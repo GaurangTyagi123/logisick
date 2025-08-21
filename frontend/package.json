@@ -1,35 +1,57 @@
 {
-  "name": "frontend",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc -b && vite build",
-    "lint": "eslint .",
-    "preview": "vite preview"
-  },
-  "dependencies": {
-    "axios": "^1.11.0",
-    "react": "^19.1.1",
-    "react-dom": "^19.1.1",
-    "react-router-dom": "^7.8.1",
-    "react-toastify": "^11.0.5",
-    "zustand": "^5.0.8"
-  },
-  "devDependencies": {
-    "@eslint/js": "^9.33.0",
-    "@tailwindcss/vite": "^4.1.12",
-    "@types/react": "^19.1.10",
-    "@types/react-dom": "^19.1.7",
-    "@vitejs/plugin-react-swc": "^4.0.0",
-    "eslint": "^9.33.0",
-    "eslint-plugin-react-hooks": "^5.2.0",
-    "eslint-plugin-react-refresh": "^0.4.20",
-    "globals": "^16.3.0",
-    "tailwindcss": "^4.1.12",
-    "typescript": "~5.8.3",
-    "typescript-eslint": "^8.39.1",
-    "vite": "^7.1.2"
-  }
+	"name": "frontend",
+	"private": true,
+	"version": "0.0.0",
+	"type": "module",
+	"main": "dist-electron/main.js",
+	"author": {
+		"name": "Manas More",
+		"email": "ravishranjan2003@gmail.com",
+		"url": "https://github.com/GaurangTyagi123"
+	},
+	"scripts": {
+		"lint": "eslint .",
+		"preview": "vite preview",
+		"build:react": "tsc -b && vite build",
+		"build:electron": "tsc --project src/electron/tsconfig.json",
+		"build": "npm run build:react && npm run build:electron",
+		"dev:react": "vite",
+		"dev:electron": "npm run build:electron && cross-env NODE_ENV=development electron .",
+		"dev": "npm-run-all --parallel dev:react dev:electron",
+		"dist:help": "npm run build:electron && npm run build:react",
+		"dist:win": "npm run dist:help && electron-builder --win --x64 --config electron-builder.json",
+		"dist:mac": "npm run dist:help && electron-builder --mac --arm64 --config electron-builder.json",
+		"dist:linux": "npm run dist:help && electron-builder --linux --x64 --config electron-builder.json"
+	},
+	"dependencies": {
+		"axios": "^1.11.0",
+		"clsx": "^2.1.1",
+		"idb": "^8.0.3",
+		"react": "^19.1.1",
+		"react-dom": "^19.1.1",
+		"react-nice-avatar": "^1.5.0",
+		"react-router-dom": "^7.8.1",
+		"react-toastify": "^11.0.5",
+		"zustand": "^5.0.8"
+	},
+	"devDependencies": {
+		"@eslint/js": "^9.33.0",
+		"@tailwindcss/vite": "^4.1.12",
+		"@types/node": "^24.3.0",
+		"@types/react": "^19.1.10",
+		"@types/react-dom": "^19.1.7",
+		"@vitejs/plugin-react-swc": "^4.0.0",
+		"cross-env": "^10.0.0",
+		"electron": "^37.3.1",
+		"electron-builder": "^26.0.12",
+		"eslint": "^9.33.0",
+		"eslint-plugin-react-hooks": "^5.2.0",
+		"eslint-plugin-react-refresh": "^0.4.20",
+		"globals": "^16.3.0",
+		"npm-run-all": "^4.1.5",
+		"tailwindcss": "^4.1.12",
+		"typescript": "~5.8.3",
+		"typescript-eslint": "^8.39.1",
+		"vite": "^7.1.2"
+	}
 }
