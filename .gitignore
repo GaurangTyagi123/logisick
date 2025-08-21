@@ -140,3 +140,6 @@ vite.config.ts.timestamp-*
 
 #prettier
 .prettierrc.json
+
+#environment files
+config.env
