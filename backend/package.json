@@ -1,0 +1,27 @@
+{
+  "name": "logisick",
+  "version": "1.0.0",
+  "description": "LogiSick is an inventory management website",
+  "main": "server.js",
+  "scripts": {
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "nodemon --watch ./ --exec ts-node server.ts"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GaurangTyagi123/logisick.git"
+  },
+  "author": "GaurangTyagi & RavishRanjan & ManasMore",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/GaurangTyagi123/logisick/issues"
+  },
+  "homepage": "https://github.com/GaurangTyagi123/logisick#readme",
+  "devDependencies": {
+    "@types/node": "^24.3.0",
+    "nodemon": "^3.1.10",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.9.2"
+  }
+}
