@@ -1,2 +1,2 @@
 ### color scheme : {#d7d8d7,#02022d,#1bd03f}
-#### pages : organization, dashboard
+#### pages : organization, dashboard, login/signup, home
