@@ -7,3 +7,10 @@
 	/* margin: 0; */
 	box-sizing: border-box;
 }
+
+html,
+body,
+#root {
+	/* width: 100vw; */
+	height: 100dvh;
+}

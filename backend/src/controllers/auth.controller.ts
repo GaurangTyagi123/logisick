@@ -5,7 +5,7 @@ import jwt from 'jsonwebtoken';
 
 import type { ObjectId } from 'mongoose';
 import type { StringValue } from 'ms';
-import User, { type UserType } from '../models/userModel';
+import User from '../models/user.model';
 
 type cookieOptionsType = {
     httpOnly: boolean;

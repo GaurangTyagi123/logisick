@@ -2,11 +2,11 @@
   "name": "logisick",
   "version": "1.0.0",
   "description": "LogiSick is an inventory management website",
-  "main": "server.js",
+  "main": "src/server.js",
   "scripts": {
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "nodemon --watch ./ --exec ts-node server.ts"
+    "start": "node dist/server.js",
+    "dev": "nodemon --watch ./ --exec ts-node src/server.ts"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   },
   "homepage": "https://github.com/GaurangTyagi123/logisick#readme",
   "devDependencies": {
+    "@types/bcryptjs": "^2.4.6",
     "@types/express": "^5.0.3",
     "@types/jsonwebtoken": "^9.0.10",
     "@types/morgan": "^1.9.10",

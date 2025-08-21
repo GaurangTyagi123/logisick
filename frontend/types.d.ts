@@ -2,9 +2,10 @@ type User = {
 	_id: string;
 	name: string;
 	email: string;
-	profileString: string;
+	avatar: string;
+	role: "admin" | "manager" | "staff";
 	updatedAt: string;
-	orgList: string[];
+	org: string[];
 };
 
 type Org = {

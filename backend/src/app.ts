@@ -1,8 +1,8 @@
 import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import authRouter from './routes/authRoutes';
-import globalErrorController from './controllers/globalErrorController';
+import authRouter from './routes/auth.routes';
+import globalErrorController from './controllers/globalError.controller';
 
 const app = express();
 app.use(express.json())
