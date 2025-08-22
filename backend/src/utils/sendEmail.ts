@@ -55,5 +55,21 @@ class Email {
         const subject = `Verify your email`;
         await this.sendMail(template, subject);
     }
+    public async sendResetLink() {
+        const verificationHtml = readFileSync(
+            path.join(__dirname, 'emailTemplates', 'resetPassword.html'),
+            { encoding: 'utf-8' }
+        );
+        const options = {
+            brand_name: 'LogiSick',
+            user_name: this.user.userName,
+            reset_url : this.url,
+            support_email : 'ravishranjan2003@gmail.com',
+            year: new Date().getFullYear(),
+        };
+        const template = Handlebars.compile(verificationHtml)(options);
+        const subject = `Reset your password`;
+        await this.sendMail(template, subject);
+    }
 }
 export default Email;
