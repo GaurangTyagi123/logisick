@@ -2,17 +2,18 @@ import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import jwt from 'jsonwebtoken';
-
-import type { ObjectId } from 'mongoose';
-import type { StringValue } from 'ms';
 import User from '../models/user.model';
+
+import type { Types } from 'mongoose';
+import type { StringValue } from 'ms';
+import type { UserType } from '../models/user.model';
 
 type cookieOptionsType = {
     httpOnly: boolean;
     expires: Date;
     secure?: boolean;
 };
-const signToken = (id: ObjectId) => {
+const signToken = (id: Types.ObjectId) => {
     const JWTSign = process.env.JWT_SIGN as string;
     const JWTExpire = process.env.JWT_EXPIRE_TIME as StringValue;
     return jwt.sign({ id }, JWTSign, { expiresIn: JWTExpire });

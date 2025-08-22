@@ -1,9 +1,13 @@
-import { Schema, model } from "mongoose";
+import { Schema, model,Types } from "mongoose";
 
 const organizationSchema = new Schema({
 	name: {
 		type: String,
 		required: [true, "Organization must have a name"],
+	},
+	numberOfEmployees: {
+		type: Number,
+		default : 1
 	},
 	description: {
 		type: String,
