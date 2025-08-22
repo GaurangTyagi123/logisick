@@ -4,7 +4,7 @@ TODO 1. Create Organization -
     ? Number of employees
     ? Description of organization
     ? type
-    ? Admin signup
+    ? Admin will create user signup
 
 TODO 2. User & Role Management -
     ? Access Control - admin | manager | Staff
