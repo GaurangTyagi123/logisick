@@ -1,18 +1,17 @@
 import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import jwt from 'jsonwebtoken';
-
-import type { ObjectId } from 'mongoose';
-import type { StringValue } from 'ms';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import User from '../models/user.model';
+import crypto from 'crypto';
+import { promisify } from 'util';
 
-type cookieOptionsType = {
-    httpOnly: boolean;
-    expires: Date;
-    secure?: boolean;
-};
-const signToken = (id: ObjectId) => {
+import type { Types } from 'mongoose';
+import type { StringValue } from 'ms';
+import Email from '../utils/sendEmail';
+
+
+const signToken = (id: Types.ObjectId) => {
     const JWTSign = process.env.JWT_SIGN as string;
     const JWTExpire = process.env.JWT_EXPIRE_TIME as StringValue;
     return jwt.sign({ id }, JWTSign, { expiresIn: JWTExpire });
@@ -33,11 +32,38 @@ const sendNewToken = (user: UserType, res: Response, statusCode: number) => {
     if (process.env.NODE_ENV === 'production') {
         cookieOptions.secure = true;
     }
+    res.cookie('jwt', token, cookieOptions);
     return res.status(statusCode).json({
         token,
         user,
     });
 };
+const protect = catchAsync(
+    async (req: UserRequest, res: Response, next: NextFunction) => {
+        let token: string | undefined;
+        if (
+            req.headers.authorization &&
+            req.headers.authorization.startsWith('Bearer')
+        ) {
+            token = req.headers.authorization.split(' ').at(1);
+        }
+        if (!token) return next(new AppError('Invalid Token', 401));
+        const verifyAsync = promisify(jwt.verify) as (
+            token: string,
+            secret: string
+        ) => Promise<JwtPayload>;
+        const { id, iat: issuedAt } = await verifyAsync(
+            token,
+            process.env.JWT_SIGN as string
+        );
+        const user = await User.findById(id);
+        if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
+            return next(new AppError('Password updated recently', 401));
+        }
+        req.user = user;
+        return next();
+    }
+);
 const login = catchAsync(
     async (req: Request, res: Response, next: NextFunction) => {
         const { email, password } = req.body;
@@ -45,8 +71,8 @@ const login = catchAsync(
             return next(
                 new AppError('Please provide a valid email and password', 400)
             );
-        const user = await User.findOne({ email });
-        if (!user || !user.comparePasswords(password, user.password))
+        const user = await User.findOne({ email }).select('+password');
+        if (!user || !(await user.comparePasswords(password, user.password)))
             return next(new AppError('No such user exists', 401));
         sendNewToken(user, res, 200);
     }
@@ -61,9 +87,132 @@ const signup = catchAsync(
             email,
             password,
             confirmPassword,
+            role: 'admin',
         });
         if (!newUser) return next(new AppError('Failed to signup', 500));
         sendNewToken(newUser, res, 201);
     }
 );
-export { login, signup };
+const verifyEmail = catchAsync(
+    async (req: UserRequest, res: Response, next: NextFunction) => {
+        const userOtp = req?.body?.otp;
+        const isVerified = req.user?.isVerified;
+        const isOtpGen = req.user!.otp;
+        if (isVerified)
+            return res.status(200).json({
+                status: 'successfull',
+                data: {
+                    message: 'Your email is already verified',
+                },
+            });
+        else if (isOtpGen && userOtp && req.user?.otp === userOtp) {
+            const user = await User.findById(req.user?._id);
+            user!.isVerified = true;
+            user!.otp = undefined;
+            await user!.save({ validateBeforeSave: false });
+
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    message: 'email verified successfully',
+                },
+            });
+        } else {
+            const otp = Math.floor(Math.random() * 10000)
+                .toString()
+                .padEnd(4, '0');
+            await User.findByIdAndUpdate(req.user?._id, { otp });
+            await new Email(
+                {
+                    userName: req.user?.name as string,
+                    email: req.user?.email as string,
+                    otp,
+                },
+                ''
+            ).sendVerification();
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    message: 'otp sent successfully',
+                },
+            });
+        }
+    }
+);
+const forgotPassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const email = req.body.email;
+        if (!email)
+            return next(new AppError('Please provide a valid email id', 400));
+        const user = await User.findOne({ email }).select('+password');
+        if (!user)
+            return next(
+                new AppError('No such user with that email exists', 400)
+            );
+        const resetToken = user.createPasswordResetToken();
+        await user.save({ validateBeforeSave: false });
+
+        const url = `${req.protocol}//${req.host}/api/v1/auth/resetPassword/${resetToken}`;
+        try {
+            await new Email(
+                {
+                    userName: user.name,
+                    email: user.email,
+                },
+                url
+            ).sendResetLink();
+            return res.status(200).json({
+                status: 'success',
+                data: {
+                    message: 'Mail sent successfully',
+                },
+            });
+        } catch (err) {
+            console.log(err);
+            user.resetPasswordToken = undefined;
+            user.resetTokenExpireTime = undefined;
+            await user.save({ validateBeforeSave: false });
+
+            return res.status(500).json({
+                status: 'fail',
+                data: {
+                    message: 'Error updating the password',
+                },
+            });
+        }
+    }
+);
+const resetPassword = catchAsync(
+    async (req: Request, res: Response, next: NextFunction) => {
+        const prevPassword = req.body.password;
+        const password = req.body.password;
+        const confirmPassword = req.body.confirmPassword;
+        const resetToken = req.params.resetToken;
+
+        if (!password || !confirmPassword)
+            return next(new AppError('Password is required', 400));
+
+        const hashedToken = crypto
+            .createHash('sha256')
+            .update(resetToken)
+            .digest('hex');
+        const user = await User.findOne({
+            resetPasswordToken: hashedToken,
+            resetTokenExpireTime: { $gte: Date.now() },
+        }).select('+password');
+        if (
+            !user ||
+            !(await user.comparePasswords(prevPassword, user.password))
+        )
+            return next(new AppError('Invalid token or password', 400));
+
+        user.password = password;
+        user.confirmPassword = confirmPassword;
+        user.resetTokenExpireTime = undefined;
+        user.resetPasswordToken = undefined;
+
+        await user.save();
+        sendNewToken(user, res, 200);
+    }
+);
+export { login, signup, forgotPassword, resetPassword, verifyEmail, protect };
