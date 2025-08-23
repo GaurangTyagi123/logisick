@@ -3,26 +3,6 @@ import validator from 'validator';
 import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
 
-export interface UserType extends Document {
-    _id: ObjectId;
-    name: string;
-    email: string;
-    password: string;
-    confirmPassword?: string | undefined;
-    passwordUpdatedAt?: Date | undefined;
-    resetPasswordToken?: string | undefined;
-    resetTokenExpireTime?: number | undefined;
-    avatar?: string;
-    role?: string;
-    org?: ObjectId;
-
-    comparePasswords: (
-        candidatePassword: string,
-        actualPassword: string
-    ) => boolean;
-    createPasswordResetToken: () => string;
-}
-
 const userSchema = new Schema({
     name: {
         type: String,
@@ -34,6 +14,11 @@ const userSchema = new Schema({
         required: [true, 'User must have an email'],
         validate: [validator.isEmail],
     },
+    isVerified: {
+        type: Boolean,
+        default: false,
+    },
+    otp: String,
     password: {
         type: String,
         required: [true, 'User must have a password'],
@@ -68,7 +53,7 @@ const userSchema = new Schema({
     ],
 });
 userSchema.pre('save', async function (this: UserType, next) {
-    if (!this.isModified("password")) return next();
+    if (!this.isModified('password')) return next();
     this.password = await bcryptjs.hash(this.password, 12);
     this.confirmPassword = undefined;
     return next();
@@ -81,6 +66,7 @@ userSchema.pre('save', function (this: UserType, next) {
 
 userSchema.methods.createPasswordResetToken = function (this: UserType) {
     const resetToken = crypto.randomBytes(32).toString('hex');
+    console.log(resetToken);
     this.resetPasswordToken = crypto
         .createHash('sha256')
         .update(resetToken)
@@ -93,6 +79,12 @@ userSchema.methods.comparePasswords = async function (
     actualPassword: string
 ) {
     return await bcryptjs.compare(candidatePassword, actualPassword);
+};
+userSchema.methods.passwordUpdatedAfter = function (issuedTimeStamp: number) {
+    if (this.passwordUpdatedAt) {
+        const updateTimeStamp = this.passwordUpdatedAt.getTime() / 1000;
+        return updateTimeStamp > issuedTimeStamp;
+    }
 };
 
 const userModel = model<UserType>('User', userSchema);
