@@ -6,7 +6,7 @@ interface LoadingProps {
 
 function Loading({ className }: LoadingProps) {
 	return (
-		<div className={clsx("flex items-center gap-2", className)}>
+		<div className={clsx("flex items-center gap-2 h-screen w-full", className)}>
 			<div className="flex space-x-1">
 				<div
 					className="rounded-full bg-black animate-bounce w-8 h-8"

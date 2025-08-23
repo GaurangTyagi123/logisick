@@ -19,7 +19,7 @@ function App() {
 	}, [getTheme, setMode]);
 
 	return (
-		<div className="h-full w-full">
+		<>
 			<Suspense fallback={<Loading />}>
 				<Routes>
 					<Route index path="/" element={<Home />} />
@@ -35,7 +35,7 @@ function App() {
 				limit={3}
 				newestOnTop
 			/>
-		</div>
+		</>
 	);
 }
 

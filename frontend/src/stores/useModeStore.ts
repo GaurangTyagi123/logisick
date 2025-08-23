@@ -11,26 +11,47 @@ interface ModeProps {
 const useModeStore = create<ModeProps>((set) => ({
 	mode: (() => {
 		const value = localStorage.getItem("shade-ui-mode");
-		return value &&
-			(value === "dark" || value === "light" || value === "system")
-			? value
-			: "system";
+		const val =
+			value === "dark" || value === "light" || value === "system"
+				? value
+				: "system";
+
+		// Apply initial theme
+		applyTheme(val);
+
+		return val;
 	})(),
+
 	setMode: (inputMode: Mode) => {
 		localStorage.setItem("shade-ui-mode", inputMode);
 		set({ mode: inputMode });
+		applyTheme(inputMode);
 	},
+
 	getTheme: (): "dark" | "light" => {
 		const currentMode = useModeStore.getState().mode;
 		if (currentMode === "system") {
-			const systemTheme = window.matchMedia("(prefers-color-scheme:dark)")
-				.matches
+			return window.matchMedia("(prefers-color-scheme: dark)").matches
 				? "dark"
 				: "light";
-			return systemTheme;
 		}
 		return currentMode;
 	},
 }));
+
+// helper to apply the correct class
+function applyTheme(mode: Mode) {
+	document.documentElement.classList.remove("dark", "light");
+
+	if (mode === "system") {
+		const systemTheme = window.matchMedia("(prefers-color-scheme: dark)")
+			.matches
+			? "dark"
+			: "light";
+		document.documentElement.classList.add(systemTheme);
+	} else {
+		document.documentElement.classList.add(mode);
+	}
+}
 
 export default useModeStore;

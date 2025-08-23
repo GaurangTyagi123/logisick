@@ -1,0 +1,20 @@
+@font-face {
+	font-family: king-julian;
+	src: url("./assets/fonts/JuliusSansOne-Regular.ttf");
+	font-weight: 400;
+	font-style: normal;
+}
+
+@font-face {
+	font-family: jet-brains;
+	src: url("./assets/fonts/JetBrainsMono-Regular.ttf");
+	font-weight: 400;
+	font-style: normal;
+}
+
+.king-julian {
+	font-family: king-julian;
+}
+.jet-brains {
+	font-family: jet-brains;
+}
