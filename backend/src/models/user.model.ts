@@ -4,6 +4,7 @@ import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
 
 const userSchema = new Schema({
+    googleId: String,
     name: {
         type: String,
         required: [true, 'User must have a name'],
@@ -21,13 +22,11 @@ const userSchema = new Schema({
     otp: String,
     password: {
         type: String,
-        required: [true, 'User must have a password'],
         min: 8,
         select: false,
     },
     confirmPassword: {
         type: String,
-        required: [true, 'User must have a confirmed Password'],
         min: 8,
         validate: {
             message: 'Passwords do not match',
@@ -39,6 +38,7 @@ const userSchema = new Schema({
     passwordUpdatedAt: Date,
     resetPasswordToken: String,
     resetTokenExpireTime: Date,
+    refreshToken: String,
     avatar: String,
     role: {
         type: String,

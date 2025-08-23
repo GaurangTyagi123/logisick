@@ -10,11 +10,7 @@ import type { Types } from 'mongoose';
 import type { StringValue } from 'ms';
 import Email from '../utils/sendEmail';
 
-type cookieOptionsType = {
-    httpOnly: boolean;
-    expires: Date;
-    secure?: boolean;
-};
+
 const signToken = (id: Types.ObjectId) => {
     const JWTSign = process.env.JWT_SIGN as string;
     const JWTExpire = process.env.JWT_EXPIRE_TIME as StringValue;
