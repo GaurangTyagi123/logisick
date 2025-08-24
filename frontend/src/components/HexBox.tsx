@@ -9,7 +9,7 @@ interface HexBoxProps {
 function HexBox({ icon, heading, text }: HexBoxProps) {
 	return (
 		<div
-			className="bg-white p-3 shadow-xl max-w-73 h-25 highlight"
+			className="bg-white p-3 shadow-xl max-w-73 h-25 "
 			style={{
 				clipPath:
 					"polygon(1rem 0%, calc(100% - 1rem) 0%, 100% 50%, calc(100% - 1rem) 100%, 1rem 100%, 0% 50%)",
