@@ -1,7 +1,9 @@
-import { BookOpen, Star } from "lucide-react";
+import { Star } from "@/assets/icons/Star";
+import { BookOpen } from "@/assets/icons/BookOpen";
 import Button from "./ui/button";
 import illus from "@/assets/illus.svg";
 import HexBox from "./HexBox";
+// import HexBox from "./HexBox";
 
 function Hero() {
 	return (

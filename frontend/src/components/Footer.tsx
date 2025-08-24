@@ -1,6 +1,11 @@
 import useModeStore from "@/stores/useModeStore";
 import clsx from "clsx";
-import { Truck, Package, MapPin, Phone, Mail, Clock } from "lucide-react";
+import { Clock } from "@/assets/icons/Clock";
+import { Truck } from "@/assets/icons/Truck";
+import { Package } from "@/assets/icons/Package";
+import { MapPin } from "@/assets/icons/MapPin";
+import { Phone } from "@/assets/icons/Phone";
+import { Mail } from "@/assets/icons/Mail";
 
 function Footer() {
 	const isDark = useModeStore().getTheme() === "dark";

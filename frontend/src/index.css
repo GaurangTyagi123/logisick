@@ -14,12 +14,29 @@
 html,
 body,
 #root {
-	width: 100vw;
+	/* width: 100vw; */
 	/* min-height: 100dvh; */
+	/* scrollbar-gutter: stable; */
 }
 .highlight,
 .highlight > * {
 	outline: 1px solid red;
+}
+
+.toast {
+	font-size: 14px;
+	font-weight: bold;
+	height: 16px;
+	padding-block: 7px;
+	font-family: "Ancizar Sans", sans-serif;
+	font-style: normal;
+	background-color: #d3d5d8;
+}
+
+@media (prefers-color-scheme: dark) {
+	.toast {
+		background-color: #636379;
+	}
 }
 
 @theme inline {

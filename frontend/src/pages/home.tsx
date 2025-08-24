@@ -5,7 +5,7 @@ import Button from "@/components/ui/button";
 import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
-import { Menu } from "lucide-react";
+import { Menu } from "@/assets/icons/HamBurger";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -17,10 +17,13 @@ import {
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import BigHeading from "@/components/BigHeading";
+import useAuthStore from "@/stores/useAuthStore";
+import UserButton from "@/components/UserButton";
 
 function Home() {
 	const isDark = useModeStore().getTheme() === "dark";
 	const navigate = useNavigate();
+	const { user } = useAuthStore();
 	return (
 		<div
 			className={clsx(
@@ -30,9 +33,13 @@ function Home() {
 		>
 			{/* topbar */}
 			<div className="flex justify-end gap-2">
-				<Button onClick={() => navigate("/authenticate")}>
-					Login/Register
-				</Button>
+				{user ? (
+					<UserButton />
+				) : (
+					<Button onClick={() => navigate("/authenticate")}>
+						Login/Register
+					</Button>
+				)}
 				<ThemeToggle />
 			</div>
 			{/* tabs bar */}

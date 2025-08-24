@@ -1,11 +1,12 @@
 import { lazy, Suspense, useEffect } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import useModeStore from "./stores/useModeStore";
 import Loading from "./components/loading";
 
 import Notfound from "./pages/notfound";
+import useAuthStore from "./stores/useAuthStore";
 const Home = lazy(() => import("./pages/home"));
 const Dashboard = lazy(() => import("./pages/dashboard"));
 const Authenticate = lazy(() => import("./pages/authenticate"));
@@ -13,19 +14,53 @@ const Profile = lazy(() => import("./pages/profile"));
 
 function App() {
 	const { getTheme, setMode } = useModeStore();
+	const { checkAuth, user,isCheckingAuth } = useAuthStore();
 
 	useEffect(() => {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
+
+	useEffect(() => {
+		async function authen() {
+			console.log("checking auth");
+			await checkAuth();
+		}
+		authen();
+	}, [checkAuth]);
+
+	if (isCheckingAuth) return <Loading />;
 
 	return (
 		<>
 			<Suspense fallback={<Loading />}>
 				<Routes>
 					<Route index path="/" element={<Home />} />
-					<Route path="/:orgId/dashboard" element={<Dashboard />} />
-					<Route path="/authenticate" element={<Authenticate />} />
-					<Route path="/profile/:userId?" element={<Profile />} />
+					<Route
+						path="/:orgId/dashboard"
+						element={
+							user ? (
+								<Dashboard />
+							) : (
+								<Navigate to={"/authenticate"} />
+							)
+						}
+					/>
+					<Route
+						path="/authenticate"
+						element={
+							!user ? <Authenticate /> : <Navigate to={"/"} />
+						}
+					/>
+					<Route
+						path="/profile/:userId?"
+						element={
+							user ? (
+								<Profile />
+							) : (
+								<Navigate to={"/authenticate"} />
+							)
+						}
+					/>
 					<Route path="*" element={<Notfound />} />
 				</Routes>
 			</Suspense>

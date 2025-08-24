@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import useModeStore from "../stores/useModeStore";
 import Button from "./ui/button";
-import { Sun, Moon, MonitorSmartphone as System } from "lucide-react";
+import { Sun, Moon, System } from "@/assets/icons/ModeToggleIcons";
 
 interface ThemeToggleProps {
 	classname?: string;
