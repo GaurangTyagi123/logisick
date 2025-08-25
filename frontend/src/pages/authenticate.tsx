@@ -16,7 +16,7 @@ function Authenticate() {
 		<div
 			className={clsx(
 				"w-full p-4 flex flex-col h-auto min-h-screen",
-				isDark ? "bg-gray-900" : ""
+				isDark ? "bg-zinc-900" : ""
 			)}
 		>
 			<div className="flex justify-end gap-2">

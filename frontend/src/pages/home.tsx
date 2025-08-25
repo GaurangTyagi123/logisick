@@ -33,6 +33,24 @@ function Home() {
 		>
 			{/* topbar */}
 			<div className="flex justify-end gap-2">
+				{/* option menu in small screens */}
+				<DropdownMenu>
+					<DropdownMenuTrigger className="md:hidden mr-auto ">
+						<Button asChild className="w-full">
+							<Menu />
+						</Button>
+					</DropdownMenuTrigger>
+					<DropdownMenuContent>
+						<DropdownMenuLabel>Options</DropdownMenuLabel>
+						<DropdownMenuSeparator />
+						<DropdownMenuItem>Product</DropdownMenuItem>
+						<DropdownMenuItem>Community</DropdownMenuItem>
+						<DropdownMenuItem>Docs</DropdownMenuItem>
+						<DropdownMenuItem>Pricing</DropdownMenuItem>
+						<DropdownMenuItem>Contact</DropdownMenuItem>
+						<DropdownMenuItem>Link</DropdownMenuItem>
+					</DropdownMenuContent>
+				</DropdownMenu>
 				{user ? (
 					<UserButton />
 				) : (
@@ -43,10 +61,10 @@ function Home() {
 				<ThemeToggle />
 			</div>
 			{/* tabs bar */}
-			<div className="flex flex-col gap-2">
+			<div className="flex flex-col justify-between gap-2 mt-4 md:mt-0">
 				<BigHeading />
 				{/* tab-bar in large screens */}
-				<div className="hidden gap-2 justify-end mr-5 lg:flex">
+				<div className="hidden gap-2 justify-end mr-5 md:flex">
 					{/* features */}
 					<Button className="text-xl" variant={"link"}>
 						Product
@@ -71,26 +89,8 @@ function Home() {
 						Link
 					</Button>
 				</div>
-				{/* option menu in small screens */}
-				<DropdownMenu>
-					<DropdownMenuTrigger>
-						<Button asChild className="lg:hidden ml-auto w-10">
-							<Menu />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuLabel>Options</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>Product</DropdownMenuItem>
-						<DropdownMenuItem>Community</DropdownMenuItem>
-						<DropdownMenuItem>Docs</DropdownMenuItem>
-						<DropdownMenuItem>Pricing</DropdownMenuItem>
-						<DropdownMenuItem>Contact</DropdownMenuItem>
-						<DropdownMenuItem>Link</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
 			</div>
-			<Separator className="mt-6" />
+			<Separator className="mt-0 md:mt-6" />
 			{/* hero */}
 			<Hero />
 			{/* Footer */}

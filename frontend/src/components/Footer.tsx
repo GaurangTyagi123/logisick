@@ -13,7 +13,7 @@ function Footer() {
 		<footer
 			className={clsx(
 				"border-t border-border",
-				isDark ? "bg-gray-900" : "bg-gray-300"
+				isDark ? "bg-zinc-800" : "bg-zinc-300"
 			)}
 		>
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">

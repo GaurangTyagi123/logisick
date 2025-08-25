@@ -14,7 +14,7 @@ const Profile = lazy(() => import("./pages/profile"));
 
 function App() {
 	const { getTheme, setMode } = useModeStore();
-	const { checkAuth, user,isCheckingAuth } = useAuthStore();
+	const { checkAuth, user, isCheckingAuth } = useAuthStore();
 
 	useEffect(() => {
 		setMode(getTheme());
@@ -48,7 +48,7 @@ function App() {
 					<Route
 						path="/authenticate"
 						element={
-							!user ? <Authenticate /> : <Navigate to={"/"} />
+							user ? <Navigate to={"/"} /> : <Authenticate />
 						}
 					/>
 					<Route

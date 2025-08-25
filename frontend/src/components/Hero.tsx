@@ -7,7 +7,7 @@ import HexBox from "./HexBox";
 
 function Hero() {
 	return (
-		<main className="mx-10 p-2 text-black">
+		<main className="md:mx-10 p-2 text-black">
 			{/* hero */}
 			<div
 				className="w-full min-h-120 flex p-4 flex-wrap justify-center "
@@ -17,8 +17,8 @@ function Hero() {
 						"0 0 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25)",
 				}}
 			>
-				<div className="flex flex-col gap-6 p-10 max-w-2xl">
-					<h2 className="text-6xl w-full text-balance jet-brains text-gray-900">
+				<div className="flex flex-col gap-6 md:p-10 max-w-2xl">
+					<h2 className="text-4xl text-center md:text-start md:text-6xl w-full text-balance jet-brains text-zinc-900">
 						Streamline Your Supply Chain
 					</h2>
 					<p

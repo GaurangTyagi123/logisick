@@ -15,7 +15,7 @@ function HexBox({ icon, heading, text }: HexBoxProps) {
 					"polygon(1rem 0%, calc(100% - 1rem) 0%, 100% 50%, calc(100% - 1rem) 100%, 1rem 100%, 0% 50%)",
 			}}
 		>
-			<h3 className="flex text-2xl gap-1 items-center font-semibold justify-center ">
+			<h3 className="flex text-xl md:text-2xl gap-1 items-center font-semibold justify-center ">
 				<DynamicIcon name={icon} />
 				{heading}
 			</h3>

@@ -7,6 +7,7 @@ import {
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
+import Button from "./ui/button";
 
 function UserButton() {
 	const { user } = useAuthStore();
@@ -14,14 +15,14 @@ function UserButton() {
 
 	return (
 		<DropdownMenu>
-			<DropdownMenuTrigger>
-				<div className="flex gap-2 p-1 rounded">
+			<DropdownMenuTrigger asChild>
+				<Button className="">
 					<UserAvatar
 						customSeed={user?.avatar || "12345678"}
-						className="w-10 h-10"
+						className="w-8 h-8"
 					/>
-					<span className="text-lg">{user?.name}</span>
-				</div>
+					<span>{user?.name}</span>
+				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
 				<DropdownMenuItem
