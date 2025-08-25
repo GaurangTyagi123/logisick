@@ -1,12 +1,16 @@
-import { NextFunction, Request, Response } from 'express';
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
 import jwt from 'jsonwebtoken';
 import '../utils/oauth.setup';
-import { StringValue } from 'ms';
+
+import type { StringValue } from 'ms';
 
 const googleSignup = catchAsync(
-    async (req: Request, res: Response, next: NextFunction) => {
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
         if (!req.user) return next(new AppError('There was an error', 400));
         const user = req.user as UserType;
         const token = jwt.sign(

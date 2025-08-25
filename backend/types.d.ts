@@ -1,12 +1,29 @@
-type MongooseDocument = import('mongoose').Document;
-type ExpressRequest = import('express').Request;
+// IMP Express Types
+namespace ExpressTypes {
+    type Request = import('express').Request;
+    type Response = import('express').Response;
+    type NextFn = import('express').NextFn;
 
-declare type ObjectId = import('mongoose').Types.ObjectId;
+    interface UserRequest extends Request {
+        user?: UserType;
+    }
+    interface OAuthUser extends Express.User {
+        user?: UserType;
+    }
+}
+
+// type declaration for http-only cookie
 declare type cookieOptionsType = {
     httpOnly: boolean;
     expires: Date;
     secure?: boolean;
 };
+
+// Types declaration for mongoose
+type MongooseDocument = import('mongoose').Document;
+declare type ObjectId = import('mongoose').Types.ObjectId;
+
+// Type declaration for User Model
 declare interface UserType extends MongooseDocument {
     _id: ObjectId;
     googleId?: string;
@@ -15,7 +32,7 @@ declare interface UserType extends MongooseDocument {
     isVerified: boolean;
     otp?: string | undefined;
 
-    password: string;
+    password?: string;
     confirmPassword?: string | undefined;
     passwordUpdatedAt?: Date | undefined;
     resetPasswordToken?: string | undefined;
@@ -33,12 +50,8 @@ declare interface UserType extends MongooseDocument {
     createPasswordResetToken: () => string;
     passwordUpdatedAfter: (issuedTimeStamp: number) => boolean;
 }
-declare interface UserRequest extends ExpressRequest {
-    user?: UserType;
-}
-declare interface OAuthUser extends Express.User {
-    user?: UserType;
-}
+
+// Type declaration for Organization Model
 declare interface OrgType {
     _id: ObjectId;
     name: string;
