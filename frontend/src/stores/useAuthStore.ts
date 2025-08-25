@@ -25,6 +25,7 @@ interface AuthProps {
 	checkAuth: () => Promise<void>;
 	login: (form: LoginForm) => Promise<void>;
 	register: (form: RegisterForm) => Promise<void>;
+	logout: () => Promise<void>;
 }
 
 const useAuthStore = create<AuthProps>((set, get) => ({
@@ -44,7 +45,11 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 		try {
 			if (!get().token) return;
 			set({ isCheckingAuth: true });
-			const res = await axinstance.get("/v1/auth/checkAuth");
+			const res = await axinstance.get<{
+				status: string;
+				isLoggedIn: boolean;
+				data: { user: User };
+			}>("/v1/auth/isLoggedIn");
 			const user = res.data.data.user;
 			console.log("User", user);
 			set({ user: user });
@@ -63,14 +68,28 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 		try {
 			set({ isLoggingIn: true });
 			const res = await axinstance.post<{
-				user: User;
-				message: string;
 				token: string;
+				name: string;
+				email: string;
+				isVerified: boolean;
+				role: "admin" | "manager" | "staff";
+				avatar: string;
+				passwordUpdatedAt: Date;
 			}>("/v1/auth/login", form);
-			set({ user: res.data.user });
-			set({ token: res.data.token });
+
+			const allData = res.data;
+			const user: User = {
+				avatar: allData.avatar,
+				email: allData.email,
+				isVerified: allData.isVerified,
+				name: allData.name,
+				passwordUpdatedAt: allData.passwordUpdatedAt,
+				role: allData.role,
+			};
+
+			set({ user: user, token: res.data.token });
 			localStorage.setItem("AuthToken", res.data.token);
-			toast.success(res.data.message, { className: "toast" });
+			toast.success("LoggedIn Successfully", { className: "toast" });
 		} catch (error) {
 			if (isAxiosError(error)) {
 				const msg = error.response?.data?.message || "Error logging in";
@@ -87,17 +106,31 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 		try {
 			set({ isRegistering: true });
 			const res = await axinstance.post<{
-				msg: string;
-				user: User;
 				token: string;
+				name: string;
+				email: string;
+				isVerified: boolean;
+				role: "admin" | "manager" | "staff";
+				avatar: string;
+				passwordUpdatedAt: Date;
 			}>("/v1/auth/signup", form);
-			set({ user: res.data.user });
-			set({ token: res.data.token });
+
+			const allData = res.data;
+			const user: User = {
+				avatar: allData.avatar,
+				email: allData.email,
+				isVerified: allData.isVerified,
+				name: allData.name,
+				passwordUpdatedAt: allData.passwordUpdatedAt,
+				role: allData.role,
+			};
+
+			set({ user: user, token: res.data.token });
 			toast.success("Registered successfully", { className: "toast" });
 		} catch (error) {
 			if (isAxiosError(error)) {
 				const msg =
-					error.response?.data?.msg || "Error registering user";
+					error.response?.data?.message || "Error registering user";
 				console.log(msg);
 				toast.error(msg, { className: "toast" });
 			} else {
@@ -105,6 +138,33 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			}
 		} finally {
 			set({ isRegistering: false });
+		}
+	},
+	logout: async () => {
+		try {
+			const res = await axinstance.get<{ status: string }>(
+				"/v1/auth/logout"
+			);
+			console.log("Logout", res);
+			const status = res.data.status;
+			if (status === "success") {
+				set({ user: null, token: null });
+				toast.success("Logged-Out Successfully", {
+					className: "toast",
+				});
+				localStorage.removeItem("AuthToken");
+			} else {
+				toast.error("Error Logging Out ", { className: "toast" });
+			}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				const msg =
+					error.response?.data?.message || "Error logging out user";
+				console.log(msg);
+				toast.error(msg, { className: "toast" });
+			} else {
+				console.log(error);
+			}
 		}
 	},
 }));

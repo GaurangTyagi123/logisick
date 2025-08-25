@@ -1,13 +1,9 @@
 type User = {
-	_id: string;
 	name: string;
 	email: string;
 	isVerified: boolean;
-	password: string;
 	avatar: string;
 	role: "admin" | "manager" | "staff";
-	updatedAt: string;
-	org: string[];
 	passwordUpdatedAt: Date;
 };
 

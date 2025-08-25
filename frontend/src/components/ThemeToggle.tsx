@@ -12,7 +12,6 @@ function ThemeToggle({ classname }: ThemeToggleProps) {
 
 	function handleThemeChange(): void {
 		// e.stopPropagation();
-		console.log("button clicked");
 		if (mode === "light") setMode("dark");
 		else if (mode === "dark") setMode("system");
 		else if (mode === "system") setMode("light");

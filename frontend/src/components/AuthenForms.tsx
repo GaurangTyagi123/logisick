@@ -42,7 +42,7 @@ export function Login({ setFormType }: FormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="flex flex-col flex-1 max-w-2xl gap-4 p-4 border min-w-lg rounded-2xl"
+			className="flex flex-col flex-1 max-w-2xl gap-4 p-4 border min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<h2 className="mb-2 text-3xl text-center">Login User</h2>
@@ -186,7 +186,7 @@ export function Register({ setFormType }: FormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="flex flex-col flex-1 max-w-3xl gap-4 p-4 py-4 border min-w-lg rounded-2xl "
+			className="flex flex-col flex-1 max-w-3xl gap-4 p-4 py-4 border min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<h2 className="mb-2 text-3xl text-center">Register New User</h2>

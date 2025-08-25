@@ -8,10 +8,16 @@ import {
 } from "./ui/dropdown-menu";
 import { useNavigate } from "react-router-dom";
 import Button from "./ui/button";
+import type React from "react";
 
 function UserButton() {
-	const { user } = useAuthStore();
+	const { user, logout } = useAuthStore();
 	const navigate = useNavigate();
+
+	function handleLogout(e: React.MouseEvent<HTMLDivElement>) {
+		e.stopPropagation();
+		logout();
+	}
 
 	return (
 		<DropdownMenu>
@@ -25,12 +31,12 @@ function UserButton() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem
-					onClick={() => navigate(`/profile/${user?._id}`)}
-				>
+				<DropdownMenuItem onClick={() => navigate(`/profile`)}>
 					Profile
 				</DropdownMenuItem>
-				<DropdownMenuItem>Logout</DropdownMenuItem>
+				<DropdownMenuItem onClick={handleLogout}>
+					Logout
+				</DropdownMenuItem>
 			</DropdownMenuContent>
 		</DropdownMenu>
 	);
