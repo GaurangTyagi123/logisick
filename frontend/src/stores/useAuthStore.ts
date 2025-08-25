@@ -44,11 +44,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 		try {
 			if (!get().token) return;
 			set({ isCheckingAuth: true });
-			const res = await axinstance.get("/v1/auth/checkAuth", {
-				headers: {
-					authorization: `Bearer ${get().token}`,
-				},
-			});
+			const res = await axinstance.get("/v1/auth/checkAuth");
 			const user = res.data.data.user;
 			console.log("User", user);
 			set({ user: user });

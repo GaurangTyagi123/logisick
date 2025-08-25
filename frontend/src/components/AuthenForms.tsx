@@ -4,6 +4,7 @@ import Button from "./ui/button";
 import useAuthStore from "@/stores/useAuthStore";
 import { Eye, EyeClosed } from "@/assets/icons/Eye";
 import { Label } from "./ui/label";
+import { Google } from "@/assets/icons/Google";
 
 interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
@@ -31,6 +32,12 @@ export function Login({ setFormType }: FormProps) {
 		if (form.email.trim() !== "" && form.password.length >= 8) login(form);
 	};
 
+	const sendForgotMail = (): void => {
+		// TODO : add resepassword path to store
+		// TODO : add reset password form to ui
+		return;
+	};
+
 	return (
 		<form
 			onSubmit={handleSubmit}
@@ -38,6 +45,7 @@ export function Login({ setFormType }: FormProps) {
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<h2 className="mb-2 text-3xl text-center">Login User</h2>
+
 			<Label
 				title="Email field is required"
 				htmlFor="email"
@@ -104,6 +112,14 @@ export function Login({ setFormType }: FormProps) {
 					</span>
 				)}
 			</Label>
+			<Button
+				variant={"link"}
+				className=""
+				onClick={sendForgotMail}
+				type="button"
+			>
+				Forgot Password?
+			</Button>
 			<Button className="mt-4" type="submit" disabled={isLoggingIn}>
 				Login
 			</Button>
@@ -113,6 +129,11 @@ export function Login({ setFormType }: FormProps) {
 				onClick={() => setFormType("register")}
 			>
 				Don't have an Account?
+			</Button>
+
+			<Button>
+				<Google />
+				<span>Login with Google account</span>
 			</Button>
 		</form>
 	);
