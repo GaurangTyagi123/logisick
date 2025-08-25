@@ -5,6 +5,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import { Eye, EyeClosed } from "@/assets/icons/Eye";
 import { Label } from "./ui/label";
 import { Google } from "@/assets/icons/Google";
+import { Separator } from "./ui/separator";
 
 interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
@@ -328,6 +329,11 @@ export function Register({ setFormType }: FormProps) {
 				onClick={() => setFormType("login")}
 			>
 				Already have an Account?
+			</Button>
+			<Separator />
+			<Button>
+				<Google />
+				<span>Register with Google account</span>
 			</Button>
 		</form>
 	);

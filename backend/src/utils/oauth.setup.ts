@@ -25,7 +25,6 @@ passport.use(
                     googleId: profile.id,
                     name: profile.displayName,
                     email: profile._json.email,
-                    role: 'admin',
                     isVerified: true,
                     refreshToken,
                 });
