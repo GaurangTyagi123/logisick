@@ -28,7 +28,7 @@ function Home() {
 		<div
 			className={clsx(
 				"w-full p-4 grid gap-3 h-auto",
-				isDark ? "bg-gray-900" : ""
+				isDark ? "bg-zinc-900" : ""
 			)}
 		>
 			{/* topbar */}
@@ -47,21 +47,26 @@ function Home() {
 				<BigHeading />
 				{/* tab-bar in large screens */}
 				<div className="hidden gap-2 justify-end mr-5 lg:flex">
+					{/* features */}
 					<Button className="text-xl" variant={"link"}>
 						Product
 					</Button>
+					{/* discord link */}
 					<Button className="text-xl" variant={"link"}>
 						Community
 					</Button>
+					{/* documentations */}
 					<Button className="text-xl" variant={"link"}>
-						Resources
+						Docs
 					</Button>
+					{/* api/feature pricing */}
 					<Button className="text-xl" variant={"link"}>
 						Pricing
 					</Button>
 					<Button className="text-xl" variant={"link"}>
 						Contact
 					</Button>
+					{/* social links */}
 					<Button className="text-xl" variant={"link"}>
 						Link
 					</Button>
@@ -78,7 +83,7 @@ function Home() {
 						<DropdownMenuSeparator />
 						<DropdownMenuItem>Product</DropdownMenuItem>
 						<DropdownMenuItem>Community</DropdownMenuItem>
-						<DropdownMenuItem>Resources</DropdownMenuItem>
+						<DropdownMenuItem>Docs</DropdownMenuItem>
 						<DropdownMenuItem>Pricing</DropdownMenuItem>
 						<DropdownMenuItem>Contact</DropdownMenuItem>
 						<DropdownMenuItem>Link</DropdownMenuItem>

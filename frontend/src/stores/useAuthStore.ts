@@ -42,6 +42,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 	isRegistering: false,
 	checkAuth: async () => {
 		try {
+			if (!get().token) return;
 			set({ isCheckingAuth: true });
 			const res = await axinstance.get("/v1/auth/checkAuth", {
 				headers: {

@@ -14,7 +14,7 @@ app.use(cookieParser());
 app.use(passport.initialize());
 
 app.use(morgan("dev"));
-app.use(helmet());
+app.use(helmet({ hidePoweredBy: true, noSniff: true, xssFilter: true }));
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
 app.use("/api/v1/auth", authRouter);
