@@ -38,6 +38,7 @@ const sendNewToken = (
     res.cookie('jwt', token, cookieOptions);
 
     return res.status(statusCode).json({
+        token,
         name: user.name,
         email: user.email,
         isVerified: user.isVerified,
@@ -58,6 +59,9 @@ export const protect = catchAsync(
             req.headers.authorization.startsWith('Bearer')
         ) {
             token = req.headers.authorization.split(' ').at(1);
+        }
+        if (req.cookies) {
+            token = req.cookies?.jwt;
         }
         if (!token) return next(new AppError('Invalid Token', 401));
         const verifyAsync = promisify(jwt.verify) as (
@@ -96,6 +100,23 @@ export const login = catchAsync(
             return next(new AppError('No such user exists', 401));
 
         sendNewToken(user, res, 200);
+    }
+);
+export const logout = catchAsync(
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        await User.findByIdAndUpdate(req.user?._id, { active: false });
+        const cookieOptions: cookieOptionsType = {
+            httpOnly: true,
+            expires: new Date(Date.now() + 10),
+        };
+        res.cookie('jwt', undefined, cookieOptions);
+        return res.status(204).json({
+            status: 'success',
+        });
     }
 );
 export const isLoggedIn = catchAsync(

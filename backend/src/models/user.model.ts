@@ -4,6 +4,10 @@ import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
 
 const userSchema = new Schema({
+    timeStamp: {
+        type: Date,
+        default : Date.now()
+    },
     googleId: String,
     name: {
         type: String,
