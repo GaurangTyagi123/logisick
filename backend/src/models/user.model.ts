@@ -1,4 +1,4 @@
-import { Document, Schema, model } from 'mongoose';
+import { type Query, Schema, model } from 'mongoose';
 import validator from 'validator';
 import bcryptjs from 'bcryptjs';
 import crypto from 'crypto';
@@ -6,7 +6,7 @@ import crypto from 'crypto';
 const userSchema = new Schema({
     timeStamp: {
         type: Date,
-        default : Date.now()
+        default: Date.now(),
     },
     googleId: String,
     name: {
@@ -46,11 +46,16 @@ const userSchema = new Schema({
     avatar: {
         type: String,
         default: '',
+        min: 1,
     },
     role: {
         type: String,
         enum: ['admin', 'manager', 'staff'],
         default: 'staff',
+    },
+    active: {
+        type: Boolean,
+        default: true,
     },
     org: [
         {
@@ -70,6 +75,13 @@ userSchema.pre('save', function (this: UserType, next) {
     this.passwordUpdatedAt = new Date(Date.now() - 1000);
     next();
 });
+userSchema.pre(
+    /find/,
+    function (this: Query<UserType, MongooseDocument>, next) {
+        this.find({ active: { $ne: false } });
+        next();
+    }
+);
 
 userSchema.methods.createPasswordResetToken = function (this: UserType) {
     const resetToken = crypto.randomBytes(32).toString('hex');

@@ -4,10 +4,10 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import User from '../models/user.model';
 import crypto from 'crypto';
 import { promisify } from 'util';
+import { genProfileString } from '../utils/avatarGen';
+import Email from '../utils/sendEmail';
 
 import type { StringValue } from 'ms';
-import Email from '../utils/sendEmail';
-import { genProfileString } from '../utils/avatarGen';
 
 const signToken = (id: ObjectId) => {
     const JWTSign = process.env.JWT_SIGN as string;
@@ -31,10 +31,9 @@ const sendNewToken = (
                     60 *
                     1000
         ),
+        secure: process.env.NODE_ENV === 'production',
     };
-    if (process.env.NODE_ENV === 'production') {
-        cookieOptions.secure = true;
-    }
+
     res.cookie('jwt', token, cookieOptions);
 
     return res.status(statusCode).json({
@@ -43,10 +42,21 @@ const sendNewToken = (
         email: user.email,
         isVerified: user.isVerified,
         role: user.role,
+        avatar: user.avatar,
         passwordUpdatedAt: user.passwordUpdatedAt,
     });
 };
-
+export const restrictTo = (...roles: string[]) => {
+    return (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { role } = req.user as UserType;
+        if (roles.includes(role as string)) return next();
+        return next(new AppError('You are not authorized', 401));
+    };
+};
 export const protect = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -114,7 +124,7 @@ export const logout = catchAsync(
             expires: new Date(Date.now() + 10),
         };
         res.cookie('jwt', undefined, cookieOptions);
-        return res.status(204).json({
+        return res.status(200).json({
             status: 'success',
         });
     }
@@ -126,6 +136,7 @@ export const isLoggedIn = catchAsync(
         next: ExpressTypes.NextFn
     ) => {
         let token: string | undefined;
+        if (req.cookies) token = req.cookies.jwt;
         if (!token)
             return res.status(401).json({
                 status: 'fail',
@@ -145,7 +156,10 @@ export const isLoggedIn = catchAsync(
         );
         const user = await User.findById(id);
         if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
-            return next(new AppError('Password updated recently', 401));
+            return res.status(200).json({
+                status: 'fail',
+                isLoggedIn: false,
+            });
         }
         return res.status(200).json({
             status: 'success',
