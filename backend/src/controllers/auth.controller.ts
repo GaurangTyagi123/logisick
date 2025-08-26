@@ -1,3 +1,11 @@
+import catchAsync from '../utils/catchAsync';
+import AppError from '../utils/appError';
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import User from '../models/user.model';
+import crypto from 'crypto';
+import { promisify } from 'util';
+import { genProfileString } from '../utils/avatarGen';
+import Email from '../utils/sendEmail';
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/appError";
 import jwt, { JwtPayload } from "jsonwebtoken";
@@ -5,6 +13,7 @@ import User from "../models/user.model";
 import crypto from "crypto";
 import { promisify } from "util";
 
+import type { StringValue } from 'ms';
 import type { StringValue } from "ms";
 import Email from "../utils/sendEmail";
 import { genProfileString } from "../utils/avatarGen";
@@ -20,6 +29,21 @@ const sendNewToken = (
 	res: ExpressTypes.Response,
 	statusCode: number
 ) => {
+    const token = signToken(user._id);
+    const cookieOptions: cookieOptionsType = {
+        httpOnly: true,
+        expires: new Date(
+            Date.now() +
+                parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
+                    24 *
+                    60 *
+                    60 *
+                    1000
+        ),
+        secure: process.env.NODE_ENV === 'production',
+    };
+
+    res.cookie('jwt', token, cookieOptions);
 	const token = signToken(user._id);
 	const cookieOptions: cookieOptionsType = {
 		httpOnly: true,
@@ -37,6 +61,15 @@ const sendNewToken = (
 	}
 	res.cookie("jwt", token, cookieOptions);
 
+    return res.status(statusCode).json({
+        token,
+        name: user.name,
+        email: user.email,
+        isVerified: user.isVerified,
+        role: user.role,
+        avatar: user.avatar,
+        passwordUpdatedAt: user.passwordUpdatedAt,
+    });
 	return res.status(statusCode).json({
 		status:"success",
 		data: {
@@ -51,7 +84,17 @@ const sendNewToken = (
 		},
 	});
 };
-
+export const restrictTo = (...roles: string[]) => {
+    return (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { role } = req.user as UserType;
+        if (roles.includes(role as string)) return next();
+        return next(new AppError('You are not authorized', 401));
+    };
+};
 export const protect = catchAsync(
 	async (
 		req: ExpressTypes.UserRequest,
@@ -124,6 +167,21 @@ export const logout = catchAsync(
 			status: "success",
 		});
 	}
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        await User.findByIdAndUpdate(req.user?._id, { active: false });
+        const cookieOptions: cookieOptionsType = {
+            httpOnly: true,
+            expires: new Date(Date.now() + 10),
+        };
+        res.cookie('jwt', undefined, cookieOptions);
+        return res.status(200).json({
+            status: 'success',
+        });
+    }
 );
 
 export const isLoggedIn = catchAsync(
@@ -142,6 +200,21 @@ export const isLoggedIn = catchAsync(
 					message: "Not logged in",
 				},
 			});
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        let token: string | undefined;
+        if (req.cookies) token = req.cookies.jwt;
+        if (!token)
+            return res.status(401).json({
+                status: 'fail',
+                isLoggedIn: false,
+                data: {
+                    message: 'Not logged in',
+                },
+            });
 
 		const verifyAsync = promisify(jwt.verify) as (
 			token: string,
@@ -166,6 +239,29 @@ export const isLoggedIn = catchAsync(
 			},
 		});
 	}
+        const verifyAsync = promisify(jwt.verify) as (
+            token: string,
+            secret: string
+        ) => Promise<JwtPayload>;
+        const { id, iat: issuedAt } = await verifyAsync(
+            token,
+            process.env.JWT_SIGN as string
+        );
+        const user = await User.findById(id);
+        if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
+            return res.status(200).json({
+                status: 'fail',
+                isLoggedIn: false,
+            });
+        }
+        return res.status(200).json({
+            status: 'success',
+            isLoggedIn: true,
+            data: {
+                user,
+            },
+        });
+    }
 );
 
 export const signup = catchAsync(
