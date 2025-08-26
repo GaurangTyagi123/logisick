@@ -1,22 +1,13 @@
-import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/appError';
-import jwt, { JwtPayload } from 'jsonwebtoken';
-import User from '../models/user.model';
-import crypto from 'crypto';
-import { promisify } from 'util';
-import { genProfileString } from '../utils/avatarGen';
-import Email from '../utils/sendEmail';
 import catchAsync from "../utils/catchAsync";
 import AppError from "../utils/appError";
 import jwt, { JwtPayload } from "jsonwebtoken";
 import User from "../models/user.model";
 import crypto from "crypto";
 import { promisify } from "util";
-
-import type { StringValue } from 'ms';
-import type { StringValue } from "ms";
 import Email from "../utils/sendEmail";
 import { genProfileString } from "../utils/avatarGen";
+
+import type { StringValue } from "ms";
 
 const signToken = (id: ObjectId) => {
 	const JWTSign = process.env.JWT_SIGN as string;
@@ -44,32 +35,7 @@ const sendNewToken = (
     };
 
     res.cookie('jwt', token, cookieOptions);
-	const token = signToken(user._id);
-	const cookieOptions: cookieOptionsType = {
-		httpOnly: true,
-		expires: new Date(
-			Date.now() +
-				parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
-					24 *
-					60 *
-					60 *
-					1000
-		),
-	};
-	if (process.env.NODE_ENV === "production") {
-		cookieOptions.secure = true;
-	}
-	res.cookie("jwt", token, cookieOptions);
-
-    return res.status(statusCode).json({
-        token,
-        name: user.name,
-        email: user.email,
-        isVerified: user.isVerified,
-        role: user.role,
-        avatar: user.avatar,
-        passwordUpdatedAt: user.passwordUpdatedAt,
-    });
+	
 	return res.status(statusCode).json({
 		status:"success",
 		data: {
@@ -167,21 +133,7 @@ export const logout = catchAsync(
 			status: "success",
 		});
 	}
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        await User.findByIdAndUpdate(req.user?._id, { active: false });
-        const cookieOptions: cookieOptionsType = {
-            httpOnly: true,
-            expires: new Date(Date.now() + 10),
-        };
-        res.cookie('jwt', undefined, cookieOptions);
-        return res.status(200).json({
-            status: 'success',
-        });
-    }
+   
 );
 
 export const isLoggedIn = catchAsync(
