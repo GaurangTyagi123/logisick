@@ -17,7 +17,6 @@ type RegisterForm = {
 };
 
 interface AuthProps {
-	token: string | null;
 	user: User | null;
 	isCheckingAuth: boolean;
 	isLoggingIn: boolean;
@@ -28,22 +27,13 @@ interface AuthProps {
 	logout: () => Promise<void>;
 }
 
-const useAuthStore = create<AuthProps>((set, get) => ({
-	token: (() => {
-		const token = localStorage.getItem("AuthToken");
-		if (token) {
-			return token;
-		} else {
-			return null;
-		}
-	})(),
+const useAuthStore = create<AuthProps>((set) => ({
 	user: null,
 	isCheckingAuth: true,
 	isLoggingIn: false,
 	isRegistering: false,
 	checkAuth: async () => {
 		try {
-			if (!get().token) return;
 			set({ isCheckingAuth: true });
 			const res = await axinstance.get<{
 				status: string;
@@ -68,27 +58,11 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 		try {
 			set({ isLoggingIn: true });
 			const res = await axinstance.post<{
-				token: string;
-				name: string;
-				email: string;
-				isVerified: boolean;
-				role: "admin" | "manager" | "staff";
-				avatar: string;
-				passwordUpdatedAt: Date;
+				status: string;
+				data: { user: User };
 			}>("/v1/auth/login", form);
 
-			const allData = res.data;
-			const user: User = {
-				avatar: allData.avatar,
-				email: allData.email,
-				isVerified: allData.isVerified,
-				name: allData.name,
-				passwordUpdatedAt: allData.passwordUpdatedAt,
-				role: allData.role,
-			};
-
-			set({ user: user, token: res.data.token });
-			localStorage.setItem("AuthToken", res.data.token);
+			set({ user: res.data.data.user });
 			toast.success("LoggedIn Successfully", { className: "toast" });
 		} catch (error) {
 			if (isAxiosError(error)) {
@@ -106,26 +80,11 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 		try {
 			set({ isRegistering: true });
 			const res = await axinstance.post<{
-				token: string;
-				name: string;
-				email: string;
-				isVerified: boolean;
-				role: "admin" | "manager" | "staff";
-				avatar: string;
-				passwordUpdatedAt: Date;
+				status: string;
+				data: { user: User };
 			}>("/v1/auth/signup", form);
 
-			const allData = res.data;
-			const user: User = {
-				avatar: allData.avatar,
-				email: allData.email,
-				isVerified: allData.isVerified,
-				name: allData.name,
-				passwordUpdatedAt: allData.passwordUpdatedAt,
-				role: allData.role,
-			};
-
-			set({ user: user, token: res.data.token });
+			set({ user: res.data.data.user });
 			toast.success("Registered successfully", { className: "toast" });
 		} catch (error) {
 			if (isAxiosError(error)) {
@@ -148,7 +107,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			console.log("Logout", res);
 			const status = res.data.status;
 			if (status === "success") {
-				set({ user: null, token: null });
+				set({ user: null });
 				toast.success("Logged-Out Successfully", {
 					className: "toast",
 				});

@@ -1,10 +1,10 @@
 type User = {
+	_id: string;
 	name: string;
 	email: string;
 	isVerified: boolean;
 	avatar: string;
 	role: "admin" | "manager" | "staff";
-	passwordUpdatedAt: Date;
 };
 
 type Org = {

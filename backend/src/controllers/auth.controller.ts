@@ -38,13 +38,17 @@ const sendNewToken = (
 	res.cookie("jwt", token, cookieOptions);
 
 	return res.status(statusCode).json({
-		token,
-		name: user.name,
-		email: user.email,
-		isVerified: user.isVerified,
-		role: user.role,
-		avatar: user.avatar,
-		passwordUpdatedAt: user.passwordUpdatedAt,
+		status:"success",
+		data: {
+			user: {
+				_id:user._id,
+				name: user.name,
+				email: user.email,
+				isVerified: user.isVerified,
+				role: user.role,
+				avatar: user.avatar,
+			},
+		},
 	});
 };
 
@@ -131,7 +135,7 @@ export const isLoggedIn = catchAsync(
 		let token: string | undefined;
 		if (req.cookies) token = req.cookies?.jwt;
 		if (!token)
-			return res.status(401).json({
+			return res.status(200).json({
 				status: "fail",
 				isLoggedIn: false,
 				data: {
