@@ -36,7 +36,7 @@ const googleSignup = catchAsync(
         res.cookie('jwt', cookieOptions);
 
         // TODO: add url to frontend
-        res.redirect('/');
+        res.redirect('http://localhost:5173/');
     }
 );
 export default googleSignup;

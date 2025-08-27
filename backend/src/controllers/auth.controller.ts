@@ -20,27 +20,27 @@ const sendNewToken = (
 	res: ExpressTypes.Response,
 	statusCode: number
 ) => {
-    const token = signToken(user._id);
-    const cookieOptions: cookieOptionsType = {
-        httpOnly: true,
-        expires: new Date(
-            Date.now() +
-                parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
-                    24 *
-                    60 *
-                    60 *
-                    1000
-        ),
-        secure: process.env.NODE_ENV === 'production',
-    };
+	const token = signToken(user._id);
+	const cookieOptions: cookieOptionsType = {
+		httpOnly: true,
+		expires: new Date(
+			Date.now() +
+				parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
+					24 *
+					60 *
+					60 *
+					1000
+		),
+		secure: process.env.NODE_ENV === "production",
+	};
 
-    res.cookie('jwt', token, cookieOptions);
-	
+	res.cookie("jwt", token, cookieOptions);
+
 	return res.status(statusCode).json({
-		status:"success",
+		status: "success",
 		data: {
 			user: {
-				_id:user._id,
+				_id: user._id,
 				name: user.name,
 				email: user.email,
 				isVerified: user.isVerified,
@@ -51,15 +51,15 @@ const sendNewToken = (
 	});
 };
 export const restrictTo = (...roles: string[]) => {
-    return (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { role } = req.user as UserType;
-        if (roles.includes(role as string)) return next();
-        return next(new AppError('You are not authorized', 401));
-    };
+	return (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { role } = req.user as UserType;
+		if (roles.includes(role as string)) return next();
+		return next(new AppError("You are not authorized", 401));
+	};
 };
 export const protect = catchAsync(
 	async (
@@ -107,6 +107,7 @@ export const login = catchAsync(
 				new AppError("Please provide a valid email and password", 400)
 			);
 		const user = await User.findOne({ email }).select("+password");
+		
 		if (
 			!user ||
 			!(await user.comparePasswords(password, user.password as string))
@@ -123,7 +124,7 @@ export const logout = catchAsync(
 		res: ExpressTypes.Response,
 		next: ExpressTypes.NextFn
 	) => {
-		await User.findByIdAndUpdate(req.user?._id, { active: false });
+		await User.findByIdAndUpdate(req.user?._id);
 		const cookieOptions: cookieOptionsType = {
 			httpOnly: true,
 			expires: new Date(Date.now() + 10),
@@ -133,7 +134,6 @@ export const logout = catchAsync(
 			status: "success",
 		});
 	}
-   
 );
 
 export const isLoggedIn = catchAsync(
@@ -152,22 +152,7 @@ export const isLoggedIn = catchAsync(
 					message: "Not logged in",
 				},
 			});
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        let token: string | undefined;
-        if (req.cookies) token = req.cookies.jwt;
-        if (!token)
-            return res.status(401).json({
-                status: 'fail',
-                isLoggedIn: false,
-                data: {
-                    message: 'Not logged in',
-                },
-            });
-
+		
 		const verifyAsync = promisify(jwt.verify) as (
 			token: string,
 			secret: string
@@ -191,29 +176,6 @@ export const isLoggedIn = catchAsync(
 			},
 		});
 	}
-        const verifyAsync = promisify(jwt.verify) as (
-            token: string,
-            secret: string
-        ) => Promise<JwtPayload>;
-        const { id, iat: issuedAt } = await verifyAsync(
-            token,
-            process.env.JWT_SIGN as string
-        );
-        const user = await User.findById(id);
-        if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
-            return res.status(200).json({
-                status: 'fail',
-                isLoggedIn: false,
-            });
-        }
-        return res.status(200).json({
-            status: 'success',
-            isLoggedIn: true,
-            data: {
-                user,
-            },
-        });
-    }
 );
 
 export const signup = catchAsync(

@@ -1,62 +1,59 @@
 // IMP Express Types
 namespace ExpressTypes {
-    type Request = import('express').Request;
-    type Response = import('express').Response;
-    type NextFn = import('express').NextFn;
+	type Request = import("express").Request;
+	type Response = import("express").Response;
+	type NextFn = import("express").NextFn;
 
-    interface UserRequest extends Request {
-        user?: UserType;
-    }
-    interface OAuthUser extends Express.User {
-        user?: UserType;
-    }
+	interface UserRequest extends Request {
+		user?: UserType;
+	}
+	interface OAuthUser extends Express.User {
+		user?: UserType;
+	}
 }
 
 // type declaration for http-only cookie
 declare type cookieOptionsType = {
-    httpOnly: boolean;
-    expires: Date;
-    secure?: boolean;
+	httpOnly: boolean;
+	expires: Date;
+	secure?: boolean;
 };
 
 // Types declaration for mongoose
-type MongooseDocument = import('mongoose').Document;
-declare type ObjectId = import('mongoose').Types.ObjectId;
+type MongooseDocument = import("mongoose").Document;
+declare type ObjectId = import("mongoose").Types.ObjectId;
 
 // Type declaration for User Model
 declare interface UserType extends MongooseDocument {
-    _id: ObjectId;
-    googleId?: string;
-    name: string;
-    email: string;
-    isVerified: boolean;
-    otp?: string | undefined;
+	_id: ObjectId;
+	googleId?: string;
+	name: string;
+	email: string;
+	isVerified: boolean;
+	otp?: string | undefined;
 
-    password?: string;
-    confirmPassword?: string | undefined;
-    passwordUpdatedAt?: Date | undefined;
-    resetPasswordToken?: string | undefined;
-    resetTokenExpireTime?: number | undefined;
-    refreshToken?: string | undefined;
+	password?: string;
+	confirmPassword?: string | undefined;
+	passwordUpdatedAt?: Date | undefined;
+	resetPasswordToken?: string | undefined;
+	resetTokenExpireTime?: number | undefined;
+	refreshToken?: string | undefined;
 
-    avatar?: string;
-    role?: string;
-    org?: ObjectId;
+	avatar?: string;
+	role?: string;
+	org?: ObjectId;
 
-    comparePasswords: (
-        candidatePassword: string,
-        actualPassword: string
-    ) => Promise;
-    createPasswordResetToken: () => string;
-    passwordUpdatedAfter: (issuedTimeStamp: number) => boolean;
-    active: boolean;
+	comparePasswords: (actualPassword: string, hashPassword: string) => Promise;
+	createPasswordResetToken: () => string;
+	passwordUpdatedAfter: (issuedTimeStamp: number) => boolean;
+	active: boolean;
 }
 
 // Type declaration for Organization Model
 declare interface OrgType {
-    _id: ObjectId;
-    name: string;
-    description: string;
-    type: string;
-    admin: ObjectId;
+	_id: ObjectId;
+	name: string;
+	description: string;
+	type: string;
+	admin: ObjectId;
 }

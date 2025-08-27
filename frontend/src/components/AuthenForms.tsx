@@ -331,7 +331,15 @@ export function Register({ setFormType }: FormProps) {
 				Already have an Account?
 			</Button>
 			<Separator />
-			<Button>
+			<Button
+				onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+					e.stopPropagation();
+					const server = window.location.hostname;
+					const protocol = window.location.protocol;
+					const port =  8000;
+					window.location.href = `${protocol}//${server}:${port}/auth/google`;
+				}}
+			>
 				<Google />
 				<span>Register with Google account</span>
 			</Button>

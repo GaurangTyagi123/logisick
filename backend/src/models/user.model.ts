@@ -94,10 +94,10 @@ userSchema.methods.createPasswordResetToken = function (this: UserType) {
     return resetToken;
 };
 userSchema.methods.comparePasswords = async function (
-    candidatePassword: string,
-    actualPassword: string
+    actualPassword: string,
+    hashPassword: string
 ) {
-    return await bcryptjs.compare(candidatePassword, actualPassword);
+    return await bcryptjs.compare(actualPassword, hashPassword);
 };
 userSchema.methods.passwordUpdatedAfter = function (issuedTimeStamp: number) {
     if (this.passwordUpdatedAt) {
