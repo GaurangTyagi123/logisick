@@ -18,16 +18,16 @@ app.use(morgan("dev"));
 app.use(helmet({ hidePoweredBy: true, noSniff: true, xssFilter: true }));
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 
-app.use(
-	(
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		console.log(req.cookies);
-		next();
-	}
-);
+// app.use(
+// 	(
+// 		req: ExpressTypes.Request,
+// 		res: ExpressTypes.Response,
+// 		next: ExpressTypes.NextFn
+// 	) => {
+// 		console.log(req.cookies);
+// 		next();
+// 	}
+// );
 
 app.use("/api/v1/auth", authRouter);
 app.use("/auth", oauthRouter);

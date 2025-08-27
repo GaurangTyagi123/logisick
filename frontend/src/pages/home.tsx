@@ -1,29 +1,15 @@
 import useModeStore from "@/stores/useModeStore";
-import ThemeToggle from "../components/ThemeToggle";
 import clsx from "clsx";
 import Button from "@/components/ui/button";
-import { useNavigate } from "react-router-dom";
 import { Separator } from "@/components/ui/separator";
 
-import { Menu } from "@/assets/icons/HamBurger";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import BigHeading from "@/components/BigHeading";
-import useAuthStore from "@/stores/useAuthStore";
-import UserButton from "@/components/UserButton";
+import Navbar from "@/components/navbar";
 
 function Home() {
 	const isDark = useModeStore().getTheme() === "dark";
-	const navigate = useNavigate();
-	const { user } = useAuthStore();
 	return (
 		<div
 			className={clsx(
@@ -32,34 +18,7 @@ function Home() {
 			)}
 		>
 			{/* topbar */}
-			<div className="flex justify-end gap-2">
-				{/* option menu in small screens */}
-				<DropdownMenu>
-					<DropdownMenuTrigger className="md:hidden mr-auto ">
-						<Button asChild className="w-full">
-							<Menu />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuLabel>Options</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>Product</DropdownMenuItem>
-						<DropdownMenuItem>Community</DropdownMenuItem>
-						<DropdownMenuItem>Docs</DropdownMenuItem>
-						<DropdownMenuItem>Pricing</DropdownMenuItem>
-						<DropdownMenuItem>Contact</DropdownMenuItem>
-						<DropdownMenuItem>Link</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-				{user ? (
-					<UserButton />
-				) : (
-					<Button onClick={() => navigate("/authenticate")}>
-						Login/Register
-					</Button>
-				)}
-				<ThemeToggle />
-			</div>
+			<Navbar />
 			{/* tabs bar */}
 			<div className="flex flex-col justify-between gap-2 mt-4 md:mt-0">
 				<BigHeading />
