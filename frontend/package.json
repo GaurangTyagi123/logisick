@@ -24,6 +24,7 @@
 		"dist:linux": "npm run dist:help && electron-builder --linux --x64 --config electron-builder.json"
 	},
 	"dependencies": {
+		"@radix-ui/react-dialog": "^1.1.15",
 		"@radix-ui/react-dropdown-menu": "^2.1.16",
 		"@radix-ui/react-label": "^2.1.7",
 		"@radix-ui/react-popover": "^1.1.15",

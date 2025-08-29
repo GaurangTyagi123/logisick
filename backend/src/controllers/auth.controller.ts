@@ -46,6 +46,8 @@ const sendNewToken = (
 				isVerified: user.isVerified,
 				role: user.role,
 				avatar: user.avatar,
+				createdAt: user.createdAt,
+				updatedAt: user.updatedAt,
 			},
 		},
 	});
@@ -107,7 +109,7 @@ export const login = catchAsync(
 				new AppError("Please provide a valid email and password", 400)
 			);
 		const user = await User.findOne({ email }).select("+password");
-		
+
 		if (
 			!user ||
 			!(await user.comparePasswords(password, user.password as string))
@@ -152,7 +154,7 @@ export const isLoggedIn = catchAsync(
 					message: "Not logged in",
 				},
 			});
-		
+
 		const verifyAsync = promisify(jwt.verify) as (
 			token: string,
 			secret: string

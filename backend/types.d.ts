@@ -47,6 +47,9 @@ declare interface UserType extends MongooseDocument {
 	createPasswordResetToken: () => string;
 	passwordUpdatedAfter: (issuedTimeStamp: number) => boolean;
 	active: boolean;
+
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 // Type declaration for Organization Model

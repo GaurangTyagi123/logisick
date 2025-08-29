@@ -5,6 +5,8 @@ type User = {
 	isVerified: boolean;
 	avatar: string;
 	role: "admin" | "manager" | "staff";
+	createdAt:string;
+	updatedAt:string
 };
 
 type Org = {
