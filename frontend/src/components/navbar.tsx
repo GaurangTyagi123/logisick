@@ -16,7 +16,6 @@ import { useLocation, useNavigate } from "react-router-dom";
 function Navbar() {
 	const { user } = useAuthStore();
 	const navigate = useNavigate();
-	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 	const dropdownHidden = useLocation().pathname === "/";
 
 	return (
@@ -42,9 +41,8 @@ function Navbar() {
 				</DropdownMenu>
 			)}
 			{/* UserButton */}
-			{user ? (
-				!userButtonHidden && <UserButton />
-			) : (
+			<UserButton/>
+			{(!user &&
 				<Button onClick={() => navigate("/authenticate")}>
 					Login/Register
 				</Button>

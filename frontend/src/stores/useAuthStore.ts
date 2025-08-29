@@ -16,22 +16,31 @@ type RegisterForm = {
 	confirmPassword: string;
 };
 
+type EmailForm = {
+	otp?: string;
+};
+
 interface AuthProps {
 	user: User | null;
 	isCheckingAuth: boolean;
 	isLoggingIn: boolean;
 	isRegistering: boolean;
+	isVerifingEmail: boolean;
 	checkAuth: () => Promise<void>;
 	login: (form: LoginForm) => Promise<void>;
 	register: (form: RegisterForm) => Promise<void>;
 	logout: () => Promise<void>;
+	verifyEmail: (
+		form: EmailForm
+	) => Promise<"already" | "sent" | "verified" | undefined>;
 }
 
-const useAuthStore = create<AuthProps>((set) => ({
+const useAuthStore = create<AuthProps>((set, get) => ({
 	user: null,
 	isCheckingAuth: true,
 	isLoggingIn: false,
 	isRegistering: false,
+	isVerifingEmail: false,
 	checkAuth: async () => {
 		try {
 			set({ isCheckingAuth: true });
@@ -124,6 +133,44 @@ const useAuthStore = create<AuthProps>((set) => ({
 			} else {
 				console.log(error);
 			}
+		}
+	},
+	verifyEmail: async (form) => {
+		try {
+			set({ isVerifingEmail: true });
+			const res = await axinstance.post<{
+				status: string;
+				data: { message: string };
+			}>("/v1/auth/verifyEmail", form);
+			if (res.data.data.message.toLowerCase().includes("already")) {
+				set({ isVerifingEmail: false });
+				toast.success(res.data.data.message, { className: "toast" });
+				return "already";
+			} else if (res.data.data.message.toLowerCase().includes("sent")) {
+				set({ isVerifingEmail: false });
+				toast.success(res.data.data.message, { className: "toast" });
+				return "sent";
+			} else if (
+				res.data.data.message.toLowerCase().includes("successfully")
+			) {
+				set({
+					isVerifingEmail: false,
+					user: { ...(get().user as User), isVerified: true },
+				});
+				toast.success(res.data.data.message, { className: "toast" });
+				return "verified";
+			}
+		} catch (error) {
+			if (isAxiosError(error)) {
+				const msg =
+					error.response?.data?.message || "Error verifing email";
+				console.log(msg);
+				toast.error(msg, { className: "toast" });
+			} else {
+				console.log(error);
+			}
+		} finally {
+			set({ isVerifingEmail: false });
 		}
 	},
 }));

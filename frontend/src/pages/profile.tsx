@@ -1,23 +1,33 @@
 import Dice from "@/assets/icons/Dice";
 import { Edit } from "@/assets/icons/Edit";
+import { Hint } from "@/assets/icons/Hint";
 import { Verified } from "@/assets/icons/Verified";
 import UserAvatar from "@/components/avatar";
+import Modal from "@/components/Modal";
 import Navbar from "@/components/navbar";
 import Button from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import {
+	InputOTP,
+	InputOTPGroup,
+	InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { H2, H4, Large, Lead } from "@/components/ui/Typography";
 import useAuthStore from "@/stores/useAuthStore";
 import useModeStore from "@/stores/useModeStore";
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 function Profile() {
 	// const userId = useParams().userId || "Default User";
 	const isDark = useModeStore().getTheme() == "dark";
-	const { user } = useAuthStore();
-	const [openModal, setOpenModal] = useState<boolean>(false);
+	const { user, verifyEmail, isVerifingEmail } = useAuthStore();
+	const [open1, setOpen1] = useState<boolean>(false);
+	const [open2, setOpen2] = useState<boolean>(false);
 	const [modalPic, setModalPic] = useState<string>(user?.avatar || "");
+	const [otp, setOtp] = useState<string>("");
 
 	if (!user) <Navigate to={"/"} />;
 
@@ -32,8 +42,46 @@ function Profile() {
 	}
 
 	function handleProfilePicChange() {
-		setOpenModal(false);
+		setOpen1(false);
 	}
+
+	async function handleVerifyEmail() {
+		if (otp.trim() !== "" && otp.length === 4) {
+			const res = await verifyEmail({ otp });
+			if (res == "verified") {
+				setOpen2(false);
+			}
+		} else {
+			toast.error("Invalid OTP", { className: "toast" });
+		}
+		setOpen2(false)
+	}
+
+	useEffect(() => {
+		if (!user?.isVerified) {
+			const warning = toast.warning(
+				<div className="grid h-auto">
+					Your Email is not verified
+					<Button
+						variant={"default"}
+						disabled={isVerifingEmail}
+						onClick={async () => {
+							const res = await verifyEmail({});
+							if (res == "sent") {
+								setOpen2(true);
+								setOtp("");
+							}
+							toast.dismiss(warning);
+						}}
+					>
+						Click to Verify
+					</Button>
+				</div>,
+				{ className: "toast" }
+			);
+		}
+		return toast.dismiss;
+	}, []);
 
 	return (
 		<div
@@ -59,7 +107,7 @@ function Profile() {
 						size={"sm"}
 						className="absolute right-2 bottom-2 rounded-full"
 						onClick={() => {
-							setOpenModal(true);
+							setOpen1(true);
 							setModalPic(user?.avatar || "12345678");
 						}}
 					>
@@ -70,7 +118,25 @@ function Profile() {
 					<div className="flex flex-col">
 						<div className="flex gap-2 flex-row justify-center md:justify-start items-center">
 							<H2 className="pb-0">{user?.name}</H2>
-							{user?.isVerified && <Verified />}
+							{user?.isVerified ? (
+								<Verified />
+							) : (
+								<Button
+									variant={"ghost"}
+									disabled={isVerifingEmail}
+									title="verify your email"
+									className="grid place-items-center p-0"
+									onClick={async () => {
+										const res = await verifyEmail({});
+										if (res == "sent") {
+											setOpen2(true);
+											setOtp("");
+										}
+									}}
+								>
+									<Hint className="h-full w-full" />
+								</Button>
+							)}
 						</div>
 						<Large className="text-center md:text-start">
 							{user?.email}
@@ -82,14 +148,8 @@ function Profile() {
 					</Lead>
 				</div>
 			</div>
-			{/* modal */}
-			<div
-				style={{ backgroundColor: "#00000088" }}
-				className={clsx(
-					"h-screen w-full absolute place-items-center",
-					openModal ? "grid" : "hidden"
-				)}
-			>
+			{/* profile-change modal */}
+			<Modal openModal={open1}>
 				<div
 					className={clsx(
 						"max-w-3xl min-w-md p-4 rounded-2xl flex flex-col gap-2",
@@ -98,7 +158,7 @@ function Profile() {
 				>
 					<span className="flex justify-between items-center">
 						<H4>Change Profile Picture</H4>
-						<Button onClick={() => setOpenModal(false)}>X</Button>
+						<Button onClick={() => setOpen1(false)}>X</Button>
 					</span>
 					<div className="grid place-items-center gap-2">
 						<UserAvatar
@@ -135,7 +195,40 @@ function Profile() {
 						</Button>
 					</div>
 				</div>
-			</div>
+			</Modal>
+			{/* otp modal */}
+			<Modal openModal={open2}>
+				<div
+					className={clsx(
+						"max-w-3xl min-w-md p-4 rounded-2xl flex flex-col gap-2 items-center",
+						isDark ? "bg-zinc-700" : "bg-zinc-300"
+					)}
+				>
+					<span className="flex justify-between items-center w-full">
+						<H4>Verify Email</H4>
+						<Button onClick={() => setOpen2(false)}>X</Button>
+					</span>
+					<InputOTP
+						maxLength={4}
+						value={otp}
+						onChange={(value) => setOtp(value)}
+					>
+						<InputOTPGroup>
+							<InputOTPSlot index={0} />
+							<InputOTPSlot index={1} />
+							<InputOTPSlot index={2} />
+							<InputOTPSlot index={3} />
+						</InputOTPGroup>
+					</InputOTP>
+					<Button
+						type="button"
+						onClick={handleVerifyEmail}
+						disabled={isVerifingEmail}
+					>
+						Submit
+					</Button>
+				</div>
+			</Modal>
 		</div>
 	);
 }

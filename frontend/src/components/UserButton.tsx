@@ -6,13 +6,14 @@ import {
 	DropdownMenuItem,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Button from "./ui/button";
 import type React from "react";
 
 function UserButton() {
-	const { user, logout } = useAuthStore();
+	const { user, logout, } = useAuthStore();
 	const navigate = useNavigate();
+	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 
 	function handleLogout(e: React.MouseEvent<HTMLDivElement>) {
 		e.stopPropagation();
@@ -31,9 +32,11 @@ function UserButton() {
 				</Button>
 			</DropdownMenuTrigger>
 			<DropdownMenuContent>
-				<DropdownMenuItem onClick={() => navigate(`/profile`)}>
-					Profile
-				</DropdownMenuItem>
+				{!userButtonHidden && (
+					<DropdownMenuItem onClick={() => navigate(`/profile`)}>
+						Profile
+					</DropdownMenuItem>
+				)}
 				<DropdownMenuItem onClick={handleLogout}>
 					Logout
 				</DropdownMenuItem>
