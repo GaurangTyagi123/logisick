@@ -52,6 +52,7 @@ const sendNewToken = (
 		},
 	});
 };
+
 export const restrictTo = (...roles: string[]) => {
     return (
         req: ExpressTypes.Request,
@@ -362,6 +363,7 @@ export const resetPassword = catchAsync(
         sendNewToken(user, res, 200);
     }
 );
+
 export const updatePassword = catchAsync(
     async (
         req: ExpressTypes.UserRequest,

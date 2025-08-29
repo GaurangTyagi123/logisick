@@ -1,5 +1,4 @@
-import { Star } from "@/assets/icons/Star";
-import { BookOpen } from "@/assets/icons/BookOpen";
+import { BookOpen, Star } from "@/assets/icons/homepage";
 import Button from "./ui/button";
 import illus from "@/assets/illus.svg";
 import HexBox from "./HexBox";

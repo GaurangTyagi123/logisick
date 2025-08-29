@@ -1,7 +1,4 @@
-import Dice from "@/assets/icons/Dice";
-import { Edit } from "@/assets/icons/Edit";
-import { Hint } from "@/assets/icons/Hint";
-import { Verified } from "@/assets/icons/Verified";
+import { Verified, Hint, Edit, Dice } from "@/assets/icons/profilepage";
 import UserAvatar from "@/components/avatar";
 import Modal from "@/components/Modal";
 import Navbar from "@/components/navbar";
@@ -54,7 +51,7 @@ function Profile() {
 		} else {
 			toast.error("Invalid OTP", { className: "toast" });
 		}
-		setOpen2(false)
+		setOpen2(false);
 	}
 
 	useEffect(() => {
