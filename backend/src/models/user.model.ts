@@ -21,6 +21,7 @@ const userSchema = new Schema(
 			default: false,
 		},
 		otp: String,
+		otpExpireTime: Date,
 		password: {
 			type: String,
 			min: 8,
@@ -36,7 +37,10 @@ const userSchema = new Schema(
 				},
 			},
 		},
-		passwordUpdatedAt: Date,
+		passwordUpdatedAt: {
+			type: Date,
+			select: false,
+		},
 		resetPasswordToken: String,
 		resetTokenExpireTime: Date,
 		refreshToken: String,
