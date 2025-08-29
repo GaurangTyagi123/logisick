@@ -24,6 +24,7 @@ const userSchema = new Schema({
         default: false,
     },
     otp: String,
+    otpExpireTime : Date,
     password: {
         type: String,
         min: 8,

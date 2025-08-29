@@ -31,6 +31,7 @@ declare interface UserType extends MongooseDocument {
 	email: string;
 	isVerified: boolean;
 	otp?: string | undefined;
+	otpExpireTime?: string | undefined;
 
 	password?: string;
 	confirmPassword?: string | undefined;
