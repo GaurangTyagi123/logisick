@@ -218,9 +218,9 @@ export const verifyEmail = catchAsync(
             });
         else if (isOtpGen && userOtp) {
             const user = await User.findOne({
-                otp:userOtp,
+                otp: userOtp,
                 otpExpireTime: { $gte: Date.now() },
-			});
+            });
             if (!user) {
                 const unverifiedUser = await User.findById(req.user?._id);
                 unverifiedUser!.otp = undefined;
@@ -230,6 +230,7 @@ export const verifyEmail = catchAsync(
             }
 
             user!.isVerified = true;
+            user!.otpExpireTime = undefined;
             user!.otp = undefined;
             await user!.save({ validateBeforeSave: false });
 
@@ -287,6 +288,7 @@ export const forgotPassword = catchAsync(
         const resetToken = user.createPasswordResetToken();
         await user.save({ validateBeforeSave: false });
 
+        // TODO: update this url to point to the frontend
         const url = `${req.protocol}//${req.host}/api/v1/auth/resetPassword/${resetToken}`;
         try {
             await new Email(
@@ -356,5 +358,30 @@ export const resetPassword = catchAsync(
 
         await user.save();
         sendNewToken(user, res, 200);
+    }
+);
+export const updatePassword = catchAsync(
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const password = req.body.password;
+        const confirmPassword = req.body.confirmPassword;
+        if (!password || !confirmPassword)
+            return next(new AppError('Please provide a valid password', 400));
+
+        const user = await User.findById(req.user?._id);
+        user!.password = password;
+        user!.confirmPassword = confirmPassword;
+        await user!.save();
+
+        user!.password = undefined;
+        return res.status(200).json({
+            status: 'success',
+            data: {
+                user,
+            },
+        });
     }
 );

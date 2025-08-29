@@ -5,16 +5,20 @@ import {
     getUsers,
     updateUser,
 } from '../controllers/user.controller';
-import { protect, restrictTo } from '../controllers/auth.controller';
+import {
+    protect,
+    restrictTo,
+    updatePassword,
+} from '../controllers/auth.controller';
 
 const userRouter = Router();
 
+userRouter.route('/').get(protect, restrictTo('admin'), getUsers);
 userRouter
-    .route('/')
-    .get(protect, restrictTo('admin'), getUsers)
+    .route('/updateMe')
     .post(protect, updateUser)
     .delete(protect, deleteUser);
-    
+userRouter.post('/updatePassword',protect, updatePassword);
 userRouter.route('/:id').get(protect, restrictTo('admin'), getUser);
 
 export default userRouter;

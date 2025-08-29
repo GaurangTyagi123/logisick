@@ -38,6 +38,7 @@ class Email {
         };
         await this.newTransport().sendMail(sendOptions);
     }
+    // TODO: Promisify readFileSync
     public async sendVerification() {
         const verificationHtml = readFileSync(
             path.join(__dirname, 'emailTemplates', 'verification.html'),
@@ -48,7 +49,8 @@ class Email {
             user_name: this.user.userName,
             otp_code: this.user.otp,
             otp_expire_time: 10,
-            support_email : 'ravishranjan2003@gmail.com',
+            verify_url: 'https://localhost:5173/otp',
+            support_email: 'ravishranjan2003@gmail.com',
             year: new Date().getFullYear(),
         };
         const template = Handlebars.compile(verificationHtml)(options);
@@ -63,8 +65,8 @@ class Email {
         const options = {
             brand_name: 'LogiSick',
             user_name: this.user.userName,
-            reset_url : this.url,
-            support_email : 'ravishranjan2003@gmail.com',
+            reset_url: this.url,
+            support_email: 'ravishranjan2003@gmail.com',
             year: new Date().getFullYear(),
         };
         const template = Handlebars.compile(verificationHtml)(options);
