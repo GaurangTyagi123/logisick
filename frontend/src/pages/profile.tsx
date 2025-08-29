@@ -1,4 +1,4 @@
-import Dice from "@/assets/icons/dice";
+import Dice from "@/assets/icons/Dice";
 import { Edit } from "@/assets/icons/Edit";
 import { Verified } from "@/assets/icons/Verified";
 import UserAvatar from "@/components/avatar";
