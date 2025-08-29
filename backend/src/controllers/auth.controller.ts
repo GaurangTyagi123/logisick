@@ -36,19 +36,21 @@ const sendNewToken = (
 
     res.cookie('jwt', token, cookieOptions);
 
-    return res.status(statusCode).json({
-        status: 'success',
-        data: {
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                isVerified: user.isVerified,
-                role: user.role,
-                avatar: user.avatar,
-            },
-        },
-    });
+	return res.status(statusCode).json({
+		status: "success",
+		data: {
+			user: {
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				isVerified: user.isVerified,
+				role: user.role,
+				avatar: user.avatar,
+				createdAt: user.createdAt,
+				updatedAt: user.updatedAt,
+			},
+		},
+	});
 };
 export const restrictTo = (...roles: string[]) => {
     return (
@@ -96,23 +98,23 @@ export const protect = catchAsync(
 );
 
 export const login = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { email, password } = req.body;
-        if (!email || !password)
-            return next(
-                new AppError('Please provide a valid email and password', 400)
-            );
-        const user = await User.findOne({ email }).select('+password');
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { email, password } = req.body;
+		if (!email || !password)
+			return next(
+				new AppError("Please provide a valid email and password", 400)
+			);
+		const user = await User.findOne({ email }).select("+password");
 
-        if (
-            !user ||
-            !(await user.comparePasswords(password, user.password as string))
-        )
-            return next(new AppError('No such user exists', 401));
+		if (
+			!user ||
+			!(await user.comparePasswords(password, user.password as string))
+		)
+			return next(new AppError("No such user exists", 401));
 
         sendNewToken(user, res, 200);
     }
@@ -137,45 +139,45 @@ export const logout = catchAsync(
 );
 
 export const isLoggedIn = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        let token: string | undefined;
-        if (req.cookies) token = req.cookies?.jwt;
-        if (!token)
-            return res.status(200).json({
-                status: 'fail',
-                isLoggedIn: false,
-                data: {
-                    message: 'Not logged in',
-                },
-            });
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		let token: string | undefined;
+		if (req.cookies) token = req.cookies?.jwt;
+		if (!token)
+			return res.status(200).json({
+				status: "fail",
+				isLoggedIn: false,
+				data: {
+					message: "Not logged in",
+				},
+			});
 
-        const verifyAsync = promisify(jwt.verify) as (
-            token: string,
-            secret: string
-        ) => Promise<JwtPayload>;
-        const { id, iat: issuedAt } = await verifyAsync(
-            token,
-            process.env.JWT_SIGN as string
-        );
-        const user = await User.findById(id);
-        if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
-            return res.status(200).json({
-                status: 'fail',
-                isLoggedIn: false,
-            });
-        }
-        return res.status(200).json({
-            status: 'success',
-            isLoggedIn: true,
-            data: {
-                user,
-            },
-        });
-    }
+		const verifyAsync = promisify(jwt.verify) as (
+			token: string,
+			secret: string
+		) => Promise<JwtPayload>;
+		const { id, iat: issuedAt } = await verifyAsync(
+			token,
+			process.env.JWT_SIGN as string
+		);
+		const user = await User.findById(id);
+		if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
+			return res.status(200).json({
+				status: "fail",
+				isLoggedIn: false,
+			});
+		}
+		return res.status(200).json({
+			status: "success",
+			isLoggedIn: true,
+			data: {
+				user,
+			},
+		});
+	}
 );
 
 export const signup = catchAsync(
