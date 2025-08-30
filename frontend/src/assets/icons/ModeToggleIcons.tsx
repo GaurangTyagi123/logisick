@@ -133,7 +133,6 @@ export function Sun(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
-
 export function Moon(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -292,7 +291,6 @@ export function Moon(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
-
 export function System(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

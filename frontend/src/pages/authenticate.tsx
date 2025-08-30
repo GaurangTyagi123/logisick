@@ -1,10 +1,10 @@
 import BigHeading from "@/components/BigHeading";
-import ThemeToggle from "@/components/ThemeToggle";
 import useModeStore from "@/stores/useModeStore";
 import { Login, Register } from "@/components/AuthenForms";
 
 import clsx from "clsx";
 import { useState } from "react";
+import Navbar from "@/components/Navbar";
 
 function Authenticate() {
 	const isDark = useModeStore().getTheme() === "dark";
@@ -12,13 +12,16 @@ function Authenticate() {
 	return (
 		<div
 			className={clsx(
-				"w-full p-4 flex flex-col h-auto min-h-screen",
+				"w-full px-4 flex flex-col h-auto min-h-screen",
 				isDark ? "bg-zinc-900" : ""
 			)}
 		>
-			<div className="flex justify-end gap-2">
-				<ThemeToggle />
-			</div>
+			<Navbar
+				hide={{
+					logo: true,
+					loginRegisterButton: true,
+				}}
+			/>
 			<BigHeading />
 			<div className="grid p-4 place-items-center">
 				{formType === "login" ? (
