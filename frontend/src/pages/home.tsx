@@ -6,14 +6,14 @@ import { Separator } from "@/components/ui/separator";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import BigHeading from "@/components/BigHeading";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
 
 function Home() {
 	const isDark = useModeStore().getTheme() === "dark";
 	return (
 		<div
 			className={clsx(
-				"w-full p-4 grid gap-3 h-auto",
+				"w-full px-4 grid gap-3 h-auto",
 				isDark ? "bg-zinc-900" : ""
 			)}
 		>

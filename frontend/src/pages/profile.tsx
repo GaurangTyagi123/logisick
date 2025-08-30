@@ -1,26 +1,36 @@
+import { Close } from "@/assets/icons/Close";
 import { Verified, Hint, Edit, Dice } from "@/assets/icons/profilepage";
 import UserAvatar from "@/components/avatar";
 import Modal from "@/components/Modal";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import {
 	InputOTP,
 	InputOTPGroup,
 	InputOTPSlot,
 } from "@/components/ui/input-otp";
-import { H2, H4, Large, Lead } from "@/components/ui/Typography";
+import { H2, Large, Lead } from "@/components/ui/Typography";
 import useAuthStore from "@/stores/useAuthStore";
 import useModeStore from "@/stores/useModeStore";
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { Navigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 function Profile() {
 	// const userId = useParams().userId || "Default User";
 	const isDark = useModeStore().getTheme() == "dark";
-	const { user, verifyEmail, isVerifingEmail } = useAuthStore();
+	const { user, verifyEmail, isVerifingEmail, isUpdatingUser, updateUser } =
+		useAuthStore();
 	const [open1, setOpen1] = useState<boolean>(false);
 	const [open2, setOpen2] = useState<boolean>(false);
 	const [modalPic, setModalPic] = useState<string>(user?.avatar || "");
@@ -39,7 +49,14 @@ function Profile() {
 	}
 
 	function handleProfilePicChange() {
-		setOpen1(false);
+		if (modalPic.length > 0 && modalPic !== user?.avatar) {
+			updateUser({ avatar: modalPic });
+			setOpen1(false);
+		} else {
+			toast.error("Changed avatar can't be same or empty", {
+				className: "toast",
+			});
+		}
 	}
 
 	async function handleVerifyEmail() {
@@ -78,12 +95,12 @@ function Profile() {
 			);
 		}
 		return toast.dismiss;
-	}, []);
+	}, [isVerifingEmail, user?.isVerified, verifyEmail]);
 
 	return (
 		<div
 			className={clsx(
-				"w-full p-4 h-auto min-h-screen flex flex-col gap-2 items-center relative",
+				"w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative",
 				isDark ? "bg-zinc-900" : ""
 			)}
 		>
@@ -92,13 +109,13 @@ function Profile() {
 			<div
 				className={clsx(
 					"max-w-6xl p-4 w-full grid place-items-center md:flex gap-2 rounded-2xl shadow-2xl",
-					isDark ? "bg-zinc-700" : "bg-gray-300"
+					isDark ? "bg-zinc-700" : "bg-zinc-300"
 				)}
 			>
 				<div className="w-40 h-40 grid place-items-center relative">
 					<UserAvatar
 						customSeed={user?.avatar || "12345678"}
-						className="w-40 h-40"
+						className="w-40 h-40 ring-2 ring-offset-2"
 					/>
 					<Button
 						size={"sm"}
@@ -147,17 +164,17 @@ function Profile() {
 			</div>
 			{/* profile-change modal */}
 			<Modal openModal={open1}>
-				<div
-					className={clsx(
-						"max-w-3xl min-w-md p-4 rounded-2xl flex flex-col gap-2",
-						isDark ? "bg-zinc-700" : "bg-zinc-300"
-					)}
-				>
-					<span className="flex justify-between items-center">
-						<H4>Change Profile Picture</H4>
-						<Button onClick={() => setOpen1(false)}>X</Button>
-					</span>
-					<div className="grid place-items-center gap-2">
+				<Card className="min-w-md">
+					<CardHeader className="flex justify-between items-center">
+						<CardTitle>Change Profile Picture</CardTitle>
+						<Button
+							onClick={() => setOpen1(false)}
+							variant={"ghost"}
+						>
+							<Close />
+						</Button>
+					</CardHeader>
+					<CardContent className="flex flex-col gap-2 items-center">
 						<UserAvatar
 							customSeed={modalPic}
 							className="w-40 h-40"
@@ -167,7 +184,7 @@ function Profile() {
 								type="text"
 								autoFocus
 								value={modalPic}
-								className="text-lg font-semibold text-center"
+								className="text-lg font-semibold text-center bg-accent"
 								onChange={(e) =>
 									setModalPic(e.target.value.trim())
 								}
@@ -184,47 +201,53 @@ function Profile() {
 								<Dice className="h-9 w-9" />
 							</Button>
 						</div>
+					</CardContent>
+					<CardFooter>
 						<Button
-							className="front-semibold"
+							className="front-semibold w-full"
 							onClick={handleProfilePicChange}
+							disabled={isUpdatingUser}
 						>
 							Seems Good!
 						</Button>
-					</div>
-				</div>
+					</CardFooter>
+				</Card>
 			</Modal>
 			{/* otp modal */}
 			<Modal openModal={open2}>
-				<div
-					className={clsx(
-						"max-w-3xl min-w-md p-4 rounded-2xl flex flex-col gap-2 items-center",
-						isDark ? "bg-zinc-700" : "bg-zinc-300"
-					)}
-				>
-					<span className="flex justify-between items-center w-full">
-						<H4>Verify Email</H4>
-						<Button onClick={() => setOpen2(false)}>X</Button>
-					</span>
-					<InputOTP
-						maxLength={4}
-						value={otp}
-						onChange={(value) => setOtp(value)}
-					>
-						<InputOTPGroup>
-							<InputOTPSlot index={0} />
-							<InputOTPSlot index={1} />
-							<InputOTPSlot index={2} />
-							<InputOTPSlot index={3} />
-						</InputOTPGroup>
-					</InputOTP>
-					<Button
-						type="button"
-						onClick={handleVerifyEmail}
-						disabled={isVerifingEmail}
-					>
-						Submit
-					</Button>
-				</div>
+				<Card className="min-w-md">
+					<CardHeader className="flex justify-between items-center">
+						<CardTitle>Verify Email</CardTitle>
+						<Button onClick={() => setOpen2(false)}>
+							<Close />
+						</Button>
+					</CardHeader>
+					<CardContent className="grid place-items-center">
+						<InputOTP
+							maxLength={4}
+							value={otp}
+							onChange={(value) => setOtp(value)}
+							pattern={REGEXP_ONLY_DIGITS}
+						>
+							<InputOTPGroup>
+								<InputOTPSlot index={0} />
+								<InputOTPSlot index={1} />
+								<InputOTPSlot index={2} />
+								<InputOTPSlot index={3} />
+							</InputOTPGroup>
+						</InputOTP>
+					</CardContent>
+					<CardFooter>
+						<Button
+							className="w-full"
+							type="button"
+							onClick={handleVerifyEmail}
+							disabled={isVerifingEmail}
+						>
+							Submit
+						</Button>
+					</CardFooter>
+				</Card>
 			</Modal>
 		</div>
 	);

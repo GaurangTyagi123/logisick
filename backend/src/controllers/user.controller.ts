@@ -64,7 +64,7 @@ export const updateUser = catchAsync(
 				runValidators: true,
 			});
 		} else
-			updatedUser = updatedUser = await User.findByIdAndUpdate(
+			updatedUser = await User.findByIdAndUpdate(
 				req.user?._id,
 				newData,
 				{ new: true, runValidators: true }

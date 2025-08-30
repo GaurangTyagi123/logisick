@@ -20,12 +20,20 @@ type EmailForm = {
 	otp?: string;
 };
 
+type UserUpdateForm = {
+	name?: string;
+	email?: string;
+	avatar?: string;
+	org?: string[];
+};
+
 interface AuthProps {
 	user: User | null;
 	isCheckingAuth: boolean;
 	isLoggingIn: boolean;
 	isRegistering: boolean;
 	isVerifingEmail: boolean;
+	isUpdatingUser: boolean;
 	checkAuth: () => Promise<void>;
 	login: (form: LoginForm) => Promise<void>;
 	register: (form: RegisterForm) => Promise<void>;
@@ -33,6 +41,7 @@ interface AuthProps {
 	verifyEmail: (
 		form: EmailForm
 	) => Promise<"already" | "sent" | "verified" | undefined>;
+	updateUser: (form: UserUpdateForm) => Promise<void>;
 }
 
 const useAuthStore = create<AuthProps>((set, get) => ({
@@ -41,6 +50,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 	isLoggingIn: false,
 	isRegistering: false,
 	isVerifingEmail: false,
+	isUpdatingUser: false,
 	checkAuth: async () => {
 		try {
 			set({ isCheckingAuth: true });
@@ -171,6 +181,32 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			}
 		} finally {
 			set({ isVerifingEmail: false });
+		}
+	},
+	updateUser: async (form) => {
+		try {
+			set({ isUpdatingUser: true });
+			if (Object.keys(form).length === 0) {
+				toast.error("Nothing to update", { className: "toast" });
+				return;
+			}
+			const res = await axinstance.post<{
+				status: string;
+				data: { updatedUser: User };
+			}>("/v1/users/updateMe", form);
+			set({ user: res.data.data.updatedUser });
+			toast.success("User updated successfully", { className: "toast" });
+		} catch (error) {
+			if (isAxiosError(error)) {
+				const msg =
+					error.response?.data?.message || "Error updating user";
+				console.log(msg);
+				toast.error(msg, { className: "toast" });
+			} else {
+				console.log(error);
+			}
+		} finally {
+			set({ isUpdatingUser: false });
 		}
 	},
 }));
