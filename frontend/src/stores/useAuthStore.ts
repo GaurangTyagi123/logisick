@@ -20,11 +20,21 @@ type EmailForm = {
 	otp?: string;
 };
 
+type PasswordResetForm = {
+	prevPassword: string;
+	password: string;
+	confirmPassword: string;
+};
+
 type UserUpdateForm = {
 	name?: string;
 	email?: string;
 	avatar?: string;
 	org?: string[];
+};
+
+type ForgotPasswordForm = {
+	email: string;
 };
 
 interface AuthProps {
@@ -34,6 +44,8 @@ interface AuthProps {
 	isRegistering: boolean;
 	isVerifingEmail: boolean;
 	isUpdatingUser: boolean;
+	isSendingForgotPassword: boolean;
+	isResettingPassword: boolean;
 	checkAuth: () => Promise<void>;
 	login: (form: LoginForm) => Promise<void>;
 	register: (form: RegisterForm) => Promise<void>;
@@ -42,6 +54,11 @@ interface AuthProps {
 		form: EmailForm
 	) => Promise<"already" | "sent" | "verified" | undefined>;
 	updateUser: (form: UserUpdateForm) => Promise<void>;
+	sendForgotPassword: (form: ForgotPasswordForm) => Promise<void>;
+	resetPassword: (
+		resetToken: string,
+		form: PasswordResetForm
+	) => Promise<void>;
 }
 
 const useAuthStore = create<AuthProps>((set, get) => ({
@@ -51,6 +68,8 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 	isRegistering: false,
 	isVerifingEmail: false,
 	isUpdatingUser: false,
+	isSendingForgotPassword: false,
+	isResettingPassword: false,
 	checkAuth: async () => {
 		try {
 			set({ isCheckingAuth: true });
@@ -207,6 +226,56 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			}
 		} finally {
 			set({ isUpdatingUser: false });
+		}
+	},
+	sendForgotPassword: async (form) => {
+		try {
+			set({ isSendingForgotPassword: true });
+			const res = await axinstance.post<{
+				status: string;
+				data: { message: string };
+			}>("/v1/auth/forgotPassword", form);
+			toast.success(res.data.data.message, { className: "toast" });
+		} catch (error) {
+			if (isAxiosError(error)) {
+				const msg =
+					error.response?.data?.message ||
+					"Error sending forgotpassword mail";
+				console.log(msg);
+				toast.error(msg, { className: "toast" });
+			} else {
+				console.log(error);
+			}
+		} finally {
+			set({ isSendingForgotPassword: false });
+		}
+	},
+	resetPassword: async (resetToken, form) => {
+		try {
+			if (!resetToken.trim()) {
+				toast.error("Invalid password reset url");
+				return;
+			}
+			set({ isResettingPassword: true });
+			const res = await axinstance.patch<{
+				status: string;
+				data: { user: User };
+			}>(`/v1/auth/resetPassword/${resetToken}`, form);
+			set({ user: res.data.data.user });
+			toast.success("Password got reset successfully", {
+				className: "toast",
+			});
+		} catch (error) {
+			if (isAxiosError(error)) {
+				const msg =
+					error.response?.data?.message || "Error sending reset mail";
+				console.log(msg);
+				toast.error(msg, { className: "toast" });
+			} else {
+				console.log(error);
+			}
+		} finally {
+			set({ isResettingPassword: true });
 		}
 	},
 }));
