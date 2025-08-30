@@ -9,7 +9,7 @@ function Modal({ openModal, children }: ModalProps) {
 		<div
 			style={{ backgroundColor: "#00000088" }}
 			className={clsx(
-				"h-screen w-full absolute place-items-center",
+				"h-full w-full absolute place-items-center",
 				openModal ? "grid" : "hidden"
 			)}
 		>

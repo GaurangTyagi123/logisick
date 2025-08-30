@@ -1,52 +1,62 @@
-import { Menu } from "@/assets/icons/HamBurger";
 import Button from "./ui/button";
-import {
-	DropdownMenu,
-	DropdownMenuContent,
-	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
-	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
 import useAuthStore from "@/stores/useAuthStore";
 import ThemeToggle from "./ThemeToggle";
 import UserButton from "./UserButton";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import logo from "@/assets/appicon.png";
+import { Large } from "./ui/Typography";
 
-function Navbar() {
+interface NavbarProps {
+	hide?: {
+		logo?: boolean;
+		options?: boolean;
+		userButton?: boolean;
+		loginRegisterButton?: boolean;
+	};
+}
+
+function Navbar({
+	hide = {
+		logo: false,
+		userButton: false,
+		loginRegisterButton: false,
+	},
+}: NavbarProps) {
 	const { user } = useAuthStore();
-	const navigate = useNavigate();
-	const dropdownHidden = useLocation().pathname === "/";
+	hide.userButton = hide.userButton || !user;
+	hide.loginRegisterButton = hide.loginRegisterButton || !!user;
 
 	return (
-		<div className="flex justify-end gap-2 w-full">
-			{/* option menu in small screens */}
-			{dropdownHidden && (
-				<DropdownMenu>
-					<DropdownMenuTrigger className="md:hidden mr-auto ">
-						<Button asChild className="w-full">
-							<Menu />
-						</Button>
-					</DropdownMenuTrigger>
-					<DropdownMenuContent>
-						<DropdownMenuLabel>Options</DropdownMenuLabel>
-						<DropdownMenuSeparator />
-						<DropdownMenuItem>Product</DropdownMenuItem>
-						<DropdownMenuItem>Community</DropdownMenuItem>
-						<DropdownMenuItem>Docs</DropdownMenuItem>
-						<DropdownMenuItem>Pricing</DropdownMenuItem>
-						<DropdownMenuItem>Contact</DropdownMenuItem>
-						<DropdownMenuItem>Link</DropdownMenuItem>
-					</DropdownMenuContent>
-				</DropdownMenu>
-			)}
-			{/* UserButton */}
-			<UserButton/>
-			{(!user &&
-				<Button onClick={() => navigate("/authenticate")}>
-					Login/Register
+		<div className="flex justify-end gap-2 w-full h-10 px-2 mt-2">
+			{/* Logo */}
+			{!hide.logo && (
+				<Button
+					asChild
+					variant={"ghost"}
+					title="Go to homepage"
+					className="h-full p-0.5 aspect-square mr-auto flex items-center"
+				>
+					<Link to={{ pathname: "/" }}>
+						<img
+							src={logo}
+							alt="applogo"
+							className="h-full bg-zinc-900 p-0.5 px-1 rounded-md"
+						/>
+						<Large>LogiSick</Large>
+					</Link>
 				</Button>
 			)}
+			{/* UserButton */}
+			{!hide.userButton && <UserButton />}
+			{/* login/register button */}
+			{!hide.loginRegisterButton && (
+				<Button asChild>
+					<Link to={{ pathname: "/authenticate" }}>
+						Login/Regsiter
+					</Link>
+				</Button>
+			)}
+			{/* Theme toggle */}
 			<ThemeToggle />
 		</div>
 	);

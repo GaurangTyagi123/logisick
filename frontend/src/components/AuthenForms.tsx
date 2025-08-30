@@ -2,10 +2,11 @@ import { useState } from "react";
 import { Input } from "./ui/input";
 import Button from "./ui/button";
 import useAuthStore from "@/stores/useAuthStore";
-import { Eye, EyeClosed } from "@/assets/icons/Eye";
+import { Eye, EyeClosed, Google } from "@/assets/icons/authenticatepage";
 import { Label } from "./ui/label";
-import { Google } from "@/assets/icons/Google";
 import { Separator } from "./ui/separator";
+import { toast } from "react-toastify";
+import { H2 } from "./ui/Typography";
 
 interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
@@ -15,8 +16,8 @@ export function Login({ setFormType }: FormProps) {
 	const [form, setForm] = useState({ email: "", password: "" });
 	const [valid, setValid] = useState({ email: true, password: true });
 	const [visi, setVisi] = useState(false);
-
-	const { isLoggingIn, login } = useAuthStore();
+	const { isLoggingIn, login, isSendingForgotPassword, sendForgotPassword } =
+		useAuthStore();
 
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
@@ -34,9 +35,14 @@ export function Login({ setFormType }: FormProps) {
 	};
 
 	const sendForgotMail = (): void => {
-		// TODO : add resepassword path to store
-		// TODO : add reset password form to ui
-		return;
+		if (form.email.trim().length == 0 && valid.email) {
+			toast.error("Email is required to reset password", {
+				className: "toast",
+			});
+			return;
+		} else {
+			sendForgotPassword({ email: form.email });
+		}
 	};
 
 	return (
@@ -45,7 +51,7 @@ export function Login({ setFormType }: FormProps) {
 			className="flex flex-col flex-1 max-w-2xl gap-4 p-4 border min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
-			<h2 className="mb-2 text-3xl text-center">Login User</h2>
+			<H2 className="mb-2 text-center">Login User</H2>
 
 			<Label
 				title="Email field is required"
@@ -118,6 +124,7 @@ export function Login({ setFormType }: FormProps) {
 				className=""
 				onClick={sendForgotMail}
 				type="button"
+				disabled={isSendingForgotPassword}
 			>
 				Forgot Password?
 			</Button>
@@ -140,6 +147,7 @@ export function Login({ setFormType }: FormProps) {
 					const port = 8000;
 					window.location.href = `${protocol}//${server}:${port}/auth/google`;
 				}}
+				type="button"
 			>
 				<Google />
 				<span>Login with Google account</span>
@@ -328,7 +336,7 @@ export function Register({ setFormType }: FormProps) {
 				)}
 			</Label>
 
-			<Button className="mt-4" disabled={isRegistering}>
+			<Button className="mt-4" disabled={isRegistering} type="submit">
 				Register
 			</Button>
 			<Button
@@ -347,6 +355,7 @@ export function Register({ setFormType }: FormProps) {
 					const port = 8000;
 					window.location.href = `${protocol}//${server}:${port}/auth/google`;
 				}}
+				type="button"
 			>
 				<Google />
 				<span>Register with Google account</span>

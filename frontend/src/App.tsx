@@ -7,6 +7,7 @@ import Loading from "./components/loading";
 
 import Notfound from "./pages/notfound";
 import useAuthStore from "./stores/useAuthStore";
+import ResetPassword from "./pages/resetPassword";
 const Home = lazy(() => import("./pages/home"));
 const Dashboard = lazy(() => import("./pages/dashboard"));
 const Authenticate = lazy(() => import("./pages/authenticate"));
@@ -60,6 +61,10 @@ function App() {
 								<Navigate to={"/authenticate"} />
 							)
 						}
+					/>
+					<Route
+						path="/resetpassword/:resetToken"
+						element={user ? <Navigate to="/" /> : <ResetPassword />}
 					/>
 					<Route path="*" element={<Notfound />} />
 				</Routes>

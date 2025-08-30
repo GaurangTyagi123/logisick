@@ -6,14 +6,23 @@ import { Separator } from "@/components/ui/separator";
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
 import BigHeading from "@/components/BigHeading";
-import Navbar from "@/components/navbar";
+import Navbar from "@/components/Navbar";
+import {
+	DropdownMenu,
+	DropdownMenuContent,
+	DropdownMenuItem,
+	DropdownMenuLabel,
+	DropdownMenuSeparator,
+	DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Menu } from "@/assets/icons/HamBurger";
 
 function Home() {
 	const isDark = useModeStore().getTheme() === "dark";
 	return (
 		<div
 			className={clsx(
-				"w-full p-4 grid gap-3 h-auto",
+				"w-full px-4 grid gap-3 h-auto",
 				isDark ? "bg-zinc-900" : ""
 			)}
 		>
@@ -21,7 +30,27 @@ function Home() {
 			<Navbar />
 			{/* tabs bar */}
 			<div className="flex flex-col justify-between gap-2 mt-4 md:mt-0">
-				<BigHeading />
+				<div className="flex flex-col justify-between">
+					<BigHeading />
+					{/* option menu in small screens */}
+					<DropdownMenu>
+						<DropdownMenuTrigger className="md:hidden ml-auto ">
+							<Button asChild className="w-full">
+								<Menu />
+							</Button>
+						</DropdownMenuTrigger>
+						<DropdownMenuContent>
+							<DropdownMenuLabel>Options</DropdownMenuLabel>
+							<DropdownMenuSeparator />
+							<DropdownMenuItem>Product</DropdownMenuItem>
+							<DropdownMenuItem>Community</DropdownMenuItem>
+							<DropdownMenuItem>Docs</DropdownMenuItem>
+							<DropdownMenuItem>Pricing</DropdownMenuItem>
+							<DropdownMenuItem>Contact</DropdownMenuItem>
+							<DropdownMenuItem>Link</DropdownMenuItem>
+						</DropdownMenuContent>
+					</DropdownMenu>
+				</div>
 				{/* tab-bar in large screens */}
 				<div className="hidden gap-2 justify-end mr-5 md:flex">
 					{/* features */}
