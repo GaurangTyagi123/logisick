@@ -59,21 +59,21 @@ const sendNewToken = (
 
 	res.cookie("jwt", token, cookieOptions);
 
-	return res.status(statusCode).json({
-		status: "success",
-		data: {
-			user: {
-				_id: user._id,
-				name: user.name,
-				email: user.email,
-				isVerified: user.isVerified,
-				role: user.role,
-				avatar: user.avatar,
-				createdAt: user.createdAt,
-				updatedAt: user.updatedAt,
-			},
-		},
-	});
+    return res.status(statusCode).json({
+        status: 'success',
+        data: {
+            user: {
+                _id: user._id,
+                name: user.name,
+                email: user.email,
+                isVerified: user.isVerified,
+                role: user.role,
+                avatar: user.avatar,
+                createdAt: user.createdAt,
+                updatedAt: user.updatedAt,
+            },
+        },
+    });
 };
 
 /**
@@ -202,21 +202,21 @@ export const logout = catchAsync(
  *         ELSE return status:fail with reason for the same
  */
 export const isLoggedIn = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		let token: string | undefined;
-		if (req.cookies) token = req.cookies?.jwt;
-		if (!token)
-			return res.status(200).json({
-				status: "fail",
-				isLoggedIn: false,
-				data: {
-					message: "Not logged in",
-				},
-			});
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        let token: string | undefined;
+        if (req.cookies) token = req.cookies?.jwt;
+        if (!token)
+            return res.status(200).json({
+                status: 'fail',
+                isLoggedIn: false,
+                data: {
+                    message: 'Invalid token',
+                },
+            });
 
 		const verifyAsync = promisify(jwt.verify) as (
 			token: string,
@@ -291,33 +291,34 @@ export const signup = catchAsync(
  * @sideEffect User email is verified
  */
 export const verifyEmail = catchAsync(
-	async (
-		req: ExpressTypes.UserRequest,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const userOtp = req?.body?.otp;
-		const isVerified = req.user?.isVerified;
-		const isOtpGen = req.user!.otp;
-		if (isVerified)
-			return res.status(200).json({
-				status: "successfull",
-				data: {
-					message: "Your email is already verified",
-				},
-			});
-		else if (isOtpGen && userOtp) {
-			const user = await User.findOne({
-				otp: userOtp,
-				otpExpireTime: { $gte: Date.now() },
-			});
-			if (!user) {
-				const unverifiedUser = await User.findById(req.user?._id);
-				unverifiedUser!.otp = undefined;
-				unverifiedUser!.otpExpireTime = undefined;
-				unverifiedUser!.save({ validateBeforeSave: false });
-				return next(new AppError("Invalid Otp", 400));
-			}
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const userOtp = req?.body?.otp;
+        const isVerified = req.user?.isVerified;
+        const isOtpGen = req.user!.otp;
+        if (isVerified)
+            return res.status(200).json({
+                status: 'successfull',
+                data: {
+                    message: 'Your email is already verified',
+                },
+            });
+        else if (isOtpGen && userOtp) {
+            // Find a user which has the same otp and the otp's expire time is greater than the current time
+            const user = await User.findOne({
+                otp: userOtp,
+                otpExpireTime: { $gte: Date.now() },
+            });
+            if (!user) {
+                const unverifiedUser = await User.findById(req.user?._id);
+                unverifiedUser!.otp = undefined;
+                unverifiedUser!.otpExpireTime = undefined;
+                unverifiedUser!.save({ validateBeforeSave: false });
+                return next(new AppError('Invalid Otp', 400));
+            }
 
 			user!.isVerified = true;
 			user!.otpExpireTime = undefined;
