@@ -4,20 +4,11 @@ import { toast } from "react-toastify";
 // import { userDb } from "@/utils/db";
 import { create } from "zustand";
 
-type LoginForm = {
-	email: string;
-	password: string;
-};
-
 type RegisterForm = {
 	name: string;
 	email: string;
 	password: string;
 	confirmPassword: string;
-};
-
-type EmailForm = {
-	otp?: string;
 };
 
 type PasswordResetForm = {
@@ -33,10 +24,6 @@ type UserUpdateForm = {
 	org?: string[];
 };
 
-type ForgotPasswordForm = {
-	email: string;
-};
-
 interface AuthProps {
 	user: User | null;
 	isCheckingAuth: boolean;
@@ -46,19 +33,34 @@ interface AuthProps {
 	isUpdatingUser: boolean;
 	isSendingForgotPassword: boolean;
 	isResettingPassword: boolean;
+	isChangingPassword: boolean;
 	checkAuth: () => Promise<void>;
-	login: (form: LoginForm) => Promise<void>;
+	login: (form: { email: string; password: string }) => Promise<void>;
 	register: (form: RegisterForm) => Promise<void>;
 	logout: () => Promise<void>;
-	verifyEmail: (
-		form: EmailForm
-	) => Promise<"already" | "sent" | "verified" | undefined>;
+	verifyEmail: (form: {
+		otp?: string;
+	}) => Promise<"already" | "sent" | "verified" | undefined>;
 	updateUser: (form: UserUpdateForm) => Promise<void>;
-	sendForgotPassword: (form: ForgotPasswordForm) => Promise<void>;
+	sendForgotPassword: (form: { email: string }) => Promise<void>;
 	resetPassword: (
 		resetToken: string,
 		form: PasswordResetForm
 	) => Promise<void>;
+	changePassword: (form: {
+		password: string;
+		confirmPassword: string;
+	}) => Promise<void>;
+}
+
+function handleError(error: unknown, message: string) {
+	if (isAxiosError(error)) {
+		const msg = error.response?.data?.message || message;
+		console.log(msg);
+		toast.error(msg, { className: "toast" });
+	} else {
+		console.log(error);
+	}
 }
 
 const useAuthStore = create<AuthProps>((set, get) => ({
@@ -70,6 +72,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 	isUpdatingUser: false,
 	isSendingForgotPassword: false,
 	isResettingPassword: false,
+	isChangingPassword: false,
 	checkAuth: async () => {
 		try {
 			set({ isCheckingAuth: true });
@@ -79,14 +82,9 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 				data: { user: User };
 			}>("/v1/auth/isLoggedIn");
 			const user = res.data.data.user;
-			console.log("User", user);
 			set({ user: user });
 		} catch (error) {
 			console.log(error);
-			// const old = await userDb.getUserMeta();
-			// if (old) {
-			// 	await userDb.setUserMeta(old.user, false);
-			// }
 			set({ user: null });
 		} finally {
 			set({ isCheckingAuth: false });
@@ -103,13 +101,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			set({ user: res.data.data.user });
 			toast.success("LoggedIn Successfully", { className: "toast" });
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg = error.response?.data?.message || "Error logging in";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error logging in");
 		} finally {
 			set({ isLoggingIn: false });
 		}
@@ -125,14 +117,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			set({ user: res.data.data.user });
 			toast.success("Registered successfully", { className: "toast" });
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg =
-					error.response?.data?.message || "Error registering user";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error registering new user");
 		} finally {
 			set({ isRegistering: false });
 		}
@@ -154,14 +139,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 				toast.error("Error Logging Out ", { className: "toast" });
 			}
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg =
-					error.response?.data?.message || "Error logging out user";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error logging out user");
 		}
 	},
 	verifyEmail: async (form) => {
@@ -190,14 +168,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 				return "verified";
 			}
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg =
-					error.response?.data?.message || "Error verifing email";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error verifing email");
 		} finally {
 			set({ isVerifingEmail: false });
 		}
@@ -216,14 +187,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			set({ user: res.data.data.updatedUser });
 			toast.success("User updated successfully", { className: "toast" });
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg =
-					error.response?.data?.message || "Error updating user";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error updating user");
 		} finally {
 			set({ isUpdatingUser: false });
 		}
@@ -237,15 +201,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			}>("/v1/auth/forgotPassword", form);
 			toast.success(res.data.data.message, { className: "toast" });
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg =
-					error.response?.data?.message ||
-					"Error sending forgotpassword mail";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error sending forgotpassword mail");
 		} finally {
 			set({ isSendingForgotPassword: false });
 		}
@@ -266,16 +222,27 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 				className: "toast",
 			});
 		} catch (error) {
-			if (isAxiosError(error)) {
-				const msg =
-					error.response?.data?.message || "Error sending reset mail";
-				console.log(msg);
-				toast.error(msg, { className: "toast" });
-			} else {
-				console.log(error);
-			}
+			handleError(error, "Error sending reset mail");
 		} finally {
 			set({ isResettingPassword: true });
+		}
+	},
+	changePassword: async (form) => {
+		try {
+			set({ isChangingPassword: true });
+			const res = await axinstance.post<{
+				status: string;
+				data: { user: User };
+			}>("/v1/users/updatePassword", form);
+
+			set({ user: res.data.data.user });
+			toast.success("Password changes successfully", {
+				className: "toast",
+			});
+		} catch (error) {
+			handleError(error, "Error changing password");
+		} finally {
+			set({ isChangingPassword: false });
 		}
 	},
 }));

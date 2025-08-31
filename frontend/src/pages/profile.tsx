@@ -1,75 +1,33 @@
-import { Close } from "@/assets/icons/Close";
-import { Verified, Hint, Edit, Dice } from "@/assets/icons/profilepage";
-import UserAvatar from "@/components/avatar";
-import Modal from "@/components/Modal";
-import Navbar from "@/components/Navbar";
+import { useEffect, useState } from "react";
+import clsx from "clsx";
+import { toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
+
+import { Verified, Hint, Edit } from "@/assets/icons/profilepage";
+
 import Button from "@/components/ui/button";
-import {
-	Card,
-	CardContent,
-	CardFooter,
-	CardHeader,
-	CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-	InputOTP,
-	InputOTPGroup,
-	InputOTPSlot,
-} from "@/components/ui/input-otp";
 import { H2, Large, Lead } from "@/components/ui/Typography";
+
+import UserAvatar from "@/components/avatar";
+import Navbar from "@/components/Navbar";
+import ProfilePicChangeModal from "@/components/profilePicChangeModal";
+import OtpModal from "@/components/otpModal";
+import ChangePasswordModal from "@/components/changePasswordModal";
+
 import useAuthStore from "@/stores/useAuthStore";
 import useModeStore from "@/stores/useModeStore";
-import clsx from "clsx";
-import { useEffect, useState } from "react";
-import { Navigate } from "react-router-dom";
-import { toast } from "react-toastify";
-import { REGEXP_ONLY_DIGITS } from "input-otp";
 
 function Profile() {
-	// const userId = useParams().userId || "Default User";
 	const isDark = useModeStore().getTheme() == "dark";
-	const { user, verifyEmail, isVerifingEmail, isUpdatingUser, updateUser } =
-		useAuthStore();
+	const { user, verifyEmail, isVerifingEmail } = useAuthStore();
 	const [open1, setOpen1] = useState<boolean>(false);
 	const [open2, setOpen2] = useState<boolean>(false);
-	const [modalPic, setModalPic] = useState<string>(user?.avatar || "");
+	const [open3, setOpen3] = useState<boolean>(false);
+
 	const [otp, setOtp] = useState<string>("");
+	const [modalPic, setModalPic] = useState<string>(user?.avatar || "");
 
 	if (!user) <Navigate to={"/"} />;
-
-	function genProfileString(len: number) {
-		const all =
-			"abcdefghijklmnopqrstuvwxyzBCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-		let ret = "";
-		for (let i = 0; i < len; i++) {
-			ret += all[Math.floor(Math.random() * 62)];
-		}
-		setModalPic(ret);
-	}
-
-	function handleProfilePicChange() {
-		if (modalPic.length > 0 && modalPic !== user?.avatar) {
-			updateUser({ avatar: modalPic });
-			setOpen1(false);
-		} else {
-			toast.error("Changed avatar can't be same or empty", {
-				className: "toast",
-			});
-		}
-	}
-
-	async function handleVerifyEmail() {
-		if (otp.trim() !== "" && otp.length === 4) {
-			const res = await verifyEmail({ otp });
-			if (res == "verified") {
-				setOpen2(false);
-			}
-		} else {
-			toast.error("Invalid OTP", { className: "toast" });
-		}
-		setOpen2(false);
-	}
 
 	useEffect(() => {
 		if (!user?.isVerified) {
@@ -162,93 +120,36 @@ function Profile() {
 					</Lead>
 				</div>
 			</div>
+			<div
+				className={clsx(
+					"max-w-6xl p-4 w-full flex flex-col-reverse highlight md:grid md:grid-cols-5 gap-2 "
+				)}
+			>
+				<span className="col-span-4">1</span>
+				<div className="col-span-1 grid">
+					<Button onClick={() => setOpen3(true)}>
+						Change Password
+					</Button>
+				</div>
+			</div>
+
+			{/* MODALS */}
 			{/* profile-change modal */}
-			<Modal openModal={open1}>
-				<Card className="min-w-md">
-					<CardHeader className="flex justify-between items-center">
-						<CardTitle>Change Profile Picture</CardTitle>
-						<Button
-							onClick={() => setOpen1(false)}
-							variant={"ghost"}
-						>
-							<Close />
-						</Button>
-					</CardHeader>
-					<CardContent className="flex flex-col gap-2 items-center">
-						<UserAvatar
-							customSeed={modalPic}
-							className="w-40 h-40"
-						/>
-						<div className="flex gap-2 w-full">
-							<Input
-								type="text"
-								autoFocus
-								value={modalPic}
-								className="text-lg font-semibold text-center bg-accent"
-								onChange={(e) =>
-									setModalPic(e.target.value.trim())
-								}
-							/>
-							<Button
-								className="h-9 w-9 grid place-items-center"
-								title="generate random"
-								onClick={() =>
-									genProfileString(
-										Math.floor(Math.random() * 11) + 1
-									)
-								}
-							>
-								<Dice className="h-9 w-9" />
-							</Button>
-						</div>
-					</CardContent>
-					<CardFooter>
-						<Button
-							className="front-semibold w-full"
-							onClick={handleProfilePicChange}
-							disabled={isUpdatingUser}
-						>
-							Seems Good!
-						</Button>
-					</CardFooter>
-				</Card>
-			</Modal>
+			<ProfilePicChangeModal
+				open={open1}
+				setOpen={setOpen1}
+				modalPic={modalPic}
+				setModalPic={setModalPic}
+			/>
 			{/* otp modal */}
-			<Modal openModal={open2}>
-				<Card className="min-w-md">
-					<CardHeader className="flex justify-between items-center">
-						<CardTitle>Verify Email</CardTitle>
-						<Button onClick={() => setOpen2(false)}>
-							<Close />
-						</Button>
-					</CardHeader>
-					<CardContent className="grid place-items-center">
-						<InputOTP
-							maxLength={4}
-							value={otp}
-							onChange={(value) => setOtp(value)}
-							pattern={REGEXP_ONLY_DIGITS}
-						>
-							<InputOTPGroup>
-								<InputOTPSlot index={0} />
-								<InputOTPSlot index={1} />
-								<InputOTPSlot index={2} />
-								<InputOTPSlot index={3} />
-							</InputOTPGroup>
-						</InputOTP>
-					</CardContent>
-					<CardFooter>
-						<Button
-							className="w-full"
-							type="button"
-							onClick={handleVerifyEmail}
-							disabled={isVerifingEmail}
-						>
-							Submit
-						</Button>
-					</CardFooter>
-				</Card>
-			</Modal>
+			<OtpModal
+				open={open2}
+				setOpen={setOpen2}
+				otp={otp}
+				setOtp={setOtp}
+			/>
+			{/* change password modal */}
+			<ChangePasswordModal open={open3} setOpen={setOpen3} />
 		</div>
 	);
 }
