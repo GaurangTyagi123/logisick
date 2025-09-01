@@ -13,12 +13,15 @@ import {
 
 const userRouter = Router();
 
+// end point to get all the users belonging to a particular organization
 userRouter.route('/').get(protect, restrictTo('admin'), getUsers);
+
+// end point to update user's profile data
 userRouter
     .route('/updateMe')
     .post(protect, updateUser)
     .delete(protect, deleteUser);
-userRouter.post('/updatePassword',protect, updatePassword);
+userRouter.post('/updatePassword', protect, updatePassword);
 userRouter.route('/:id').get(protect, restrictTo('admin'), getUser);
 
 export default userRouter;
