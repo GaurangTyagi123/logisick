@@ -239,6 +239,7 @@ const useAuthStore = create<AuthProps>((set, get) => ({
 			toast.success("Password changes successfully", {
 				className: "toast",
 			});
+			await get().logout();
 		} catch (error) {
 			handleError(error, "Error changing password");
 		} finally {

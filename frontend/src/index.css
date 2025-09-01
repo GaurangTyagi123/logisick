@@ -31,11 +31,13 @@ body,
 	font-family: "Ancizar Sans", sans-serif;
 	font-style: normal;
 	background-color: #d3d5d8;
+	color:black;
 }
 
 @media (prefers-color-scheme: dark) {
 	.toast {
 		background-color: #636379;
+		color: white;
 	}
 }
 

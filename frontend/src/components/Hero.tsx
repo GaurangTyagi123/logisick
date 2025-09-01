@@ -2,7 +2,6 @@ import { BookOpen, Star } from "@/assets/icons/homepage";
 import Button from "./ui/button";
 import illus from "@/assets/illus.svg";
 import HexBox from "./HexBox";
-// import HexBox from "./HexBox";
 
 function Hero() {
 	return (
@@ -44,7 +43,7 @@ function Hero() {
 						/>
 						<HexBox
 							heading="Report & Analytics"
-							icon="truck"
+							icon="report"
 							text="Gain insights with customizable reports & analytics."
 						/>
 					</div>

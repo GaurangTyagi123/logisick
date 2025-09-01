@@ -5,9 +5,10 @@ import { ToastContainer } from "react-toastify";
 import useModeStore from "./stores/useModeStore";
 import Loading from "./components/loading";
 
-import Notfound from "./pages/notfound";
 import useAuthStore from "./stores/useAuthStore";
-import ResetPassword from "./pages/resetPassword";
+
+const Notfound = lazy(() => import("./pages/notfound"));
+const ResetPassword = lazy(() => import("./pages/resetPassword"));
 const Home = lazy(() => import("./pages/home"));
 const Dashboard = lazy(() => import("./pages/dashboard"));
 const Authenticate = lazy(() => import("./pages/authenticate"));

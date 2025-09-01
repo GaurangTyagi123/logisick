@@ -1,7 +1,7 @@
-import { DynamicIcon, type IconName } from "lucide-react/dynamic";
+import { Truck, Report } from "@/assets/icons/homepage";
 
 interface HexBoxProps {
-	icon: IconName;
+	icon: "truck" | "report";
 	heading: string;
 	text: string;
 }
@@ -16,7 +16,8 @@ function HexBox({ icon, heading, text }: HexBoxProps) {
 			}}
 		>
 			<h3 className="flex text-xl md:text-2xl gap-1 items-center font-semibold justify-center ">
-				<DynamicIcon name={icon} />
+				{icon == "truck" && <Truck />}
+				{icon == "report" && <Report />}
 				{heading}
 			</h3>
 			<p className="text-center">{text}</p>
