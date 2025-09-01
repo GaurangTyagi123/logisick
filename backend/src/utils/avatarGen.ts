@@ -1,3 +1,4 @@
+// generates a random seed for generating random user avatar
 export function genProfileString(len: number) {
 	const all = "abcdefghijklmnopqrstuvwxyzBCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
 	let ret = "";
