@@ -5,19 +5,24 @@ import path from 'path';
 import Handlebars from 'handlebars';
 import dotenv from 'dotenv';
 
+// configure the path of config file
 dotenv.config({ path: 'config.env' });
 
 import { type TransportOptions } from 'nodemailer';
 
+// Email handler for the application
 class Email {
-    private user: Record<string, string>;
-    private url: string;
+    private user: Record<string, string>; //contains user's name and email
+    private url: string; // any url that should be included in the email to the user
 
     constructor(user: Record<string, string>, url: string) {
+        // initialize the variables;
         this.user = user;
         this.url = url;
     }
     private newTransport() {
+        // create a new transport
+        // transport is used to configure the way this application will send email
         const transport = nodemailer.createTransport({
             host: process.env.DEV_MAIL_HOST,
             port: process.env.DEV_MAIL_PORT,
@@ -28,10 +33,14 @@ class Email {
         } as TransportOptions);
         return transport;
     }
+    /**
+     * @param template, template is the html that the mail will contain
+     * @param subject
+     */
     private async sendMail(template: string, subject: string) {
         const sendOptions = {
             to: this.user.email,
-            from: `LogiSick`,
+            from: `admin@LogiSick.com`,
             subject,
             html: template,
             text: convert(template),
@@ -39,6 +48,9 @@ class Email {
         await this.newTransport().sendMail(sendOptions);
     }
     // TODO: Promisify readFileSync
+    /**
+     * send email verification mail to the user
+     */
     public async sendVerification() {
         const verificationHtml = readFileSync(
             path.join(__dirname, 'emailTemplates', 'verification.html'),
@@ -48,7 +60,7 @@ class Email {
             brand_name: 'LogiSick',
             user_name: this.user.userName,
             otp_code: this.user.otp,
-            otp_expire_time: 10,
+            reset_ttl_minutes: 10,
             verify_url: 'https://localhost:5173/otp',
             support_email: 'ravishranjan2003@gmail.com',
             year: new Date().getFullYear(),
@@ -57,6 +69,7 @@ class Email {
         const subject = `Verify your email`;
         await this.sendMail(template, subject);
     }
+    // send reset link to the user
     public async sendResetLink() {
         const verificationHtml = readFileSync(
             path.join(__dirname, 'emailTemplates', 'resetPassword.html'),
@@ -68,6 +81,7 @@ class Email {
             reset_url: this.url,
             support_email: 'ravishranjan2003@gmail.com',
             year: new Date().getFullYear(),
+            otp_ttl_minutes: 10,
         };
         const template = Handlebars.compile(verificationHtml)(options);
         const subject = `Reset your password`;
