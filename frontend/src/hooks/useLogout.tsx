@@ -2,12 +2,12 @@ import { logout } from '@/services/apiAuth';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
-function useLogout() {
+function useLogout(message:string = "Logged-Out Successfully") {
     const queryClient = useQueryClient();
     const { mutate: logoutFn, isPending } = useMutation({
         mutationFn: logout,
         onSuccess: () => {
-            toast.success('Logged-Out Successfully', {
+            toast.success(message, {
                 className: 'toast',
             });
             queryClient.invalidateQueries({

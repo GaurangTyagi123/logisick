@@ -1,4 +1,3 @@
-import useAuthStore from "@/stores/useAuthStore";
 import Modal from "./Modal";
 import Button from "./ui/button";
 import {
@@ -14,6 +13,7 @@ import { Close } from "@/assets/icons/Close";
 import { Label } from "./ui/label";
 import { Input } from "./ui/input";
 import { Eye, EyeClosed } from "@/assets/icons/authenticatepage";
+import useUpdatePassword from "@/hooks/useUpdatePassword";
 
 interface ChangePasswordProps {
 	open: boolean;
@@ -21,7 +21,8 @@ interface ChangePasswordProps {
 }
 
 function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
-	const { changePassword, isChangingPassword } = useAuthStore();
+	const { updatePasswordFn: changePassword, isPending: isChangingPassword } = useUpdatePassword();
+	// const { changePassword, isChangingPassword } = useAuthStore();
 	const [form, setForm] = useState<{
 		password: string;
 		confirmPassword: string;
