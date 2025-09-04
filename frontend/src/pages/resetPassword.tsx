@@ -14,7 +14,6 @@ import useResetPassword from '@/hooks/useResetPassword';
 
 function ResetPassword() {
     const resetToken = useParams().resetToken as string;
-    // const { isResettingPassword, resetPassword } = useAuthStore();
     const { resetPasswordFn: resetPassword, isPending: isResettingPassword } =
         useResetPassword();
     const [form, setForm] = useState({
