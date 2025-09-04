@@ -1,33 +1,3 @@
-<<<<<<< HEAD
-import useAuthStore from "@/stores/useAuthStore";
-import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "@/components/Navbar";
-import { toast } from "react-toastify";
-import { H2 } from "@/components/ui/Typography";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import Button from "@/components/ui/button";
-import { Eye, EyeClosed } from "@/assets/icons/authenticatepage";
-
-function ResetPassword() {
-	const resetToken = useParams().resetToken as string;
-	const { isResettingPassword, resetPassword } = useAuthStore();
-	const [form, setForm] = useState({
-		prevPassword: "",
-		password: "",
-		confirmPassword: "",
-	});
-	const [valid, setValid] = useState<{
-		password: boolean;
-		confirmPassword: boolean;
-	}>({
-		password: true,
-		confirmPassword: true,
-	});
-	const [visi, setVisi] = useState<boolean>(false);
-	const navigate = useNavigate();
-=======
 // import useAuthStore from '@/stores/useAuthStore';
 import useModeStore from '@/stores/useModeStore';
 import clsx from 'clsx';
@@ -62,23 +32,12 @@ function ResetPassword() {
     const [visi, setVisi] = useState<boolean>(false);
     const navigate = useNavigate();
     const isDark = useModeStore().getTheme() === 'dark';
->>>>>>> feature/react-intergation
 
     const validatePassword = (password: string) => {
         if (password.trim().length >= 8) setValid({ ...valid, password: true });
         else setValid({ ...valid, password: false });
     };
 
-<<<<<<< HEAD
-	const validateConfirmPassword = (password: string) => {
-		if (
-			password.trim().length >= 8 &&
-			password.trim() === form.password.trim()
-		)
-			setValid({ ...valid, confirmPassword: true });
-		else setValid({ ...valid, confirmPassword: false });
-	};
-=======
     const validateConfirmPassword = (password: string) => {
         if (
             password.trim().length >= 8 &&
@@ -87,7 +46,6 @@ function ResetPassword() {
             setValid({ ...valid, confirmPassword: true });
         else setValid({ ...valid, confirmPassword: false });
     };
->>>>>>> feature/react-intergation
 
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
         e.preventDefault();
@@ -107,22 +65,6 @@ function ResetPassword() {
     useEffect(() => {
         console.log('checkig reset token');
 
-<<<<<<< HEAD
-		if (!resetToken.trim()) {
-			console.log("noreset token");
-			navigate("/");
-		}
-	}, [resetToken, navigate]);
-	return (
-		<div className="w-full px-4 flex flex-col h-auto min-h-screen dark:bg-zinc-900">
-			<Navbar
-				hide={{
-					userButton: true,
-					options: true,
-					loginRegisterButton: true,
-				}}
-			/>
-=======
         if (!resetToken.trim()) {
             console.log('noreset token');
             navigate('/');
@@ -142,7 +84,6 @@ function ResetPassword() {
                     loginRegisterButton: true,
                 }}
             />
->>>>>>> feature/react-intergation
 
             <div className="grid p-4 place-items-center">
                 <form
