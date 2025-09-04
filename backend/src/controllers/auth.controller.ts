@@ -388,7 +388,8 @@ export const forgotPassword = catchAsync(
 		const resetToken = user.createPasswordResetToken();
 		await user.save({ validateBeforeSave: false });
 
-		const url = `${req.protocol}//${req.host}:5173/resetpassword/${resetToken}`;
+		// const url = `${req.protocol}//${req.host}/resetpassword/${resetToken}`;
+		const url = `${req.protocol}//localhost:5173/resetpassword/${resetToken}`;
 		try {
 			await new Email(
 				{

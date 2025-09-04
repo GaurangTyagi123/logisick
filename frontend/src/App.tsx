@@ -1,10 +1,11 @@
-import { lazy, Suspense, useEffect } from "react";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { ToastContainer } from "react-toastify";
+import { lazy, Suspense, useEffect } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
-import useModeStore from "./stores/useModeStore";
-import Loading from "./components/loading";
+import useModeStore from './stores/useModeStore';
+import Loading from './components/loading';
 
+<<<<<<< HEAD
 import useAuthStore from "./stores/useAuthStore";
 
 const Docs = lazy(() => import("./pages/docs"));
@@ -22,17 +23,29 @@ function App() {
 	useEffect(() => {
 		setMode(getTheme());
 	}, [setMode, getTheme]);
+=======
+import Notfound from './pages/notfound';
+// import useAuthStore from "./stores/useAuthStore";
+import ResetPassword from './pages/resetPassword';
+import useCheckAuth from './hooks/useCheckAuth';
+const Home = lazy(() => import('./pages/home'));
+const Dashboard = lazy(() => import('./pages/dashboard'));
+const Authenticate = lazy(() => import('./pages/authenticate'));
+const Profile = lazy(() => import('./pages/profile'));
 
-	useEffect(() => {
-		async function authen() {
-			console.log("checking auth");
-			await checkAuth();
-		}
-		authen();
-	}, [checkAuth]);
+function App() {
+    const { getTheme, setMode } = useModeStore();
+    const { user, isPending: isCheckingAuth } = useCheckAuth();
 
-	if (isCheckingAuth) return <Loading />;
+    useEffect(() => {
+        setMode(getTheme());
+    }, [getTheme, setMode]);
+>>>>>>> feature/react-intergation
 
+
+    if (isCheckingAuth) return <Loading />;
+
+<<<<<<< HEAD
 	return (
 		<>
 			<Suspense fallback={<Loading />}>
@@ -80,6 +93,57 @@ function App() {
 			/>
 		</>
 	);
+=======
+    return (
+        <>
+            <Suspense fallback={<Loading />}>
+                <Routes>
+                    <Route index path="/" element={<Home />} />
+                    <Route
+                        path="/:orgId/dashboard"
+                        element={
+                            user ? (
+                                <Dashboard />
+                            ) : (
+                                <Navigate to={'/authenticate'} />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/authenticate"
+                        element={
+                            !user ? <Navigate to={'/'} /> : <Authenticate />
+                        }
+                    />
+                    <Route
+                        path="/profile/:userId?"
+                        element={
+                            user ? (
+                                <Profile />
+                            ) : (
+                                <Navigate to={'/authenticate'} />
+                            )
+                        }
+                    />
+                    <Route
+                        path="/resetpassword/:resetToken"
+                        element={!user ? <Navigate to="/" /> : <ResetPassword />}
+                    />
+                    <Route path="*" element={<Notfound />} />
+                </Routes>
+            </Suspense>
+            <ToastContainer
+                position="top-right"
+                theme={getTheme()}
+                limit={3}
+                newestOnTop
+                toastStyle={{
+                    paddingBlock: '20px',
+                }}
+            />
+        </>
+    );
+>>>>>>> feature/react-intergation
 }
 
 export default App;

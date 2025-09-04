@@ -1,12 +1,15 @@
 import { useState } from "react";
 import { Input } from "./ui/input";
 import Button from "./ui/button";
-import useAuthStore from "@/stores/useAuthStore";
+// import useAuthStore from "@/stores/useAuthStore";
 import { Eye, EyeClosed, Google } from "@/assets/icons/authenticatepage";
 import { Label } from "./ui/label";
 import { Separator } from "./ui/separator";
 import { toast } from "react-toastify";
 import { H2 } from "./ui/Typography";
+import useLogin from "@/hooks/useLogin";
+import useResetPassword from "@/hooks/useSendForgotPassword";
+import useSignup from "@/hooks/useSignup";
 
 interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
@@ -16,8 +19,8 @@ export function Login({ setFormType }: FormProps) {
 	const [form, setForm] = useState({ email: "", password: "" });
 	const [valid, setValid] = useState({ email: true, password: true });
 	const [visi, setVisi] = useState(false);
-	const { isLoggingIn, login, isSendingForgotPassword, sendForgotPassword } =
-		useAuthStore();
+	const { sendForgotPassword, isPending: isSendingForgotPassword } = useResetPassword();
+	const { loginFn: login, isPending: isLoggingIn } = useLogin();
 
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
@@ -169,7 +172,8 @@ export function Register({ setFormType }: FormProps) {
 		confirmPassword: true,
 	});
 	const [visi, setVisi] = useState(false);
-	const { isRegistering, register } = useAuthStore();
+	const { signupFn: register, isPending: isRegistering } = useSignup();
+	// const { isRegistering, register } = useAuthStore();
 
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
