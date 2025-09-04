@@ -51,7 +51,7 @@ function Button({
 			data-slot="button"
 			className={cn(
 				buttonVariants({ variant, size, className }),
-				"cursor-pointer"
+				"cursor-pointer jet-brains"
 			)}
 			{...props}
 		/>

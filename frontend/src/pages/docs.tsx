@@ -14,8 +14,6 @@ import {
 import logo from "@/assets/appicon.png";
 import { H2, H3, Large, Muted } from "@/components/ui/Typography";
 import Navbar from "@/components/Navbar";
-import useModeStore from "@/stores/useModeStore";
-import clsx from "clsx";
 import DocSec from "@/components/DocSec";
 
 interface TabItem {
@@ -47,16 +45,10 @@ const tabs: Tabs = {
 };
 
 function CustomSidebar() {
-	const isDark = useModeStore().getTheme() == "dark";
 	return (
 		<Sidebar>
 			<SidebarHeader>
-				<div
-					className={clsx(
-						"h-16 p-2 flex gap-2 items-center rounded-2xl",
-						isDark ? "bg-zinc-700" : "bg-zinc-300"
-					)}
-				>
+				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-700">
 					<img
 						src={logo}
 						alt="logo"

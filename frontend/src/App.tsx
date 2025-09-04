@@ -16,12 +16,12 @@ const Authenticate = lazy(() => import("./pages/authenticate"));
 const Profile = lazy(() => import("./pages/profile"));
 
 function App() {
-	const { getTheme, setMode } = useModeStore();
+	const { setMode, getTheme } = useModeStore();
 	const { checkAuth, user, isCheckingAuth } = useAuthStore();
 
 	useEffect(() => {
 		setMode(getTheme());
-	}, [getTheme, setMode]);
+	}, [setMode, getTheme]);
 
 	useEffect(() => {
 		async function authen() {

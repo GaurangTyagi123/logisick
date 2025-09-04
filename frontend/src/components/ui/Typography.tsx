@@ -29,7 +29,7 @@ export function H2({
 	return (
 		<h2
 			className={cn(
-				"pb-2 text-3xl font-semibold tracking-tight border-b scroll-m-20 first:mt-0",
+				"king-julian pb-2 text-3xl font-semibold tracking-tight border-b scroll-m-20 first:mt-0",
 				className
 			)}
 		>
@@ -47,7 +47,7 @@ export function H3({
 	return (
 		<h3
 			className={cn(
-				"text-2xl font-semibold tracking-tight scroll-m-20",
+				"king-julian text-2xl font-semibold tracking-tight scroll-m-20",
 				className
 			)}
 		>
@@ -65,7 +65,7 @@ export function H4({
 	return (
 		<h4
 			className={cn(
-				"text-xl font-semibold tracking-tight scroll-m-20",
+				"king-julian text-xl font-semibold tracking-tight scroll-m-20",
 				className
 			)}
 		>
@@ -81,7 +81,7 @@ export function P({
 	className?: string;
 }) {
 	return (
-		<p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
+		<p className={cn("king-julian leading-7 [&:not(:first-child)]:mt-6", className)}>
 			{children}
 		</p>
 	);
@@ -94,7 +94,7 @@ export function Muted({
 	className?: string;
 }) {
 	return (
-		<p className={cn(`text-sm text-muted-foreground `, className)}>
+		<p className={cn(`king-julian text-sm text-muted-foreground `, className)}>
 			{children}
 		</p>
 	);
@@ -107,7 +107,7 @@ export function Small({
 	className?: string;
 }) {
 	return (
-		<p className={cn("text-sm font-medium leading-none", className)}>
+		<p className={cn("king-julian text-sm font-medium leading-none", className)}>
 			{children}
 		</p>
 	);
@@ -119,7 +119,7 @@ export function Large({
 	children: ReactNode;
 	className?: string;
 }) {
-	return <p className={cn("text-lg font-semibold", className)}>{children}</p>;
+	return <p className={cn("king-julian text-lg font-semibold", className)}>{children}</p>;
 }
 export function Lead({
 	children,
@@ -129,7 +129,7 @@ export function Lead({
 	className?: string;
 }) {
 	return (
-		<p className={cn("text-xl text-muted-foreground", className)}>
+		<p className={cn("king-julian text-xl text-muted-foreground", className)}>
 			{children}
 		</p>
 	);

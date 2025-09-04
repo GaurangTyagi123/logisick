@@ -15,12 +15,12 @@ function HexBox({ icon, heading, text }: HexBoxProps) {
 					"polygon(1rem 0%, calc(100% - 1rem) 0%, 100% 50%, calc(100% - 1rem) 100%, 1rem 100%, 0% 50%)",
 			}}
 		>
-			<h3 className="flex text-xl md:text-2xl gap-1 items-center font-semibold justify-center ">
+			<h3 className="flex text-lg md:text-xl gap-1 items-center font-semibold justify-center king-julian">
 				{icon == "truck" && <Truck />}
 				{icon == "report" && <Report />}
 				{heading}
 			</h3>
-			<p className="text-center">{text}</p>
+			<p className="text-center" style={{fontFamily:"TimesNewRoman"}}>{text}</p>
 		</div>
 	);
 }
