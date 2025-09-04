@@ -5,7 +5,6 @@ type Mode = "dark" | "light" | "system";
 interface ModeProps {
 	mode: Mode;
 	setMode: (inputMode: Mode) => void;
-	getTheme: () => "dark" | "light";
 }
 
 const useModeStore = create<ModeProps>((set) => ({
@@ -26,16 +25,6 @@ const useModeStore = create<ModeProps>((set) => ({
 		localStorage.setItem("shade-ui-mode", inputMode);
 		set({ mode: inputMode });
 		applyTheme(inputMode);
-	},
-
-	getTheme: (): "dark" | "light" => {
-		const currentMode = useModeStore.getState().mode;
-		if (currentMode === "system") {
-			return window.matchMedia("(prefers-color-scheme: dark)").matches
-				? "dark"
-				: "light";
-		}
-		return currentMode;
 	},
 }));
 

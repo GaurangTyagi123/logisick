@@ -2,19 +2,11 @@ import notfound from "@/assets/notfound.svg";
 import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
 import { H1, Large } from "@/components/ui/Typography";
-import useModeStore from "@/stores/useModeStore";
-import clsx from "clsx";
 import { Link } from "react-router-dom";
 
 function Notfound() {
-	const isDark = useModeStore().getTheme() == "dark";
 	return (
-		<div
-			className={clsx(
-				"h-screen w-full flex flex-col justify-between items-center px-4",
-				isDark ? "bg-zinc-900" : "bg-zinc-300"
-			)}
-		>
+		<div className="h-screen w-full flex flex-col justify-between items-center px-4 bg-zinc-300 dark:bg-zinc-900">
 			<Navbar hide={{ userButton: true, loginRegisterButton: true }} />
 			<div className="grid place-items-center grid-cols-1 md:grid-cols-5 container">
 				<Button

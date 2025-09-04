@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import clsx from "clsx";
 import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 
@@ -15,10 +14,8 @@ import OtpModal from "@/components/otpModal";
 import ChangePasswordModal from "@/components/changePasswordModal";
 
 import useAuthStore from "@/stores/useAuthStore";
-import useModeStore from "@/stores/useModeStore";
 
 function Profile() {
-	const isDark = useModeStore().getTheme() == "dark";
 	const { user, verifyEmail, isVerifingEmail } = useAuthStore();
 	const [open1, setOpen1] = useState<boolean>(false);
 	const [open2, setOpen2] = useState<boolean>(false);
@@ -56,20 +53,10 @@ function Profile() {
 	}, [isVerifingEmail, user?.isVerified, verifyEmail]);
 
 	return (
-		<div
-			className={clsx(
-				"w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative",
-				isDark ? "bg-zinc-900" : ""
-			)}
-		>
+		<div className="w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative dark:bg-zinc-900">
 			<Navbar />
 			{/* User Bar */}
-			<div
-				className={clsx(
-					"max-w-6xl p-4 w-full grid place-items-center md:flex gap-2 rounded-2xl shadow-2xl",
-					isDark ? "bg-zinc-700" : "bg-zinc-300"
-				)}
-			>
+			<div className="max-w-6xl p-4 w-full grid place-items-center md:flex gap-2 rounded-2xl shadow-2xl bg-zinc-300 dark:bg-zinc-700">
 				<div className="w-40 h-40 grid place-items-center relative">
 					<UserAvatar
 						customSeed={user?.avatar || "12345678"}
@@ -120,11 +107,7 @@ function Profile() {
 					</Lead>
 				</div>
 			</div>
-			<div
-				className={clsx(
-					"max-w-6xl p-4 w-full flex flex-col-reverse highlight md:grid md:grid-cols-5 gap-2 "
-				)}
-			>
+			<div className="max-w-6xl p-4 w-full flex flex-col-reverse highlight md:grid md:grid-cols-5 gap-2 ">
 				<span className="col-span-4">1</span>
 				<div className="col-span-1 grid">
 					<Button onClick={() => setOpen3(true)}>

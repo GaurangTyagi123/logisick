@@ -1,12 +1,10 @@
 import clsx from "clsx";
-import useModeStore from "@/stores/useModeStore";
 
 interface LoadingProps {
 	className?: string;
 }
 
 function Loading({ className }: LoadingProps) {
-	const isDark = useModeStore().getTheme() === "dark";
 	return (
 		<div
 			className={clsx(
@@ -16,24 +14,15 @@ function Loading({ className }: LoadingProps) {
 		>
 			<div className="flex space-x-1 justify-center w-full">
 				<div
-					className={clsx(
-						"rounded-full animate-bounce w-8 h-8",
-						isDark ? "bg-white" : "bg-zinc-900"
-					)}
+					className="rounded-full animate-bounce w-8 h-8 bg-zinc-900 dark:bg-white"
 					style={{ animationDelay: "0ms" }}
 				/>
 				<div
-					className={clsx(
-						"rounded-full animate-bounce w-8 h-8",
-						isDark ? "bg-white" : "bg-zinc-900"
-					)}
+					className="rounded-full animate-bounce w-8 h-8 bg-zinc-900 dark:bg-white"
 					style={{ animationDelay: "150ms" }}
 				/>
 				<div
-					className={clsx(
-						"rounded-full animate-bounce w-8 h-8",
-						isDark ? "bg-white" : "bg-zinc-900"
-					)}
+					className="rounded-full animate-bounce w-8 h-8 bg-zinc-900 dark:bg-white"
 					style={{ animationDelay: "300ms" }}
 				/>
 			</div>

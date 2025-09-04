@@ -1,6 +1,4 @@
 import useAuthStore from "@/stores/useAuthStore";
-import useModeStore from "@/stores/useModeStore";
-import clsx from "clsx";
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Navbar from "@/components/Navbar";
@@ -28,7 +26,6 @@ function ResetPassword() {
 	});
 	const [visi, setVisi] = useState<boolean>(false);
 	const navigate = useNavigate();
-	const isDark = useModeStore().getTheme() === "dark";
 
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
@@ -36,7 +33,10 @@ function ResetPassword() {
 	};
 
 	const validateConfirmPassword = (password: string) => {
-		if (password.trim().length >= 8 && password.trim() === form.password.trim())
+		if (
+			password.trim().length >= 8 &&
+			password.trim() === form.password.trim()
+		)
 			setValid({ ...valid, confirmPassword: true });
 		else setValid({ ...valid, confirmPassword: false });
 	};
@@ -65,12 +65,7 @@ function ResetPassword() {
 		}
 	}, [resetToken, navigate]);
 	return (
-		<div
-			className={clsx(
-				"w-full px-4 flex flex-col h-auto min-h-screen",
-				isDark ? "bg-zinc-900" : ""
-			)}
-		>
+		<div className="w-full px-4 flex flex-col h-auto min-h-screen dark:bg-zinc-900">
 			<Navbar
 				hide={{
 					userButton: true,

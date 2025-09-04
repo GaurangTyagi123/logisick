@@ -1,5 +1,3 @@
-import useModeStore from "@/stores/useModeStore";
-import clsx from "clsx";
 import Button from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 
@@ -18,14 +16,8 @@ import {
 import { Menu } from "@/assets/icons/HamBurger";
 
 function Home() {
-	const isDark = useModeStore().getTheme() === "dark";
 	return (
-		<div
-			className={clsx(
-				"w-full px-4 grid gap-3 h-auto",
-				isDark ? "bg-zinc-900" : ""
-			)}
-		>
+		<div className="w-full px-4 grid gap-3 h-auto dark:bg-zinc-900">
 			{/* topbar */}
 			<Navbar />
 			{/* tabs bar */}
