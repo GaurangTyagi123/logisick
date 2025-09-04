@@ -14,6 +14,7 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "@/assets/icons/HamBurger";
+import { Link } from "react-router-dom";
 
 function Home() {
 	return (
@@ -36,7 +37,9 @@ function Home() {
 							<DropdownMenuSeparator />
 							<DropdownMenuItem>Product</DropdownMenuItem>
 							<DropdownMenuItem>Community</DropdownMenuItem>
-							<DropdownMenuItem>Docs</DropdownMenuItem>
+							<DropdownMenuItem>
+								<Link to={"/docs"}></Link>
+							</DropdownMenuItem>
 							<DropdownMenuItem>Pricing</DropdownMenuItem>
 							<DropdownMenuItem>Contact</DropdownMenuItem>
 							<DropdownMenuItem>Link</DropdownMenuItem>
@@ -54,8 +57,8 @@ function Home() {
 						Community
 					</Button>
 					{/* documentations */}
-					<Button className="text-xl" variant={"link"}>
-						Docs
+					<Button className="text-xl" variant={"link"} asChild	>
+						<Link to={"/docs"}>Docs</Link>
 					</Button>
 					{/* api/feature pricing */}
 					<Button className="text-xl" variant={"link"}>

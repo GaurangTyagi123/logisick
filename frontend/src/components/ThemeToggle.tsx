@@ -20,6 +20,7 @@ function ThemeToggle({ classname }: ThemeToggleProps) {
 		<Button
 			onClick={handleThemeChange}
 			title="toggle colour theme"
+			variant={"outline"}
 			className={clsx(classname, "cursor-pointer")}
 		>
 			{mode === "system" && <System strokeWidth={2.5} />}

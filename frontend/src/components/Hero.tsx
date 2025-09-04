@@ -1,6 +1,6 @@
 import { BookOpen, Star } from "@/assets/icons/homepage";
 import Button from "./ui/button";
-import illus from "@/assets/illus.svg";
+import illus from "@/assets/579919970271Heavy_Equipment.gif";
 import HexBox from "./HexBox";
 
 function Hero() {
