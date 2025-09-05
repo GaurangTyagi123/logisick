@@ -169,4 +169,4 @@ No permission is granted to use, copy, modify, merge, publish, distribute, subli
 ----
 
 # Contact
-For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](gaurangt.mca25@cs.du.ac.in) or [ravishr.mca25@cs.du.ac.in](ravishr.mca25@cs.du.ac.in)
+For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](mailto:gaurangt.mca25@cs.du.ac.in) or [ravishr.mca25@cs.du.ac.in](mailto:ravishr.mca25@cs.du.ac.in)
