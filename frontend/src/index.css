@@ -17,6 +17,7 @@ body,
 	/* width: 100vw; */
 	/* min-height: 100dvh; */
 	/* scrollbar-gutter: stable; */
+	scroll-behavior: smooth;
 }
 .highlight,
 .highlight > * {

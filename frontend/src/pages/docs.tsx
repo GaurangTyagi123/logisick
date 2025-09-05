@@ -15,6 +15,8 @@ import logo from "@/assets/appicon.png";
 import { H2, H3, Large, Muted } from "@/components/ui/Typography";
 import Navbar from "@/components/Navbar";
 import DocSec from "@/components/DocSec";
+import Button from "@/components/ui/button";
+import { Link } from "react-router";
 
 interface TabItem {
 	label: string;
@@ -105,6 +107,9 @@ function Docs() {
 						className="p-2 h-10 w-10 rounded-xl"
 						variant={"outline"}
 					/>
+					<Button variant={"link"} asChild>
+						<Link to={"/"}>Go to Homepage</Link>
+					</Button>
 					<Navbar hide={{ logo: true }} />
 				</div>
 				<div className="p-4 king-julian h-11/12 overflow-y-auto">
