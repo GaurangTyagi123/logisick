@@ -153,7 +153,7 @@ Make sure you have installed:
 
 #### Access the app
 
-> Visit [http://localhost:8000](http://localhost:8000) in your browser.
+> Visit [http://localhost:5173](http://localhost:5173) in your browser.
 
 ----
 
@@ -169,4 +169,4 @@ No permission is granted to use, copy, modify, merge, publish, distribute, subli
 ----
 
 # Contact
-For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](gaurangt.mca25@cs.du.ac.in) or [ravish.mca25@cs.du.ac.in](ravish.mca25@cs.du.ac.in)
+For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](gaurangt.mca25@cs.du.ac.in) or [ravishr.mca25@cs.du.ac.in](ravishr.mca25@cs.du.ac.in)
