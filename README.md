@@ -146,8 +146,8 @@ Make sure you have installed:
 
 ```bash
 
-    cd ../frontend
-    npm start
+    cd frontend
+    npm run dev:react
 
 ```
 
