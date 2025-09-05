@@ -93,7 +93,7 @@ Make sure you have installed:
 
 
    ```bash
-   git clone https://github.com/your-username/logisick.git
+   git clone https://github.com/GaurangTyagi123/logisick.git
    cd logisick
 
    ```
