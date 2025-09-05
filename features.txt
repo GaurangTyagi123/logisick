@@ -10,3 +10,13 @@ TODO 2. User & Role Management -
     ? Access Control - admin | manager | Staff
     ? Permissions - read-only | write | read / write
     ! manager & staff signup through admin
+
+    
+ Auth:
+    cookies, JWT, bcryptjs, indexedDB,
+
+Security:
+    helmetJS, cors, rate-limit(prod),
+
+features:
+    electronbase, react-nice-avatar
