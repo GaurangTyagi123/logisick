@@ -4,6 +4,7 @@ import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
+    DropdownMenuLabel,
     DropdownMenuTrigger,
 } from './ui/dropdown-menu';
 import { useLocation, useNavigate } from 'react-router-dom';
@@ -12,6 +13,7 @@ import type React from 'react';
 import { useQueryClient } from '@tanstack/react-query';
 // import useAuthStore from '@/stores/useAuthStore';
 import useLogout from '@/hooks/useLogout';
+import { Separator } from './ui/separator';
 
 function UserButton() {
     const queryClient = useQueryClient();
@@ -36,10 +38,14 @@ function UserButton() {
                         customSeed={user?.avatar || '12345678'}
                         className="w-8 h-8"
                     />
-                    <span>{user?.name}</span>
+                    <span className='hidden sm:flex'>{user?.name}</span>
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+                <DropdownMenuLabel className='flex sm:hidden'>
+                    {user?.name}
+                </DropdownMenuLabel>
+                <Separator/>
                 {!userButtonHidden && (
                     <DropdownMenuItem onClick={() => navigate(`/profile`)}>
                         Profile

@@ -8,7 +8,7 @@ function Hero() {
 		<main className="md:mx-10 p-2 text-black">
 			{/* hero */}
 			<div
-				className="w-full min-h-120 flex p-4 flex-wrap justify-center "
+				className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center highlight"
 				style={{
 					backgroundColor: "hsl(var(--hue-gray-val))",
 					boxShadow:
@@ -48,7 +48,7 @@ function Hero() {
 						/>
 					</div>
 				</div>
-				<img src={illus} srcSet="" alt="" className="h-112" />
+				<img src={illus} srcSet="" alt="" className="h-full" />
 			</div>
 		</main>
 	);
