@@ -19,7 +19,8 @@ export function Login({ setFormType }: FormProps) {
 	const [form, setForm] = useState({ email: "", password: "" });
 	const [valid, setValid] = useState({ email: true, password: true });
 	const [visi, setVisi] = useState(false);
-	const { sendForgotPassword, isPending: isSendingForgotPassword } = useResetPassword();
+	const { sendForgotPassword, isPending: isSendingForgotPassword } =
+		useResetPassword();
 	const { loginFn: login, isPending: isLoggingIn } = useLogin();
 
 	const validatePassword = (password: string) => {
@@ -51,7 +52,7 @@ export function Login({ setFormType }: FormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="flex flex-col flex-1 max-w-2xl gap-4 p-4 border min-w-lg rounded-2xl shadow-2xl"
+			className="flex flex-col max-w-2xl gap-4 p-4 border md:min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<H2 className="mb-2 text-center">Login User</H2>
@@ -68,6 +69,7 @@ export function Login({ setFormType }: FormProps) {
 					value={form.email}
 					name="email"
 					required
+					className="text-sm md:text-md"
 					onChange={(e) => {
 						setForm({ ...form, email: e.target.value.trim() });
 						if (e.target.value.trim() != "") {
@@ -96,6 +98,7 @@ export function Login({ setFormType }: FormProps) {
 						value={form.password}
 						name="password"
 						required
+						className="text-sm md:text-md"
 						onChange={(e) => {
 							setForm({
 								...form,
@@ -206,7 +209,7 @@ export function Register({ setFormType }: FormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="flex flex-col flex-1 max-w-3xl gap-4 p-4 py-4 border min-w-lg rounded-2xl shadow-2xl"
+			className="flex flex-col max-w-2xl gap-4 p-4 py-4 border md:min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<h2 className="mb-2 text-3xl text-center">Register New User</h2>
@@ -219,10 +222,10 @@ export function Register({ setFormType }: FormProps) {
 				<Input
 					placeholder="Enter Your Full Name"
 					type="text"
-					id="name"
 					value={form.name}
 					name="name"
 					required
+					className="text-sm md:text-md"
 					onChange={(e) => {
 						setForm({
 							...form,
@@ -242,8 +245,8 @@ export function Register({ setFormType }: FormProps) {
 					type="email"
 					value={form.email}
 					name="email"
-					id="email"
 					required
+					className="text-sm md:text-md"
 					onChange={(e) => {
 						setForm({ ...form, email: e.target.value.trim() });
 						if (e.target.value.trim() != "") {
@@ -271,8 +274,8 @@ export function Register({ setFormType }: FormProps) {
 						type={visi ? "text" : "password"}
 						value={form.password}
 						name="password"
-						id="password"
 						required
+						className="text-sm md:text-md"
 						onChange={(e) => {
 							setForm({
 								...form,
@@ -311,8 +314,8 @@ export function Register({ setFormType }: FormProps) {
 						type={visi ? "text" : "password"}
 						value={form.confirmPassword}
 						name="confirmPassword"
-						id="confirmPassword"
 						required
+						className="text-sm md:text-md"
 						onChange={(e) => {
 							setForm({
 								...form,

@@ -21,7 +21,8 @@ interface ChangePasswordProps {
 }
 
 function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
-	const { updatePasswordFn: changePassword, isPending: isChangingPassword } = useUpdatePassword();
+	const { updatePasswordFn: changePassword, isPending: isChangingPassword } =
+		useUpdatePassword();
 	// const { changePassword, isChangingPassword } = useAuthStore();
 	const [form, setForm] = useState<{
 		password: string;
@@ -84,7 +85,6 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 								type={visi ? "text" : "password"}
 								value={form.password}
 								name="newpassword"
-								id="password"
 								required
 								onChange={(e) => {
 									setForm({
@@ -124,7 +124,6 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 								type={visi ? "text" : "password"}
 								value={form.confirmPassword}
 								name="confirmPassword"
-								id="confirmPassword"
 								required
 								onChange={(e) => {
 									setForm({

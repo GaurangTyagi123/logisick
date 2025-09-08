@@ -15,7 +15,7 @@ function Authenticate() {
 				}}
 			/>
 			<BigHeading />
-			<div className="grid p-4 place-items-center">
+			<div className="grid p-4 place-items-center w-full">
 				{formType === "login" ? (
 					<Login setFormType={setFormType} />
 				) : (
