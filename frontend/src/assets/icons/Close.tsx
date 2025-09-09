@@ -1,5 +1,6 @@
 import type { SVGProps } from "react";
 
+// close/exit icon
 export function Close(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

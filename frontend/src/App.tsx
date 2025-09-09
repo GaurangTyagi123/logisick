@@ -2,18 +2,20 @@ import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
-import useModeStore from "./stores/useModeStore";
-import Loading from "./components/loading";
+import useModeStore from "@/stores/useModeStore";
+// import useAuthStore from "@/stores/useAuthStore";
 
-import Notfound from "./pages/notfound";
-// import useAuthStore from "./stores/useAuthStore";
-import ResetPassword from "./pages/resetPassword";
-import useCheckAuth from "./hooks/useCheckAuth";
-import Docs from "./pages/docs";
-const Home = lazy(() => import("./pages/home"));
-const Dashboard = lazy(() => import("./pages/dashboard"));
-const Authenticate = lazy(() => import("./pages/authenticate"));
-const Profile = lazy(() => import("./pages/profile"));
+import Loading from "@/components/Loading";
+
+import useCheckAuth from "@/hooks/useCheckAuth";
+
+import ResetPassword from "@/pages/ResetPassword";
+import Notfound from "@/pages/Notfound";
+import Docs from "@/pages/Docs";
+const Home = lazy(() => import("@/pages/Home"));
+const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const Authenticate = lazy(() => import("@/pages/Authenticate"));
+const Profile = lazy(() => import("@/pages/Profile"));
 
 function App() {
 	const { getTheme, setMode } = useModeStore();

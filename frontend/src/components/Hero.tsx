@@ -1,7 +1,7 @@
-import { BookOpen, Star } from "@/assets/icons/homepage";
-import Button from "./ui/button";
-import illus from "@/assets/579919970271Heavy_Equipment.gif";
-import HexBox from "./HexBox";
+import { BookOpen, Star } from "@/assets/icons/Homepage";
+import Button from "@/components/ui/button";
+import illus from "@/assets/hero.gif";
+import HexBox from "@/components/HexBox";
 
 function Hero() {
 	return (

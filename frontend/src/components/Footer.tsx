@@ -5,7 +5,7 @@ import {
 	MapPin,
 	Phone,
 	Mail,
-} from "@/assets/icons/homepage";
+} from "@/assets/icons/Homepage";
 
 function Footer() {
 	return (

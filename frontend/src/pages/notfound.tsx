@@ -1,8 +1,10 @@
+import { Link } from "react-router-dom";
+
 import notfound from "@/assets/notfound.svg";
+
 import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
 import { H1, Large } from "@/components/ui/Typography";
-import { Link } from "react-router-dom";
 
 function Notfound() {
 	return (

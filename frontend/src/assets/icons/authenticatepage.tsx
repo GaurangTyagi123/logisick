@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// assets for authenticate page
+
+// eye icon
 export function Eye(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -20,6 +23,8 @@ export function Eye(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// eye-close icon
 export function EyeClosed(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -43,6 +48,8 @@ export function EyeClosed(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// google icon
 export function Google(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

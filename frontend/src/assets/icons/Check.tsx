@@ -1,5 +1,6 @@
 import type { SVGProps } from "react";
 
+// check-mark icon
 export function Check(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

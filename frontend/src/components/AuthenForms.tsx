@@ -1,12 +1,14 @@
 import { useState } from "react";
-import { Input } from "./ui/input";
-import Button from "./ui/button";
-// import useAuthStore from "@/stores/useAuthStore";
-import { Eye, EyeClosed, Google } from "@/assets/icons/authenticatepage";
-import { Label } from "./ui/label";
-import { Separator } from "./ui/separator";
 import { toast } from "react-toastify";
-import { H2 } from "./ui/Typography";
+
+import Button from "@/components/ui/button";
+import { H2 } from "@/components/ui/Typography";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Separator } from "@/components/ui/separator";
+import { Eye, EyeClosed, Google } from "@/assets/icons/Authenticatepage";
+// import useAuthStore from "@/stores/useAuthStore";
+
 import useLogin from "@/hooks/useLogin";
 import useResetPassword from "@/hooks/useSendForgotPassword";
 import useSignup from "@/hooks/useSignup";

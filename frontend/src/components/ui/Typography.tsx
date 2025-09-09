@@ -81,7 +81,7 @@ export function P({
 	className?: string;
 }) {
 	return (
-		<p className={cn("king-julian leading-7 [&:not(:first-child)]:mt-6", className)}>
+		<p className={cn("leading-7 [&:not(:first-child)]:mt-6", className)}>
 			{children}
 		</p>
 	);
@@ -94,7 +94,7 @@ export function Muted({
 	className?: string;
 }) {
 	return (
-		<p className={cn(`king-julian text-sm text-muted-foreground `, className)}>
+		<p className={cn(`text-sm text-muted-foreground `, className)}>
 			{children}
 		</p>
 	);
@@ -107,7 +107,7 @@ export function Small({
 	className?: string;
 }) {
 	return (
-		<p className={cn("king-julian text-sm font-medium leading-none", className)}>
+		<p className={cn("text-sm font-medium leading-none", className)}>
 			{children}
 		</p>
 	);
@@ -119,7 +119,7 @@ export function Large({
 	children: ReactNode;
 	className?: string;
 }) {
-	return <p className={cn("king-julian text-lg font-semibold", className)}>{children}</p>;
+	return <p className={cn("text-lg font-semibold", className)}>{children}</p>;
 }
 export function Lead({
 	children,

@@ -1,4 +1,4 @@
-import { Truck, Report } from "@/assets/icons/homepage";
+import { Truck, Report } from "@/assets/icons/Homepage";
 
 interface HexBoxProps {
 	icon: "truck" | "report";
@@ -20,7 +20,9 @@ function HexBox({ icon, heading, text }: HexBoxProps) {
 				{icon == "report" && <Report />}
 				{heading}
 			</h3>
-			<p className="text-center" style={{fontFamily:"TimesNewRoman"}}>{text}</p>
+			<p className="text-center" style={{ fontFamily: "TimesNewRoman" }}>
+				{text}
+			</p>
 		</div>
 	);
 }

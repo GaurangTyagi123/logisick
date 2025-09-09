@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// assets for mode-theme toggle button
+
+// sun/light mode icon
 export function Sun(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -9,7 +12,6 @@ export function Sun(props: SVGProps<SVGSVGElement>) {
 			viewBox="0 0 24 24"
 			{...props}
 		>
-			{/* Icon from Material Line Icons by Vjacheslav Trushkin - https://github.com/cyberalien/line-md/blob/master/license.txt */}
 			<g
 				fill="none"
 				stroke="currentColor"
@@ -133,6 +135,8 @@ export function Sun(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// moon/dark mode icon
 export function Moon(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -291,6 +295,8 @@ export function Moon(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// system/default mode icon
 export function System(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

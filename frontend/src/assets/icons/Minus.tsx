@@ -1,4 +1,6 @@
 import type { SVGProps } from "react";
+
+// minus icon
 export function Minus(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -8,7 +10,6 @@ export function Minus(props: SVGProps<SVGSVGElement>) {
 			viewBox="0 0 24 24"
 			{...props}
 		>
-			{/* Icon from Google Material Icons by Material Design Authors - https://github.com/material-icons/material-icons/blob/master/LICENSE */}
 			<path fill="currentColor" d="M19 12.998H5v-2h14z" />
 		</svg>
 	);

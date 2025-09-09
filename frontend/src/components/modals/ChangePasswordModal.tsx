@@ -1,18 +1,18 @@
-import Modal from "./Modal";
-import Button from "./ui/button";
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "./ui/card";
+} from "@/components/ui/card";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { Close } from "@/assets/icons/Close";
-import { Label } from "./ui/label";
-import { Input } from "./ui/input";
-import { Eye, EyeClosed } from "@/assets/icons/authenticatepage";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+import { Eye, EyeClosed } from "@/assets/icons/Authenticatepage";
 import useUpdatePassword from "@/hooks/useUpdatePassword";
 
 interface ChangePasswordProps {

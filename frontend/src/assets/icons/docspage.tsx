@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// assets for documentation page
+
+// panel-left icon
 export function PanelLeftIcon(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

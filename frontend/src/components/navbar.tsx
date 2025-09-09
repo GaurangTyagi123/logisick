@@ -1,10 +1,11 @@
-import Button from './ui/button';
-import ThemeToggle from './ThemeToggle';
-import UserButton from './UserButton';
 import { Link } from 'react-router-dom';
-import logo from '@/assets/appicon.png';
-import { Large } from './ui/Typography';
 import { useQueryClient } from '@tanstack/react-query';
+
+import logo from '@/assets/appicon.png';
+import Button from '@/components/ui/button';
+import { Large } from '@/components/ui/Typography';
+import UserButton from '@/components/UserButton';
+import ThemeToggle from '@/components/ThemeToggle';
 
 interface NavbarProps {
     hide?: {

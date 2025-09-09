@@ -1,5 +1,6 @@
 import type { SVGProps } from "react";
 
+// menu icon
 export function Menu(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

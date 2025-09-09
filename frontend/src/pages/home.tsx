@@ -1,10 +1,11 @@
+import { Link } from "react-router-dom";
+
 import Button from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-
 import Hero from "@/components/Hero";
 import Footer from "@/components/Footer";
-import BigHeading from "@/components/BigHeading";
 import Navbar from "@/components/Navbar";
+import BigHeading from "@/components/BigHeading";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -14,7 +15,6 @@ import {
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "@/assets/icons/HamBurger";
-import { Link } from "react-router-dom";
 
 function Home() {
 	return (

@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// assets for profile page
+
+// question mark icon
 export function Hint(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -16,6 +19,8 @@ export function Hint(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// verified mark icon
 export function Verified(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -33,6 +38,8 @@ export function Verified(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// dice icon
 export function Dice(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -57,6 +64,8 @@ export function Dice(props: SVGProps<SVGSVGElement>) {
 		</svg>
 	);
 }
+
+// pen/edit icon
 export function Edit(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -70,6 +79,50 @@ export function Edit(props: SVGProps<SVGSVGElement>) {
 			<path
 				fill="currentColor"
 				d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h8.925l-2 2H5v14h14v-6.95l2-2V19q0 .825-.587 1.413T19 21zm4-6v-4.25l9.175-9.175q.3-.3.675-.45t.75-.15q.4 0 .763.15t.662.45L22.425 3q.275.3.425.663T23 4.4t-.137.738t-.438.662L13.25 15zM21.025 4.4l-1.4-1.4zM11 13h1.4l5.8-5.8l-.7-.7l-.725-.7L11 11.575zm6.5-6.5l-.725-.7zl.7.7z"
+			/>
+		</svg>
+	);
+}
+
+// delete/trash icon
+export function Delete(props: SVGProps<SVGSVGElement>) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="1em"
+			height="1em"
+			viewBox="0 0 24 24"
+			{...props}
+		>
+			<path
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				d="M3 6h18m-2 0v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6m3 0V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2m-6 5v6m4-6v6"
+			/>
+		</svg>
+	);
+}
+
+// Shield icon
+export function Shield(props: SVGProps<SVGSVGElement>) {
+	return (
+		<svg
+			xmlns="http://www.w3.org/2000/svg"
+			width="1em"
+			height="1em"
+			viewBox="0 0 24 24"
+			{...props}
+		>
+			<path
+				fill="none"
+				stroke="currentColor"
+				strokeLinecap="round"
+				strokeLinejoin="round"
+				strokeWidth="2"
+				d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"
 			/>
 		</svg>
 	);

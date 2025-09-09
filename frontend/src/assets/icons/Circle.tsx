@@ -1,5 +1,6 @@
 import type { SVGProps } from "react";
 
+// circle icon
 export function Circle(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

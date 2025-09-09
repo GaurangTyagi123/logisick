@@ -52,7 +52,7 @@ function Button({
 			className={cn(
 				buttonVariants({ variant, size, className }),
 				"cursor-pointer jet-brains",
-				variant != "link"?"font-semibold":"font-normal"
+				// variant != "link"?"font-semibold":"font-normal"
 			)}
 			{...props}
 		/>

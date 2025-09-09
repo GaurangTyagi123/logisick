@@ -1,13 +1,16 @@
 // import useAuthStore from '@/stores/useAuthStore';
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Navbar from "@/components/Navbar";
 import { toast } from "react-toastify";
+
+import Navbar from "@/components/Navbar";
 import { H2 } from "@/components/ui/Typography";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import Button from "@/components/ui/button";
-import { Eye, EyeClosed } from "@/assets/icons/authenticatepage";
+
+import { Eye, EyeClosed } from "@/assets/icons/Authenticatepage";
+
 import useResetPassword from "@/hooks/useResetPassword";
 
 function ResetPassword() {
