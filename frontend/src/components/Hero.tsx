@@ -8,7 +8,7 @@ function Hero() {
 		<main className="md:mx-10 p-2 text-black">
 			{/* hero */}
 			<div
-				className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center highlight"
+				className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center"
 				style={{
 					backgroundColor: "hsl(var(--hue-gray-val))",
 					boxShadow:
