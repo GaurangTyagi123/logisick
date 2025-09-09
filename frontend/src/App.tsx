@@ -17,6 +17,10 @@ const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Authenticate = lazy(() => import("@/pages/Authenticate"));
 const Profile = lazy(() => import("@/pages/Profile"));
 
+/**
+ * @component a component to serves as base of all pages and handles routing of pages
+ * @returns base app component
+ */
 function App() {
 	const { getTheme, setMode } = useModeStore();
 	const { user, isPending: isCheckingAuth } = useCheckAuth();
