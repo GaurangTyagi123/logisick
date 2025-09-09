@@ -2,6 +2,10 @@ import { app, BrowserWindow, Menu, Tray } from "electron";
 import path from "path";
 import { getAssetPath } from "./pathResolver.js";
 
+/**
+ * @objective function which adds a custom tray for electron app
+ * @param main browser window of electron app
+ */
 export function createTray(main: BrowserWindow) {
 	const tray = new Tray(
 		path.join(

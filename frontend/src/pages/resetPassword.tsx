@@ -13,6 +13,10 @@ import { Eye, EyeClosed } from "@/assets/icons/Authenticatepage";
 
 import useResetPassword from "@/hooks/useResetPassword";
 
+/**
+ * @objective page to be used as form to reset forgot password (for users)
+ * @returns page/react component
+ */
 function ResetPassword() {
 	const resetToken = useParams().resetToken as string;
 	const { resetPasswordFn: resetPassword, isPending: isResettingPassword } =
@@ -32,11 +36,19 @@ function ResetPassword() {
 	const [visi, setVisi] = useState<boolean>(false);
 	const navigate = useNavigate();
 
+	/**
+	 * @objective function to validate password field
+	 * @param password string value to check for constrains of password
+	 */
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
 		else setValid({ ...valid, password: false });
 	};
 
+	/**
+	 * @objective function to validate confirm password field
+	 * @param password string value to check for constrains of confirm password
+	 */
 	const validateConfirmPassword = (password: string) => {
 		if (
 			password.trim().length >= 8 &&
@@ -46,6 +58,10 @@ function ResetPassword() {
 		else setValid({ ...valid, confirmPassword: false });
 	};
 
+	/**
+	 * @objective function to handle user request to reset password if forgot
+	 * @param e react form event
+	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
 		e.preventDefault();
 		if (
@@ -62,13 +78,14 @@ function ResetPassword() {
 	};
 
 	useEffect(() => {
-		console.log("checkig reset token");
+		console.log("checking reset token");
 
 		if (!resetToken.trim()) {
 			console.log("noreset token");
 			navigate("/");
 		}
 	}, [resetToken, navigate]);
+	
 	return (
 		<div className="w-full px-4 flex flex-col h-auto min-h-screen dark:bg-zinc-900">
 			<Navbar

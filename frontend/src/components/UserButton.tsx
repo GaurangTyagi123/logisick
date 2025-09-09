@@ -15,6 +15,10 @@ import { useQueryClient } from "@tanstack/react-query";
 import useLogout from "@/hooks/useLogout";
 import { Separator } from "@/components/ui/separator";
 
+/**
+ * @component a component to server as user image button on navbar or other place
+ * @returns react dropdown component
+ */
 function UserButton() {
 	const queryClient = useQueryClient();
 	const user = queryClient.getQueryData<Record<string, User> | undefined>([
@@ -25,6 +29,10 @@ function UserButton() {
 	const navigate = useNavigate();
 	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 
+	/**
+	 * @objective function to handle logout request from user
+	 * @param e mouse click event
+	 */
 	function handleLogout(e: React.MouseEvent<HTMLDivElement>) {
 		e.stopPropagation();
 		logout();

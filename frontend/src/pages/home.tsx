@@ -16,6 +16,10 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "@/assets/icons/HamBurger";
 
+/**
+ * @component a page to be used as home page of app
+ * @returns page/react component
+ */
 function Home() {
 	return (
 		<div className="w-full px-4 grid gap-3 h-auto dark:bg-zinc-900">

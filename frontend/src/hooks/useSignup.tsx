@@ -3,6 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+/**
+ * @objective hook to handle registration functionality of user
+ * @returns registration state of app from react-query
+ */
 function useSignup() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();

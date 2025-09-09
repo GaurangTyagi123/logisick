@@ -4,6 +4,12 @@ interface ModalProps {
 	openModal: boolean;
 	children: React.ReactNode;
 }
+
+/**
+ * @component a component wrapper to convert them to modal
+ * @param openModal boolean state to indicate weather modal is open or close 
+ * @returns react component
+ */
 function Modal({ openModal, children }: ModalProps) {
 	return (
 		<div

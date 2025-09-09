@@ -3,6 +3,10 @@ import Button from "@/components/ui/button";
 import illus from "@/assets/hero.gif";
 import HexBox from "@/components/HexBox";
 
+/**
+ * @component a component as a hero section of home page
+ * @returns a static react component
+ */
 function Hero() {
 	return (
 		<main className="md:mx-10 p-2 text-black">

@@ -3,6 +3,10 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
+/**
+ * @objective hook to handle resetting of password functionality
+ * @returns reset password state of app from react-query
+ */
 function useResetPassword() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();

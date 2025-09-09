@@ -27,6 +27,9 @@ interface Tabs {
 	[key: string]: TabItem[];
 }
 
+/**
+ * @information tabs for sidebar and heading of documents
+ */
 const tabs: Tabs = {
 	"User Guide": [
 		{ label: "Getting Started", link: "#ug-getting-started" },
@@ -46,6 +49,10 @@ const tabs: Tabs = {
 	],
 };
 
+/**
+ * @component a custom sidebar component for documentation page
+ * @returns sidebar component
+ */
 function CustomSidebar() {
 	return (
 		<Sidebar>
@@ -97,6 +104,10 @@ function CustomSidebar() {
 	);
 }
 
+/**
+ * @component a page to be used as documentation page of app
+ * @returns page/react component
+ */
 function Docs() {
 	return (
 		<SidebarProvider>

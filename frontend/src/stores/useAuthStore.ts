@@ -56,6 +56,11 @@ interface AuthProps {
 	deleteUser: () => Promise<void>;
 }
 
+/**
+ * @objective function to handle error for async API class to server or system error
+ * @param error instance of error
+ * @param message custom message for toast to user
+ */
 function handleError(error: unknown, message: string) {
 	if (isAxiosError(error)) {
 		const msg = error.response?.data?.message || message;
@@ -66,17 +71,24 @@ function handleError(error: unknown, message: string) {
 	}
 }
 
+/**
+ * @objective hook to handle user authentication functions 
+ */
 const useAuthStore = create<AuthProps>((set) => ({
-	user: null,
-	isCheckingAuth: true,
-	isLoggingIn: false,
-	isRegistering: false,
-	isVerifingEmail: false,
-	isUpdatingUser: false,
-	isSendingForgotPassword: false,
-	isResettingPassword: false,
-	isChangingPassword: false,
-	isDeleteingUser: false,
+	user: null, // user state
+	isCheckingAuth: true, // boolean value to tell if check auth request is processing
+	isLoggingIn: false, // boolean value to tell if logging in request is processing
+	isRegistering: false, // boolean value to tell if registering request is processing
+	isVerifingEmail: false, // boolean value to tell if verifying email request is processing
+	isUpdatingUser: false, // boolean value to tell if updating user request is processing
+	isSendingForgotPassword: false, // boolean value to tell if seding forgot password mail request is processing
+	isResettingPassword: false, // boolean value to tell if resetting password request is processing
+	isChangingPassword: false, // boolean value to tell if changing password request is processing
+	isDeleteingUser: false, // boolean value to tell if deleting userrequest is processing
+	/**
+	 * @objective async function to request api to check user authentication
+	 * @effect updates user state
+	 */
 	checkAuth: async () => {
 		try {
 			set({ isCheckingAuth: true });
@@ -94,6 +106,11 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isCheckingAuth: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to login user
+	 * @param form data for login containing (email,password)
+	 * @effect updated user state if logged in successfully
+	 */
 	login: async (form) => {
 		try {
 			set({ isLoggingIn: true });
@@ -110,6 +127,11 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isLoggingIn: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to register new user
+	 * @param form data for registering (name,email,password,confirm password)
+	 * @effect updates user state if succesfull
+	 */
 	register: async (form) => {
 		try {
 			set({ isRegistering: true });
@@ -126,6 +148,10 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isRegistering: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to logout user
+	 * @effect settes user to null if succesfull
+	 */
 	logout: async () => {
 		try {
 			const res = await axinstance.get<{ status: string }>(
@@ -146,6 +172,12 @@ const useAuthStore = create<AuthProps>((set) => ({
 			handleError(error, "Error logging out user");
 		}
 	},
+	/**
+	 * @objective async function to request api to verify email
+	 * @param form data for verifying email (otp?)
+	 * @returns (already | sent | verified )sate of verification of email
+	 * @effect updates user state to new user data
+	 */
 	verifyEmail: async (form) => {
 		try {
 			set({ isVerifingEmail: true });
@@ -176,6 +208,11 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isVerifingEmail: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to update user
+	 * @param form data to update user (name?,email?,avatar?,org?)
+	 * @effect updates user with new data
+	 */
 	updateUser: async (form) => {
 		try {
 			set({ isUpdatingUser: true });
@@ -195,6 +232,10 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isUpdatingUser: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to send forgot password email
+	 * @param form data to send forgot password request (email)
+	 */
 	sendForgotPassword: async (form) => {
 		try {
 			set({ isSendingForgotPassword: true });
@@ -209,6 +250,12 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isSendingForgotPassword: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to reset pasword after user forgot
+	 * @param resetToken token user got on email
+	 * @param form data for request (previous password,new password,confirm new password)
+	 * @effect updates user with new data
+	 */
 	resetPassword: async (resetToken, form) => {
 		try {
 			if (!resetToken.trim()) {
@@ -230,6 +277,11 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isResettingPassword: true });
 		}
 	},
+	/**
+	 * @objective async function to request api to change user password
+	 * @param form data to change password (new password,confirm new password)
+	 * @effect updates user with new data
+	 */
 	changePassword: async (form) => {
 		try {
 			set({ isChangingPassword: true });
@@ -248,6 +300,10 @@ const useAuthStore = create<AuthProps>((set) => ({
 			set({ isChangingPassword: false });
 		}
 	},
+	/**
+	 * @objective async function to request api to delete user
+	 * @effect sets user to null
+	 */
 	deleteUser: async () => {
 		try {
 			set({ isDeleteingUser: true });

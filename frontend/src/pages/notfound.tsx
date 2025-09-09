@@ -6,6 +6,10 @@ import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
 import { H1, Large } from "@/components/ui/Typography";
 
+/**
+ * @component a page to be used as a fallback page where thier is no path defined
+ * @returns page/react component
+ */
 function Notfound() {
 	return (
 		<div className="h-screen w-full flex flex-col justify-between items-center px-4 bg-zinc-300 dark:bg-zinc-900">

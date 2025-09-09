@@ -21,10 +21,21 @@ interface OTPProps {
 	setOtp: React.Dispatch<React.SetStateAction<string>>;
 }
 
+/**
+ * @component a modal for profilepage which prompts user to enter otp when user want to verify email 
+ * @param open a boolean value stating is modal is open
+ * @param setOpen a function to change state of open of modal
+ * @param otp a string state for user input of otp
+ * @param setOtp a setter function for user input of otp
+ * @returns gives a components as a otp entering modal to put somewhere
+ */
 function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 	const { verifyEmail, isVerifingEmail } = useAuthStore();
 	const queryClient = useQueryClient();
 
+	/**
+	 * @objective async function to handle user request to verify email
+	 */
 	async function handleVerifyEmail() {
 		if (otp.trim() !== "" && otp.length === 4) {
 			const res = await verifyEmail({ otp });

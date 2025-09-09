@@ -14,6 +14,12 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 
+/**
+ * @component a modal for profilepage which prompts user to delete account when clicks to do so
+ * @param open a boolean value stating is modal is open
+ * @param setOpen a function to change state of open of modal
+ * @returns gives a components as a delete account modal to put somewhere
+ */
 function DeleteMeModal({
 	open,
 	setOpen,
@@ -24,6 +30,9 @@ function DeleteMeModal({
 	const [text, setText] = useState<string>("");
 	const { deleteUser, isDeleteingUser } = useAuthStore();
 
+	/**
+	 * @objective async function to handle the user request to delete account
+	 */
 	async function handleDeleteAccount() {
 		if (text.trim() == "delete my account") {
 			await deleteUser();

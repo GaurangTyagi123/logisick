@@ -4,6 +4,10 @@ import { Login, Register } from "@/components/AuthenForms";
 import { useState } from "react";
 import Navbar from "@/components/Navbar";
 
+/**
+ * @component authentication page for users
+ * @returns page with selected authentcation for ("login" | "register")
+ */
 function Authenticate() {
 	const [formType, setFormType] = useState<"login" | "register">("login");
 	return (

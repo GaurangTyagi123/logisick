@@ -4,6 +4,10 @@ import { getAssetPath, getPreloadPath, getUIPath } from "./pathResolver.js";
 import { handleCloseEvent, isDev } from "./utils.js";
 import { createTray } from "./tray.js";
 
+/**
+ * @brief event listener on app when it gets ready
+ * @param callback function which runs when app gets ready
+ */
 app.on("ready", () => {
 	// creating app window
 	const main = new BrowserWindow({

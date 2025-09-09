@@ -6,6 +6,13 @@ interface HexBoxProps {
 	text: string;
 }
 
+/**
+ * @component a hexagonal box to use as a styled component iwht heading, icon and body 
+ * @param icon string icon name to specify whihc icon to choose ("truck" | "report") 
+ * @param heading string heading for the hexbox
+ * @param text string body text of the hexbox
+ * @returns a styled react component 
+ */
 function HexBox({ icon, heading, text }: HexBoxProps) {
 	return (
 		<div

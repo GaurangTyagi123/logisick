@@ -7,6 +7,10 @@ import {
 	Mail,
 } from "@/assets/icons/Homepage";
 
+/**
+ * @component a static footer component for the hoem and other pages
+ * @returns a static react component
+ */
 function Footer() {
 	return (
 		<footer className="border-t border-border bg-zinc-300 dark:bg-zinc-800">

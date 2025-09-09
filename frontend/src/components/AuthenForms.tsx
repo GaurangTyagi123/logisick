@@ -17,6 +17,11 @@ interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
 }
 
+/**
+ * @component a login for for user authentication
+ * @param setFormType a setter function to set type of the form which is getting selected ("login" | "register")
+ * @returns a components to place conditionally wheather user want to login or register
+ */
 export function Login({ setFormType }: FormProps) {
 	const [form, setForm] = useState({ email: "", password: "" });
 	const [valid, setValid] = useState({ email: true, password: true });
@@ -25,21 +30,36 @@ export function Login({ setFormType }: FormProps) {
 		useResetPassword();
 	const { loginFn: login, isPending: isLoggingIn } = useLogin();
 
+	/**
+	 * @objective function to validate password field
+	 * @param password string value to check for constrains of password
+	 */
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
 		else setValid({ ...valid, password: false });
 	};
 
+	/**
+	 * @objective function to validate email field
+	 * @param email string value to check for constrains of email
+	 */
 	function validateEmail(email: string) {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		setValid({ ...valid, email: emailRegex.test(email) });
 	}
 
+	/**
+	 * @objective function to handle user request to login 
+	 * @param e form event on when submit
+	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
 		e.preventDefault();
 		if (form.email.trim() !== "" && form.password.length >= 8) login(form);
 	};
 
+	/**
+	 * @objective function to send forgot password request to send reset link to user registered email 
+	 */
 	const sendForgotMail = (): void => {
 		if (form.email.trim().length == 0 && valid.email) {
 			toast.error("Email is required to reset password", {
@@ -164,6 +184,11 @@ export function Login({ setFormType }: FormProps) {
 	);
 }
 
+/**
+ * @component a register for for user authentication
+ * @param setFormType a setter function to set type of the form which is getting selected ("login" | "register")
+ * @returns a components to place conditionally wheather user want to login or register
+ */
 export function Register({ setFormType }: FormProps) {
 	const [form, setForm] = useState({
 		name: "",
@@ -180,22 +205,38 @@ export function Register({ setFormType }: FormProps) {
 	const { signupFn: register, isPending: isRegistering } = useSignup();
 	// const { isRegistering, register } = useAuthStore();
 
+	/**
+	 * @objective function to validate password field
+	 * @param password string value to check for constrains of password
+	 */
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
 		else setValid({ ...valid, password: false });
 	};
 
+	/**
+	 * @objective function to validate confirm password field
+	 * @param password string value to check for constrains of confirm password
+	 */
 	const validateConfirmPassword = (password: string) => {
 		if (password.trim() === form.password.trim())
 			setValid({ ...valid, confirmPassword: true });
 		else setValid({ ...valid, confirmPassword: false });
 	};
 
+	/**
+	 * @objective function to validate email field
+	 * @param email string value to check for constrains of email
+	 */
 	function validateEmail(email: string) {
 		const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 		setValid({ ...valid, email: emailRegex.test(email) });
 	}
 
+	/**
+	 * @objective function to handle user request to register as new user
+	 * @param e react form event
+	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
 		e.preventDefault();
 		if (

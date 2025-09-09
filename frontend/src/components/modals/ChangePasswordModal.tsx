@@ -20,6 +20,12 @@ interface ChangePasswordProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * @component a modal for profilepage which prompts user for change of password when clicks to change password
+ * @param open a boolean value stating is modal is open
+ * @param setOpen a function to change state of open of modal
+ * @returns gives a components as a change password modal to put somewhere
+ */
 function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	const { updatePasswordFn: changePassword, isPending: isChangingPassword } =
 		useUpdatePassword();
@@ -40,29 +46,41 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	});
 	const [visi, setVisi] = useState<boolean>(false);
 
+	/**
+	 * @objective function to validate password field
+	 * @param password string value to check for constrains of password
+	 */
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
 		else setValid({ ...valid, password: false });
 	};
 
+	/**
+	 * @objective function to validate confirm password field
+	 * @param password string value to check for constrains of confirm password
+	 */
 	const validateConfirmPassword = (password: string) => {
 		if (password.trim() === form.password.trim())
 			setValid({ ...valid, confirmPassword: true });
 		else setValid({ ...valid, confirmPassword: false });
 	};
 
-	function handleSubmit() {
+	/**
+	 * @objective function to handle the submittion of change password form
+	 */ 
+	async function handleSubmit() {
 		if (
 			form.password != "" &&
 			form.password.length >= 8 &&
 			form.confirmPassword === form.password
 		) {
-			changePassword(form);
+			await changePassword(form);
 			setOpen(false);
 		} else {
 			toast.error("All fields are required", { className: "toast" });
 		}
 	}
+
 	return (
 		<Modal openModal={open}>
 			<Card className="min-w-md">

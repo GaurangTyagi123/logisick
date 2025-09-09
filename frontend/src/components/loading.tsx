@@ -4,6 +4,11 @@ interface LoadingProps {
 	className?: string;
 }
 
+/**
+ * @component a aninated loading component to use as a placeholder when other compoennts are loading
+ * @param className extra classes added at parent component at whihc it is used 
+ * @returns react component
+ */
 function Loading({ className }: LoadingProps) {
 	return (
 		<div

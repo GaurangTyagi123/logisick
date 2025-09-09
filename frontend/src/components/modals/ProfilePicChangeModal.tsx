@@ -22,6 +22,14 @@ interface ChangeProps {
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
+/**
+ * @component a modal for profilepage which prompts user to change profile picture when user want to do so 
+ * @param open a boolean value stating is modal is open
+ * @param setOpen a function to change state of open of modal
+ * @param modalPic a string state for user input of avatar seed
+ * @param setModalPic a setter function for user input of avatar seed
+ * @returns gives a components as a profile pic changing modal to put somewhere
+ */
 function ProfilePicChangeModal({
 	open,
 	setModalPic,
@@ -37,6 +45,10 @@ function ProfilePicChangeModal({
 		useUpdateUser();
 	// const { user, updateUser, isUpdatingUser } = useAuthStore();
 
+	/**
+	 * @objective function to generate random seed for new profile picture
+	 * @param len length of the random generates string
+	 */
 	function genProfileString(len: number) {
 		const all =
 			"abcdefghijklmnopqrstuvwxyzBCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
@@ -47,6 +59,9 @@ function ProfilePicChangeModal({
 		setModalPic(ret);
 	}
 
+	/**
+	 * @objective function to handle user request to change profile picture
+	 */
 	function handleProfilePicChange() {
 		if (modalPic.length > 0 && modalPic !== user?.avatar) {
 			updateUser({ avatar: modalPic });

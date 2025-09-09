@@ -17,7 +17,10 @@ import ProfilePicChangeModal from "@/components/modals/ProfilePicChangeModal";
 
 import useAuthStore from "@/stores/useAuthStore";
 import ProfileOrgTable from "@/components/ProfileOrgTable";
-
+/**
+ * @component a page to be used a profile page for users where they can modify their information
+ * @returns page/react component
+ */
 function Profile() {
 	const { verifyEmail, isVerifingEmail } = useAuthStore();
 	const queryClient = useQueryClient();

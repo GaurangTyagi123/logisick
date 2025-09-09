@@ -1,5 +1,9 @@
 import { Navigate, useParams } from "react-router-dom";
 
+/**
+ * @objective page to use as dashboard for a organizations  
+ * @returns page/react component
+ */
 function Dashboard() {
 	const { orgId } = useParams<string>();
 

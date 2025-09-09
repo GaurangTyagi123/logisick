@@ -57,6 +57,11 @@ const organizations: OrgType[] = [
 	  },
 ];
 
+/**
+ * @objective function to give different classes based on subscription type
+ * @param subscription type of subscription of organization
+ * @returns string of tailwind classes
+ */
 const getSubscriptionColor = (subscription: OrgType["subscription"]) => {
 	switch (subscription) {
 		case "Pro":
@@ -70,6 +75,11 @@ const getSubscriptionColor = (subscription: OrgType["subscription"]) => {
 	}
 };
 
+/**
+ * @objective function to give different clasees based on status type
+ * @param status type of status of organization 
+ * @returns string of tailwind classes
+ */
 const getStatusColor = (status: OrgType["status"]) => {
 	switch (status) {
 		case "Active":
@@ -81,6 +91,10 @@ const getStatusColor = (status: OrgType["status"]) => {
 	}
 };
 
+/**
+ * @component a table component to display organizations a users is included in along wiht other info of organization
+ * @returns react component
+ */
 function ProfileOrgTable() {
 	return (
 		<div className="col-span-1 md:col-span-4">
