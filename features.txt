@@ -20,3 +20,18 @@ Security:
 
 features:
     electronbase, react-nice-avatar
+
+technologies used
+1. NodeJS
+2. Typescript
+3. ReactJS
+4. TailwindCSS
+5. ShadcnUI
+6. Google Authentication
+7. MongoDB
+8. Mongoose ODM
+9. MongoDB Atlas 
+10. ElectronJS
+11. JWT Authentication
+12. ExpressJS
+13. 

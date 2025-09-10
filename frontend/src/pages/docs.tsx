@@ -151,16 +151,16 @@ function Docs() {
 							<H3>Feature-1</H3>
 						</DocSec>
 						<DocSec id="feat-f2">
-							<H3>Featur-2</H3>
+							<H3>Feature-2</H3>
 						</DocSec>
 						<DocSec id="feat-f3">
-							<H3>Featur-3</H3>
+							<H3>Feature-3</H3>
 						</DocSec>
 						<DocSec id="feat-f4">
-							<H3>Featur-4</H3>
+							<H3>Feature-4</H3>
 						</DocSec>
 						<DocSec id="feat-f5">
-							<H3>Featur-5</H3>
+							<H3>Feature-5</H3>
 						</DocSec>
 					</div>
 				</div>
