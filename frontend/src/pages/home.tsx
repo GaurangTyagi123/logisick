@@ -24,7 +24,7 @@ function Home() {
 	return (
 		<div className="w-full px-4 grid gap-3 h-auto dark:bg-zinc-900">
 			{/* topbar */}
-			<Navbar />
+			<Navbar hide={{logo:true}}/>
 			{/* tabs bar */}
 			<div className="flex flex-col justify-between gap-2 mt-4 md:mt-0">
 				<div className="flex flex-col justify-between">

@@ -111,7 +111,7 @@ function ProfileOrgTable() {
 							<div className="h-full w-full grid place-items-center gap-3">
 								<H3>You are not in any organizations.</H3>
                                 <Button asChild>
-                                    <Link to={"/default/dashboard"}>
+                                    <Link to={"/dashboard"}>
                                         Create/Join a Organization
                                     </Link>
                                 </Button>

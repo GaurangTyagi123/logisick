@@ -10,7 +10,7 @@ import Loading from "@/components/Loading";
 import useCheckAuth from "@/hooks/useCheckAuth";
 
 import ResetPassword from "@/pages/ResetPassword";
-import Notfound from "@/pages/Notfound";
+import Notfound from "@/pages/NotFound";
 import Docs from "@/pages/Docs";
 const Home = lazy(() => import("@/pages/Home"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
@@ -35,9 +35,11 @@ function App() {
 		<>
 			<Suspense fallback={<Loading />}>
 				<Routes>
+					{/* path for homepage */}
 					<Route index path="/" element={<Home />} />
+					{/* path for all/specific dashboard */}
 					<Route
-						path="/:orgId/dashboard"
+						path="/dashboard/:orgid?"
 						element={
 							user ? (
 								<Dashboard />
@@ -46,12 +48,14 @@ function App() {
 							)
 						}
 					/>
+					{/* path for uesr authentication */}
 					<Route
 						path="/authenticate"
 						element={
 							!user ? <Navigate to={"/"} /> : <Authenticate />
 						}
 					/>
+					{/* path for default/specific user profile  */}
 					<Route
 						path="/profile/:userId?"
 						element={
@@ -62,13 +66,16 @@ function App() {
 							)
 						}
 					/>
+					{/* path to reset password of user who forgot thier's */}
 					<Route
 						path="/resetpassword/:resetToken"
 						element={
 							!user ? <Navigate to="/" /> : <ResetPassword />
 						}
 					/>
+					{/* path for documentation */}
 					<Route path="/docs" element={<Docs />} />
+					{/* default path for paths that are not found/defined/allowed */}
 					<Route path="*" element={<Notfound />} />
 				</Routes>
 			</Suspense>

@@ -1,17 +1,19 @@
-import { Navigate, useParams } from "react-router-dom";
+import { useState } from "react";
+import { useParams } from "react-router-dom";
 
 /**
- * @objective page to use as dashboard for a organizations  
+ * @objective page to use as dashboard for a organizations
  * @returns page/react component
  */
 function Dashboard() {
-	const { orgId } = useParams<string>();
+	const [org, ] = useState<string>(
+		useParams<string>().orgid || ""
+	);
 
-	if (!orgId) return <Navigate to={"/notfound"} />;
 	return (
 		<div>
 			<h2>Dashboard</h2>
-			<div>Organizatin Id : {orgId}</div>
+			<div>Organizatin Id : {org || "All orgs"}</div>
 		</div>
 	);
 }
