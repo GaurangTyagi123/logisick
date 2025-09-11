@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -10,10 +10,14 @@ import Navbar from "@/components/Navbar";
 import UserAvatar from "@/components/UserAvatar";
 import { H2, Large, Lead } from "@/components/ui/Typography";
 
-import OtpModal from "@/components/modals/OtpModal";
-import DeleteMeModal from "@/components/modals/DeleteMeModal";
-import ChangePasswordModal from "@/components/modals/ChangePasswordModal";
-import ProfilePicChangeModal from "@/components/modals/ProfilePicChangeModal";
+const OtpModal = lazy(() => import("@/components/modals/OtpModal"));
+const DeleteMeModal = lazy(() => import("@/components/modals/DeleteMeModal"));
+const ChangePasswordModal = lazy(
+	() => import("@/components/modals/ChangePasswordModal")
+);
+const ProfilePicChangeModal = lazy(
+	() => import("@/components/modals/ProfilePicChangeModal")
+);
 
 import useAuthStore from "@/stores/useAuthStore";
 import ProfileOrgTable from "@/components/ProfileOrgTable";
@@ -140,23 +144,25 @@ function Profile() {
 
 			{/* MODALS */}
 			{/* profile-change modal */}
-			<ProfilePicChangeModal
-				open={open1}
-				setOpen={setOpen1}
-				modalPic={modalPic}
-				setModalPic={setModalPic}
-			/>
-			{/* otp modal */}
-			<OtpModal
-				open={open2}
-				setOpen={setOpen2}
-				otp={otp}
-				setOtp={setOtp}
-			/>
-			{/* change password modal */}
-			<ChangePasswordModal open={open3} setOpen={setOpen3} />
-			{/* confirm delete modal */}
-			<DeleteMeModal open={open4} setOpen={setOpen4} />
+			<Suspense>
+				<ProfilePicChangeModal
+					open={open1}
+					setOpen={setOpen1}
+					modalPic={modalPic}
+					setModalPic={setModalPic}
+				/>
+				{/* otp modal */}
+				<OtpModal
+					open={open2}
+					setOpen={setOpen2}
+					otp={otp}
+					setOtp={setOtp}
+				/>
+				{/* change password modal */}
+				<ChangePasswordModal open={open3} setOpen={setOpen3} />
+				{/* confirm delete modal */}
+				<DeleteMeModal open={open4} setOpen={setOpen4} />
+			</Suspense>
 		</div>
 	);
 }

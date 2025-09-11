@@ -5,13 +5,14 @@ import { ToastContainer } from "react-toastify";
 import useModeStore from "@/stores/useModeStore";
 // import useAuthStore from "@/stores/useAuthStore";
 
-import Loading from "@/components/Loading";
-
 import useCheckAuth from "@/hooks/useCheckAuth";
 
-import ResetPassword from "@/pages/ResetPassword";
-import Notfound from "@/pages/NotFound";
-import Docs from "@/pages/Docs";
+const Loading = lazy(() => import("@/components/Loading"));
+
+const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
+const Notfound = lazy(() => import("@/pages/NotFound"));
+const Docs = lazy(() => import("@/pages/Docs"));
+
 const Home = lazy(() => import("@/pages/Home"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Authenticate = lazy(() => import("@/pages/Authenticate"));
@@ -23,13 +24,13 @@ const Profile = lazy(() => import("@/pages/Profile"));
  */
 function App() {
 	const { getTheme, setMode } = useModeStore();
-	const { user, isPending: isCheckingAuth } = useCheckAuth();
+	const { user } = useCheckAuth();
 
 	useEffect(() => {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
 
-	if (isCheckingAuth) return <Loading />;
+	// if (isCheckingAuth) return <Loading />;
 
 	return (
 		<>
