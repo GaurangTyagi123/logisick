@@ -90,7 +90,7 @@ export const updateUser = catchAsync(
 				req.user?._id,
 				newData,
 				{ new: true, runValidators: true }
-			);
+			).select("-__v");
 		if (!updateUser) return next(new AppError("There was an error", 500));
 		return res.status(200).json({
 			status: "success",

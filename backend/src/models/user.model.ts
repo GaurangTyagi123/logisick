@@ -127,8 +127,8 @@ userSchema.methods.comparePasswords = async function (
 };
 // checks whether the password was updated after the jwt was 
 userSchema.methods.passwordUpdatedAfter = function (issuedTimeStamp: number) {
-    if (this.passwordUpdatedAt) {
-        const updateTimeStamp = this.passwordUpdatedAt.getTime() / 1000;
+    if (this.updatedAt) {
+        const updateTimeStamp = this.updatedAt.getTime() / 1000;
         return updateTimeStamp > issuedTimeStamp;
     }
 };

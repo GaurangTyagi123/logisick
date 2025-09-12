@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import Navbar from "@/components/Navbar";
+import Navbar from "@/components/Navbar"
 import { H2 } from "@/components/ui/Typography";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";

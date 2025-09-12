@@ -44,7 +44,7 @@ export const checkAuth: checkAuth = async () => {
 		const user = res.data.data.user;
 		return { user };
 	} catch (err) {
-		console.log(err);
+		handleError(err,"You are not logged in")
 	}
 };
 
