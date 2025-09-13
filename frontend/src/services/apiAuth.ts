@@ -9,27 +9,30 @@ import { toast } from "react-toastify";
 //     checkAuth: () => Promise<void>;
 // }
 
-// type PasswordResetForm = {
-//     prevPassword: string;
-//     password: string;
-//     confirmPassword: string;
-// };
+type PasswordResetForm = {
+	password: string;
+	confirmPassword: string;
+};
 type checkAuth = () => Promise<{ user: User } | undefined>;
+
 type signup = (form: {
 	email: string;
 	password: string;
 	confirmPassword: string;
 }) => Promise<User | undefined>;
+
 type login = (form: {
 	email: string;
 	password: string;
 }) => Promise<User | void>;
+
 type sendForgotPassword = (form: {
 	email: string;
 }) => Promise<{ message: string } | undefined>;
+
 type resetPassword = (
 	resetToken: string,
-	form: Record<string, string>
+	form: PasswordResetForm
 ) => Promise<User | undefined>;
 
 /**
@@ -44,7 +47,7 @@ export const checkAuth: checkAuth = async () => {
 		const user = res.data.data.user;
 		return { user };
 	} catch (err) {
-		handleError(err,"You are not logged in")
+		handleError(err, "You are not logged in");
 	}
 };
 
@@ -128,7 +131,7 @@ export const sendForgotToken: sendForgotPassword = async (form) => {
 /**
  * @objective async function to request api to reset pasword after user forgot
  * @param resetToken token user got on email
- * @param form data for request (previous password,new password,confirm new password)
+ * @param form data for request (new password,confirm new password)
  * @effect updates user with new data
  */
 export const resetPassword: resetPassword = async (resetToken, form) => {

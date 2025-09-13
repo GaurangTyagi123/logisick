@@ -22,7 +22,7 @@ function useUpdatePassword() {
             logout();
         },
         onError: (err) => {
-            toast.error(err.message);
+            toast.error(err.message,{className:"toast"});
         },
     });
     return { updatePasswordFn, isPending };

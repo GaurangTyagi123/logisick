@@ -17,7 +17,7 @@ function useUpdateUser() {
             toast.success('User updated successfully', { className: 'toast' });
         },
         onError: (err) => {
-            toast.error(err.message);
+            toast.error(err.message,{className:"toast"});
         },
     });
     return { updateUserFn, isPending };

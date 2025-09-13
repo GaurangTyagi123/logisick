@@ -31,16 +31,20 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 		useUpdatePassword();
 	// const { changePassword, isChangingPassword } = useAuthStore();
 	const [form, setForm] = useState<{
+		prevPassword: string;
 		password: string;
 		confirmPassword: string;
 	}>({
+		prevPassword: "",
 		password: "",
 		confirmPassword: "",
 	});
 	const [valid, setValid] = useState<{
+		prevPassword: boolean;
 		password: boolean;
 		confirmPassword: boolean;
 	}>({
+		prevPassword: true,
 		password: true,
 		confirmPassword: true,
 	});
@@ -49,6 +53,16 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	/**
 	 * @objective function to validate password field
 	 * @param password string value to check for constrains of password
+	 */
+	const validatePrevPassword = (prevPassword: string) => {
+		if (prevPassword.trim().length >= 8)
+			setValid({ ...valid, prevPassword: true });
+		else setValid({ ...valid, prevPassword: false });
+	};
+
+	/**
+	 * @objective function to validate password field
+	 * @param prevPassword string value to check for constrains of password
 	 */
 	const validatePassword = (password: string) => {
 		if (password.trim().length >= 8) setValid({ ...valid, password: true });
@@ -59,25 +73,26 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	 * @objective function to validate confirm password field
 	 * @param password string value to check for constrains of confirm password
 	 */
-	const validateConfirmPassword = (password: string) => {
-		if (password.trim() === form.password.trim())
+	const validateConfirmPassword = (confirmPassword: string) => {
+		if (confirmPassword.trim() === form.password.trim())
 			setValid({ ...valid, confirmPassword: true });
 		else setValid({ ...valid, confirmPassword: false });
 	};
 
 	/**
 	 * @objective function to handle the submittion of change password form
-	 */ 
-	async function handleSubmit() {
+	 */
+	function handleSubmit() {
 		if (
-			form.password != "" &&
+			form.prevPassword.trim() != "" &&
+			form.password.trim() != "" &&
 			form.password.length >= 8 &&
 			form.confirmPassword === form.password
 		) {
-			await changePassword(form);
-			setOpen(false);
+			changePassword(form);
 		} else {
 			toast.error("All fields are required", { className: "toast" });
+			setForm({ confirmPassword: "", password: "", prevPassword: "" });
 		}
 	}
 
@@ -91,6 +106,52 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 					</Button>
 				</CardHeader>
 				<CardContent className="grid gap-2">
+					{/* previous password */}
+					<Label
+						title="Previous Password field is required"
+						htmlFor="prevpassword"
+						className="grid"
+					>
+						Previous Password *
+						<div className="flex items-center justify-between w-full gap-1">
+							<Input
+								placeholder="Enter Your Previous Password"
+								type={visi ? "text" : "password"}
+								value={form.prevPassword}
+								name="prevpassword"
+								required
+								onChange={(e) => {
+									setForm({
+										...form,
+										prevPassword: e.target.value.trim(),
+									});
+									if (e.target.value.trim() != "") {
+										validatePrevPassword(
+											e.target.value.trim()
+										);
+									} else {
+										setValid({
+											...valid,
+											prevPassword: true,
+										});
+									}
+								}}
+							/>
+							<Button
+								onClick={() => setVisi(!visi)}
+								type="button"
+								variant="ghost"
+							>
+								{visi ? <Eye /> : <EyeClosed />}
+							</Button>
+						</div>
+						{!valid.prevPassword && (
+							<span className="text-xs text-red-500">
+								*Previous Password must be atleast 8 character
+							</span>
+						)}
+					</Label>
+					{/* new password */}
 					<Label
 						title="New Password field is required"
 						htmlFor="newpassword"
@@ -99,7 +160,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 						New Password *
 						<div className="flex items-center justify-between w-full gap-1">
 							<Input
-								placeholder="Enter Your Password"
+								placeholder="Enter Your New Password"
 								type={visi ? "text" : "password"}
 								value={form.password}
 								name="newpassword"
@@ -130,6 +191,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 							</span>
 						)}
 					</Label>
+					{/* confirm passwrord */}
 					<Label
 						title="Confirm Password field is required"
 						htmlFor="confirmPassword"
@@ -178,7 +240,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 				<CardFooter>
 					<Button
 						className="w-full"
-						type="button"
+						type="submit"
 						onClick={handleSubmit}
 						disabled={isChangingPassword}
 					>

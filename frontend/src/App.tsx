@@ -10,7 +10,7 @@ import useCheckAuth from "@/hooks/useCheckAuth";
 const Loading = lazy(() => import("@/components/Loading"));
 
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
-const Notfound = lazy(() => import("@/pages/Notfound"));
+const Notfound = lazy(() => import("@/pages/NotFound"));
 const Docs = lazy(() => import("@/pages/Docs"));
 
 const Home = lazy(() => import("@/pages/Home"));

@@ -8,7 +8,9 @@ type UserUpdateForm = {
 	org?: string[];
 };
 type updateUser = (form: UserUpdateForm) => Promise<User | void>;
+
 type changePassword = (form: {
+	prevPassword: string;
 	password: string;
 	confirmPassword: string;
 }) => Promise<User | void>;
@@ -35,7 +37,7 @@ export const updateUser: updateUser = async (form) => {
 
 /**
  * @objective async function to request api to change user password
- * @param form data to change password (new password,confirm new password)
+ * @param form data to change password (prev password,new password,confirm new password)
  * @effect updates user with new data
  */
 export const updatePassword: changePassword = async (form) => {

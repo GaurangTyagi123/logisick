@@ -13,7 +13,6 @@ type RegisterForm = {
 };
 
 type PasswordResetForm = {
-	prevPassword: string;
 	password: string;
 	confirmPassword: string;
 };
@@ -50,6 +49,7 @@ interface AuthProps {
 		form: PasswordResetForm
 	) => Promise<void>;
 	changePassword: (form: {
+		prevPassword:string;
 		password: string;
 		confirmPassword: string;
 	}) => Promise<void>;
@@ -253,13 +253,13 @@ const useAuthStore = create<AuthProps>((set) => ({
 	/**
 	 * @objective async function to request api to reset pasword after user forgot
 	 * @param resetToken token user got on email
-	 * @param form data for request (previous password,new password,confirm new password)
+	 * @param form data for request (new password,confirm new password)
 	 * @effect updates user with new data
 	 */
 	resetPassword: async (resetToken, form) => {
 		try {
 			if (!resetToken.trim()) {
-				toast.error("Invalid password reset url");
+				toast.error("Invalid password reset url",{className:"toast"});
 				return;
 			}
 			set({ isResettingPassword: true });
@@ -279,7 +279,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 	},
 	/**
 	 * @objective async function to request api to change user password
-	 * @param form data to change password (new password,confirm new password)
+	 * @param form data to change password (prev password,new password,confirm new password)
 	 * @effect updates user with new data
 	 */
 	changePassword: async (form) => {

@@ -22,7 +22,6 @@ function ResetPassword() {
 	const { resetPasswordFn: resetPassword, isPending: isResettingPassword } =
 		useResetPassword();
 	const [form, setForm] = useState({
-		prevPassword: "",
 		password: "",
 		confirmPassword: "",
 	});
@@ -65,7 +64,6 @@ function ResetPassword() {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
 		e.preventDefault();
 		if (
-			form.prevPassword.trim().length == 0 ||
 			form.password.trim().length === 0 ||
 			form.confirmPassword.trim().length === 0 ||
 			form.password !== form.confirmPassword ||
@@ -103,35 +101,6 @@ function ResetPassword() {
 					style={{ maxWidth: "calc(100% - 2rem)" }}
 				>
 					<H2 className="mb-2 text-center">Reset Password</H2>
-					<Label
-						title="Current Password field is required"
-						htmlFor="prevpassword"
-						className="grid"
-					>
-						Current Password *
-						<div className="flex items-center justify-between w-full gap-1">
-							<Input
-								placeholder="Enter Your Current Password"
-								type={visi ? "text" : "password"}
-								value={form.prevPassword}
-								name="prevpassword"
-								required
-								onChange={(e) => {
-									setForm({
-										...form,
-										prevPassword: e.target.value.trim(),
-									});
-								}}
-							/>
-							<Button
-								onClick={() => setVisi(!visi)}
-								type="button"
-								variant="ghost"
-							>
-								{visi ? <Eye /> : <EyeClosed />}
-							</Button>
-						</div>
-					</Label>
 					<Label
 						title="New Password field is required"
 						htmlFor="newpassword"
