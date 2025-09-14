@@ -1,0 +1,7 @@
+{
+	"require": ["ts-node/register"],
+	"extension": ["ts"],
+	"spec": ["tests/**/*.ts"],
+	"ui": "tdd",
+	"timeout": 10000
+}

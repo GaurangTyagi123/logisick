@@ -26,15 +26,18 @@ process.on('uncaughtException', (err) => {
     console.log(err);
     console.log('uncaught exception encountered!!! 💥...application crashed!');
     server.close();
+    mongoose.disconnect();
 });
 // For unhandled errors in async code
 process.on('unhandledRejection', (err) => {
     console.log(err);
     console.log('unhandled rejection encountered!!! 💥...application crashed!');
     server.close();
+    mongoose.disconnect();
 });
 // When hosting service closes our application it triggers SIGTERM event
 process.on('SIGTERM', () => {
     console.log('SIGTERM recieved.... Closing server gracefully 😇');
     server.close();
+    mongoose.disconnect();
 });

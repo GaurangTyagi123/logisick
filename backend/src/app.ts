@@ -3,7 +3,7 @@ import helmet from "helmet"; // For security headers
 import morgan from "morgan"; // Only for development.
 import cors from "cors";
 import cookieParser from "cookie-parser";
-import path from "node:path"
+import path from "node:path";
 
 // Api ROUTERS
 import authRouter from "./routes/auth.routes";
@@ -56,11 +56,13 @@ app.use("/api/v1/users", userRouter);
 // Global Error Handler
 app.use(globalErrorController);
 
-app.use(express.static(path.join(__dirname, "../../frontend", "dist-react")))
+app.use(express.static(path.join(__dirname, "../../frontend", "dist-react")));
 if (process.env.NODE_ENV === "production") {
-	console.log("produciton build")
+	console.log("produciton build");
 	app.get("{*splat}", (req, res) => {
-		res.sendFile(path.join(__dirname, "../../frontend", "dist-react", "index.html"));
+		res.sendFile(
+			path.join(__dirname, "../../frontend", "dist-react", "index.html")
+		);
 	});
 }
 
