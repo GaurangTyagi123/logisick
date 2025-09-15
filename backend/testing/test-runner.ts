@@ -5,7 +5,7 @@ import fs from "fs";
 import path from "path";
 
 const mocha = new Mocha();
-const testDir = "./tests";
+const testDir = "./testing/tests";
 
 // Add each .ts file to the Mocha instance
 fs.readdirSync(testDir)
