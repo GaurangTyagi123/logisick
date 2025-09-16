@@ -91,7 +91,7 @@ suite("User Auth Test", function () {
 			const jwtCookie = cookies.find((c) => c.startsWith("jwt="));
 			assert.exists(jwtCookie, "JWT cookie should exist");
 
-			const jwtValue = jwtCookie!.split(";")[0].split("=")[1];
+			const jwtValue = res.body.token;
 			assert.isString(jwtValue, "JWT value should be a string");
 			assert.isAtLeast(
 				jwtValue.length,
