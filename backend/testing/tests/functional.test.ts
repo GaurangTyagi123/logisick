@@ -33,10 +33,11 @@ after(async function () {
 	await mongoServer.stop();
 });
 
+let loginCookie: string;
+
 // --- Test Suite ---
 suite("User Auth Test", function () {
 	this.timeout(5000);
-
 	suite("User creation tests", () => {
 		test("should create a new user", async () => {
 			const newUser = {
@@ -188,7 +189,8 @@ suite("User Auth Test", function () {
 			const jwtCookie = cookies.find((c) => c.startsWith("jwt="));
 			assert.exists(jwtCookie, "JWT cookie should exist");
 
-			const jwtValue = jwtCookie!.split(";")[0].split("=")[1];
+			const jwtValue = res.body.token;
+			loginCookie = jwtValue;
 			assert.isString(jwtValue, "JWT value should be a string");
 			assert.isAtLeast(
 				jwtValue.length,
@@ -204,7 +206,7 @@ suite("User Auth Test", function () {
 			);
 		});
 
-		test("shoudl not login (incomplete data)", async () => {
+		test("should not login (incomplete data)", async () => {
 			const loginData = {
 				email: "mamakallu@gmail.com",
 			};
@@ -247,5 +249,35 @@ suite("User Auth Test", function () {
 				"status message should be error"
 			);
 		});
+	});
+	suite("User logout tests", () => {
+		test("successfull user logout", async () => {
+			const res = await request(app)
+				.get("/api/v1/auth/logout")
+				.set("Cookie", `jwt=${loginCookie}`);
+
+			assert.equal(res.status, 200, "status should be 200");
+			assert.property(res.body, "status", "status should be in body");
+			assert.equal(
+				res.body.status,
+				"success",
+				"status should be success"
+			);
+		});
+
+		test("unsuccessfull user logout (without token / invalid token)", async () => {
+			const res = await request(app).get("/api/v1/auth/logout");
+
+			assert.equal(res.status, 401, "status should be 401");
+			assert.property(res.body, "status", "status should be in body");
+			assert.equal(res.body.status, "error", "status should be error");
+			assert.property(res.body, "message", "message should be in body");
+			assert.oneOf(
+				res.body.message,
+				["Invalid Token", "Password updated recently"],
+				"error message should be one of given"
+			);
+		});
+		
 	});
 });
