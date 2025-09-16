@@ -41,7 +41,6 @@ declare interface UserType extends MongooseDocument {
 	refreshToken?: string | undefined;
 
 	avatar?: string;
-	role?: string;
 	org?: ObjectId;
 
 	comparePasswords: (actualPassword: string, hashPassword: string) => Promise;
@@ -60,4 +59,13 @@ declare interface OrgType {
 	description: string;
 	type: string;
 	admin: ObjectId;
+	active: boolean;
+	createdAt: Date;
+	updatedAt: Date;
+}
+
+declare enum EmployeeRole {
+	ADMIN = "admin",
+	MANAGER = "manager",
+	STAFF = "staff",
 }

@@ -32,7 +32,6 @@ const signToken = (id: ObjectId) => {
  *                       name: stinrg,
  *                       email: stinrg,
  *                       isVerified: user.isVerified,
- *                       role: stinrg,
  *                       avatar: stinrg,
  *                       createdAt: date,
  *                       updatedAt: datet,
@@ -68,7 +67,6 @@ const sendNewToken = (
 				name: user.name,
 				email: user.email,
 				isVerified: user.isVerified,
-				role: user.role,
 				avatar: user.avatar,
 				createdAt: user.createdAt,
 				updatedAt: user.updatedAt,
@@ -77,22 +75,22 @@ const sendNewToken = (
 	});
 };
 
-/**
- * @obective To restrict according to the roles
- * @param roles admin | manager | staff
- * @returns NA
- */
-export const restrictTo = (...roles: string[]) => {
-	return (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { role } = req.user as UserType;
-		if (roles.includes(role as string)) return next();
-		return next(new AppError("You are not authorized", 401));
-	};
-};
+// /**
+//  * @obective To restrict according to the roles
+//  * @param roles admin | manager | staff
+//  * @returns NA
+//  */
+// export const restrictTo = (...roles: string[]) => {
+// 	return (
+// 		req: ExpressTypes.Request,
+// 		res: ExpressTypes.Response,
+// 		next: ExpressTypes.NextFn
+// 	) => {
+// 		const { role } = req.user as UserType;
+// 		if (roles.includes(role as string)) return next();
+// 		return next(new AppError("You are not authorized", 401));
+// 	};
+// };
 
 /**
  * @param req(UserRequest)
@@ -276,7 +274,6 @@ export const signup = catchAsync(
 			email,
 			password,
 			confirmPassword,
-			role: "admin",
 			avatar: genProfileString(12),
 		});
 		if (!newUser) return next(new AppError("Failed to signup", 500));

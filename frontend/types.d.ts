@@ -4,7 +4,6 @@ type User = {
 	email: string;
 	isVerified: boolean;
 	avatar: string;
-	role: "admin" | "manager" | "staff";
 	createdAt:string;
 	updatedAt:string
 };

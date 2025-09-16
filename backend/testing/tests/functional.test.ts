@@ -72,7 +72,6 @@ suite("User Auth Test", function () {
 				user.isVerified,
 				"User isVerified should be a boolean"
 			);
-			assert.isString(user.role, "User role should be a string");
 			assert.isString(user.avatar, "User avatar should be a string");
 			assert.isString(
 				user.createdAt,
@@ -169,7 +168,6 @@ suite("User Auth Test", function () {
 				user.isVerified,
 				"User isVerified should be a boolean"
 			);
-			assert.isString(user.role, "User role should be a string");
 			assert.isString(user.avatar, "User avatar should be a string");
 			assert.isString(
 				user.createdAt,
