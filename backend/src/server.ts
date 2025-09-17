@@ -17,6 +17,8 @@ mongoose.connect(DB_URL!).then((con) => {
 });
 redisClient.connect().then(() => {
     console.log("redis connection successfull")
+}).catch(err => {
+    console.log("error connecting to redis server")
 })
 
 // start the server

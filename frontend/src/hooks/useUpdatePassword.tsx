@@ -1,7 +1,7 @@
 import { updatePassword } from '@/services/apiUser';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
-import useLogout from './useLogout';
+// import useLogout from './useLogout';
 
 /**
  * @objective hook to handle updating of password of user
@@ -9,7 +9,7 @@ import useLogout from './useLogout';
  */
 function useUpdatePassword() {
     const queryClient = useQueryClient();
-    const { logoutFn: logout } = useLogout('Please Login again');
+    // const { logoutFn: logout } = useLogout('Please Login again');
     const { mutate: updatePasswordFn, isPending } = useMutation({
         mutationFn: updatePassword,
         onSuccess: () => {
@@ -19,7 +19,7 @@ function useUpdatePassword() {
             queryClient.invalidateQueries({
                 queryKey: ['user'],
             });
-            logout();
+            // logout();
         },
         onError: (err) => {
             toast.error(err.message,{className:"toast"});

@@ -120,10 +120,10 @@ userSchema.methods.comparePasswords = async function (
 ) {
     return await bcryptjs.compare(actualPassword, hashPassword);
 };
-// checks whether the password was updated after the jwt was 
+// checks whether the password was updated after the jwt was
 userSchema.methods.passwordUpdatedAfter = function (issuedTimeStamp: number) {
-    if (this.updatedAt) {
-        const updateTimeStamp = this.updatedAt.getTime() / 1000;
+    if (this.passwordUpdatedAt) {
+        const updateTimeStamp = this.passwordUpdatedAt.getTime() / 1000;
         return updateTimeStamp > issuedTimeStamp;
     }
 };
