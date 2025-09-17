@@ -64,7 +64,7 @@ interface AuthProps {
 function handleError(error: unknown, message: string) {
 	if (isAxiosError(error)) {
 		const msg = error.response?.data?.message || message;
-		console.log(msg);
+		console.log(error);
 		toast.error(msg, { className: "toast" });
 	} else {
 		console.log(error);
@@ -308,7 +308,6 @@ const useAuthStore = create<AuthProps>((set) => ({
 		try {
 			set({ isDeleteingUser: true });
 			await axinstance.delete("/v1/users/updateMe");
-			set({ user: null });
 			toast.success("User deleted successfully",{className:"toast"})
 		} catch (error) {
 			handleError(error, "Error deleting user");

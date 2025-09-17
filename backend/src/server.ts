@@ -8,14 +8,14 @@ dotenv.config({ path: 'config.env' });
 const PORT = process.env.PORT;
 
 // Database connection url
-const DB_URL = process.env.DB_URL;
+const DB_URL = process.env.NODE_ENV === "production" ? process.env.DB_URL : process.env.DB_URL_DEV;
 
 // con is the connection object to the database
 mongoose.connect(DB_URL!).then((con) => {
     if (con) console.log('Connection successfull');
     else console.log('Connection failed');
 });
-redisClient.connect().then(con => {
+redisClient.connect().then(() => {
     console.log("redis connection successfull")
 })
 
