@@ -1,4 +1,5 @@
 import express from "express";
+import { createClient } from "redis";
 import helmet from "helmet"; // For security headers
 import morgan from "morgan"; // Only for development.
 import cors from "cors";
@@ -18,6 +19,9 @@ import userRouter from "./routes/user.routes";
 
 // Initialize the application
 const app = express();
+const redisClient = createClient();
+
+
 
 // Middleware for parsing json in request body
 app.use(express.json());
@@ -65,3 +69,4 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export default app;
+export {redisClient}

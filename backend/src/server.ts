@@ -1,5 +1,5 @@
 import mongoose from 'mongoose';
-import app from './app';
+import app,{redisClient} from './app';
 import dotenv from 'dotenv';
 
 // To configure path to the environment variables
@@ -15,6 +15,9 @@ mongoose.connect(DB_URL!).then((con) => {
     if (con) console.log('Connection successfull');
     else console.log('Connection failed');
 });
+redisClient.connect().then(con => {
+    console.log("redis connection successfull")
+})
 
 // start the server
 const server = app.listen(PORT, () => {
