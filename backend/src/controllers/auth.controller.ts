@@ -3,15 +3,17 @@ import AppError from "../utils/appError";
 import Email from "../utils/sendEmail";
 import { genProfileString } from "../utils/avatarGen";
 
-import { promisify } from "util";
-import crypto from "crypto";
+import { promisify } from 'util';
+import crypto from 'crypto';
+import bcrypt from "bcryptjs";
 
 //I MODELS
 import User from "../models/user.model";
 
 //I TYPES
-import jwt, { type JwtPayload } from "jsonwebtoken";
-import type { StringValue } from "ms";
+import jwt, { type JwtPayload } from 'jsonwebtoken';
+import type { StringValue } from 'ms';
+import { redisClient } from '../app';
 
 /**  @returns json-webtoken with user-id as payload */
 const signToken = (id: ObjectId) => {
@@ -295,75 +297,87 @@ export const signup = catchAsync(
  * @sideEffect User email is verified
  */
 export const verifyEmail = catchAsync(
-	async (
-		req: ExpressTypes.UserRequest,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const userOtp = req?.body?.otp;
-		const isVerified = req.user?.isVerified;
-		const isOtpGen = req.user!.otp;
-		if (isVerified)
-			return res.status(200).json({
-				status: "successfull",
-				data: {
-					message: "Your email is already verified",
-				},
-			});
-		else if (isOtpGen && userOtp) {
-			// Find a user which has the same otp and the otp's expire time is greater than the current time
-			const user = await User.findOne({
-				otp: userOtp,
-				otpExpireTime: { $gte: Date.now() },
-			});
-			if (!user) {
-				const unverifiedUser = await User.findById(req.user?._id);
-				unverifiedUser!.otp = undefined;
-				unverifiedUser!.otpExpireTime = undefined;
-				unverifiedUser!.save({ validateBeforeSave: false });
-				return next(new AppError("Invalid Otp", 400));
-			}
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const userOtp = req?.body?.otp;
+        const isVerified = req.user?.isVerified;
+        // const isOtpGen = req.user!.otp;
+        const isOtpGen = await redisClient.get('OTP');
+        if (isVerified)
+            return res.status(200).json({
+                status: 'successfull',
+                data: {
+                    message: 'Your email is already verified',
+                },
+            });
+        else if (isOtpGen && userOtp) {
+            // Find a user which has the same otp and the otp's expire time is greater than the current time
+            const user = await User.findById(req.user?.id);
+            const storedOtp = await redisClient.hGet(user?.id,"otp");
+            if (!user || !(await bcrypt.compare(userOtp,storedOtp as string))) {
+                return next(new AppError('Invalid OTP', 400));
+            }
 
-			user!.isVerified = true;
-			user!.otpExpireTime = undefined;
-			user!.otp = undefined;
-			await user!.save({ validateBeforeSave: false });
+            user!.isVerified = true;
+            await user!.save({ validateBeforeSave: false });
 
-			res.status(200).json({
-				status: "success",
-				data: {
-					message: "email verified successfully",
-				},
-			});
-		} else {
-			const otp = Math.floor(Math.random() * 10000)
-				.toString()
-				.padEnd(4, "0");
-			await User.findByIdAndUpdate(req.user?._id, {
-				otp,
-				otpExpireTime: new Date(
-					Date.now() +
-						parseInt(process.env.OTP_EXPIRE_TIME as string) *
-							60 *
-							1000
-				),
-			});
-			await new Email(
-				{
-					userName: req.user?.name as string,
-					email: req.user?.email as string,
-					otp,
-				},
-				""
-			).sendVerification();
-			res.status(200).json({
-				status: "success",
-				data: {
-					message: "otp sent successfully",
-				},
-			});
-		}
-	}
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    message: 'email verified successfully',
+                },
+            });
+        } else {
+            const otp = Math.floor(Math.random() * 10000)
+                .toString()
+                .padEnd(4, '0');
+            const hashedOTP = await bcrypt.hash(otp, 12);
+            await redisClient.hSet(req.user?.id, {
+                otp:hashedOTP,
+            });
+            const expireResult = await redisClient.expire(
+                req.user?.id,
+                parseInt(process.env.OTP_EXPIRE_TIME as string) * 60 * 1000
+            );
+            if (expireResult === 1) {
+                console.log(
+                    `TTL of ${
+                        parseInt(process.env.OTP_EXPIRE_TIME as string) *
+                        60 *
+                        1000
+                    } seconds set for hash '${req.user?.id}'.`
+                );
+            } else {
+                console.log(`Failed to set TTL for hash '${req.user?.id}'.`);
+            }
+            // await User.findByIdAndUpdate(req.user?._id, {
+            //     otp,
+            //     otpExpireTime: new Date(
+            //         Date.now() +
+            //             parseInt(process.env.OTP_EXPIRE_TIME as string) *
+            //                 60 *
+            //                 1000
+            //     ),
+            // });
+            await new Email(
+                {
+                    userName: req.user?.name as string,
+                    email: req.user?.email as string,
+                    otp,
+                },
+                ''
+            ).sendVerification();
+            res.status(200).json({
+                status: 'success',
+                data: {
+                    message: 'otp sent successfully',
+                },
+            });
+        }
+    }
 );
 
 /**
