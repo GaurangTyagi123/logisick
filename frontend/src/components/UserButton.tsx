@@ -60,6 +60,11 @@ function UserButton() {
 					</DropdownMenuItem>
 				)}
 				<DropdownMenuItem
+					onClick={()=>navigate("/dashboard",{replace : true})}
+				>
+					Dashboard
+				</DropdownMenuItem>
+				<DropdownMenuItem
 					onClick={handleLogout}
 					disabled={isLoggingOut}
 				>
