@@ -63,11 +63,11 @@ function OrgOverview({ data }: OrgOverviewProps) {
           </div>
           <span className=" w-fit p-2 text-white rounded-sm bg-blue-500 dark:bg-transparent dark:outline  dark:outline-blue-500">OWNER : {user?.user?.name}</span>
           <div className="grid grid-cols-2 w-full">
-              <div className="dark:bg-zinc-800 w-full h-56 mr-2 pt-1  grid place-items-center  rounded-sm overflow-hidden">
+              <div className="dark:bg-zinc-800 w-full h-56 mr-2 pt-1  grid place-items-center  rounded-sm overflow-hidden outline outline-[#777] uppercase">
                   Number of Employees
                   <PieChart data={empData} />
               </div>
-              <div className="dark:bg-zinc-800 w-full h-56 ml-2 pt-1 grid place-items-center rounded-sm overflow-hidden">
+              <div className="dark:bg-zinc-800 w-full h-56 ml-2 pt-1 grid place-items-center rounded-sm overflow-hidden outline outline-[#777] uppercase">
                   Inventory Capacity
                   <PieChart data={inventoryData}/>
               </div>
