@@ -20,7 +20,7 @@ const Notfound = lazy(() => import("@/pages/NotFound"));
 const Docs = lazy(() => import("@/pages/Docs"));
 
 const Home = lazy(() => import("@/pages/home"));
-const Dashboard = lazy(() => import("@/pages/Dashboard"));
+const Dashboard = lazy(() => import("@/pages/dashboard"));
 const Authenticate = lazy(() => import("@/pages/Authenticate"));
 const Profile = lazy(() => import("@/pages/Profile"));
 
@@ -37,13 +37,13 @@ const data = {
  */
 function App() {
 	const { getTheme, setMode } = useModeStore();
-	const { user } = useCheckAuth();
+	const { user,isPending:isCheckingAuth } = useCheckAuth();
 
 	useEffect(() => {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
 
-	// if (isCheckingAuth) return <Loading />;
+	if (isCheckingAuth) return <Loading />;
 
 	return (
 		<>

@@ -54,8 +54,8 @@ function OrgOverview({ data }: OrgOverviewProps) {
           <div className="flex flex-row justify-between  w-full outline outline-zinc-500 outline-offset-10  mt-3">
               <h1 className="text-2xl font-light tracking-widest p-2">{ data.name}</h1>
               <div className="flex justify-evenly gap-3  w-[50%] font-semibold text-2xl">
-                    <div className=" dark:bg-zinc-800 p-2 rounded-sm bg-green-400 text-white dark:text-green-500 tracking-widest">{formatCurrency(50000) } Imports</div>
-                  <div className=" dark:bg-zinc-800 p-2 rounded-sm bg-red-400 text-white dark:text-red-500 tracking-widest">{formatCurrency(150000) } Exports</div>
+                    <div className=" dark:bg-zinc-800 p-2 rounded-sm uppercase bg-green-400 text-white dark:text-green-500 tracking-widest">{formatCurrency(50000) } Imports</div>
+                  <div className=" dark:bg-zinc-800 p-2 rounded-sm uppercase bg-red-400 text-white dark:text-red-500 tracking-widest">{formatCurrency(150000) } Exports</div>
               </div>
           </div>
           <div className="tracking-wide">
