@@ -56,24 +56,23 @@ employeeSchema.pre("save", async function (this: EmpType, next) {
 });
 
 // soft delete for one employee
-employeeSchema.pre(
-	"deleteOne",
-	{ document: true, query: false },
-	async function (next) {
+employeeSchema.pre("deleteOne", async function () {
+	if (this.getQuery) {
+		await this.model.updateOne(this.getQuery(), { active: false });
+	} else {
 		await this.updateOne({ active: false });
-		next();
 	}
-);
+});
 
-// soft delete for many employees
-employeeSchema.pre(
-	"deleteMany",
-	{ document: false, query: true },
-	async function (next) {
-		await this.updateMany(this.getFilter(), { active: false });
-		next();
-	}
-);
+// For deleteMany (query context only)
+employeeSchema.pre("deleteMany", async function () {
+	await this.model.updateMany(this.getQuery(), { active: false });
+});
+
+// For findOneAndDelete (query context only)
+employeeSchema.pre("findOneAndDelete", async function () {
+	await this.model.updateOne(this.getQuery(), { active: false });
+});
 
 const employeeModel = model("Employee", employeeSchema);
 export default employeeModel;

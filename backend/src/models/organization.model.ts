@@ -50,14 +50,23 @@ organizationSchema.pre(
 );
 
 // soft deleting organization
-organizationSchema.pre(
-	"deleteOne",
-	{ document: true, query: false },
-	async function (next) {
+organizationSchema.pre("deleteOne", async function () {
+	if (this.getQuery) {
+		await this.model.updateOne(this.getQuery(), { active: false });
+	} else {
 		await this.updateOne({ active: false });
-		next();
 	}
-);
+});
+
+// For deleteMany (query context only)
+organizationSchema.pre("deleteMany", async function () {
+	await this.model.updateMany(this.getQuery(), { active: false });
+});
+
+// For findOneAndDelete (query context only)
+organizationSchema.pre("findOneAndDelete", async function () {
+	await this.model.updateOne(this.getQuery(), { active: false });
+});
 
 const organizationModel = model("Organization", organizationSchema);
 export default organizationModel;
