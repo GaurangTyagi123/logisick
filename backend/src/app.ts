@@ -8,6 +8,7 @@ import path from "node:path";
 
 // Api ROUTERS
 import authRouter from "./routes/auth.routes";
+import orgRouter from "./routes/org.routes";
 
 // Global Error Handler for requests
 import globalErrorController from "./controllers/globalError.controller";
@@ -20,8 +21,6 @@ import userRouter from "./routes/user.routes";
 // Initialize the application
 const app = express();
 const redisClient = createClient();
-
-
 
 // Middleware for parsing json in request body
 app.use(express.json());
@@ -50,8 +49,10 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 // 	}
 // );
 
-// Api routes
+// authentication router
 app.use("/api/v1/auth", authRouter);
+// organzations router
+app.use("/api/v1/org", orgRouter);
 
 // Open Authentication Routes
 app.use("/auth", oauthRouter);
@@ -71,4 +72,4 @@ if (process.env.NODE_ENV === "production") {
 }
 
 export default app;
-export {redisClient}
+export { redisClient };

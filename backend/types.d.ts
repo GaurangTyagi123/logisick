@@ -57,15 +57,23 @@ declare interface OrgType {
 	_id: ObjectId;
 	name: string;
 	description: string;
-	type: string;
-	admin: ObjectId;
+	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
+	owner: ObjectId;
+	admin?: ObjectId | null;
+	subscription: "None" | "Basic" | "Pro";
 	active: boolean;
 	createdAt: Date;
 	updatedAt: Date;
 }
 
-declare enum EmployeeRole {
-	ADMIN = "admin",
-	MANAGER = "manager",
-	STAFF = "staff",
+// type declareation for Employee Model
+declare interface EmpType {
+	_id: ObjectId;
+	userid: ObjectId;
+	orgid: ObjectId;
+	role: "Owner" | "Admin" | "Manager" | "Staff";
+	manager: ObjectId;
+	active: boolean;
+	createdAt: Date;
+	updatedAt: Date;
 }

@@ -11,10 +11,26 @@ const organizationSchema = new Schema(
 			type: String,
 			default: "Your organization",
 		},
-		type: String,
+		type: {
+			type: String,
+			enum: ["Basic", "Small-Cap", "Mid-Cap", "Large-Cap", "Other"],
+			required: true,
+			default: "Basic",
+		},
+		owner: {
+			type: Schema.ObjectId,
+			required: true,
+			ref: "User",
+		},
 		admin: {
 			type: Schema.ObjectId,
 			ref: "User",
+		},
+		subscription: {
+			type: String,
+			enum: ["None", "Basic", "Pro"],
+			required: true,
+			default: "None",
 		},
 		active: {
 			type: Boolean,
@@ -29,6 +45,16 @@ organizationSchema.pre(
 	/find/,
 	function (this: Query<UserType, MongooseDocument>, next) {
 		this.find({ active: { $ne: false } });
+		next();
+	}
+);
+
+// soft deleting organization
+organizationSchema.pre(
+	"deleteOne",
+	{ document: true, query: false },
+	async function (next) {
+		await this.updateOne({ active: false });
 		next();
 	}
 );

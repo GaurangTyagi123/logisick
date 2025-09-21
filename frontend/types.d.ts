@@ -11,8 +11,8 @@ type User = {
 type Org = {
 	_id: string;
 	name: string;
-	isActive: boolean;
 	description: string;
-	admin_id: string;
-	type: "individual" | "small-cap" | "mid-cap" | "large-cap" | "other";
+	active: boolean;
+	admin: string;
+	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
 };
