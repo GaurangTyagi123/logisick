@@ -5,7 +5,7 @@
 import { PieChart } from '@/components/ui/PieChart';
 import { formatCurrency } from '@/utils/utilfn';
 import { useQueryClient } from '@tanstack/react-query';
-import { useNavigate, useParams } from 'react-router-dom';
+import {  useParams } from 'react-router-dom';
 
 interface OrgOverviewProps {
     data: Array<Record<string, string>>;
@@ -53,13 +53,11 @@ const inventoryData = {
 
 function OrgOverview({ data }: OrgOverviewProps) {
     const { orgId } = useParams();
-    const navigate = useNavigate();
     const queryClient = useQueryClient();
     const user = queryClient.getQueryData<{ user: User }>(['user']);
 
     if (orgId) {
         const [orgData] = data.filter((d) => d.id == orgId);
-        if (!orgData) return navigate('/notfound');
         return (
             <div className="flex flex-col justify-between w-full  h-full jet-brains">
                 <div className="flex flex-row justify-between  w-full outline outline-zinc-500 outline-offset-10  mt-3">

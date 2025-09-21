@@ -12,7 +12,7 @@ import ProductManagement from './pages/ProductManagement';
 import OrderSales from './pages/OrderSales';
 import OrgOverview from './pages/OrgOverview';
 import { faker } from '@faker-js/faker';
-import Organiztion from './pages/Organiztion';
+import Organiztion from './pages/Organization';
 
 const Loading = lazy(() => import('@/components/Loading'));
 
