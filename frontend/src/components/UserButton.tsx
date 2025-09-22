@@ -7,7 +7,7 @@ import {
 	DropdownMenuLabel,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Button from "@/components/ui/button";
 import type React from "react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -26,7 +26,6 @@ function UserButton() {
 	])?.user;
 	// const {logout } = useAuthStore();
 	const { logoutFn: logout, isPending: isLoggingOut } = useLogout();
-	const navigate = useNavigate();
 	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 
 	/**
@@ -55,14 +54,12 @@ function UserButton() {
 				</DropdownMenuLabel>
 				<Separator />
 				{!userButtonHidden && (
-					<DropdownMenuItem onClick={() => navigate(`/profile`)}>
-						Profile
+					<DropdownMenuItem asChild>
+						<Link to={"/profile"}>Profile</Link>
 					</DropdownMenuItem>
 				)}
-				<DropdownMenuItem
-					onClick={()=>navigate("/organization",{replace : true})}
-				>
-					Your Organizations
+				<DropdownMenuItem asChild>
+					<Link to={"/organizations"}>Your Organizations</Link>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onClick={handleLogout}

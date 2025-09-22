@@ -20,6 +20,7 @@ const organizationSchema = new Schema(
 		owner: {
 			type: Schema.ObjectId,
 			required: true,
+			unique: true,
 			ref: "User",
 		},
 		admin: {

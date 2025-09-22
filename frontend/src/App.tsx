@@ -20,8 +20,8 @@ const ResetPassword = lazy(() => import('@/pages/ResetPassword'));
 const Notfound = lazy(() => import('@/pages/NotFound'));
 const Docs = lazy(() => import('@/pages/Docs'));
 
-const Home = lazy(() => import('@/pages/home'));
-const Dashboard = lazy(() => import('@/pages/dashboard'));
+const Home = lazy(() => import('@/pages/Home'));
+const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Authenticate = lazy(() => import('@/pages/Authenticate'));
 const Profile = lazy(() => import('@/pages/Profile'));
 
@@ -77,7 +77,7 @@ function App() {
                     {/* path for homepage */}
                     <Route index path="/" element={<Home />} />
                     <Route
-                        path="/organization"
+                        path="/organizations"
                         element={
                             user ? (
                                 <Organiztion data={data} />

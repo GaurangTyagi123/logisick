@@ -56,12 +56,6 @@ export const createOrg = catchAsync(
 			);
 		}
 
-		const alreadyOwner = await Emp.findOne({ owner: req.user?._id });
-		if (alreadyOwner)
-			return next(
-				new AppError("User can only be owner of one organization", 400)
-			);
-
 		const { name, description, type } = req.body;
 		if (!name)
 			return next(
