@@ -8,7 +8,7 @@
 		"dev:frontend": "npm run dev:react --prefix frontend",
 		"dev": "npm-run-all --parallel dev:backend dev:frontend",
 		"lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
-		"test": "npm run test --prefix backend",
+		"test": "cd ./backend && npm run test && cd ../",
 		"build": "npm run build:react --prefix frontend && npm run build --prefix backend",
 		"start": "npm run build --prefix frontend && npm run start --prefix backend"
 	},
