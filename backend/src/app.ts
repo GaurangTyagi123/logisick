@@ -33,7 +33,36 @@ app.use(passport.initialize());
 
 // Middleware which gives additional information about the requests comming to the server
 app.use(morgan("dev"));
-app.use(helmet({ hidePoweredBy: true, noSniff: true, xssFilter: true }));
+app.use(
+	helmet({
+		hidePoweredBy: true,
+		noSniff: true,
+		xssFilter: true,
+		contentSecurityPolicy: {
+			directives: {
+				defaultSrc: ["'self'"],
+				styleSrc: ["'self'", "'unsafe-inline'"],
+				workerSrc: ["'self'", "blob:"],
+				childSrc: ["'self'", "blob:"],
+				scriptSrc: [
+					"'self'",
+					"'unsafe-inline'",
+					process.env.NODE_ENV === "development"
+						? "'unsafe-eval'"
+						: "https://storage.googleapis.com",
+				],
+
+				imgSrc: ["'self'", "data:", "https:"],
+				connectSrc: ["'self'"],
+				manifestSrc: ["'self'"],
+				frameSrc: ["'none'"],
+				objectSrc: ["'none'"],
+				mediaSrc: ["'self'"],
+				fontSrc: ["'self'", "https:", "data:"],
+			},
+		},
+	})
+);
 
 // Middleware to configure response to cross-origin requests
 app.use(cors({ origin: "http://localhost:5173", credentials: true }));
@@ -61,12 +90,19 @@ app.use("/api/v1/users", userRouter);
 // Global Error Handler
 app.use(globalErrorController);
 
-app.use(express.static(path.join(__dirname, "../../frontend", "dist-react")));
+// for production 
 if (process.env.NODE_ENV === "production") {
-	console.log("produciton build");
+	app.use(
+		express.static(path.join(__dirname, "../../../frontend", "dist-react"))
+	);
 	app.get("{*splat}", (req, res) => {
 		res.sendFile(
-			path.join(__dirname, "../../frontend", "dist-react", "index.html")
+			path.join(
+				__dirname,
+				"../../../frontend",
+				"dist-react",
+				"index.html"
+			)
 		);
 	});
 }

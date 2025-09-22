@@ -7,7 +7,10 @@
 		"dev:backend": "npm run dev --prefix backend",
 		"dev:frontend": "npm run dev:react --prefix frontend",
 		"dev": "npm-run-all --parallel dev:backend dev:frontend",
-		"lint": "npm run lint --prefix backend && npm run lint --prefix frontend"
+		"lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
+		"test": "npm run test --prefix backend",
+		"build": "npm run build:react --prefix frontend && npm run build --prefix backend",
+		"start": "npm run build --prefix frontend && npm run start --prefix backend"
 	},
 	"repository": {
 		"type": "git",
