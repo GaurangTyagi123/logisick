@@ -47,7 +47,7 @@ class Email {
 				text: convert(template),
 			};
 			await this.newTransport().sendMail(sendOptions);
-		} catch (err) {
+		} catch (_err) {
 			console.log(template);
 		}
 	}

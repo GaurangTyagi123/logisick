@@ -65,7 +65,7 @@ export const createOrg = catchAsync(
 				)
 			);
 
-		let newOrgData: {
+		const newOrgData: {
 			name: string;
 			description?: string;
 			type?: string;

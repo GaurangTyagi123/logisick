@@ -1,16 +1,16 @@
 import AppError from "../utils/appError";
 
 // Handles invalid json-webtoken error
-const handleTokenError = (e: Error) => {
+const handleTokenError = (_e: Error) => {
 	return new AppError("Invalid token... please login again", 401);
 };
 
 // Express Error Handler
 export default (
 	err: any,
-	req: ExpressTypes.Request,
+	_req: ExpressTypes.Request,
 	res: ExpressTypes.Response,
-	next: ExpressTypes.NextFn
+	_next: ExpressTypes.NextFn
 ) => {
 	err.statusCode = err.statusCode || 500;
 	err.status = err.status || "error";

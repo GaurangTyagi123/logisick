@@ -6,7 +6,7 @@
  * @returns newBody(Object)
  */
 export default (body: Record<string, string>, illegalFields: Array<string>) => {
-    let newBody: Record<string, string> = Object();
+    const newBody: Record<string, string> = Object();
     Object.keys(body).forEach((field) => {
         if (!illegalFields.includes(field)) newBody[field] = body[field];
     });

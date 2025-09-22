@@ -10,9 +10,9 @@ import checkRequestBody from '../utils/checkRequestBody';
  */
 export const getUsers = catchAsync(
     async (
-        req: ExpressTypes.Request,
+        _req: ExpressTypes.Request,
         res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
+        _next: ExpressTypes.NextFn
     ) => {
         const users = await User.find({ role: { $ne: 'admin' } });
         const results = users.length;
@@ -111,7 +111,7 @@ export const deleteUser = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
         res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
+        _next: ExpressTypes.NextFn
     ) => {
         await User.findByIdAndUpdate(req.user?._id, {
             active: false,

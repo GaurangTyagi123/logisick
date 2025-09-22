@@ -34,39 +34,32 @@ emitter.run = function () {
 	let context = "";
 	const separator = " -> ";
 
-	try {
-		const runner = mocha
-			.ui("tdd")
-			.run()
-			.on("test end", function (test) {
-				let body = test.body.replace(/\/\/.*\n|\/\*.*?\*\//g, "");
-				body = body.replace(/\s+/g, " ");
+	mocha
+		.ui("tdd")
+		.run()
+		.on("test end", function (test) {
+			let body = test.body.replace(/\/\/.*\n|\/\*.*?\*\//g, "");
+			body = body.replace(/\s+/g, " ");
 
-				const obj: TestResult = {
-					title: test.title,
-					context: context.slice(0, -separator.length),
-					state: test.state,
-					assertions: assertionAnalyser(body),
-				};
+			const obj: TestResult = {
+				title: test.title,
+				context: context.slice(0, -separator.length),
+				state: test.state,
+				assertions: assertionAnalyser(body),
+			};
 
-				tests.push(obj);
-			})
-			.on("end", function () {
-				emitter.report = tests;
-				emitter.emit("done", tests);
-			})
-			.on("suite", function (s) {
-				context += s.title + separator;
-			})
-			.on("suite end", function (s) {
-				context = context.slice(
-					0,
-					-(s.title.length + separator.length)
-				);
-			});
-	} catch (e) {
-		throw e;
-	}
+			tests.push(obj);
+		})
+		.on("end", function () {
+			emitter.report = tests;
+			emitter.emit("done", tests);
+		})
+		.on("suite", function (s) {
+			context += s.title + separator;
+		})
+		.on("suite end", function (s) {
+			context = context.slice(0, -(s.title.length + separator.length));
+		});
 };
 
 export default emitter;

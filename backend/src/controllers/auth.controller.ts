@@ -107,7 +107,7 @@ const sendNewToken = (
 export const protect = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
+        _res: ExpressTypes.Response,
         next: ExpressTypes.NextFn
     ) => {
         let token: string | undefined;
@@ -179,9 +179,9 @@ export const login = catchAsync(
  */
 export const logout = catchAsync(
     async (
-        req: ExpressTypes.UserRequest,
+        _req: ExpressTypes.UserRequest,
         res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
+        _next: ExpressTypes.NextFn
     ) => {
         const cookieOptions: cookieOptionsType = {
             httpOnly: true,
@@ -206,7 +206,7 @@ export const isLoggedIn = catchAsync(
     async (
         req: ExpressTypes.Request,
         res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
+        _next: ExpressTypes.NextFn
     ) => {
         let token: string | undefined;
         if (req.cookies) token = req.cookies?.jwt;

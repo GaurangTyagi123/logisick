@@ -20,14 +20,14 @@ mongoose
 		if (con) console.log("SERVER : MongDB connection successfull");
 		else console.log("SERVER : MongoDB connection failed");
 	})
-	.catch((error) => console.log("SERVER (ERROR) : error connecting to MongoDB"));
+	.catch((_error) => console.log("SERVER (ERROR) : error connecting to MongoDB"));
 
 redisClient
 	.connect()
 	.then(() => {
 		console.log("SERVER : Redis connection successfull");
 	})
-	.catch((error) => console.log("SERVER (ERROR) : error connecting to redis server",));
+	.catch((_error) => console.log("SERVER (ERROR) : error connecting to redis server",));
 
 // start the server
 const server = app.listen(PORT, () => {
