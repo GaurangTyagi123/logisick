@@ -102,7 +102,7 @@ userSchema.pre(
 
 // . SCHEMA FUNCTIONS
 
-// creates and stores the password reset token
+// Creates and stores the password reset token
 userSchema.methods.createPasswordResetToken = function (this: UserType) {
     const resetToken = crypto.randomBytes(32).toString('hex');
     this.resetPasswordToken = crypto
@@ -113,14 +113,14 @@ userSchema.methods.createPasswordResetToken = function (this: UserType) {
     return resetToken;
 };
 
-// compares the hashed password with the password given by the user trying to log in
+// Compares the hashed password with the password given by the user trying to log in
 userSchema.methods.comparePasswords = async function (
     actualPassword: string,
     hashPassword: string
 ) {
     return await bcryptjs.compare(actualPassword, hashPassword);
 };
-// checks whether the password was updated after the jwt was
+// Checks whether the password was updated after the jwt was
 userSchema.methods.passwordUpdatedAfter = function (issuedTimeStamp: number) {
     if (this.passwordUpdatedAt) {
         const updateTimeStamp = this.passwordUpdatedAt.getTime() / 1000;
@@ -128,7 +128,7 @@ userSchema.methods.passwordUpdatedAfter = function (issuedTimeStamp: number) {
     }
 };
 
-// creates user model from the schema
+// Creates user model from the schema
 const userModel = model<UserType>('User', userSchema);
 
 export default userModel;

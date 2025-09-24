@@ -1,4 +1,5 @@
 /**
+ * @objective function to remove illegal fields from body
  * @params request body(object), illegalFields (array of strings)
  * @approach create a new object (newBody).
  *          iterate through the fields of body and check whether illegalFields array contains that field

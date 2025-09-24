@@ -78,9 +78,9 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 // 	}
 // );
 
-// authentication router
+// Authentication router
 app.use("/api/v1/auth", authRouter);
-// organzations router
+// Organzations router
 app.use("/api/v1/org", orgRouter);
 
 // Open Authentication Routes
@@ -90,12 +90,12 @@ app.use("/api/v1/users", userRouter);
 // Global Error Handler
 app.use(globalErrorController);
 
-// for production 
+// For production 
 if (process.env.NODE_ENV === "production") {
 	app.use(
 		express.static(path.join(__dirname, "../../../frontend", "dist-react"))
 	);
-	app.get("{*splat}", (req, res) => {
+	app.get("{*splat}", (_req, res) => {
 		res.sendFile(
 			path.join(
 				__dirname,

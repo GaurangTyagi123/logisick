@@ -6,6 +6,7 @@ import "../utils/oauth.setup";
 import type { StringValue } from "ms";
 
 /**
+ * @objective Functiont to handle user signup by oAuth via google
  * @params req(Express Request) res(Express Response) next(Express Next Function)
  * @request user(UserType)
  * @approach if the request contains user data then generate json-webtoken from the user-id and redirect the request to frontend of the application
@@ -29,8 +30,7 @@ const googleSignup = catchAsync(
 
 		const cookieOptions: cookieOptionsType = {
 			httpOnly: true,
-			secure:
-				process.env.NODE_ENV === "production",
+			secure: process.env.NODE_ENV === "production",
 			expires: new Date(
 				Date.now() +
 					parseInt(process.env.COOKIE_EXPIRE_TIME as string) *

@@ -4,9 +4,8 @@ import AppError from "../utils/appError";
 import catchAsync from "../utils/catchAsync";
 import type { NextFunction, Response } from "express";
 
-
 /**
- * @objective function to return organization in the response of api request
+ * @objective Function to return organization in the response of api request
  * @param res Express response of API request
  * @param status numberical status code
  * @param org data of organization to send to client
@@ -31,7 +30,7 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
 }
 
 /**
- * @objective function to create new organization by verified user who has no organization prior as owner
+ * @objective Function to create new organization by verified user who has no organization prior as owner
  * @param req(UserRequest)
  * @param res(ExpressRexponse)
  * @param next(Express Next Function)
@@ -39,7 +38,7 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
  * 			ELSE IF (user already an owner) return error with status 400
  * 			ELSE IF (name is not given in body) return error with status 404
  * 			ELSE IF (org or emp creation fails) return error with status 500
- * 			ELSE call returnOrgRes function with new org details and 201 status
+ * 			ELSE call returnOrgRes Function with new org details and 201 status
  */
 export const createOrg = catchAsync(
 	async (
@@ -112,7 +111,7 @@ export const createOrg = catchAsync(
  * @param res(ExpressRexponse)
  * @param next(Express Next Function)
  * @return IF (user dont have any orgs ) return error with status 404
- * 			ELSE call returnOrgRes function with user's org and status 200
+ * 			ELSE call returnOrgRes Function with user's org and status 200
  */
 export const getUserOrg = catchAsync(
 	async (
@@ -128,11 +127,50 @@ export const getUserOrg = catchAsync(
 	}
 );
 
-// TODO : function to update org details (only name,description,type,subscription and admin)
-// TODO : function to transfer ownership only by owner itself
+// TODO : Function to update org details (only name,description,type,subscription and admin)
 
+// TODO : Function to transfer ownership only by owner itself
+/**
+ * @brief Function to transfer ownership of an organization
+ * @param req(UserRequest)
+ * @param res(ExpressRexponse)
+ * @param next(Express Next Function)
+ *
+ */
+export const transferOrg = catchAsync(
+	async (
+		req: ExpressTypes.UserRequest,
+		res: Response,
+		next: NextFunction
+	) => {
+		const { newOwnerId, orgId } = req.body;
+		if (!newOwnerId || !orgId)
+			return next(new AppError("Please provide valid details", 404));
+		const oldUserId = req.user?._id;
+
+		const newOrgData = await Org.findOneAndUpdate(
+			{ _id: orgId, owner: oldUserId },
+			{ $set: { owner: newOwnerId } },
+			{ new: true }
+		);
+		if (!newOrgData)
+			return next(new AppError("Error transfering ownership", 500));
+
+		await Emp.findOneAndDelete({ userid: oldUserId });
+		const newOwnerEmp = await Emp.create({
+			userid: newOwnerId,
+			orgid: newOrgData._id,
+			role: "Owner",
+		});
+		if (!newOwnerEmp)
+			return next(new AppError("Error transfering ownership", 500));
+
+		return returnOrgRes(res, 200, newOrgData);
+	}
+);
 
 /**
+ * @brief Function to delete an organization (done by only owner)
  * @param req(UserRequest)
  * @param res(ExpressRexponse)
  * @param next(Express Next Function)

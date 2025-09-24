@@ -1,6 +1,5 @@
 import { type Query, Schema, model } from "mongoose";
 
-// TO BE IMPLEMENTED
 const organizationSchema = new Schema(
 	{
 		name: {
@@ -41,7 +40,7 @@ const organizationSchema = new Schema(
 	{ timestamps: true }
 );
 
-// middleware to filter the organizations which are not active during fetching
+// Middleware to filter the organizations which are not active during fetching
 organizationSchema.pre(
 	/find/,
 	function (this: Query<UserType, MongooseDocument>, next) {
@@ -50,7 +49,7 @@ organizationSchema.pre(
 	}
 );
 
-// soft deleting organization
+// Soft deleting organization
 organizationSchema.pre("deleteOne", async function () {
 	if (this.getQuery) {
 		await this.model.updateOne(this.getQuery(), { active: false });

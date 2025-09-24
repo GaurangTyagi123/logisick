@@ -1,4 +1,4 @@
-// application's error handler
+// Application's error handler
 class AppError extends Error {
     private statusCode: number;
     private isOperational: boolean;

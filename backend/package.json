@@ -7,7 +7,7 @@
 		"lint": "eslint .",
 		"build": "tsc",
 		"start": "npm run build && cross-env NODE_ENV=production node dist/src/server.js",
-		"dev": "tsnd --respawn --transpile-only ./src/server.ts",
+		"dev": "cross-env NODE_ENV=development tsnd --respawn --transpile-only ./src/server.ts",
 		"test": "tsx ./testing/run-test.ts"
 	},
 	"repository": {

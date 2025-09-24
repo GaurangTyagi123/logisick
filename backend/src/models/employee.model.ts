@@ -31,7 +31,7 @@ const employeeSchema = new Schema(
 	{ timestamps: true }
 );
 
-// middleware to filter the employees which are not active during fetching
+// Middleware to filter the employees which are not active during fetching
 employeeSchema.pre(
 	/find/,
 	function (this: Query<UserType, MongooseDocument>, next) {
@@ -40,7 +40,7 @@ employeeSchema.pre(
 	}
 );
 
-// setting by default that manager od a manager should be the owner
+// Setting by default that manager od a manager should be the owner
 employeeSchema.pre("save", async function (this: EmpType, next) {
 	try {
 		if (this.role === "Manager" && !this.manager) {
@@ -55,7 +55,7 @@ employeeSchema.pre("save", async function (this: EmpType, next) {
 	}
 });
 
-// soft delete for one employee
+// Soft delete for one employee
 employeeSchema.pre("deleteOne", async function () {
 	if (this.getQuery) {
 		await this.model.updateOne(this.getQuery(), { active: false });
