@@ -1,7 +1,7 @@
 import AppError from "../utils/appError";
 
 /**
- * @objective Function to generate app error if user's token is invalid
+ * @brief Function to generate app error if user's token is invalid
  * @param _e error object
  * @returns 
  */
@@ -10,7 +10,7 @@ const handleTokenError = (_e: Error) => {
 };
 
 /**
- * @objective Function to handle error in express routes globally
+ * @brief Function to handle error in express routes globally
  * @param err error given by error catcher
  * @param _req Express request
  * @param res Express response

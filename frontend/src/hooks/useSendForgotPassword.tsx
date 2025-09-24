@@ -3,7 +3,7 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 /**
- * @objective hook to handle forgot password functionality of user
+ * @brief hook to handle forgot password functionality of user
  * @returns forgot password state of app from react-query
  */
 function useResetPassword() {

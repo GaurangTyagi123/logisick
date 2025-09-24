@@ -57,7 +57,7 @@ interface AuthProps {
 }
 
 /**
- * @objective function to handle error for async API class to server or system error
+ * @brief function to handle error for async API class to server or system error
  * @param error instance of error
  * @param message custom message for toast to user
  */
@@ -72,7 +72,7 @@ function handleError(error: unknown, message: string) {
 }
 
 /**
- * @objective hook to handle user authentication functions 
+ * @brief hook to handle user authentication functions 
  */
 const useAuthStore = create<AuthProps>((set) => ({
 	user: null, // user state
@@ -86,7 +86,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 	isChangingPassword: false, // boolean value to tell if changing password request is processing
 	isDeleteingUser: false, // boolean value to tell if deleting userrequest is processing
 	/**
-	 * @objective async function to request api to check user authentication
+	 * @brief async function to request api to check user authentication
 	 * @effect updates user state
 	 */
 	checkAuth: async () => {
@@ -107,7 +107,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to login user
+	 * @brief async function to request api to login user
 	 * @param form data for login containing (email,password)
 	 * @effect updated user state if logged in successfully
 	 */
@@ -128,7 +128,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to register new user
+	 * @brief async function to request api to register new user
 	 * @param form data for registering (name,email,password,confirm password)
 	 * @effect updates user state if succesfull
 	 */
@@ -149,7 +149,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to logout user
+	 * @brief async function to request api to logout user
 	 * @effect settes user to null if succesfull
 	 */
 	logout: async () => {
@@ -173,7 +173,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to verify email
+	 * @brief async function to request api to verify email
 	 * @param form data for verifying email (otp?)
 	 * @returns (already | sent | verified )sate of verification of email
 	 * @effect updates user state to new user data
@@ -209,7 +209,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to update user
+	 * @brief async function to request api to update user
 	 * @param form data to update user (name?,email?,avatar?,org?)
 	 * @effect updates user with new data
 	 */
@@ -233,7 +233,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to send forgot password email
+	 * @brief async function to request api to send forgot password email
 	 * @param form data to send forgot password request (email)
 	 */
 	sendForgotPassword: async (form) => {
@@ -251,7 +251,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to reset pasword after user forgot
+	 * @brief async function to request api to reset pasword after user forgot
 	 * @param resetToken token user got on email
 	 * @param form data for request (new password,confirm new password)
 	 * @effect updates user with new data
@@ -278,7 +278,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to change user password
+	 * @brief async function to request api to change user password
 	 * @param form data to change password (prev password,new password,confirm new password)
 	 * @effect updates user with new data
 	 */
@@ -301,7 +301,7 @@ const useAuthStore = create<AuthProps>((set) => ({
 		}
 	},
 	/**
-	 * @objective async function to request api to delete user
+	 * @brief async function to request api to delete user
 	 * @effect sets user to null
 	 */
 	deleteUser: async () => {

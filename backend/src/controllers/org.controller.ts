@@ -5,7 +5,7 @@ import catchAsync from "../utils/catchAsync";
 import type { NextFunction, Response } from "express";
 
 /**
- * @objective Function to return organization in the response of api request
+ * @brief Function to return organization in the response of api request
  * @param res Express response of API request
  * @param status numberical status code
  * @param org data of organization to send to client
@@ -30,7 +30,7 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
 }
 
 /**
- * @objective Function to create new organization by verified user who has no organization prior as owner
+ * @brief Function to create new organization by verified user who has no organization prior as owner
  * @param req(UserRequest)
  * @param res(ExpressRexponse)
  * @param next(Express Next Function)
@@ -65,28 +65,43 @@ export const createOrg = catchAsync(
 			);
 
 		const newOrgData: {
-			name: string;
+			name?: string;
 			description?: string;
 			type?: string;
 			owner: ObjectId;
-		} = { name, owner: req.user?._id };
+		} = { owner: req.user?._id };
 
-		if (description) newOrgData["description"] = description;
-		if (type) {
+		if (name && name.trim() !== "") {
+			if (name.trim().length() > 0 && name.trim().length <= 48) {
+				newOrgData["name"] = name.trim();
+			} else return next(new AppError("Invalid data", 400));
+		} else {
+			return next(new AppError("All fields are required (name)", 404));
+		}
+
+		if (description && description.trim() !== "") {
 			if (
-				![
+				description.trim().length() > 0 &&
+				description.trim().length <= 300
+			) {
+				newOrgData["description"] = description.trim();
+			} else return next(new AppError("Invalid data", 400));
+		}
+
+		if (type && type.trim() !== "") {
+			if (
+				[
 					"Basic",
 					"Small-Cap",
 					"Mid-Cap",
 					"Large-Cap",
 					"Other",
-				].includes(type)
+				].includes(type.trim())
 			) {
-				return next(
-					new AppError("Wrogn type given to Organization", 400)
-				);
+				newOrgData["type"] = type.trim();
+			} else {
+				newOrgData["type"] = "Other";
 			}
-			newOrgData["type"] = type;
 		}
 
 		const newOrg = await Org.create(newOrgData);
@@ -106,7 +121,7 @@ export const createOrg = catchAsync(
 );
 
 /**
- * @objective
+ * @brief function to get organization of which user is owner of
  * @param req(UserRequest)
  * @param res(ExpressRexponse)
  * @param next(Express Next Function)
@@ -127,9 +142,71 @@ export const getUserOrg = catchAsync(
 	}
 );
 
-// TODO : Function to update org details (only name,description,type,subscription and admin)
+/**
+ * @brief function to update data of organization like (name,description,type)
+ * @param req(UserRequest)
+ * @param res(ExpressRexponse)
+ * @param next(Express Next Function)
+ * @return IF (name and is not valid) return error with 400
+ * 			IF (description and not valid description) return error with 400
+ * 			ELSE return the updated
+ */
+export const updateOrg = catchAsync(
+	async (
+		req: ExpressTypes.UserRequest,
+		res: Response,
+		next: NextFunction
+	) => {
+		const { orgId } = req.body;
+		const { name, description, type } = req.body;
 
-// TODO : Function to transfer ownership only by owner itself
+		const dataToUpdate: {
+			name?: string;
+			description?: string;
+			type?: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
+		} = {};
+
+		if (name && name.trim() !== "") {
+			if (name.trim().length() > 0 && name.trim().length() <= 48)
+				dataToUpdate["name"] = name.trim();
+			else return next(new AppError("Invalid data", 400));
+		}
+
+		if (description && description.trim() !== "") {
+			if (
+				description.trim().length > 8 &&
+				description.trim().length <= 300
+			) {
+				dataToUpdate["description"] = description.trim();
+			} else return next(new AppError("Invalid data", 400));
+		}
+
+		if (type && type.trim() !== "") {
+			if (
+				[
+					"Basic",
+					"Small-Cap",
+					"Mid-Cap",
+					"Large-Cap",
+					"Other",
+				].includes(type.trim())
+			) {
+				dataToUpdate["type"] = type.trim();
+			} else {
+				dataToUpdate["type"] = "Other";
+			}
+		}
+
+		const newOrgData = await Org.findByIdAndUpdate(orgId, dataToUpdate, {
+			new: true,
+		});
+
+		if (!newOrgData)
+			return next(new AppError("Error updating organization data", 500));
+		return returnOrgRes(res, 200, newOrgData);
+	}
+);
+
 /**
  * @brief Function to transfer ownership of an organization
  * @param req(UserRequest)

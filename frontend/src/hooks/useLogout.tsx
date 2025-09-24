@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 /**
- * @objective hook to handle logout functionality of user
+ * @brief hook to handle logout functionality of user
  * @param message optional parameter for logout message 
  * @returns logout state of app from react-query
  */

@@ -31,7 +31,7 @@ export function Login({ setFormType }: FormProps) {
 	const { loginFn: login, isPending: isLoggingIn } = useLogin();
 
 	/**
-	 * @objective function to validate password field
+	 * @brief function to validate password field
 	 * @param password string value to check for constrains of password
 	 */
 	const validatePassword = (password: string) => {
@@ -40,7 +40,7 @@ export function Login({ setFormType }: FormProps) {
 	};
 
 	/**
-	 * @objective function to validate email field
+	 * @brief function to validate email field
 	 * @param email string value to check for constrains of email
 	 */
 	function validateEmail(email: string) {
@@ -49,7 +49,7 @@ export function Login({ setFormType }: FormProps) {
 	}
 
 	/**
-	 * @objective function to handle user request to login 
+	 * @brief function to handle user request to login 
 	 * @param e form event on when submit
 	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -58,7 +58,7 @@ export function Login({ setFormType }: FormProps) {
 	};
 
 	/**
-	 * @objective function to send forgot password request to send reset link to user registered email 
+	 * @brief function to send forgot password request to send reset link to user registered email 
 	 */
 	const sendForgotMail = (): void => {
 		if (form.email.trim().length == 0 && valid.email) {
@@ -206,7 +206,7 @@ export function Register({ setFormType }: FormProps) {
 	// const { isRegistering, register } = useAuthStore();
 
 	/**
-	 * @objective function to validate password field
+	 * @brief function to validate password field
 	 * @param password string value to check for constrains of password
 	 */
 	const validatePassword = (password: string) => {
@@ -215,7 +215,7 @@ export function Register({ setFormType }: FormProps) {
 	};
 
 	/**
-	 * @objective function to validate confirm password field
+	 * @brief function to validate confirm password field
 	 * @param password string value to check for constrains of confirm password
 	 */
 	const validateConfirmPassword = (password: string) => {
@@ -225,7 +225,7 @@ export function Register({ setFormType }: FormProps) {
 	};
 
 	/**
-	 * @objective function to validate email field
+	 * @brief function to validate email field
 	 * @param email string value to check for constrains of email
 	 */
 	function validateEmail(email: string) {
@@ -234,7 +234,7 @@ export function Register({ setFormType }: FormProps) {
 	}
 
 	/**
-	 * @objective function to handle user request to register as new user
+	 * @brief function to handle user request to register as new user
 	 * @param e react form event
 	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {

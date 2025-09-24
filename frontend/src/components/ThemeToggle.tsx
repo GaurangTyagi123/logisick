@@ -16,7 +16,7 @@ function ThemeToggle({ classname }: ThemeToggleProps) {
 	const { setMode, mode } = useModeStore();
 
 	/**
-	 * @objective function to handle change of theme on user click
+	 * @brief function to handle change of theme on user click
 	 */
 	function handleThemeChange(): void {
 		// e.stopPropagation();

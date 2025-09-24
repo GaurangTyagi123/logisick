@@ -31,7 +31,7 @@ function DeleteMeModal({
 	const { deleteUser, isDeleteingUser } = useAuthStore();
 
 	/**
-	 * @objective async function to handle the user request to delete account
+	 * @brief async function to handle the user request to delete account
 	 */
 	async function handleDeleteAccount() {
 		if (text.trim() == "delete my account") {

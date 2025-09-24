@@ -58,7 +58,7 @@ const organizations: OrgType[] = [
 ];
 
 /**
- * @objective function to give different classes based on subscription type
+ * @brief function to give different classes based on subscription type
  * @param subscription type of subscription of organization
  * @returns string of tailwind classes
  */
@@ -76,7 +76,7 @@ const getSubscriptionColor = (subscription: OrgType["subscription"]) => {
 };
 
 /**
- * @objective function to give different clasees based on status type
+ * @brief function to give different clasees based on status type
  * @param status type of status of organization 
  * @returns string of tailwind classes
  */

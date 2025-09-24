@@ -4,7 +4,7 @@ import AppError from '../utils/appError';
 import checkRequestBody from '../utils/checkRequestBody';
 
 /**
- * @objective Function to get User who are not admin
+ * @brief Function to get User who are not admin
  * @params req(Request) res(Express Response) next(Express Next Function)
  * @preCondition user is logged in && user is an admin
  * @return (TO BE IMPLEMENTED) all the users working for the organization of admin
@@ -28,7 +28,7 @@ export const getUsers = catchAsync(
 );
 // TODO : Add a route to the request handler below
 /**
- * @objective Function to get user data from request body added before
+ * @brief Function to get user data from request body added before
  * @params req(Request) res(Express Response) next(Express Next Function)
  * @preCondition user is logged in & user is an admin
  * @requestParams user id
@@ -58,7 +58,7 @@ export const getUser = catchAsync(
 );
 
 /**
- * @objective Function to update the data (not isVerified,rol or passwordUpdatedAt) of user
+ * @brief Function to update the data (not isVerified,rol or passwordUpdatedAt) of user
  * @params req(User Request) res(Express Response) next(Express Next Function)
  * @preCondition user is logged in
  * @body new data
@@ -105,7 +105,7 @@ export const updateUser = catchAsync(
 );
 
 /**
- * @objective Function to delete user
+ * @brief Function to delete user
  * @params req(User Request) res(Express Response) next(Express Next Function)
  * @preCondition user is logged in
  * @body new data

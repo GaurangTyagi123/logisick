@@ -5,10 +5,14 @@ const organizationSchema = new Schema(
 		name: {
 			type: String,
 			required: [true, "Organization must have a name"],
+			minLength: 1,
+			maxLength: 48,
 		},
 		description: {
 			type: String,
 			default: "Your organization",
+			minLength: 8,
+			maxLength: 300,
 		},
 		type: {
 			type: String,

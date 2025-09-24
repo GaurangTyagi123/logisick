@@ -6,7 +6,7 @@ import "../utils/oauth.setup";
 import type { StringValue } from "ms";
 
 /**
- * @objective Functiont to handle user signup by oAuth via google
+ * @brief Functiont to handle user signup by oAuth via google
  * @params req(Express Request) res(Express Response) next(Express Next Function)
  * @request user(UserType)
  * @approach if the request contains user data then generate json-webtoken from the user-id and redirect the request to frontend of the application

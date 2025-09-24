@@ -2,7 +2,7 @@ import { checkAuth } from '@/services/apiAuth';
 import { useQuery } from '@tanstack/react-query';
 
 /**
- * @objective hook for user state in app and if user is authenticated
+ * @brief hook for user state in app and if user is authenticated
  * @returns user state of app from react-query
  */
 function useCheckAuth() {

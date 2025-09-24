@@ -1,7 +1,7 @@
 import axios from "axios";
 
 /**
- * @objective instance of axios with presets to our backend API in development or production mdoe 
+ * @brief instance of axios with presets to our backend API in development or production mdoe 
  */
 const axinstance = axios.create({
 	baseURL:

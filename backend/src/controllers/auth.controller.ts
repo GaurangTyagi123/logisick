@@ -95,7 +95,7 @@ const sendNewToken = (
 // };
 
 /**
- * @objective Function to protect the routes from non-loggedin users
+ * @brief Function to protect the routes from non-loggedin users
  * @param req(UserRequest)
  * @param res(ExpressRexponse)
  * @param next(Express Next Function)
@@ -140,7 +140,7 @@ export const protect = catchAsync(
 );
 
 /**
- * @objective Function to loginexisting users
+ * @brief Function to loginexisting users
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -172,7 +172,7 @@ export const login = catchAsync(
 );
 
 /**
- * @objective Function to logout signed in users
+ * @brief Function to logout signed in users
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -198,7 +198,7 @@ export const logout = catchAsync(
 );
 
 /**
- * @objective Function to check authentication of a user
+ * @brief Function to check authentication of a user
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -252,7 +252,7 @@ export const isLoggedIn = catchAsync(
 );
 
 /**
- * @objective Function to signup new user 
+ * @brief Function to signup new user 
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -289,7 +289,7 @@ export const signup = catchAsync(
 );
 
 /**
- * @objective Function to verify email id of user
+ * @brief Function to verify email id of user
  * @param req(User Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -373,7 +373,7 @@ export const verifyEmail = catchAsync(
 );
 
 /**
- * @objective Function to handle case if user forgot th password
+ * @brief Function to handle case if user forgot th password
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -432,7 +432,7 @@ export const forgotPassword = catchAsync(
 );
 
 /**
- * @objective Function to reset user password if he forgets
+ * @brief Function to reset user password if he forgets
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)
@@ -475,7 +475,7 @@ export const resetPassword = catchAsync(
 );
 
 /**
- * @objective Function to update the password ofuseron request
+ * @brief Function to update the password ofuseron request
  * @param req(User Request)
  * @param res(Express Response)
  * @param next(Express Next Function)

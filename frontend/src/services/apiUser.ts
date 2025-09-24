@@ -16,7 +16,7 @@ type changePassword = (form: {
 }) => Promise<User | void>;
 
 /**
- * @objective async function to request api to update user
+ * @brief async function to request api to update user
  * @param form data to update user (name?,email?,avatar?,org?)
  * @effect updates user with new data
  */
@@ -36,7 +36,7 @@ export const updateUser: updateUser = async (form) => {
 };
 
 /**
- * @objective async function to request api to change user password
+ * @brief async function to request api to change user password
  * @param form data to change password (prev password,new password,confirm new password)
  * @effect updates user with new data
  */

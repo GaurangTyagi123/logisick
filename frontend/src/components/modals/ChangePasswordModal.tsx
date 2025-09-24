@@ -51,7 +51,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	const [visi, setVisi] = useState<boolean>(false);
 
 	/**
-	 * @objective function to validate password field
+	 * @brief function to validate password field
 	 * @param password string value to check for constrains of password
 	 */
 	const validatePrevPassword = (prevPassword: string) => {
@@ -61,7 +61,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	};
 
 	/**
-	 * @objective function to validate password field
+	 * @brief function to validate password field
 	 * @param prevPassword string value to check for constrains of password
 	 */
 	const validatePassword = (password: string) => {
@@ -70,7 +70,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	};
 
 	/**
-	 * @objective function to validate confirm password field
+	 * @brief function to validate confirm password field
 	 * @param password string value to check for constrains of confirm password
 	 */
 	const validateConfirmPassword = (confirmPassword: string) => {
@@ -80,7 +80,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 	};
 
 	/**
-	 * @objective function to handle the submittion of change password form
+	 * @brief function to handle the submittion of change password form
 	 */
 	function handleSubmit() {
 		if (

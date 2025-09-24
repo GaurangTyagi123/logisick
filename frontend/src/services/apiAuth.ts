@@ -36,7 +36,7 @@ type resetPassword = (
 ) => Promise<User | undefined>;
 
 /**
- * @objective async function to request api to check user authentication
+ * @brief async function to request api to check user authentication
  * @effect updates user state
  */
 export const checkAuth: checkAuth = async () => {
@@ -52,7 +52,7 @@ export const checkAuth: checkAuth = async () => {
 };
 
 /**
- * @objective async function to request api to register new user
+ * @brief async function to request api to register new user
  * @param form data for registering (name,email,password,confirm password)
  * @effect updates user state if succesfull
  */
@@ -72,7 +72,7 @@ export const signup: signup = async (form) => {
 };
 
 /**
- * @objective async function to request api to login user
+ * @brief async function to request api to login user
  * @param form data for login containing (email,password)
  * @effect updated user state if logged in successfully
  */
@@ -92,7 +92,7 @@ export const login: login = async (form: {
 };
 
 /**
- * @objective async function to request api to logout user
+ * @brief async function to request api to logout user
  * @effect settes user to null if succesfull
  */
 export const logout = async () => {
@@ -109,7 +109,7 @@ export const logout = async () => {
 	}
 };
 /**
- * @objective async function to request api to send forgot password email
+ * @brief async function to request api to send forgot password email
  * @param form data to send forgot password request (email)
  */
 export const sendForgotToken: sendForgotPassword = async (form) => {
@@ -129,7 +129,7 @@ export const sendForgotToken: sendForgotPassword = async (form) => {
 };
 
 /**
- * @objective async function to request api to reset pasword after user forgot
+ * @brief async function to request api to reset pasword after user forgot
  * @param resetToken token user got on email
  * @param form data for request (new password,confirm new password)
  * @effect updates user with new data

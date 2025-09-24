@@ -4,7 +4,7 @@ import { toast } from 'react-toastify';
 import useLogout from './useLogout';
 
 /**
- * @objective hook to handle updating of password of user
+ * @brief hook to handle updating of password of user
  * @returns update password state of app from react-query
  */
 function useUpdatePassword() {

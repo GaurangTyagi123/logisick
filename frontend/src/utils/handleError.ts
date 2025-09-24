@@ -1,7 +1,7 @@
 import { isAxiosError } from "axios";
 
 /**
- * @objective function to handle error for async API class to server or system error
+ * @brief function to handle error for async API class to server or system error
  * @param error instance of error
  * @param message custom message for toast to user
  */

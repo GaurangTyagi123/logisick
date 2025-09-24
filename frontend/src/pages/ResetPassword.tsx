@@ -14,7 +14,7 @@ import { Eye, EyeClosed } from "@/assets/icons/Authenticatepage";
 import useResetPassword from "@/hooks/useResetPassword";
 
 /**
- * @objective page to be used as form to reset forgot password (for users)
+ * @brief page to be used as form to reset forgot password (for users)
  * @returns page/react component
  */
 function ResetPassword() {
@@ -36,7 +36,7 @@ function ResetPassword() {
 	const navigate = useNavigate();
 
 	/**
-	 * @objective function to validate password field
+	 * @brief function to validate password field
 	 * @param password string value to check for constrains of password
 	 */
 	const validatePassword = (password: string) => {
@@ -45,7 +45,7 @@ function ResetPassword() {
 	};
 
 	/**
-	 * @objective function to validate confirm password field
+	 * @brief function to validate confirm password field
 	 * @param password string value to check for constrains of confirm password
 	 */
 	const validateConfirmPassword = (password: string) => {
@@ -58,7 +58,7 @@ function ResetPassword() {
 	};
 
 	/**
-	 * @objective function to handle user request to reset password if forgot
+	 * @brief function to handle user request to reset password if forgot
 	 * @param e react form event
 	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {

@@ -29,7 +29,7 @@ function UserButton() {
 	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 
 	/**
-	 * @objective function to handle logout request from user
+	 * @brief function to handle logout request from user
 	 * @param e mouse click event
 	 */
 	function handleLogout(e: React.MouseEvent<HTMLDivElement>) {

@@ -3,7 +3,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 /**
- * @objective hook to handle updating of user information 
+ * @brief hook to handle updating of user information 
  * @returns update user state of app from react-query
  */
 function useUpdateUser() {

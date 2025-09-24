@@ -10,7 +10,7 @@ type PasswordResetForm = {
 };
 
 /**
- * @objective hook to handle resetting of password functionality
+ * @brief hook to handle resetting of password functionality
  * @returns reset password state of app from react-query
  */
 function useResetPassword() {

@@ -3,7 +3,7 @@ import path from "path";
 import { isDev } from "./utils.js";
 
 /**
- * @objective function to get resolved path of ui for electrin
+ * @brief function to get resolved path of ui for electrin
  * @returns resolved path
  */
 export function getUIPath() {
@@ -11,7 +11,7 @@ export function getUIPath() {
 }
 
 /**
- * @objective function to get path of assets in development or production
+ * @brief function to get path of assets in development or production
  * @returns resolved path
  */
 export function getAssetPath() {
@@ -19,7 +19,7 @@ export function getAssetPath() {
 }
 
 /**
- * @objective function to get path of preload file in development or production
+ * @brief function to get path of preload file in development or production
  * @returns resolved path
  */
 export function getPreloadPath() {

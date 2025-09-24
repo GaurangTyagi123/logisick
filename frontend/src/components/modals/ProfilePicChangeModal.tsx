@@ -46,7 +46,7 @@ function ProfilePicChangeModal({
 	// const { user, updateUser, isUpdatingUser } = useAuthStore();
 
 	/**
-	 * @objective function to generate random seed for new profile picture
+	 * @brief function to generate random seed for new profile picture
 	 * @param len length of the random generates string
 	 */
 	function genProfileString(len: number) {
@@ -60,7 +60,7 @@ function ProfilePicChangeModal({
 	}
 
 	/**
-	 * @objective function to handle user request to change profile picture
+	 * @brief function to handle user request to change profile picture
 	 */
 	function handleProfilePicChange() {
 		if (modalPic.length > 0 && modalPic !== user?.avatar) {

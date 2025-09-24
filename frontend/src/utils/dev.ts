@@ -1,5 +1,5 @@
 /**
- * @objective function to check if app is in development or production
+ * @brief function to check if app is in development or production
  * @returns boolean value
  */
 export function isDev() {

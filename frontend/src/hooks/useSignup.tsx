@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 /**
- * @objective hook to handle registration functionality of user
+ * @brief hook to handle registration functionality of user
  * @returns registration state of app from react-query
  */
 function useSignup() {

@@ -34,7 +34,7 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 	const queryClient = useQueryClient();
 
 	/**
-	 * @objective async function to handle user request to verify email
+	 * @brief async function to handle user request to verify email
 	 */
 	async function handleVerifyEmail() {
 		if (otp.trim() !== "" && otp.length === 4) {
