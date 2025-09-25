@@ -224,7 +224,7 @@ export const transferOrg = catchAsync(
 		if (!newOwnerId || !orgId)
 			return next(new AppError("Please provide valid details", 404));
 		const oldUserId = req.user?._id;
-
+		// TODO if the new owner is verified
 		const newOrgData = await Org.findOneAndUpdate(
 			{ _id: orgId, owner: oldUserId },
 			{ $set: { owner: newOwnerId } },
