@@ -1,5 +1,6 @@
 import Org from "../models/organization.model";
 import Emp from "../models/employee.model";
+import User from "../models/user.model";
 import AppError from "../utils/appError";
 import catchAsync from "../utils/catchAsync";
 import type { NextFunction, Response } from "express";
@@ -54,6 +55,17 @@ export const createOrg = catchAsync(
 				)
 			);
 		}
+		const existingOrgs = await Org.findWithDeleted({
+			owner: req.user._id,
+		});
+
+		const existingOrg = existingOrgs.some((org) => !org.deleted);
+
+		if (existingOrg) {
+			return next(
+				new AppError("Owner already has an active organization", 400)
+			);
+		}
 
 		const { name, description, type } = req.body;
 		if (!name)
@@ -71,37 +83,40 @@ export const createOrg = catchAsync(
 			owner: ObjectId;
 		} = { owner: req.user?._id };
 
-		if (name && name.trim() !== "") {
-			if (name.trim().length() > 0 && name.trim().length <= 48) {
-				newOrgData["name"] = name.trim();
-			} else return next(new AppError("Invalid data", 400));
-		} else {
+		if (!name || name.trim() == "")
 			return next(new AppError("All fields are required (name)", 404));
-		}
+
+		if (name.trim().length > 48)
+			return next(
+				new AppError("name should be atmost 48 characters", 400)
+			);
+
+		newOrgData["name"] = name.trim();
 
 		if (description && description.trim() !== "") {
 			if (
-				description.trim().length() > 0 &&
-				description.trim().length <= 300
-			) {
-				newOrgData["description"] = description.trim();
-			} else return next(new AppError("Invalid data", 400));
+				description.trim().length > 300 ||
+				description.trim().length < 8
+			)
+				return next(
+					new AppError(
+						"description should be atmost 300 and atleast 8 characters",
+						400
+					)
+				);
+			newOrgData["description"] = description.trim();
 		}
 
 		if (type && type.trim() !== "") {
-			if (
-				[
-					"Basic",
-					"Small-Cap",
-					"Mid-Cap",
-					"Large-Cap",
-					"Other",
-				].includes(type.trim())
-			) {
-				newOrgData["type"] = type.trim();
-			} else {
-				newOrgData["type"] = "Other";
-			}
+			newOrgData["type"] = [
+				"Basic",
+				"Small-Cap",
+				"Mid-Cap",
+				"Large-Cap",
+				"Other",
+			].includes(type.trim())
+				? type.trim()
+				: "Basic";
 		}
 
 		const newOrg = await Org.create(newOrgData);
@@ -166,19 +181,19 @@ export const updateOrg = catchAsync(
 			type?: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
 		} = {};
 
-		if (name && name.trim() !== "") {
-			if (name.trim().length() > 0 && name.trim().length() <= 48)
-				dataToUpdate["name"] = name.trim();
-			else return next(new AppError("Invalid data", 400));
+		if (name?.trim()) {
+			if (name.trim().length <= 48) dataToUpdate["name"] = name.trim();
+			else return next(new AppError("Invalid name length (<48)", 400));
 		}
 
-		if (description && description.trim() !== "") {
+		if (description?.trim() !== "") {
 			if (
-				description.trim().length > 8 &&
+				description.trim().length >= 8 &&
 				description.trim().length <= 300
 			) {
 				dataToUpdate["description"] = description.trim();
-			} else return next(new AppError("Invalid data", 400));
+			} else
+				return next(new AppError("Invalid description (<300,>8)", 400));
 		}
 
 		if (type && type.trim() !== "") {
@@ -197,9 +212,11 @@ export const updateOrg = catchAsync(
 			}
 		}
 
-		const newOrgData = await Org.findByIdAndUpdate(orgId, dataToUpdate, {
-			new: true,
-		});
+		const newOrgData = await Org.findOneAndUpdate(
+			{ _id: orgId, deleted: false },
+			dataToUpdate,
+			{ new: true }
+		);
 
 		if (!newOrgData)
 			return next(new AppError("Error updating organization data", 500));
@@ -221,26 +238,38 @@ export const transferOrg = catchAsync(
 		next: NextFunction
 	) => {
 		const { newOwnerId, orgId } = req.body;
+
 		if (!newOwnerId || !orgId)
 			return next(new AppError("Please provide valid details", 404));
+
 		const oldUserId = req.user?._id;
-		// TODO if the new owner is verified
+
+		// TODO : implement mongoose-delete for user and update here
+		const newUser = await User.findOne({ _id: newOwnerId, active: true });
+		if (!newUser) {
+			return next(
+				new AppError(
+					"New Owner should be an existing and verified user",
+					404
+				)
+			);
+		}
+
 		const newOrgData = await Org.findOneAndUpdate(
-			{ _id: orgId, owner: oldUserId },
-			{ $set: { owner: newOwnerId } },
+			{ _id: orgId, owner: oldUserId, deleted: false },
+			{ owner: newOwnerId },
 			{ new: true }
 		);
 		if (!newOrgData)
-			return next(new AppError("Error transfering ownership", 500));
+			return next(new AppError("Can't find organization specified", 500));
 
-		await Emp.findOneAndDelete({ userid: oldUserId });
-		const newOwnerEmp = await Emp.create({
+		await Emp.delete({ userid: oldUserId, orgid: newOrgData._id });
+
+		await Emp.create({
 			userid: newOwnerId,
 			orgid: newOrgData._id,
 			role: "Owner",
 		});
-		if (!newOwnerEmp)
-			return next(new AppError("Error transfering ownership", 500));
 
 		return returnOrgRes(res, 200, newOrgData);
 	}
@@ -272,21 +301,14 @@ export const deleteOrg = catchAsync(
 				)
 			);
 
-		const orgToDel = await Org.findOne({ orgid, owner: req.user?._id });
+		const orgToDel = await Org.findOne({
+			_id: orgid,
+			owner: req.user?._id,
+		});
 		if (!orgToDel) return next(new AppError("Organization not found", 404));
 
-		await orgToDel.deleteOne();
-
-		const orgLeft = await Org.findById(orgToDel._id);
-		if (orgLeft)
-			return next(new AppError("Error deleteing organization", 500));
-
-		await Emp.deleteMany({ orgid: orgToDel._id });
-		const empLeft = await Emp.find({ orgid: orgToDel._id });
-		if (empLeft.length !== 0)
-			return next(
-				new AppError("Error deleteing employees of organization", 500)
-			);
+		await orgToDel.delete();
+		await Emp.delete({ orgid: orgToDel._id });
 
 		return res.status(204).send();
 	}

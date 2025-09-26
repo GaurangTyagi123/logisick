@@ -25,6 +25,7 @@ export default [
 				},
 			],
 			"@typescript-eslint/no-explicit-any": "off",
+			"allowObjectTypes":"off"
 		},
 	},
 ];
