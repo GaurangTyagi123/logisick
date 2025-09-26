@@ -3,16 +3,13 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import useModeStore from "@/stores/useModeStore";
-// import useAuthStore from "@/stores/useAuthStore";
 
 import useCheckAuth from "@/hooks/useCheckAuth";
 import Analytics from "./pages/Analytics";
 import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import OrderSales from "./pages/OrderSales";
-import OrgOverview from "./pages/OrgOverview";
 import { faker } from "@faker-js/faker";
-import Organiztion from "./pages/Organization";
 
 const Loading = lazy(() => import("@/components/Loading"));
 
@@ -24,6 +21,8 @@ const Home = lazy(() => import("@/pages/Home"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Authenticate = lazy(() => import("@/pages/Authenticate"));
 const Profile = lazy(() => import("@/pages/Profile"));
+const Organization = lazy(()=>import("./pages/Organization"))
+const OrgOverview = lazy(()=> import("./pages/OrgOverview"))
 
 const data = [
 	{
@@ -77,10 +76,10 @@ function App() {
 					{/* path for homepage */}
 					<Route index path="/" element={<Home />} />
 					<Route
-						path="/organizations"
+						path="/dashboard"
 						element={
 							user ? (
-								<Organiztion data={data} />
+								<Organization data={data} />
 							) : (
 								<Navigate to={"/authenticate"} />
 							)
