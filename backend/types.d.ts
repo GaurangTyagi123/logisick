@@ -61,9 +61,12 @@ declare interface OrgType {
 	owner: ObjectId;
 	admin?: ObjectId | null;
 	subscription: "None" | "Basic" | "Pro";
-	active: boolean;
+	
 	createdAt: Date;
 	updatedAt: Date;
+
+	deleted?: boolean;
+    deletedAt?: Date | null;
 }
 
 // type declareation for Employee Model
@@ -73,7 +76,9 @@ declare interface EmpType {
 	orgid: ObjectId;
 	role: "Owner" | "Admin" | "Manager" | "Staff";
 	manager: ObjectId;
-	active: boolean;
 	createdAt: Date;
 	updatedAt: Date;
+
+	deleted?: boolean;
+    deletedAt?: Date | null;
 }

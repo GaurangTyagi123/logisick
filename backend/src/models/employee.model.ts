@@ -1,7 +1,21 @@
-import { type Query, Schema, model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
 import organizationModel from "./organization.model";
+import MongooseDelete from "mongoose-delete";
 
-const employeeSchema = new Schema(
+export interface EmpDocument extends EmpType, Document {
+	delete(): Promise<EmpDocument>; // soft delete
+	restore(): Promise<EmpDocument>; // restore soft-deleted doc
+}
+
+export interface EmpModel extends Model<EmpDocument> {
+	findWithDeleted(conditions?: any): Promise<EmpDocument[]>;
+
+	findDeleted(conditions?: any): Promise<EmpDocument[]>;
+
+	delete(conditions: any): Promise<any>;
+}
+
+const employeeSchema = new Schema<any, EmpModel>(
 	{
 		userid: {
 			type: Schema.ObjectId,
@@ -23,22 +37,15 @@ const employeeSchema = new Schema(
 			type: Schema.ObjectId,
 			ref: "User",
 		},
-		active: {
-			type: Boolean,
-			default: true,
-		},
 	},
 	{ timestamps: true }
 );
 
-// Middleware to filter the employees which are not active during fetching
-employeeSchema.pre(
-	/find/,
-	function (this: Query<UserType, MongooseDocument>, next) {
-		this.find({ active: { $ne: false } });
-		next();
-	}
-);
+employeeSchema.plugin(MongooseDelete, {
+	deletedAt: true,
+	deletedBy: false,
+	overrideMethods: "all",
+});
 
 // Setting by default that manager od a manager should be the owner
 employeeSchema.pre("save", async function (this: EmpType, next) {
@@ -55,24 +62,5 @@ employeeSchema.pre("save", async function (this: EmpType, next) {
 	}
 });
 
-// Soft delete for one employee
-employeeSchema.pre("deleteOne", async function () {
-	if (this.getQuery) {
-		await this.model.updateOne(this.getQuery(), { active: false });
-	} else {
-		await this.updateOne({ active: false });
-	}
-});
-
-// For deleteMany (query context only)
-employeeSchema.pre("deleteMany", async function () {
-	await this.model.updateMany(this.getQuery(), { active: false });
-});
-
-// For findOneAndDelete (query context only)
-employeeSchema.pre("findOneAndDelete", async function () {
-	await this.model.updateOne(this.getQuery(), { active: false });
-});
-
-const employeeModel = model("Employee", employeeSchema);
+const employeeModel = model<EmpDocument, EmpModel>("Employee", employeeSchema);
 export default employeeModel;

@@ -1,6 +1,20 @@
-import { type Query, Schema, model } from "mongoose";
+import { Schema, model, Model } from "mongoose";
+import mongooseDelete from "mongoose-delete";
 
-const organizationSchema = new Schema(
+export interface OrgDocument extends OrgType, Document {
+	delete(): Promise<OrgDocument>; // soft delete
+	restore(): Promise<OrgDocument>; // restore soft-deleted doc
+}
+
+export interface OrgModel extends Model<OrgDocument> {
+	findWithDeleted(conditions?: any): Promise<OrgDocument[]>;
+
+	findDeleted(conditions?: any): Promise<OrgDocument[]>;
+
+	delete(conditions: any): Promise<any>;
+}
+
+const organizationSchema = new Schema<any, OrgModel>(
 	{
 		name: {
 			type: String,
@@ -23,7 +37,6 @@ const organizationSchema = new Schema(
 		owner: {
 			type: Schema.ObjectId,
 			required: true,
-			unique: true,
 			ref: "User",
 		},
 		admin: {
@@ -36,41 +49,24 @@ const organizationSchema = new Schema(
 			required: true,
 			default: "None",
 		},
-		active: {
-			type: Boolean,
-			default: true,
-		},
 	},
 	{ timestamps: true }
 );
 
-// Middleware to filter the organizations which are not active during fetching
-organizationSchema.pre(
-	/find/,
-	function (this: Query<UserType, MongooseDocument>, next) {
-		this.find({ active: { $ne: false } });
-		next();
-	}
+organizationSchema.index(
+	{ owner: 1 },
+	{ unique: true, partialFilterExpression: { deleted: { $ne: true } } }
 );
 
-// Soft deleting organization
-organizationSchema.pre("deleteOne", async function () {
-	if (this.getQuery) {
-		await this.model.updateOne(this.getQuery(), { active: false });
-	} else {
-		await this.updateOne({ active: false });
-	}
+// plugin for soft delete
+organizationSchema.plugin(mongooseDelete, {
+	deletedAt: true,
+	deletedBy: false,
+	overrideMethods: "all",
 });
 
-// For deleteMany (query context only)
-organizationSchema.pre("deleteMany", async function () {
-	await this.model.updateMany(this.getQuery(), { active: false });
-});
-
-// For findOneAndDelete (query context only)
-organizationSchema.pre("findOneAndDelete", async function () {
-	await this.model.updateOne(this.getQuery(), { active: false });
-});
-
-const organizationModel = model("Organization", organizationSchema);
+const organizationModel = model<OrgDocument, OrgModel>(
+	"Organization",
+	organizationSchema
+);
 export default organizationModel;
