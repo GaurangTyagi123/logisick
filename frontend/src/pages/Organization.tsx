@@ -1,77 +1,155 @@
-import OrganizationModal from '@/components/modals/OrganizationModal';
-import Navbar from '@/components/Navbar';
-import { Badge } from '@/components/ui/badge';
-import Button from '@/components/ui/button';
-import { Suspense, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
+import OrganizationModal from "@/components/modals/OrganizationModal";
+import Navbar from "@/components/Navbar";
+import { Badge } from "@/components/ui/badge";
+import Button from "@/components/ui/button";
+import {
+	Card,
+	CardContent,
+	CardFooter,
+	CardHeader,
+	CardTitle,
+} from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
+import { H2, Large, Muted, Small } from "@/components/ui/Typography";
+import clsx from "clsx";
+import { Suspense, useState } from "react";
+import { Link } from "react-router-dom";
 
-interface OrgOverviewProps {
-    data: Array<Record<string, string>>;
+interface OrgCardProps {
+	org: {
+		_id: Org["_id"];
+		name: Org["name"];
+		description: Org["description"];
+	};
+	view: "grid" | "list";
 }
-function Organiztion({ data }: OrgOverviewProps) {
-    const [openOrgForm, setOpenOrgForm] = useState(false);
-    return (
-        <>
-            <div className="mx-5 flex flex-col justify-center">
-                <Navbar />
-                <div className="h-11/12 grid grid-cols-[repeat(auto-fill,350px)] m-5 p-5 gap-4 justify-center align-middle dark:bg-muted bg-zinc-200 rounded-sm">
-                    {data.map((org) => {
-                        return (
-                            <div
-                                key={org.id}
-                                className="w-full h-56  rounded-md bg-zinc-300 dark:bg-zinc-800 shadow-2xl flex flex-col justify-around items-center"
-                            >
-                                <h3 className="text-4xl text-baseline tracking-widest underline decoration-1 underline-offset-8 ">
-                                    {org.name.substring(0, 10)}..
-                                </h3>
-                                <p className="w-full text-baseline px-2 truncate">
-                                    {org.description.substring(0, 50)}
-                                </p>
-                                <div className="flex items-center justify-around w-full">
-                                    <Badge
-                                        variant="outline"
-                                        className="text-md lowercase font-light dark:text-lime-500"
-                                    >
-                                        Owner
-                                    </Badge>
-                                    <Button className="self-end ">
-                                        <Link to={`/dashboard/${org?._id}`}>
-                                            View
-                                        </Link>
-                                    </Button>
-                                </div>
-                            </div>
-                        );
-                    })}
-                </div>
-                <Button
-                    size="lg"
-                    className="rounded-full self-end fixed bottom-6 right-20 h-[50px] w-[50px]"
-                    onClick={() => setOpenOrgForm(!openOrgForm)}
-                >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="none"
-                        stroke="currentColor"
-                        strokeWidth="2"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        className="h-4 w-4"
-                    >
-                        <line x1="12" y1="5" x2="12" y2="19" />
-                        <line x1="5" y1="12" x2="19" y2="12" />
-                    </svg>
-                </Button>
-                <Suspense>
-                    <OrganizationModal
-                        open={openOrgForm}
-                        setOpen={setOpenOrgForm}
-                    />
-                </Suspense>
-            </div>
-        </>
-    );
+
+function roleClasses(role: string): string {
+	switch (role) {
+		case "Owner":
+			return "text-black bg-yellow-400 dark:text-black dark:bg-yellow-400";
+		case "Admin":
+			return "text-black bg-violet-400 dark:text-black dark:bg-violet-400";
+		case "Manager":
+			return "text-black bg-green-400 dark:text-black dark:bg-green-400";
+		case "Staff":
+			return "text-white bg-zinc-800 dark:text-black dark:bg-zinc-200";
+		default:
+			return "text-black bg-zinc-300 outline-1 dark:text-white dark:bg-zinc-800 ";
+	}
+}
+
+function OrgCard({ org, view }: OrgCardProps) {
+	return (
+		<Card className="bg-zinc-300 dark:bg-zinc-800 hover:border-zinc-500 transition-colors duration-100">
+			<CardHeader className="flex items-center">
+				<CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap">
+					<Large>{org.name}</Large>
+				</CardTitle>
+				<Badge
+					className={clsx(
+						roleClasses(""),
+						"font-semibold shadow-md ml-auto"
+					)}
+				>
+					Owner
+				</Badge>
+				{view === "list" && (
+					<Button asChild variant={"link"}>
+						<Link to={`/dashboard/${org?._id}`}>View</Link>
+					</Button>
+				)}
+			</CardHeader>
+			<CardContent>
+				<Muted className="line-clamp-2">{org.description}</Muted>
+			</CardContent>
+			{view === "grid" && (
+				<CardFooter className="flex justify-end">
+					<Button asChild>
+						<Link to={`/dashboard/${org?._id}`}>View</Link>
+					</Button>
+				</CardFooter>
+			)}
+		</Card>
+	);
+}
+
+interface OrganizationProps {
+	data: Omit<Org, "admin" | "createdAt" | "updatedAt">[];
+}
+
+function Organiztion({ data }: OrganizationProps) {
+	const [openOrgForm, setOpenOrgForm] = useState(false);
+	const [view, setView] = useState<"grid" | "list">("grid");
+
+	return (
+		<>
+			<div className="w-full flex flex-col gap-3 min-h-dvh dark:bg-zinc-900 relative">
+				<Navbar />
+
+				<Separator />
+				<div className="flex flex-col sm:flex-row justify-between items-center king-julian md:px-4 gap-2 px-2">
+					<H2>Organizations</H2>
+					<div className="flex gap-2 justify-between w-full sm:w-fit sm:justify-center">
+						{/* view toggle */}
+						<div className="flex">
+							<Button
+								variant={
+									view === "grid" ? "default" : "outline"
+								}
+								className="ml-auto rounded-r-none"
+								onClick={() => setView("grid")}
+								title="grid view"
+							>
+								<Grid />
+							</Button>
+							<Button
+								variant={
+									view === "list" ? "default" : "outline"
+								}
+								className="rounded-l-none"
+								onClick={() => setView("list")}
+								title="list view"
+							>
+								<List />
+							</Button>
+						</div>
+						{/* new org button */}
+						<Button
+							size="lg"
+							className="top-10 right-20 w-fit"
+							onClick={() => setOpenOrgForm(true)}
+						>
+							<Small>Add new Org</Small>
+							<Plus />
+						</Button>
+					</div>
+				</div>
+				{/* orgs display */}
+				<div
+					className={clsx(
+						"min-h-96 m-4 items-baseline outline-1 p-4 rounded-2xl grid gap-2 ",
+						view === "grid"
+							? `grid-cols-[repeat(auto-fit,minmax(320px,1fr))]`
+							: ""
+					)}
+				>
+					{data.map((orgData) => (
+						<OrgCard org={orgData} key={orgData._id} view={view} />
+					))}
+				</div>
+
+				{/* modal to create new org */}
+				<Suspense>
+					<OrganizationModal
+						open={openOrgForm}
+						setOpen={setOpenOrgForm}
+					/>
+				</Suspense>
+			</div>
+		</>
+	);
 }
 
 export default Organiztion;
