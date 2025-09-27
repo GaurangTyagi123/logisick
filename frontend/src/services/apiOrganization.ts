@@ -1,24 +1,21 @@
-import axinstance from "@/utils/axios"
-import { handleError } from "@/utils/handleError"
+import axinstance from '@/utils/axios';
+import { handleError } from '@/utils/handleError';
 
-type getMyOrgType = ()=>Promise<Org | object | undefined>
+type orgFormType = {
+    name: string;
+    description?: string;
+    type?: string;
+};
+type createOrg = (data: orgFormType) => Promise<Org | object | undefined>;
 
-export const getMyOrg:getMyOrgType = async () => {
+export const createOrg: createOrg = async (data) => {
     try {
-        const res = await axinstance.get<{
+        const res = await axinstance.post<{
             data: { org: Org; message?: string };
             status: string;
-
-        }>("/v1/org/myorg");
-        if (res.data && res.data.data.org) {
-            return res.data.data.org;
-        } 
-        else {
-            handleError(new Error("No organization found"),"No such organization found");
-        }
+        }>('/v1/org/create',data);
+        return res.data.data.org;
+    } catch (err) {
+        handleError(err);
     }
-    catch (err) {
-        // handleError(err);
-        console.log(err)
-    }
-}
+};

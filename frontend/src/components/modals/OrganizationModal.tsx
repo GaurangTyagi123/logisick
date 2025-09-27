@@ -1,0 +1,182 @@
+import Modal from '../Modal';
+import {
+    Card,
+    CardContent,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from '../ui/card';
+import Button from '../ui/button';
+import { Close } from '@/assets/icons/Close';
+import { useForm, Controller } from 'react-hook-form';
+import { Label } from '@/components/ui/label';
+import { Input } from '../ui/input';
+import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from '@/components/ui/Select';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { createOrg } from '@/services/apiOrganization';
+import { toast } from 'react-toastify';
+const orgTypes = ['Basic', 'Small-Cap', 'Mid-Cap', 'Large-Cap', 'Other'];
+type OrganizationFormData = {
+    name: string;
+    description?: string;
+    type?: string;
+};
+
+function OrganizationModal({
+    open,
+    setOpen,
+}: {
+    open: boolean;
+    setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
+    const { register, handleSubmit, formState, control } =
+        useForm<OrganizationFormData>();
+    const { errors } = formState;
+    const queryClient = useQueryClient();
+    const { mutate: createOrgFn, isPending } = useMutation({
+        mutationFn: createOrg,
+        onSuccess: () => {
+            queryClient.invalidateQueries({
+                queryKey: ['user'],
+            });
+            toast.success('Organization created successfully', {
+                className: 'toast',
+            });
+        },
+        onError: (err) => {
+            toast.error(err.message);
+        },
+    });
+
+    const onSubmit = (data: OrganizationFormData) => {
+        createOrgFn(data);
+    };
+    return (
+        <Modal openModal={open}>
+            <Card className="min-w-md">
+                <CardHeader className="flex justify-between items-center">
+                    <CardTitle>Create Organization</CardTitle>
+                    <Button onClick={() => setOpen(false)}>
+                        <Close />
+                    </Button>
+                </CardHeader>
+                <CardContent className="grid gap-2">
+                    <form>
+                        <Label
+                            title="Previous Password field is required"
+                            htmlFor="name"
+                            className="grid gap-4 my-3"
+                        >
+                            Organization's Name
+                            <div className="flex items-center justify-between w-full gap-1">
+                                <Input
+                                    placeholder="Enter Your Organization's Name"
+                                    type="text"
+                                    id="name"
+                                    {...register('name', {
+                                        required: 'Please provide a name',
+                                        minLength: {
+                                            value: 1,
+                                            message: 'Name is too short',
+                                        },
+                                        maxLength: {
+                                            value: 48,
+                                            message: 'Name is too long',
+                                        },
+                                    })}
+                                />
+                            </div>
+                            {errors?.name && (
+                                <span className="text-xs text-red-500">
+                                    {errors?.name?.message as string}
+                                </span>
+                            )}
+                        </Label>
+                        <Label
+                            title="Previous Password field is required"
+                            htmlFor="Description"
+                            className="grid gap-4"
+                        >
+                            Organization's Description
+                            <div className="flex items-center justify-between w-full gap-1">
+                                <Input
+                                    placeholder="Enter a brief description "
+                                    type="text"
+                                    id="Description"
+                                    {...register('description', {
+                                        required:
+                                            'Please provide a description of your organization',
+                                        minLength: {
+                                            value: 8,
+                                            message: 'Description is too short',
+                                        },
+                                        maxLength: {
+                                            value: 300,
+                                            message: 'Description is too long',
+                                        },
+                                    })}
+                                />
+                            </div>
+                            {errors?.description && (
+                                <span className="text-xs text-red-500">
+                                    {errors?.description?.message as string}
+                                </span>
+                            )}
+                        </Label>
+                        <Label
+                            title="Previous Password field is required"
+                            htmlFor="Type"
+                            className="grid gap-4 mt-3"
+                        >
+                            Type
+                            <div className="flex items-center justify-between w-full gap-1">
+                                <Controller
+                                    name="type"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Select
+                                            onValueChange={field.onChange}
+                                            value={field.value}
+                                        >
+                                            <SelectTrigger className="w-[180px]">
+                                                <SelectValue
+                                                    placeholder="Basic"
+                                                    defaultValue="Basic"
+                                                />
+                                            </SelectTrigger>
+                                            <SelectContent>
+                                                {orgTypes.map((type) => (
+                                                    <SelectItem value={type}>
+                                                        {type}
+                                                    </SelectItem>
+                                                ))}
+                                            </SelectContent>
+                                        </Select>
+                                    )}
+                                />
+                            </div>
+                        </Label>
+                    </form>
+                </CardContent>
+                <CardFooter>
+                    <Button
+                        className="w-full"
+                        type="submit"
+                        onClick={handleSubmit(onSubmit)}
+                        disabled={isPending}
+                    >
+                        Submit
+                    </Button>
+                </CardFooter>
+            </Card>
+        </Modal>
+    );
+}
+
+export default OrganizationModal;

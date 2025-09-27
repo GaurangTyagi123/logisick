@@ -87,26 +87,20 @@ export const createOrg = catchAsync(
         } else {
             return next(new AppError('All fields are required (name)', 404));
         }
-
-        if (description && description.trim() !== '')
-            newOrgData['description'] = description.trim();
+        if (description) newOrgData['description'] = description.trim();
         else return next(new AppError('Invalid data', 400));
 
-        if (type) {
-            if (
-                [
-                    'Basic',
-                    'Small-Cap',
-                    'Mid-Cap',
-                    'Large-Cap',
-                    'Other',
-                ].includes(type.trim())
-            ) {
-                newOrgData['type'] = type.trim();
-            } else {
-                newOrgData['type'] = 'Other';
-            }
-        }
+       if (type) {
+			newOrgData["type"] = [
+				"Basic",
+				"Small-Cap",
+				"Mid-Cap",
+				"Large-Cap",
+				"Other",
+			].includes(type.trim())
+				? type.trim()
+				: "Basic";
+		}
 
         const newOrg = await Org.create(newOrgData);
         if (!newOrg)
@@ -289,35 +283,11 @@ export const deleteOrg = catchAsync(
             );
 
         const org = await Org.deleteById(orgid);
-        if (!org.modifiedCount) return next(new AppError('No such org exists', 400));
+        if (!org.modifiedCount)
+            return next(new AppError('No such org exists', 400));
 
         await Emp.delete({ orgid });
 
         return res.status(204).send();
     }
-    // async (
-    //     req: ExpressTypes.UserRequest,
-    //     res: Response,
-    //     next: NextFunction
-    // ) => {
-    //     const { orgid } = req.params;
-    //     if (!orgid)
-    //         return next(
-    //             new AppError(
-    //                 'Orgnization indentification is required to delete',
-    //                 404
-    //             )
-    //         );
-
-    //     const orgToDel = await Org.findOne({
-    //         _id: orgid,
-    //         owner: req.user?._id,
-    //     });
-    //     if (!orgToDel) return next(new AppError('Organization not found', 404));
-
-    //     await orgToDel.delete();
-    //     await Emp.delete({ orgid: orgToDel._id });
-
-    //     return res.status(204).send();
-    // }
 );
