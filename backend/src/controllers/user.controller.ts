@@ -2,6 +2,8 @@ import catchAsync from "../utils/catchAsync";
 import User from "../models/user.model";
 import AppError from "../utils/appError";
 import checkRequestBody from "../utils/checkRequestBody";
+import Emp from "../models/employee.model";
+import Org from "../models/organization.model";
 
 /**
  * @brief Function to get User who are not admin
@@ -117,10 +119,11 @@ export const deleteUser = catchAsync(
 		res: ExpressTypes.Response,
 		next: ExpressTypes.NextFn
 	) => {
-        if (req.user)
-            await User.deleteById(req.user?._id);
-        else 
-            return next(new AppError("User not authenticated",401))
-		return res.status(204);
+		console.log("getting into controller for user delete");
+		if (!req.user) return next(new AppError("User not authenticated", 401));
+		await User.deleteById(req.user?._id);
+		await Emp.delete({ userid: req.user?._id });
+		await Org.delete({ owner: req.user?._id });
+		return res.status(204).end();
 	}
 );

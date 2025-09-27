@@ -82,10 +82,11 @@ app.use(cors({ origin: "http://localhost:5173", credentials: true }));
 app.use("/api/v1/auth", authRouter);
 // Organzations router
 app.use("/api/v1/org", orgRouter);
+// Users router
+app.use("/api/v1/users", userRouter);
 
 // Open Authentication Routes
 app.use("/auth", oauthRouter);
-app.use("/api/v1/users", userRouter);
 
 // Global Error Handler
 app.use(globalErrorController);

@@ -72,6 +72,7 @@ const sendNewToken = (
 				avatar: user.avatar,
 				createdAt: user.createdAt,
 				updatedAt: user.updatedAt,
+				myOrg: user.myOrg,
 			},
 		},
 	});
@@ -131,9 +132,11 @@ export const protect = catchAsync(
 			process.env.JWT_SIGN as string
 		);
 		const user = await User.findById(id);
-		if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
+		if (!user) return next(new AppError("Unauthenticated", 401));
+
+		if (user.passwordUpdatedAfter(issuedAt as number))
 			return next(new AppError("Password updated recently", 401));
-		}
+
 		req.user = user;
 		return next();
 	}
@@ -232,7 +235,16 @@ export const isLoggedIn = catchAsync(
 			process.env.JWT_SIGN as string
 		);
 		const user = await User.findOne({ _id: id });
-		if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
+		if (!user) {
+			return res.status(401).json({
+				status: "fail",
+				isLoggedIn: false,
+				data: {
+					message: "Unauthenticated",
+				},
+			});
+		}
+		if (user.passwordUpdatedAfter(issuedAt as number)) {
 			return res.status(200).json({
 				status: "fail",
 				isLoggedIn: false,
