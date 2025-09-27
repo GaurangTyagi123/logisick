@@ -105,13 +105,14 @@ export const updateUser = catchAsync(
 	}
 );
 
-// TODO : also delete user as emp of multiple orgs
 /**
  * @brief Function to delete user
  * @params req(User Request) res(Express Response) next(Express Next Function)
  * @preCondition user is logged in
  * @body new data
- * @return soft delete user
+ * @return if (owner of an org) error with status 400
+ * 			if (employee of an org) error with status 400
+ * 			else user deleted with status 204
  */
 export const deleteUser = catchAsync(
 	async (
@@ -121,9 +122,26 @@ export const deleteUser = catchAsync(
 	) => {
 		console.log("getting into controller for user delete");
 		if (!req.user) return next(new AppError("User not authenticated", 401));
+
+		const orgOwner = await Org.findOne({ owner: req.user?._id });
+		if (orgOwner)
+			return next(
+				new AppError(
+					"Transfer ownership of your organization first",
+					400
+				)
+			);
+
+		const anyOrgEmployee = await Emp.findOne({ userid: req.user?._id });
+		if (anyOrgEmployee)
+			return next(
+				new AppError(
+					"Employee of an org can't be deleted by user. Contact owner/admin of org",
+					400
+				)
+			);
+
 		await User.deleteById(req.user?._id);
-		await Emp.delete({ userid: req.user?._id });
-		await Org.delete({ owner: req.user?._id });
 		return res.status(204).end();
 	}
 );

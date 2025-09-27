@@ -226,7 +226,6 @@ export const transferOrg = catchAsync(
 
         const oldUserId = req.user?._id;
 
-        // TODO : implement mongoose-delete for user and update here
         const newUser = await User.findOne({ _id: newOwnerId, deleted: false });
         if (!newUser) {
             return next(

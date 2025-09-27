@@ -9,6 +9,7 @@ import path from "node:path";
 // Api ROUTERS
 import authRouter from "./routes/auth.routes";
 import orgRouter from "./routes/org.routes";
+import empRouter from "./routes/emp.routes";
 
 // Global Error Handler for requests
 import globalErrorController from "./controllers/globalError.controller";
@@ -84,6 +85,8 @@ app.use("/api/v1/auth", authRouter);
 app.use("/api/v1/org", orgRouter);
 // Users router
 app.use("/api/v1/users", userRouter);
+// Employee router
+app.use("/api/v1/emp", empRouter);
 
 // Open Authentication Routes
 app.use("/auth", oauthRouter);
