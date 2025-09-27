@@ -41,15 +41,16 @@ declare interface UserType extends MongooseDocument {
 	refreshToken?: string | undefined;
 
 	avatar?: string;
-	org?: ObjectId;
+	myOrg?:OrgType
 
 	comparePasswords: (actualPassword: string, hashPassword: string) => Promise;
 	createPasswordResetToken: () => string;
 	passwordUpdatedAfter: (issuedTimeStamp: number) => boolean;
-	active: boolean;
+	deleted: boolean;
 
 	createdAt: Date;
 	updatedAt: Date;
+	deletedAt?:Date;
 }
 
 // Type declaration for Organization Model
@@ -61,12 +62,13 @@ declare interface OrgType {
 	owner: ObjectId;
 	admin?: ObjectId | null;
 	subscription: "None" | "Basic" | "Pro";
-	
+	members?: number;
+
 	createdAt: Date;
 	updatedAt: Date;
 
-	deleted?: boolean;
-    deletedAt?: Date | null;
+	deleted: boolean;
+	deletedAt?: Date | null;
 }
 
 // type declareation for Employee Model
@@ -80,5 +82,5 @@ declare interface EmpType {
 	updatedAt: Date;
 
 	deleted?: boolean;
-    deletedAt?: Date | null;
+	deletedAt?: Date | null;
 }

@@ -44,13 +44,13 @@ function Navbar({
                     asChild
                     variant={'ghost'}
                     title="Go to homepage"
-                    className="h-full p-0.5 aspect-square mr-auto flex items-center"
+                    className="h-full p-0.5 w-36 aspect-square mr-auto flex items-center"
                 >
                     <Link to={{ pathname: '/' }}>
                         <img
                             src={logo}
                             alt="applogo"
-                            className="h-full bg-zinc-900 p-0.5 px-1 rounded-md"
+                            className="h-full bg-zinc-900 p-0.5 rounded-md"
                         />
                         <Large>LogiSick</Large>
                     </Link>

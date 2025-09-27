@@ -9,8 +9,6 @@ import {
 
 const router = Router();
 
-
-
 // Endpoint to create new organization
 router.post("/create", protect, createOrg);
 

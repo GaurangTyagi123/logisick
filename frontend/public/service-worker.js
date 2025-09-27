@@ -7,14 +7,8 @@ if (workbox) {
 	workbox.routing.registerRoute(
 		({ request }) =>
 			request.destination === "script" || request.destination === "style",
-		new workbox.strategies.CacheFirst({
+		new workbox.strategies.NetworkFirst({
 			cacheName: "static-resources",
-			plugins: [
-				new workbox.expiration.ExpirationPlugin({
-					maxEntries: 50,
-					maxAgeSeconds: 30 * 24 * 60 * 60,
-				}),
-			],
 		})
 	);
 

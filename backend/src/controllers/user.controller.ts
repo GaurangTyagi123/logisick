@@ -1,7 +1,7 @@
-import catchAsync from '../utils/catchAsync';
-import User from '../models/user.model';
-import AppError from '../utils/appError';
-import checkRequestBody from '../utils/checkRequestBody';
+import catchAsync from "../utils/catchAsync";
+import User from "../models/user.model";
+import AppError from "../utils/appError";
+import checkRequestBody from "../utils/checkRequestBody";
 
 /**
  * @brief Function to get User who are not admin
@@ -10,21 +10,21 @@ import checkRequestBody from '../utils/checkRequestBody';
  * @return (TO BE IMPLEMENTED) all the users working for the organization of admin
  */
 export const getUsers = catchAsync(
-    async (
-        _req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        _next: ExpressTypes.NextFn
-    ) => {
-        const users = await User.find({ role: { $ne: 'admin' } });
-        const results = users.length;
-        return res.status(200).json({
-            status: 'success',
-            results,
-            data: {
-                users,
-            },
-        });
-    }
+	async (
+		_req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		_next: ExpressTypes.NextFn
+	) => {
+		const users = await User.find({ role: { $ne: "admin" } });
+		const results = users.length;
+		return res.status(200).json({
+			status: "success",
+			results,
+			data: {
+				users,
+			},
+		});
+	}
 );
 // TODO : Add a route to the request handler below
 /**
@@ -36,25 +36,25 @@ export const getUsers = catchAsync(
  *         ELSE return status:400 message:incorrect id
  */
 export const getUser = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const id = req.params.id;
-        if (!id)
-            return next(new AppError('Please provide a valid user id', 400));
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const id = req.params.id;
+		if (!id)
+			return next(new AppError("Please provide a valid user id", 400));
 
-        const user = await User.findById(id);
-        if (!user) return next(new AppError('No such user exists', 400));
+		const user = await User.findById(id);
+		if (!user) return next(new AppError("No such user exists", 400));
 
-        return res.status(200).json({
-            status: 'success',
-            data: {
-                user,
-            },
-        });
-    }
+		return res.status(200).json({
+			status: "success",
+			data: {
+				user,
+			},
+		});
+	}
 );
 
 /**
@@ -67,19 +67,19 @@ export const getUser = catchAsync(
  *         ELSE return status:500 message:internal error
  */
 export const updateUser = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        if (req.body.password || req.body.confirmPassword)
-            return next(new AppError('Password cannot be updated here', 400));
-        let newData = req.body;
-        newData = checkRequestBody(newData, [
-            'isVerified',
-            'role',
-            'passwordUpdatedAt',
-        ]);
+	async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		if (req.body.password || req.body.confirmPassword)
+			return next(new AppError("Password cannot be updated here", 400));
+		let newData = req.body;
+		newData = checkRequestBody(newData, [
+			"isVerified",
+			"role",
+			"passwordUpdatedAt",
+		]);
 
 		let updatedUser;
 		if (newData.email) {
@@ -89,11 +89,10 @@ export const updateUser = catchAsync(
 				runValidators: true,
 			});
 		} else
-			updatedUser = await User.findByIdAndUpdate(
-				req.user?._id,
-				newData,
-				{ new: true, runValidators: true }
-			).select("-__v");
+			updatedUser = await User.findByIdAndUpdate(req.user?._id, newData, {
+				new: true,
+				runValidators: true,
+			}).select("-__v");
 		if (!updateUser) return next(new AppError("There was an error", 500));
 		return res.status(200).json({
 			status: "success",
@@ -104,22 +103,24 @@ export const updateUser = catchAsync(
 	}
 );
 
+// TODO : also delete user as emp of multiple orgs
 /**
  * @brief Function to delete user
  * @params req(User Request) res(Express Response) next(Express Next Function)
  * @preCondition user is logged in
  * @body new data
- * @return update the user's active field to false
+ * @return soft delete user
  */
 export const deleteUser = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        _next: ExpressTypes.NextFn
-    ) => {
-        await User.findByIdAndUpdate(req.user?._id, {
-            active: false,
-        });
-        return res.status(204);
-    }
+	async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+        if (req.user)
+            await User.deleteById(req.user?._id);
+        else 
+            return next(new AppError("User not authenticated",401))
+		return res.status(204);
+	}
 );

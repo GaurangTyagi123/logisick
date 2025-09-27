@@ -231,7 +231,7 @@ export const isLoggedIn = catchAsync(
 			token,
 			process.env.JWT_SIGN as string
 		);
-		const user = await User.findById(id);
+		const user = await User.findOne({ _id: id });
 		if (!user || user.passwordUpdatedAfter(issuedAt as number)) {
 			return res.status(200).json({
 				status: "fail",
@@ -241,18 +241,28 @@ export const isLoggedIn = catchAsync(
 				},
 			});
 		}
+		console.log("user", user);
 		return res.status(200).json({
 			status: "success",
 			isLoggedIn: true,
 			data: {
-				user,
+				user: {
+					_id: user._id,
+					name: user.name,
+					email: user.email,
+					isVerified: user.isVerified,
+					avatar: user.avatar,
+					createdAt: user.createdAt,
+					updatedAt: user.updatedAt,
+					myOrg: user.myOrg,
+				},
 			},
 		});
 	}
 );
 
 /**
- * @brief Function to signup new user 
+ * @brief Function to signup new user
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)

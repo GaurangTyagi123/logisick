@@ -23,6 +23,7 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
                 type: org.type,
                 owner: org.owner,
                 subscription: org.subscription,
+                members:org.members,
                 createdAt: org.createdAt,
                 updatesAt: org.updatedAt,
             },
@@ -226,7 +227,7 @@ export const transferOrg = catchAsync(
         const oldUserId = req.user?._id;
 
         // TODO : implement mongoose-delete for user and update here
-        const newUser = await User.findOne({ _id: newOwnerId, active: true });
+        const newUser = await User.findOne({ _id: newOwnerId, deleted: false });
         if (!newUser) {
             return next(
                 new AppError(

@@ -1,6 +1,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
+import { faker } from "@faker-js/faker";
 
 import useModeStore from "@/stores/useModeStore";
 
@@ -9,7 +10,7 @@ import Analytics from "./pages/Analytics";
 import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import OrderSales from "./pages/OrderSales";
-import { faker } from "@faker-js/faker";
+
 
 const Loading = lazy(() => import("@/components/Loading"));
 
@@ -24,33 +25,33 @@ const Profile = lazy(() => import("@/pages/Profile"));
 const Organization = lazy(()=>import("./pages/Organization"))
 const OrgOverview = lazy(()=> import("./pages/OrgOverview"))
 
-const data = [
+const data: Omit<Org, "admin" | "createdAt" | "updatedAt">[] = [
 	{
-		id: String(faker.number.bigInt()),
+		_id: String(faker.number.bigInt()),
 		name: faker.company.name(),
-		catchPhrase: faker.company.buzzPhrase(),
-		type: faker.company.buzzNoun(),
+		subscription: "Basic",
+		type: "Basic",
 		description: faker.lorem.paragraph(),
 	},
 	{
-		id: String(faker.number.bigInt()),
+		_id: String(faker.number.bigInt()),
 		name: faker.company.name(),
-		catchPhrase: faker.company.buzzPhrase(),
-		type: faker.company.buzzNoun(),
+		subscription: "None",
+		type: "Large-Cap",
 		description: faker.lorem.paragraph(),
 	},
 	{
-		id: String(faker.number.bigInt()),
+		_id: String(faker.number.bigInt()),
 		name: faker.company.name(),
-		catchPhrase: faker.company.buzzPhrase(),
-		type: faker.company.buzzNoun(),
+		subscription: "Pro",
+		type: "Mid-Cap",
 		description: faker.lorem.paragraph(),
 	},
 	{
-		id: String(faker.number.bigInt()),
+		_id: String(faker.number.bigInt()),
 		name: faker.company.name(),
-		catchPhrase: faker.company.buzzPhrase(),
-		type: faker.company.buzzNoun(),
+		subscription: "Basic",
+		type: "Other",
 		description: faker.lorem.paragraph(),
 	},
 ];
@@ -79,7 +80,7 @@ function App() {
 						path="/dashboard"
 						element={
 							user ? (
-								<Organization data={data} />
+								<Organization data={data}/>
 							) : (
 								<Navigate to={"/authenticate"} />
 							)
@@ -96,7 +97,7 @@ function App() {
 							)
 						}
 					>
-						<Route index element={<OrgOverview data={data} />} />
+						<Route index element={<OrgOverview data={data}/>} />
 						<Route
 							path="/dashboard/:orgId/analytics"
 							element={<Analytics />}
