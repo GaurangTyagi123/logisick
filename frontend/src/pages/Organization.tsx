@@ -12,9 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { H2, Large, Muted, Small } from "@/components/ui/Typography";
+import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Suspense, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 interface OrgCardProps {
 	org: {
@@ -82,6 +83,15 @@ interface OrganizationProps {
 function Organiztion({ data }: OrganizationProps) {
 	const [openOrgForm, setOpenOrgForm] = useState(false);
 	const [view, setView] = useState<"grid" | "list">("grid");
+	const navigate = useNavigate();
+
+	const queryClient = useQueryClient();
+	const userData = queryClient.getQueryData(["user"]) as
+		| { user?: User }
+		| undefined;
+	const user = userData?.user;
+
+	if (!user) navigate("/");
 
 	return (
 		<>

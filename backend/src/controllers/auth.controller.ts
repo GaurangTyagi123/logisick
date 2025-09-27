@@ -241,7 +241,6 @@ export const isLoggedIn = catchAsync(
 				},
 			});
 		}
-		console.log("user", user);
 		return res.status(200).json({
 			status: "success",
 			isLoggedIn: true,

@@ -124,7 +124,7 @@ function Home() {
 						/>
 					</div>
 				</div>
-				<img src={illus} srcSet="" alt="" className="h-full" />
+				<img src={illus} srcSet="" alt="" className="sm:w-5/12 w-full" />
 			</div>
 		</main>
 			{/* Footer */}
