@@ -60,9 +60,18 @@ const userSchema = new Schema(
             },
         ],
     },
-    { timestamps: true }
+    {
+        timestamps: true,
+        toJSON: { virtuals: true },
+        toObject: { virtuals: true },
+    }
 );
-
+userSchema.virtual('myOrg', {
+    ref: 'Organization',
+    localField: '_id',
+    foreignField: 'owner',
+    justOne: true,
+});
 // .User Model Middlewares
 
 // This middleware runs before every user doc is created/saved and it hashes the user's password
@@ -95,7 +104,10 @@ userSchema.pre('save', function (this: UserType, next) {
 userSchema.pre(
     /find/,
     function (this: Query<UserType, MongooseDocument>, next) {
-        this.find({ active: { $ne: false } });
+        this.find({ active: { $ne: false } }).populate({
+            path: 'myOrg',
+            select: '-__v',
+        });
         next();
     }
 );

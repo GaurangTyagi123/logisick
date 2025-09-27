@@ -3,15 +3,13 @@ import { protect } from "../controllers/auth.controller";
 import {
 	createOrg,
 	deleteOrg,
-	getUserOrg,
 	transferOrg,
 	updateOrg,
 } from "../controllers/org.controller";
 
 const router = Router();
 
-// Endpoint to get organization whereuser is owner
-router.get("/myOrg", protect, getUserOrg);
+
 
 // Endpoint to create new organization
 router.post("/create", protect, createOrg);
@@ -22,6 +20,6 @@ router.patch("/transfer", protect, transferOrg);
 router.patch("/update", protect, updateOrg);
 
 // Endpoint to delete a organization (only by owner)
-router.delete("/delete", protect, deleteOrg);
+router.delete("/:orgid", protect, deleteOrg);
 
 export default router;
