@@ -288,10 +288,36 @@ export const deleteOrg = catchAsync(
                 )
             );
 
-        await Org.findByIdAndDelete(orgid);
+        const org = await Org.deleteById(orgid);
+        if (!org.modifiedCount) return next(new AppError('No such org exists', 400));
 
-        await Emp.deleteMany({ orgid });
+        await Emp.delete({ orgid });
 
         return res.status(204).send();
     }
+    // async (
+    //     req: ExpressTypes.UserRequest,
+    //     res: Response,
+    //     next: NextFunction
+    // ) => {
+    //     const { orgid } = req.params;
+    //     if (!orgid)
+    //         return next(
+    //             new AppError(
+    //                 'Orgnization indentification is required to delete',
+    //                 404
+    //             )
+    //         );
+
+    //     const orgToDel = await Org.findOne({
+    //         _id: orgid,
+    //         owner: req.user?._id,
+    //     });
+    //     if (!orgToDel) return next(new AppError('Organization not found', 404));
+
+    //     await orgToDel.delete();
+    //     await Emp.delete({ orgid: orgToDel._id });
+
+    //     return res.status(204).send();
+    // }
 );
