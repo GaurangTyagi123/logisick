@@ -50,7 +50,10 @@ employeeSchema.plugin(MongooseDelete, {
 // Setting by default that manager od a manager should be the owner
 employeeSchema.pre("save", async function (this: EmpType, next) {
 	try {
-		if (this.role === "Manager" && !this.manager) {
+		if (
+			(this.role === "Manager" || this.role === "Admin") &&
+			!this.manager
+		) {
 			const org = await organizationModel.findById(this.orgid);
 			if (org && org.owner) {
 				this.manager = org.owner;

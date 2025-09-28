@@ -91,5 +91,25 @@ class Email {
 		const subject = `Reset your password`;
 		await this.sendMail(template, subject);
 	}
+	// send org invite link to user
+	public async sendOrgInviteLink() {
+		const verificationHtml = readFileSync(
+			path.join(__dirname, "emailTemplates", "orgInvite.html"),
+			{ encoding: "utf-8" }
+		);
+		const options = {
+			org_name: this.user.orgName,
+			brand_name: "LogiSick",
+
+			invite_url: this.url,
+			role: this.user.role,
+			support_email: "ravishranjan2003@gmail.com",
+			year: new Date().getFullYear(),
+			invite_ttl_days: 10,
+		};
+		const template = Handlebars.compile(verificationHtml)(options);
+		const subject = `Accept Invite`;
+		await this.sendMail(template, subject);
+	}
 }
 export default Email;
