@@ -23,7 +23,7 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
                 type: org.type,
                 owner: org.owner,
                 subscription: org.subscription,
-                members: org.members,
+                totalEmployees: org.totalEmployees,
                 createdAt: org.createdAt,
                 updatesAt: org.updatedAt,
             },
@@ -165,11 +165,11 @@ export const updateOrg = catchAsync(
 			type?: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
 		} = {};
 
-        if (!name || name.trim() === '')
+        if (name && name.trim() === '')
             return next(new AppError('Invalid data', 400));
         dataToUpdate.name = name;
 
-        if (!description || description.trim() === '') {
+        if (description && description.trim() === '') {
             return next(new AppError('Invalid data', 400));
         }
         dataToUpdate.description = description;
