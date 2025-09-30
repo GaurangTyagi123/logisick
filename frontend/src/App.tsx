@@ -79,7 +79,7 @@ function App() {
 						path="/dashboard"
 						element={
 							user ? (
-								<Organization data={data} />
+								<Organization />
 							) : (
 								<Navigate to={"/authenticate"} />
 							)

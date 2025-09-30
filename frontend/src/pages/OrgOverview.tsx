@@ -1,7 +1,3 @@
-// import { PieChart } from "@/components/ui/PieChart";
-// import { formatCurrency } from "@/utils/utilfn";
-// import { useQueryClient } from "@tanstack/react-query";
-
 import { PieChart } from "@/components/ui/PieChart";
 import { formatCurrency } from "@/utils/utilfn";
 import { useQueryClient } from "@tanstack/react-query";

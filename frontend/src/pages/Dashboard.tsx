@@ -12,7 +12,7 @@ import {
     SidebarProvider,
     SidebarTrigger,
 } from '@/components/ui/sidebar';
-import { /*H2 */ /*H3*/ Large, Muted } from '@/components/ui/Typography';
+import { Large, Muted } from '@/components/ui/Typography';
 import Button from '@/components/ui/button';
 import { Link, Outlet, useParams } from 'react-router-dom';
 import { useState } from 'react';
