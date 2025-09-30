@@ -5,6 +5,7 @@ import {
 	Shield,
 	Transfer,
 } from "@/assets/icons/Profilepage";
+
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
 	Table,
@@ -18,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { H3, Small } from "./ui/Typography";
 import Button from "./ui/button";
 import { Link } from "react-router-dom";
-import { useQueryClient } from "@tanstack/react-query";
+import useGetOrganizations from "@/hooks/useGetOrganizations";
 import clsx from "clsx";
 import {
 	DropdownMenu,
@@ -97,10 +98,7 @@ function ProfileOrgTable({
 	setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-	const queryClient = useQueryClient();
-	const userData = queryClient.getQueryData<{ user: User }>(["user"]);
-	const user = userData?.user;
-	const org = user?.myOrg;
+	const { data: organizations, isPending } = useGetOrganizations();
 
 	return (
 		<div className="col-span-1 md:col-span-4">
@@ -113,7 +111,7 @@ function ProfileOrgTable({
 				</CardHeader>
 				<CardContent>
 					<Table>
-						{!org ? (
+						{!organizations || isPending ? (
 							<div className="h-full w-full grid place-items-center gap-3">
 								<H3>You are not in any organizations.</H3>
 								<Button asChild>
@@ -134,79 +132,95 @@ function ProfileOrgTable({
 									</TableRow>
 								</TableHeader>
 								<TableBody>
-									<TableRow
-										key={org._id}
-										className="hover:bg-muted/50"
-									>
-										<TableCell className="font-medium">
-											{org.name}
-										</TableCell>
-										<TableCell>
-											<Badge
-												variant="outline"
-												className={clsx(
-													"font-medium",
-													roleClasses("Owner")
-												)}
-											>
-												owner
-											</Badge>
-										</TableCell>
-										<TableCell>
-											<Badge
-												className={getSubscriptionColor(
-													org.subscription
-												)}
-											>
-												{org.subscription}
-											</Badge>
-										</TableCell>
-										<TableCell
-											className={"text-muted-foreground"}
+									{organizations.map((org: Org) => (
+										<TableRow
+											key={org._id}
+											className="hover:bg-muted/50"
 										>
-											{org?.totalEmployees ?? 1} members
-										</TableCell>
-										<TableCell>
-											<Badge variant="outline">
-												{org.type}
-											</Badge>
-										</TableCell>
-										<TableCell className="w-[5px]">
-											<DropdownMenu>
-												<DropdownMenuTrigger>
-													<Setting className="w-5 h-5 outline rounded-sm cursor-pointer outline-offset-2" />
-												</DropdownMenuTrigger>
-												<DropdownMenuContent className="font-semibold bg-zinc-100 dark:bg-zinc-800">
-													<DropdownMenuItem
-														className="cursor-pointer"
-														onClick={() =>
-															setEditOpen(true)
-														}
-													>
-														<Edit />
-														EDIT organization
-													</DropdownMenuItem>
-													<DropdownMenuSeparator />
-													<DropdownMenuItem className="cursor-pointer">
-														<Transfer />
-														TRANSFER ownership
-													</DropdownMenuItem>
-													<DropdownMenuSeparator />
-													<DropdownMenuItem
-														className="cursor-pointer"
-														onClick={() =>
-															setDeleteOpen(true)
-														}
-													>
-														<Delete className="text-red-500" />
-														<Small className="text-red-500">
-															DELETE organization
-														</Small>
-													</DropdownMenuItem>
-												</DropdownMenuContent>
-											</DropdownMenu>
-										</TableCell>
-									</TableRow>
+											<TableCell className="font-medium">
+												{org.name}
+											</TableCell>
+											<TableCell>
+												<Badge
+													variant="outline"
+													className={clsx(
+														"font-medium",
+														roleClasses("Owner")
+													)}
+												>
+													{org.role}
+												</Badge>
+											</TableCell>
+											<TableCell>
+												<Badge
+													className={getSubscriptionColor(
+														org.subscription
+													)}
+												>
+													{org.subscription}
+												</Badge>
+											</TableCell>
+											<TableCell
+												className={
+													"text-muted-foreground"
+												}
+											>
+												{org?.totalEmployees ?? 1}{" "}
+												members
+											</TableCell>
+											<TableCell>
+												<Badge variant="outline">
+													{org.type}
+												</Badge>
+											</TableCell>
+											{org.role.toLowerCase() ===
+												"owner" && (
+												<TableCell className="w-[5px]">
+													<DropdownMenu>
+														<DropdownMenuTrigger>
+															<Setting className="w-5 h-5 outline rounded-sm cursor-pointer outline-offset-2" />
+														</DropdownMenuTrigger>
+														<DropdownMenuContent className="font-semibold bg-zinc-100 dark:bg-zinc-800">
+															<DropdownMenuItem
+																className="cursor-pointer"
+																onClick={() =>
+																	setEditOpen(
+																		true
+																	)
+																}
+															>
+																<Edit />
+																EDIT
+																organization
+															</DropdownMenuItem>
+															<DropdownMenuSeparator />
+															<DropdownMenuItem className="cursor-pointer">
+																<Transfer />
+																TRANSFER
+																ownership
+															</DropdownMenuItem>
+															<DropdownMenuSeparator />
+															<DropdownMenuItem
+																className="cursor-pointer"
+																onClick={() =>
+																	setDeleteOpen(
+																		true
+																	)
+																}
+															>
+																<Delete className="text-red-500" />
+																<Small className="text-red-500">
+																	DELETE
+																	organization
+																</Small>
+															</DropdownMenuItem>
+															<DropdownMenuSeparator />
+														</DropdownMenuContent>
+													</DropdownMenu>
+												</TableCell>
+											)}
+										</TableRow>
+									))}
 								</TableBody>
 							</>
 						)}
