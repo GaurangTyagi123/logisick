@@ -118,11 +118,12 @@ export const joinOrg = catchAsync(
 					403
 				)
 			);
-		const inviteToken = await redisClient.hGet(req.user.email, "token");
-		
-		const orgid = await redisClient.hGet(req.user.email, "orgid");
-		const role = await redisClient.hGet(req.user.email, "role");
-		const managerid = await redisClient.hGet(req.user.email, "managerid");
+		const {
+			token: inviteToken,
+			orgid,
+			role,
+			managerid,
+		} = await redisClient.hGetAll(req.user.email);
 
 		if (!role || !orgid || !inviteToken || token.trim() !== inviteToken)
 			return next(new AppError("User not invited in organization", 400));
@@ -325,6 +326,7 @@ export const changeRole = catchAsync(
 			dataToUpdate.role = "Manager";
 			dataToUpdate.manager = req.user?._id;
 		} else if (newRole.trim() === "Staff") {
+			// TODO check if prev its manager
 			dataToUpdate.role = "Staff";
 			if (!managerid)
 				return next(new AppError("Manager field is required", 404));
@@ -478,5 +480,40 @@ export const deleteEmp = catchAsync(
 		await oldEmp.delete();
 
 		return res.status(204).end();
+	}
+);
+
+// TODO employees under me (orgid)
+// role : owner => all
+// role : manager => staffs , owner
+// role : staff => empty , mnager
+export const empUnderMe = catchAsync(
+	async (
+		req: ExpressTypes.UserRequest,
+		_res: Response,
+		next: NextFunction
+	) => {
+		const { orgid } = req.body;
+		if (!orgid) return next(new AppError("All fields are required", 404));
+
+		const meEmp = await Emp.findOne({ orgid, userid: req.user?._id });
+		if (!meEmp)
+			return next(
+				new AppError(
+					"You are not an employee of this organization",
+					403
+				)
+			);
+		
+		switch (meEmp.role){
+			case "Owner":
+				break;
+			case "Manager":
+				break;
+			case "Staff":
+				break;
+			default:
+				
+		}
 	}
 );

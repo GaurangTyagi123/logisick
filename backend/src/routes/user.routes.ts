@@ -17,8 +17,10 @@ const userRouter = Router();
 userRouter.route("/").get(protect, /*restrictTo('admin'),*/ getUsers);
 
 // End point to update user's profile data
-userRouter.route("/updateMe").post(protect, updateUser);
-userRouter.delete("/updateMe", protect, deleteUser);
+userRouter
+	.route("/updateMe")
+	.post(protect, updateUser)
+	.delete(protect, deleteUser);
 userRouter.post("/updatePassword", protect, updatePassword);
 userRouter.route("/:id").get(protect, /* restrictTo('admin'),*/ getUser);
 
