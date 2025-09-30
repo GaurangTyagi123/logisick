@@ -268,7 +268,6 @@ export const getMyOrgs = catchAsync(
 			},
 		]);
 
-		console.log(orgs);
 		return res.status(200).json({
 			status: "success",
 			data: {
@@ -282,7 +281,7 @@ export const getMyOrgs = catchAsync(
 						owner: org.owner,
 						admin: org.admin,
 						subscription: org.subscription,
-						members: org.members,
+						totalEmployees: org.totalEmployees,
 						createdAt: org.createdAt,
 						updatesAt: org.updatedAt,
 					};
