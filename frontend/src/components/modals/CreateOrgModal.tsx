@@ -56,6 +56,7 @@ function OrganizationModal({
 
     const onSubmit = (data: OrganizationFormData) => {
         createOrgFn(data);
+        setOpen(false);
     };
     return (
         <Modal openModal={open}>

@@ -23,7 +23,7 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
                 type: org.type,
                 owner: org.owner,
                 subscription: org.subscription,
-                members:org.members,
+                members: org.members,
                 createdAt: org.createdAt,
                 updatesAt: org.updatedAt,
             },
@@ -91,17 +91,17 @@ export const createOrg = catchAsync(
         if (description) newOrgData['description'] = description.trim();
         else return next(new AppError('Invalid data', 400));
 
-       if (type) {
-			newOrgData["type"] = [
-				"Basic",
-				"Small-Cap",
-				"Mid-Cap",
-				"Large-Cap",
-				"Other",
-			].includes(type.trim())
-				? type.trim()
-				: "Basic";
-		}
+        if (type) {
+            newOrgData['type'] = [
+                'Basic',
+                'Small-Cap',
+                'Mid-Cap',
+                'Large-Cap',
+                'Other',
+            ].includes(type.trim())
+                ? type.trim()
+                : 'Basic';
+        }
 
         const newOrg = await Org.create(newOrgData);
         if (!newOrg)
@@ -156,7 +156,7 @@ export const updateOrg = catchAsync(
         res: Response,
         next: NextFunction
     ) => {
-        const { orgId } = req.body;
+        const { orgid } = req.params;
         const { name, description, type } = req.body;
 
         const dataToUpdate: {
@@ -165,20 +165,14 @@ export const updateOrg = catchAsync(
             type?: 'Basic' | 'Small-Cap' | 'Mid-Cap' | 'Large-Cap' | 'Other';
         } = {};
 
-        if (name && name.trim() !== '') {
-            if (name.trim().length() > 0 && name.trim().length() <= 48)
-                dataToUpdate['name'] = name.trim();
-            else return next(new AppError('Invalid data', 400));
-        }
+        if (!name || name.trim() === '')
+            return next(new AppError('Invalid data', 400));
+        dataToUpdate.name = name;
 
-        if (description && description.trim() !== '') {
-            if (
-                description.trim().length > 8 &&
-                description.trim().length <= 300
-            ) {
-                dataToUpdate['description'] = description.trim();
-            } else return next(new AppError('Invalid data', 400));
+        if (!description || description.trim() === '') {
+            return next(new AppError('Invalid data', 400));
         }
+        dataToUpdate.description = description;
 
         if (type && type.trim() !== '') {
             if (
@@ -195,11 +189,9 @@ export const updateOrg = catchAsync(
                 dataToUpdate['type'] = 'Other';
             }
         }
-
-        const newOrgData = await Org.findByIdAndUpdate(orgId, dataToUpdate, {
+        const newOrgData = await Org.findByIdAndUpdate(orgid, dataToUpdate, {
             new: true,
         });
-
         if (!newOrgData)
             return next(new AppError('Error updating organization data', 500));
         return returnOrgRes(res, 200, newOrgData);
