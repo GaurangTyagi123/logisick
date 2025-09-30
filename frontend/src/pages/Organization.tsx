@@ -12,8 +12,10 @@ import {
 } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { H2, Large, Muted, Small } from "@/components/ui/Typography";
+import useGetOrganizations from "@/hooks/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
+import { Loader } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -75,12 +77,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 		</Card>
 	);
 }
-
-interface OrganizationProps {
-	data: DummyOrg[];
-}
-
-function Organiztion({ data }: OrganizationProps) {
+function Organiztion() {
 	const [openOrgForm, setOpenOrgForm] = useState(false);
 	const [view, setView] = useState<"grid" | "list">("grid");
 	const navigate = useNavigate();
@@ -90,8 +87,10 @@ function Organiztion({ data }: OrganizationProps) {
 		| { user?: User }
 		| undefined;
 	const user = userData?.user;
+	const { data: organizations, isPending } = useGetOrganizations();
 
 	if (!user) navigate("/");
+	if(isPending) return <Loader/>
 
 	return (
 		<>
@@ -145,7 +144,7 @@ function Organiztion({ data }: OrganizationProps) {
 							: ""
 					)}
 				>
-					{data.map((orgData) => (
+					{organizations.map((orgData:Org) => (
 						<OrgCard org={orgData} key={orgData._id} view={view} />
 					))}
 				</div>
