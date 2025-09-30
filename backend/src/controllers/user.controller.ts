@@ -28,7 +28,7 @@ export const getUsers = catchAsync(
 		});
 	}
 );
-// TODO : Add a route to the request handler below
+// Function to Add a route to the request handler below
 /**
  * @brief Function to get user data from request body added before
  * @params req(Request) res(Express Response) next(Express Next Function)

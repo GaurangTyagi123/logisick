@@ -1,9 +1,9 @@
-import Org from '../models/organization.model';
-import Emp from '../models/employee.model';
-import User from '../models/user.model';
-import AppError from '../utils/appError';
-import catchAsync from '../utils/catchAsync';
-import type { NextFunction, Response } from 'express';
+import Org from "../models/organization.model";
+import Emp from "../models/employee.model";
+import User from "../models/user.model";
+import AppError from "../utils/appError";
+import catchAsync from "../utils/catchAsync";
+import type { NextFunction, Response } from "express";
 
 /**
  * @brief Function to return organization in the response of api request
@@ -13,22 +13,22 @@ import type { NextFunction, Response } from 'express';
  * @returns returns the response with added data as json format
  */
 function returnOrgRes(res: Response, status: number, org: OrgType): Response {
-    return res.status(status).json({
-        status: 'success',
-        data: {
-            org: {
-                _id: org._id,
-                name: org.name,
-                description: org.description,
-                type: org.type,
-                owner: org.owner,
-                subscription: org.subscription,
-                members:org.members,
-                createdAt: org.createdAt,
-                updatesAt: org.updatedAt,
-            },
-        },
-    });
+	return res.status(status).json({
+		status: "success",
+		data: {
+			org: {
+				_id: org._id,
+				name: org.name,
+				description: org.description,
+				type: org.type,
+				owner: org.owner,
+				subscription: org.subscription,
+				members: org.members,
+				createdAt: org.createdAt,
+				updatesAt: org.updatedAt,
+			},
+		},
+	});
 }
 
 /**
@@ -43,55 +43,55 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
  * 			ELSE call returnOrgRes Function with new org details and 201 status
  */
 export const createOrg = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: Response,
-        next: NextFunction
-    ) => {
-        if (!req.user?.isVerified) {
-            return next(
-                new AppError(
-                    'User must be verified to create new organization',
-                    400
-                )
-            );
-        }
-        const existingOrgs = await Org.findWithDeleted({
-            owner: req.user._id,
-        });
+	async (
+		req: ExpressTypes.UserRequest,
+		res: Response,
+		next: NextFunction
+	) => {
+		if (!req.user?.isVerified) {
+			return next(
+				new AppError(
+					"User must be verified to create new organization",
+					400
+				)
+			);
+		}
+		const existingOrgs = await Org.findWithDeleted({
+			owner: req.user._id,
+		});
 
-        const existingOrg = existingOrgs.some((org) => !org.deleted);
+		const existingOrg = existingOrgs.some((org) => !org.deleted);
 
-        if (existingOrg) {
-            return next(
-                new AppError('Owner already has an active organization', 400)
-            );
-        }
-        const { name, description, type } = req.body;
-        if (!name)
-            return next(
-                new AppError(
-                    'Name id required while creating organization',
-                    404
-                )
-            );
+		if (existingOrg) {
+			return next(
+				new AppError("Owner already has an active organization", 400)
+			);
+		}
+		const { name, description, type } = req.body;
+		if (!name)
+			return next(
+				new AppError(
+					"Name id required while creating organization",
+					404
+				)
+			);
 
-        const newOrgData: {
-            name?: string;
-            description?: string;
-            type?: string;
-            owner: ObjectId;
-        } = { owner: req.user?._id };
+		const newOrgData: {
+			name?: string;
+			description?: string;
+			type?: string;
+			owner: ObjectId;
+		} = { owner: req.user?._id };
 
-        if (name) {
-            newOrgData['name'] = name.trim();
-        } else {
-            return next(new AppError('All fields are required (name)', 404));
-        }
-        if (description) newOrgData['description'] = description.trim();
-        else return next(new AppError('Invalid data', 400));
+		if (name) {
+			newOrgData["name"] = name.trim();
+		} else {
+			return next(new AppError("All fields are required (name)", 404));
+		}
+		if (description) newOrgData["description"] = description.trim();
+		else return next(new AppError("Invalid data", 400));
 
-       if (type) {
+		if (type) {
 			newOrgData["type"] = [
 				"Basic",
 				"Small-Cap",
@@ -103,20 +103,20 @@ export const createOrg = catchAsync(
 				: "Basic";
 		}
 
-        const newOrg = await Org.create(newOrgData);
-        if (!newOrg)
-            return next(new AppError('Failed to create new Organization', 500));
+		const newOrg = await Org.create(newOrgData);
+		if (!newOrg)
+			return next(new AppError("Failed to create new Organization", 500));
 
-        const newEmp = await Emp.create({
-            userid: req.user?._id,
-            orgid: newOrg._id,
-            role: 'Owner',
-        });
-        if (!newEmp)
-            return next(new AppError('Failed to create new Employee', 500));
+		const newEmp = await Emp.create({
+			userid: req.user?._id,
+			orgid: newOrg._id,
+			role: "Owner",
+		});
+		if (!newEmp)
+			return next(new AppError("Failed to create new Employee", 500));
 
-        return returnOrgRes(res, 201, newOrg);
-    }
+		return returnOrgRes(res, 201, newOrg);
+	}
 );
 
 /**
@@ -151,59 +151,59 @@ export const createOrg = catchAsync(
  * 			ELSE return the updated
  */
 export const updateOrg = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: Response,
-        next: NextFunction
-    ) => {
-        const { orgId } = req.body;
-        const { name, description, type } = req.body;
+	async (
+		req: ExpressTypes.UserRequest,
+		res: Response,
+		next: NextFunction
+	) => {
+		const { orgId } = req.body;
+		const { name, description, type } = req.body;
 
-        const dataToUpdate: {
-            name?: string;
-            description?: string;
-            type?: 'Basic' | 'Small-Cap' | 'Mid-Cap' | 'Large-Cap' | 'Other';
-        } = {};
+		const dataToUpdate: {
+			name?: string;
+			description?: string;
+			type?: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
+		} = {};
 
-        if (name && name.trim() !== '') {
-            if (name.trim().length() > 0 && name.trim().length() <= 48)
-                dataToUpdate['name'] = name.trim();
-            else return next(new AppError('Invalid data', 400));
-        }
+		if (name && name.trim() !== "") {
+			if (name.trim().length() > 0 && name.trim().length() <= 48)
+				dataToUpdate["name"] = name.trim();
+			else return next(new AppError("Invalid data", 400));
+		}
 
-        if (description && description.trim() !== '') {
-            if (
-                description.trim().length > 8 &&
-                description.trim().length <= 300
-            ) {
-                dataToUpdate['description'] = description.trim();
-            } else return next(new AppError('Invalid data', 400));
-        }
+		if (description && description.trim() !== "") {
+			if (
+				description.trim().length > 8 &&
+				description.trim().length <= 300
+			) {
+				dataToUpdate["description"] = description.trim();
+			} else return next(new AppError("Invalid data", 400));
+		}
 
-        if (type && type.trim() !== '') {
-            if (
-                [
-                    'Basic',
-                    'Small-Cap',
-                    'Mid-Cap',
-                    'Large-Cap',
-                    'Other',
-                ].includes(type.trim())
-            ) {
-                dataToUpdate['type'] = type.trim();
-            } else {
-                dataToUpdate['type'] = 'Other';
-            }
-        }
+		if (type && type.trim() !== "") {
+			if (
+				[
+					"Basic",
+					"Small-Cap",
+					"Mid-Cap",
+					"Large-Cap",
+					"Other",
+				].includes(type.trim())
+			) {
+				dataToUpdate["type"] = type.trim();
+			} else {
+				dataToUpdate["type"] = "Other";
+			}
+		}
 
-        const newOrgData = await Org.findByIdAndUpdate(orgId, dataToUpdate, {
-            new: true,
-        });
+		const newOrgData = await Org.findByIdAndUpdate(orgId, dataToUpdate, {
+			new: true,
+		});
 
-        if (!newOrgData)
-            return next(new AppError('Error updating organization data', 500));
-        return returnOrgRes(res, 200, newOrgData);
-    }
+		if (!newOrgData)
+			return next(new AppError("Error updating organization data", 500));
+		return returnOrgRes(res, 200, newOrgData);
+	}
 );
 
 /**
@@ -214,46 +214,46 @@ export const updateOrg = catchAsync(
  *
  */
 export const transferOrg = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: Response,
-        next: NextFunction
-    ) => {
-        const { newOwnerId, orgId } = req.body;
+	async (
+		req: ExpressTypes.UserRequest,
+		res: Response,
+		next: NextFunction
+	) => {
+		const { newOwnerId, orgId } = req.body;
 
-        if (!newOwnerId || !orgId)
-            return next(new AppError('Please provide valid details', 404));
+		if (!newOwnerId || !orgId)
+			return next(new AppError("Please provide valid details", 404));
 
-        const oldUserId = req.user?._id;
+		const oldUserId = req.user?._id;
 
-        const newUser = await User.findOne({ _id: newOwnerId, deleted: false });
-        if (!newUser) {
-            return next(
-                new AppError(
-                    'New Owner should be an existing and verified user',
-                    404
-                )
-            );
-        }
+		const newUser = await User.findOne({ _id: newOwnerId, deleted: false });
+		if (!newUser) {
+			return next(
+				new AppError(
+					"New Owner should be an existing and verified user",
+					404
+				)
+			);
+		}
 
-        const newOrgData = await Org.findOneAndUpdate(
-            { _id: orgId, owner: oldUserId, deleted: false },
-            { owner: newOwnerId },
-            { new: true }
-        );
-        if (!newOrgData)
-            return next(new AppError("Can't find organization specified", 500));
+		const newOrgData = await Org.findOneAndUpdate(
+			{ _id: orgId, owner: oldUserId, deleted: false },
+			{ owner: newOwnerId },
+			{ new: true }
+		);
+		if (!newOrgData)
+			return next(new AppError("Can't find organization specified", 500));
 
-        await Emp.delete({ userid: oldUserId, orgid: newOrgData._id });
+		await Emp.delete({ userid: oldUserId, orgid: newOrgData._id });
 
-        await Emp.create({
-            userid: newOwnerId,
-            orgid: newOrgData._id,
-            role: 'Owner',
-        });
+		await Emp.create({
+			userid: newOwnerId,
+			orgid: newOrgData._id,
+			role: "Owner",
+		});
 
-        return returnOrgRes(res, 200, newOrgData);
-    }
+		return returnOrgRes(res, 200, newOrgData);
+	}
 );
 
 /**
@@ -268,26 +268,26 @@ export const transferOrg = catchAsync(
  * 			ELSE return status(204)
  */
 export const deleteOrg = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: Response,
-        next: NextFunction
-    ) => {
-        const { orgid } = req.params;
-        if (!orgid)
-            return next(
-                new AppError(
-                    'Orgnization indentification is required to delete',
-                    404
-                )
-            );
+	async (
+		req: ExpressTypes.UserRequest,
+		res: Response,
+		next: NextFunction
+	) => {
+		const { orgid } = req.params;
+		if (!orgid)
+			return next(
+				new AppError(
+					"Orgnization indentification is required to delete",
+					404
+				)
+			);
 
-        const org = await Org.deleteById(orgid);
-        if (!org.modifiedCount)
-            return next(new AppError('No such org exists', 400));
+		const org = await Org.delete({ _id: orgid, owner: req.user?._id });
+		if (!org.modifiedCount)
+			return next(new AppError("No such org exists", 400));
 
-        await Emp.delete({ orgid });
+		await Emp.delete({ orgid });
 
-        return res.status(204).send();
-    }
+		return res.status(204).send();
+	}
 );
