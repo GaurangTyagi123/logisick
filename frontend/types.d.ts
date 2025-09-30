@@ -16,6 +16,7 @@ type Org = {
 	subscription: "None" | "Basic" | "Pro";
 	admin: string;
 	totalEmployees: number;
+	role: "Staff" | "Admin" | "Owner";
 	deleted?: boolean;
 	members?:number;
 	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";

@@ -63,7 +63,6 @@ declare interface OrgType {
     owner: ObjectId;
     admin?: ObjectId | null;
     subscription: 'None' | 'Basic' | 'Pro';
-    members?: number;
 
     createdAt: Date;
     updatedAt: Date;

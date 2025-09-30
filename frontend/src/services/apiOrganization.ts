@@ -16,6 +16,7 @@ type updateOrg = ({
     id: string;
     data: orgFormType;
 }) => Promise<void>;
+type getAllOrgs = () => Promise<Org[]>;
 
 export const createOrg: createOrg = async (data) => {
     try {
@@ -45,12 +46,24 @@ export const updateOrg: updateOrg = async ({ id, data }) => {
         if (res.status === 200) {
             return res.data.data.org;
         } else
-            console.log(res.data)
             handleError(
-                null,
-                'An error occurred while updating your organization'
+                new Error('An error occurred while updating your organization')
             );
     } catch (err) {
         if (err instanceof Error) handleError(err);
+    }
+};
+export const getAllOrgs = async () => {
+    try {
+        const res = await axinstance.get('/v1/emp/myOrgs');
+        if (res.status == 200) {
+            return res.data.data.orgs;
+        } else {
+            handleError(
+                new Error('An error occurred while fetching your organizations')
+            );
+        }
+    } catch (err) {
+        handleError(err);
     }
 };

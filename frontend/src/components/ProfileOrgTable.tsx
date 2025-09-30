@@ -12,7 +12,6 @@ import { Badge } from '@/components/ui/badge';
 import { H3 } from './ui/Typography';
 import Button from './ui/button';
 import { Link } from 'react-router-dom';
-import { useQueryClient } from '@tanstack/react-query';
 import clsx from 'clsx';
 import {
     DropdownMenu,
@@ -25,6 +24,7 @@ import { MaterialSymbolsCompareArrowsRounded } from '@/assets/icons/TransferIcon
 import { MaterialSymbolsEditSquareOutline } from '@/assets/icons/EditIcon';
 import { MaterialSymbolsAutoDelete } from '@/assets/icons/DeleteIcon';
 import { MaterialSymbolsSettingsOutline } from '@/assets/icons/SettingsIcon';
+import useGetOrganizations from '@/hooks/useGetOrganizations';
 
 type OrgType = {
     id: number;
@@ -95,10 +95,7 @@ function ProfileOrgTable({
     setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const queryClient = useQueryClient();
-    const userData = queryClient.getQueryData<{ user: User }>(['user']);
-    const user = userData?.user;
-    const org = user?.myOrg;
+    const { data: organizations, isPending } = useGetOrganizations();
 
     return (
         <div className="col-span-1 md:col-span-4">
@@ -111,7 +108,7 @@ function ProfileOrgTable({
                 </CardHeader>
                 <CardContent>
                     <Table>
-                        {!org ? (
+                        {!organizations || isPending ? (
                             <div className="h-full w-full grid place-items-center gap-3">
                                 <H3>You are not in any organizations.</H3>
                                 <Button asChild>
@@ -132,97 +129,109 @@ function ProfileOrgTable({
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    <TableRow
-                                        key={org._id}
-                                        className="hover:bg-muted/50"
-                                    >
-                                        <TableCell className="font-medium">
-                                            {org.name}
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                variant="outline"
-                                                className={clsx(
-                                                    'font-medium',
-                                                    roleClasses('Owner')
-                                                )}
-                                            >
-                                                owner
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge
-                                                className={getSubscriptionColor(
-                                                    org.subscription
-                                                )}
-                                            >
-                                                {org.subscription}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell
-                                            className={'text-muted-foreground'}
+                                    {organizations.map((org: Org) => (
+                                        <TableRow
+                                            key={org._id}
+                                            className="hover:bg-muted/50"
                                         >
-                                            {org?.totalEmployees ?? 1} members
-                                        </TableCell>
-                                        <TableCell>
-                                            <Badge variant="outline">
-                                                {org.type}
-                                            </Badge>
-                                        </TableCell>
-                                        <TableCell className="w-[5px]">
-                                            <DropdownMenu>
-                                                <DropdownMenuTrigger>
-                                                    <span>
-                                                        <MaterialSymbolsSettingsOutline className="w-6 h-6 outline rounded-sm cursor-pointer outline-offset-2 "/>
-                                                    </span>
-                                                </DropdownMenuTrigger>
-                                                <DropdownMenuContent className="h-fit flex flex-col gap-1 my-2 p-2  border rounded-md ">
-                                                    <DropdownMenuItem
-                                                        className="  border-b-1 cursor-pointer p-1"
-                                                        onClick={() =>
-                                                            setEditOpen(true)
-                                                        }
-                                                    >
-                                                        <span className="flex gap-2">
-                                                            {/* <HiPencilSquare /> */}
-                                                            <MaterialSymbolsEditSquareOutline />
-                                                            <p className="text-sm ">
-                                                                EDIT
-                                                                organization
-                                                            </p>
-                                                        </span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem className=" p-1 border-b-1 cursor-pointer">
-                                                        <span className="flex gap-2">
-                                                            {/* <HiArrowsRightLeft /> */}
-                                                            <MaterialSymbolsCompareArrowsRounded />
-                                                            <p className="text-sm">
-                                                                TRANSFER
-                                                                ownership
-                                                            </p>
-                                                        </span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                    <DropdownMenuItem
-                                                        className="p-1 text-red-500 cursor-pointer font-bold "
-                                                        onClick={() =>
-                                                            setDeleteOpen(true)
-                                                        }
-                                                    >
-                                                        <span className="flex gap-2">
-                                                            <MaterialSymbolsAutoDelete />
-                                                            <p className="text-sm">
-                                                                DELETE
-                                                                organization
-                                                            </p>
-                                                        </span>
-                                                    </DropdownMenuItem>
-                                                    <DropdownMenuSeparator />
-                                                </DropdownMenuContent>
-                                            </DropdownMenu>
-                                        </TableCell>
-                                    </TableRow>
+                                            <TableCell className="font-medium">
+                                                {org.name}
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    variant="outline"
+                                                    className={clsx(
+                                                        'font-medium',
+                                                        roleClasses('Owner')
+                                                    )}
+                                                >
+                                                    {org.role}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge
+                                                    className={getSubscriptionColor(
+                                                        org.subscription
+                                                    )}
+                                                >
+                                                    {org.subscription}
+                                                </Badge>
+                                            </TableCell>
+                                            <TableCell
+                                                className={
+                                                    'text-muted-foreground'
+                                                }
+                                            >
+                                                {org?.totalEmployees ?? 1}{' '}
+                                                members
+                                            </TableCell>
+                                            <TableCell>
+                                                <Badge variant="outline">
+                                                    {org.type}
+                                                </Badge>
+                                            </TableCell>
+                                            {org.role.toLowerCase() ===
+                                                'owner' && (
+                                                <TableCell className="w-[5px]">
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger>
+                                                            <span>
+                                                                <MaterialSymbolsSettingsOutline className="w-6 h-6 outline rounded-sm cursor-pointer outline-offset-2 " />
+                                                            </span>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent className="h-fit flex flex-col gap-1 my-2 p-2  border rounded-md ">
+                                                            <DropdownMenuItem
+                                                                className="  border-b-1 cursor-pointer p-1"
+                                                                onClick={() =>
+                                                                    setEditOpen(
+                                                                        true
+                                                                    )
+                                                                }
+                                                            >
+                                                                <span className="flex gap-2">
+                                                                    {/* <HiPencilSquare /> */}
+                                                                    <MaterialSymbolsEditSquareOutline />
+                                                                    <p className="text-sm ">
+                                                                        EDIT
+                                                                        organization
+                                                                    </p>
+                                                                </span>
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem className=" p-1 border-b-1 cursor-pointer">
+                                                                <span className="flex gap-2">
+                                                                    {/* <HiArrowsRightLeft /> */}
+                                                                    <MaterialSymbolsCompareArrowsRounded />
+                                                                    <p className="text-sm">
+                                                                        TRANSFER
+                                                                        ownership
+                                                                    </p>
+                                                                </span>
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem
+                                                                className="p-1 text-red-500 cursor-pointer font-bold "
+                                                                onClick={() =>
+                                                                    setDeleteOpen(
+                                                                        true
+                                                                    )
+                                                                }
+                                                            >
+                                                                <span className="flex gap-2">
+                                                                    <MaterialSymbolsAutoDelete />
+                                                                    <p className="text-sm">
+                                                                        DELETE
+                                                                        organization
+                                                                    </p>
+                                                                </span>
+                                                            </DropdownMenuItem>
+                                                            <DropdownMenuSeparator />
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell>
+                                            )}
+                                        </TableRow>
+                                    ))}
                                 </TableBody>
                             </>
                         )}
