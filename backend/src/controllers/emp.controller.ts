@@ -29,7 +29,6 @@ export const sendInvite = catchAsync(
 			return next(
 				new AppError("No organization to add employee to", 404)
 			);
-
 		const isOldUser = await User.findOne({ email: empEmail });
 		if (isOldUser) {
 			const isOldEmp = await Emp.findOne({
@@ -120,6 +119,7 @@ export const joinOrg = catchAsync(
 				)
 			);
 		const inviteToken = await redisClient.hGet(req.user.email, "token");
+		
 		const orgid = await redisClient.hGet(req.user.email, "orgid");
 		const role = await redisClient.hGet(req.user.email, "role");
 		const managerid = await redisClient.hGet(req.user.email, "managerid");
@@ -147,6 +147,7 @@ export const joinOrg = catchAsync(
 		if (!newEmp)
 			return next(new AppError("Error adding new Employee", 500));
 
+		await redisClient.del(req.user?.email);
 		return res.status(201).json({
 			status: "success",
 			data: {

@@ -31,7 +31,7 @@ type OrgType = {
     name: string;
     role: 'Admin' | 'Manager' | 'Staff';
     subscription: 'None' | 'Basic' | 'Pro';
-    members: number;
+    totalEmployees: number;
     status: 'Active' | 'Deactivated';
 };
 
@@ -162,7 +162,7 @@ function ProfileOrgTable({
                                         <TableCell
                                             className={'text-muted-foreground'}
                                         >
-                                            {org?.members ?? 1} members
+                                            {org?.totalEmployees ?? 1} members
                                         </TableCell>
                                         <TableCell>
                                             <Badge variant="outline">
