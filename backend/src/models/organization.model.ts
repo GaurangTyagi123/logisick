@@ -52,8 +52,8 @@ const organizationSchema = new Schema<any, OrgModel>(
 	},
 	{
 		timestamps: true,
-		// toJSON: { virtuals: true },
-		// toObject: { virtuals: true },
+		toJSON: { virtuals: true },
+		toObject: { virtuals: true },
 	}
 );
 
