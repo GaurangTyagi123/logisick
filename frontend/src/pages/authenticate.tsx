@@ -11,7 +11,7 @@ import Navbar from "@/components/Navbar";
 function Authenticate() {
 	const [formType, setFormType] = useState<"login" | "register">("login");
 	return (
-		<div className="w-full px-4 flex flex-col h-auto min-h-screen dark:bg-zinc-900">
+		<div className="w-full px-4 flex flex-col h-auto min-h-screen bg-zinc-200 dark:bg-zinc-900">
 			<Navbar
 				hide={{
 					logo: true,

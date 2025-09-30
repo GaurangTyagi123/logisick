@@ -74,7 +74,7 @@ export function Login({ setFormType }: FormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="flex flex-col max-w-2xl gap-4 p-4 border md:min-w-lg rounded-2xl shadow-2xl"
+			className="bg-white dark:bg-zinc-800 flex flex-col max-w-2xl gap-4 p-4 border md:min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<H2 className="mb-2 text-center">Login User</H2>
@@ -156,7 +156,7 @@ export function Login({ setFormType }: FormProps) {
 			>
 				Forgot Password?
 			</Button>
-			<Button className="mt-4" type="submit" disabled={isLoggingIn}>
+			<Button className="mt-4 font-semibold" type="submit" disabled={isLoggingIn}>
 				Login
 			</Button>
 			<Button
@@ -176,6 +176,7 @@ export function Login({ setFormType }: FormProps) {
 					window.location.href = `${protocol}//${server}:${port}/auth/google`;
 				}}
 				type="button"
+				className="font-semibold"
 			>
 				<Google />
 				<span>Login with Google account</span>
@@ -252,7 +253,7 @@ export function Register({ setFormType }: FormProps) {
 	return (
 		<form
 			onSubmit={handleSubmit}
-			className="flex flex-col max-w-2xl gap-4 p-4 py-4 border md:min-w-lg rounded-2xl shadow-2xl"
+			className="bg-white dark:bg-zinc-800 flex flex-col max-w-2xl gap-4 p-4 py-4 border md:min-w-lg rounded-2xl shadow-2xl"
 			style={{ maxWidth: "calc(100% - 2rem)" }}
 		>
 			<h2 className="mb-2 text-3xl text-center">Register New User</h2>
@@ -386,7 +387,7 @@ export function Register({ setFormType }: FormProps) {
 				)}
 			</Label>
 
-			<Button className="mt-4" disabled={isRegistering} type="submit">
+			<Button className="mt-4 font-semibold" disabled={isRegistering} type="submit">
 				Register
 			</Button>
 			<Button
@@ -406,6 +407,7 @@ export function Register({ setFormType }: FormProps) {
 					window.location.href = `${protocol}//${server}:${port}/auth/google`;
 				}}
 				type="button"
+				className="font-semibold"
 			>
 				<Google />
 				<span>Register with Google account</span>

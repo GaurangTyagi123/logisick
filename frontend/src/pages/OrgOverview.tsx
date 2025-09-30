@@ -8,7 +8,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
 interface OrgOverviewProps {
-	data: Omit<Org, "admin" | "createdAt" | "updatedAt">[];
+	data: DummyOrg[];
 }
 const empData = {
 	labels: ["admin", "manager", "staff"],

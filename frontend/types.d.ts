@@ -17,9 +17,17 @@ type Org = {
 	admin: string;
 	totalEmployees: number;
 	deleted?: boolean;
-	members?:number;
+	members?: number;
 	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
 	createdAt: string;
 	updatedAt: string;
 	deletedAt?: string;
+};
+
+type DummyOrg = {
+	_id: string;
+	name: string;
+	subscription: "None" | "Basic" | "Pro";
+	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
+	description: string;
 };

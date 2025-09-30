@@ -77,7 +77,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 }
 
 interface OrganizationProps {
-	data: Omit<Org, "admin" | "createdAt" | "updatedAt">[];
+	data: DummyOrg[];
 }
 
 function Organiztion({ data }: OrganizationProps) {

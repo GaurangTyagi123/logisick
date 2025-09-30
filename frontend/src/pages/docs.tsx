@@ -57,7 +57,7 @@ function CustomSidebar() {
 	return (
 		<Sidebar>
 			<SidebarHeader>
-				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-700">
+				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-800">
 					<img
 						src={logo}
 						alt="logo"
@@ -71,7 +71,7 @@ function CustomSidebar() {
 					</div>
 				</div>
 			</SidebarHeader>
-			<SidebarContent>
+			<SidebarContent className="dark:bg-zinc-800">
 				{Object.keys(tabs).map((val, i) => {
 					return (
 						<SidebarGroup key={i}>
@@ -112,7 +112,7 @@ function Docs() {
 	return (
 		<SidebarProvider>
 			<CustomSidebar />
-			<main className="p-2 w-full h-screen">
+			<main className="p-2 w-full h-screen bg-zinc-200 dark:bg-zinc-900">
 				<div className="flex gap-2 items-center">
 					<SidebarTrigger
 						className="p-2 h-10 w-10 rounded-xl"

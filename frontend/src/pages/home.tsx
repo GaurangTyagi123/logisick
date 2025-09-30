@@ -24,9 +24,9 @@ import illus from "@/assets/illus.svg";
  */
 function Home() {
 	return (
-		<div className="w-full px-4 grid gap-3 h-auto dark:bg-zinc-900">
+		<div className="w-full px-4 grid gap-3 h-auto bg-zinc-200 dark:bg-zinc-900">
 			{/* topbar */}
-			<Navbar hide={{logo:true}}/>
+			<Navbar hide={{ logo: true }} />
 			{/* tabs bar */}
 			<div className="flex flex-col justify-between gap-2 mt-4 md:mt-0">
 				<div className="flex flex-col justify-between">
@@ -63,7 +63,7 @@ function Home() {
 						Community
 					</Button>
 					{/* documentations */}
-					<Button className="text-xl" variant={"link"} asChild	>
+					<Button className="text-xl" variant={"link"} asChild>
 						<Link to={"/docs"}>Docs</Link>
 					</Button>
 					{/* api/feature pricing */}
@@ -82,51 +82,55 @@ function Home() {
 			<Separator className="mt-0 md:mt-6" />
 			{/* hero */}
 			<main className="md:mx-10 p-2 text-black">
-			{/* hero */}
-			<div
-				className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center"
-				style={{
-					backgroundColor: "hsl(var(--hue-gray-val))",
-					boxShadow:
-						"0 0 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25)",
-				}}
-			>
-				<div className="flex flex-col gap-6 md:p-10 max-w-2xl">
-					<h2 className="text-4xl text-center md:text-start md:text-6xl w-full text-balance jet-brains text-zinc-900">
-						Streamline Your Supply Chain
-					</h2>
-					<p
-						className="text-xl text-balance text-center lg:text-start"
-						style={{ fontFamily: "TimesNewRoman" }}
-					>
-						Track, manage and analyze your inventory with ease.
-					</p>
-					<div className="flex gap-2 justify-center lg:justify-start">
-						<Button className="shadow-xl bg-green-500">
-							<Star />
-							Get Started
-						</Button>
-						<Button className="shadow-xl border-1 border-black">
-							<BookOpen />
-							Learn More
-						</Button>
+				{/* hero */}
+				<div
+					className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center bg-white dark:bg-zinc-200"
+					style={{
+						boxShadow:
+							"0 0 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25)",
+					}}
+				>
+					<div className="flex flex-col gap-6 md:p-10 max-w-2xl">
+						<h2 className="text-4xl text-center md:text-start md:text-6xl w-full text-balance jet-brains text-zinc-900">
+							Streamline Your Supply Chain
+						</h2>
+						<p
+							className="text-xl text-balance text-center lg:text-start"
+							style={{ fontFamily: "TimesNewRoman" }}
+						>
+							Track, manage and analyze your inventory with ease.
+						</p>
+						<div className="flex gap-2 justify-center lg:justify-start">
+							<Button className="shadow-xl bg-green-500 hover:bg-green-600  dark:bg-green-500 border-1 border-black">
+								<Star />
+								Get Started
+							</Button>
+							<Button className="shadow-xl border-1 border-black">
+								<BookOpen />
+								Learn More
+							</Button>
+						</div>
+						<div className="flex gap-2 flex-wrap justify-center lg:justify-start">
+							<HexBox
+								heading="Inventory Tracking"
+								icon="truck"
+								text="Easily track stock levels across multiple locations."
+							/>
+							<HexBox
+								heading="Report & Analytics"
+								icon="report"
+								text="Gain insights with customizable reports & analytics."
+							/>
+						</div>
 					</div>
-					<div className="flex gap-2 flex-wrap justify-center lg:justify-start">
-						<HexBox
-							heading="Inventory Tracking"
-							icon="truck"
-							text="Easily track stock levels across multiple locations."
-						/>
-						<HexBox
-							heading="Report & Analytics"
-							icon="report"
-							text="Gain insights with customizable reports & analytics."
-						/>
-					</div>
+					<img
+						src={illus}
+						srcSet=""
+						alt=""
+						className="sm:w-5/12 w-full"
+					/>
 				</div>
-				<img src={illus} srcSet="" alt="" className="sm:w-5/12 w-full" />
-			</div>
-		</main>
+			</main>
 			{/* Footer */}
 			<Footer />
 		</div>

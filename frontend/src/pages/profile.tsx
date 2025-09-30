@@ -8,7 +8,7 @@ import { Verified, Hint, Edit, Delete } from '@/assets/icons/Profilepage';
 import Button from '@/components/ui/button';
 import Navbar from '@/components/Navbar';
 import UserAvatar from '@/components/UserAvatar';
-import { H2, Large, Lead } from '@/components/ui/Typography';
+import { H2, Large, Muted } from '@/components/ui/Typography';
 
 const OtpModal = lazy(() => import('@/components/modals/OtpModal'));
 const DeleteMeModal = lazy(() => import('@/components/modals/DeleteMeModal'));
@@ -75,10 +75,10 @@ function Profile() {
     }, [isVerifingEmail, user?.isVerified, verifyEmail, open2]);
 
     return (
-        <div className="w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative dark:bg-zinc-900">
+        <div className="w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative bg-zinc-200 dark:bg-zinc-900">
             <Navbar />
             {/* User Bar */}
-            <div className="max-w-6xl p-4 w-full grid place-items-center md:flex gap-4 rounded-2xl shadow-2xl bg-zinc-300 dark:bg-zinc-700">
+            <div className="max-w-6xl p-4 w-full grid place-items-center md:flex gap-4 rounded-2xl shadow-2xl bg-white dark:bg-zinc-800">
                 <div className="w-40 h-40 grid place-items-center relative">
                     <UserAvatar
                         customSeed={user?.avatar || '12345678'}
@@ -123,14 +123,14 @@ function Profile() {
                             {user?.email}
                         </Large>
                     </div>
-                    <Lead className="text-sm text-center md:text-start">
+                    <Muted className="text-sm text-center md:text-start">
                         Member since :{' '}
                         {new Date(user?.createdAt ?? '').toDateString()}
-                    </Lead>
+                    </Muted>
                 </div>
             </div>
             {/* main */}
-            <main className="max-w-6xl p-4 w-full flex flex-col-reverse md:grid md:grid-cols-5 gap-2 ">
+            <main className="max-w-6xl py-4 w-full flex flex-col-reverse md:grid md:grid-cols-5 gap-2 ">
                 <ProfileOrgTable setDeleteOpen={setOrgDelete} setEditOpen={setOpenEdit} />
                 <div className="md:min-h-96 gap-2 flex flex-wrap md:flex-nowrap md:flex-col">
                     <Button onClick={() => setOpen3(true)} className="">

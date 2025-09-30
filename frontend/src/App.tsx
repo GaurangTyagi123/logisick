@@ -11,7 +11,6 @@ import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import OrderSales from "./pages/OrderSales";
 
-
 const Loading = lazy(() => import("@/components/Loading"));
 
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
@@ -22,10 +21,10 @@ const Home = lazy(() => import("@/pages/Home"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Authenticate = lazy(() => import("@/pages/Authenticate"));
 const Profile = lazy(() => import("@/pages/Profile"));
-const Organization = lazy(()=>import("./pages/Organization"))
-const OrgOverview = lazy(()=> import("./pages/OrgOverview"))
+const Organization = lazy(() => import("./pages/Organization"));
+const OrgOverview = lazy(() => import("./pages/OrgOverview"));
 
-const data: Omit<Org, "admin" | "createdAt" | "updatedAt">[] = [
+const data: DummyOrg[] = [
 	{
 		_id: String(faker.number.bigInt()),
 		name: faker.company.name(),
@@ -80,7 +79,7 @@ function App() {
 						path="/dashboard"
 						element={
 							user ? (
-								<Organization data={data}/>
+								<Organization data={data} />
 							) : (
 								<Navigate to={"/authenticate"} />
 							)
@@ -97,7 +96,7 @@ function App() {
 							)
 						}
 					>
-						<Route index element={<OrgOverview data={data}/>} />
+						<Route index element={<OrgOverview data={data} />} />
 						<Route
 							path="/dashboard/:orgId/analytics"
 							element={<Analytics />}

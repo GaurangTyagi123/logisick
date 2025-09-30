@@ -7,16 +7,16 @@ interface HexBoxProps {
 }
 
 /**
- * @component a hexagonal box to use as a styled component iwht heading, icon and body 
- * @param icon string icon name to specify whihc icon to choose ("truck" | "report") 
+ * @component a hexagonal box to use as a styled component iwht heading, icon and body
+ * @param icon string icon name to specify whihc icon to choose ("truck" | "report")
  * @param heading string heading for the hexbox
  * @param text string body text of the hexbox
- * @returns a styled react component 
+ * @returns a styled react component
  */
 function HexBox({ icon, heading, text }: HexBoxProps) {
 	return (
 		<div
-			className="bg-white p-3 shadow-xl max-w-73 h-25 "
+			className="bg-zinc-300 p-3 shadow-2xl max-w-73 h-25 "
 			style={{
 				clipPath:
 					"polygon(1rem 0%, calc(100% - 1rem) 0%, 100% 50%, calc(100% - 1rem) 100%, 1rem 100%, 0% 50%)",

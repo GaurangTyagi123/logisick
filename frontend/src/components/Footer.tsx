@@ -6,80 +6,68 @@ import {
 	Phone,
 	Mail,
 } from "@/assets/icons/Homepage";
+import { H3, H4, P, Small } from "./ui/Typography";
 
 /**
  * @component a static footer component for the hoem and other pages
  * @returns a static react component
  */
 function Footer() {
+	const listContentClass =
+		"dark:text-muted-foreground hover:text-foreground transition-colors";
 	return (
-		<footer className="border-t border-border bg-zinc-300 dark:bg-zinc-800">
+		<footer className="border-t border-border bg-white dark:bg-zinc-800">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 					{/* Company Info */}
 					<div className="space-y-4">
 						<div className="flex items-center space-x-2">
 							<Truck className="h-8 w-8 text-primary" />
-							<h3 className="text-2xl font-bold text-foreground king-julian">
+							<H3 className="text-2xl font-bold text-foreground king-julian">
 								LogiSick
-							</h3>
+							</H3>
 						</div>
-						<p className="text-muted-foreground text-sm leading-relaxed jet-brains">
+						<P className="dark:text-muted-foreground text-sm leading-relaxed jet-brains">
 							Streamlining your supply chain with intelligent
 							logistics solutions. From warehouse management to
 							last-mile delivery, we've got you covered.
-						</p>
+						</P>
 						<div className="flex space-x-4">
-							<div className="flex items-center space-x-2 text-sm text-muted-foreground">
+							<div className="flex items-center space-x-2 text-sm dark:text-muted-foreground">
 								<Clock className="h-4 w-4" />
-								<span>24/7 Support</span>
+								<Small>24/7 Support</Small>
 							</div>
 						</div>
 					</div>
 
 					{/* Solutions */}
 					<div className="space-y-4">
-						<h4 className="text-lg font-semibold text-foreground king-julian">
+						<H4 className="text-lg font-semibold text-foreground king-julian">
 							Solutions
-						</h4>
+						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Inventory Management
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Import/Export Management
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Delivery Tracking
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Bills Management
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Analytics & Reports
 								</a>
 							</li>
@@ -88,55 +76,37 @@ function Footer() {
 
 					{/* Company */}
 					<div className="space-y-4">
-						<h4 className="text-lg font-semibold text-foreground king-julian">
+						<H4 className="text-lg font-semibold text-foreground king-julian">
 							Company
-						</h4>
+						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									About Us
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Products
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Community
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Resources
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Pricing
 								</a>
 							</li>
 							<li>
-								<a
-									href="#"
-									className="text-muted-foreground hover:text-foreground transition-colors"
-								>
+								<a href="#" className={listContentClass}>
 									Link
 								</a>
 							</li>
@@ -145,25 +115,25 @@ function Footer() {
 
 					{/* Contact */}
 					<div className="space-y-4">
-						<h4 className="text-lg font-semibold text-foreground king-julian">
+						<H4 className="text-lg font-semibold text-foreground king-julian">
 							Contact
-						</h4>
+						</H4>
 						<div className="space-y-3 text-sm jet-brains">
-							<div className="flex items-center space-x-2 text-muted-foreground">
+							<div className="flex items-center space-x-2 dark:text-muted-foreground">
 								<Phone className="h-4 w-4" />
-								<span>+1 (555) 123-4567</span>
+								<Small>+1 (555) 123-4567</Small>
 							</div>
-							<div className="flex items-center space-x-2 text-muted-foreground">
+							<div className="flex items-center space-x-2 dark:text-muted-foreground">
 								<Mail className="h-4 w-4" />
-								<span>support@logisick.com</span>
+								<Small>support@logisick.com</Small>
 							</div>
-							<div className="flex items-start space-x-2 text-muted-foreground">
+							<div className="flex items-start space-x-2 dark:text-muted-foreground">
 								<MapPin className="h-4 w-4 mt-0.5" />
-								<span>
+								<Small>
 									123 ABC Marg
 									<br />
 									New Delhi, 110000
-								</span>
+								</Small>
 							</div>
 						</div>
 					</div>
@@ -172,8 +142,8 @@ function Footer() {
 				{/* Bottom Section */}
 				<div className="mt-12 pt-8 border-t border-border">
 					<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 jet-brains">
-						<div className="flex items-center space-x-6 text-sm text-muted-foreground">
-							<span>© 2025 logisick. All rights reserved.</span>
+						<div className="flex items-center space-x-6 text-sm dark:text-muted-foreground">
+							<Small>© 2025 logisick. All rights reserved.</Small>
 							<a
 								href="#"
 								className="hover:text-foreground transition-colors"
@@ -188,9 +158,9 @@ function Footer() {
 							</a>
 						</div>
 						<div className="flex items-center space-x-4">
-							<div className="flex items-center space-x-2 text-sm text-muted-foreground">
+							<div className="flex items-center space-x-2 text-sm dark:text-muted-foreground">
 								<Package className="h-4 w-4" />
-								<span>Enterprise Ready</span>
+								<Small>Enterprise Ready</Small>
 							</div>
 						</div>
 					</div>
