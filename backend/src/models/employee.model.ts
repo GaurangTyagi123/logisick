@@ -53,6 +53,7 @@ employeeSchema.statics.calcNumberOfEmployees = async function (orgid: string) {
         {
             $match: {
                 orgid: new Types.ObjectId(orgid),
+                deleted: false,
             },
         },
         {
@@ -89,6 +90,7 @@ employeeSchema.pre('save', async function (this: EmpType, next) {
 employeeSchema.post('save', function () {
     (this.constructor as EmpModel).calcNumberOfEmployees(this.orgid as string);
 });
+
 
 const employeeModel = model<EmpDocument, EmpModel>('Employee', employeeSchema);
 export default employeeModel;

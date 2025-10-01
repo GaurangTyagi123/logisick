@@ -237,6 +237,7 @@ export const transferOrg = catchAsync(
             return next(new AppError("Can't find organization specified", 500));
 
         await Emp.delete({ userid: oldUserId, orgid: newOrgData._id });
+        await Emp.updateOne({ userid: newOwnerId, orgid: newOrgData._id });
 
         await Emp.create({
             userid: newOwnerId,

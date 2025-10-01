@@ -23,6 +23,7 @@ import useAuthStore from '@/stores/useAuthStore';
 import ProfileOrgTable from '@/components/ProfileOrgTable';
 import DeleteOrgModal from '@/components/modals/DeleteOrgModal';
 import EditOrgModal from '@/components/modals/EditOrgModal';
+import TransferOwnershipModal from '@/components/modals/TransferOwnershipModal';
 /**
  * @component a page to be used a profile page for users where they can modify their information
  * @returns page/react component
@@ -41,6 +42,7 @@ function Profile() {
     const [open4, setOpen4] = useState<boolean>(false);
     const [openOrgDelete, setOrgDelete] = useState<boolean>(false);
     const [openEdit, setOpenEdit] = useState<boolean>(false);
+    const [openTransfer, setOpenTransfer] = useState<boolean>(false);
 
     const [otp, setOtp] = useState<string>('');
     const [modalPic, setModalPic] = useState<string>(user?.avatar || '');
@@ -131,7 +133,11 @@ function Profile() {
             </div>
             {/* main */}
             <main className="max-w-6xl p-4 w-full flex flex-col-reverse md:grid md:grid-cols-5 gap-2 ">
-                <ProfileOrgTable setDeleteOpen={setOrgDelete} setEditOpen={setOpenEdit} />
+                <ProfileOrgTable
+                    setDeleteOpen={setOrgDelete}
+                    setEditOpen={setOpenEdit}
+                    setOpenTransfer={setOpenTransfer}
+                />
                 <div className="md:min-h-96 gap-2 flex flex-wrap md:flex-nowrap md:flex-col">
                     <Button onClick={() => setOpen3(true)} className="">
                         Change Password
@@ -166,6 +172,10 @@ function Profile() {
                 <ChangePasswordModal open={open3} setOpen={setOpen3} />
                 {/* confirm delete modal */}
                 <EditOrgModal setOpen={setOpenEdit} open={openEdit} />
+                <TransferOwnershipModal
+                    open={openTransfer}
+                    setOpen={setOpenTransfer}
+                />
                 <DeleteMeModal open={open4} setOpen={setOpen4} />
                 <DeleteOrgModal
                     open={openOrgDelete}

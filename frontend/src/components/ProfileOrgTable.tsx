@@ -91,9 +91,11 @@ function roleClasses(role: string): string {
 function ProfileOrgTable({
     setDeleteOpen,
     setEditOpen,
+    setOpenTransfer
 }: {
     setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
     setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpenTransfer: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
     const { data: organizations, isPending } = useGetOrganizations();
 
@@ -108,7 +110,7 @@ function ProfileOrgTable({
                 </CardHeader>
                 <CardContent>
                     <Table>
-                        {!organizations || isPending ? (
+                        {!organizations?.length || isPending ? (
                             <div className="h-full w-full grid place-items-center gap-3">
                                 <H3>You are not in any organizations.</H3>
                                 <Button asChild>
@@ -198,7 +200,7 @@ function ProfileOrgTable({
                                                                 </span>
                                                             </DropdownMenuItem>
                                                             <DropdownMenuSeparator />
-                                                            <DropdownMenuItem className=" p-1 border-b-1 cursor-pointer">
+                                                            <DropdownMenuItem className=" p-1 border-b-1 cursor-pointer" onClick={()=>setOpenTransfer(true)}>
                                                                 <span className="flex gap-2">
                                                                     {/* <HiArrowsRightLeft /> */}
                                                                     <MaterialSymbolsCompareArrowsRounded />

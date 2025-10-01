@@ -43,7 +43,7 @@ function OrganizationModal({
         mutationFn: createOrg,
         onSuccess: () => {
             queryClient.invalidateQueries({
-                queryKey: ['user'],
+                queryKey: ['orgs'],
             });
             toast.success('Organization created successfully', {
                 className: 'toast',

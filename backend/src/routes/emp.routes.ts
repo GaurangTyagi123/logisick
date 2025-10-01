@@ -16,7 +16,7 @@ router.get("/myOrgs", protect, getMyOrgs);
 
 router.post("/sendInvite", protect, sendInvite);
 router.post("/acceptInvite", protect, joinOrg);
-router.post("/getEmps", getEmps);
+router.get("/:orgid",protect, getEmps);
 
 router.patch("/changeRole", protect, changeRole);
 router.patch("/changeManager", protect, changeManager);
