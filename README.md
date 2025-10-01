@@ -96,7 +96,7 @@ Make sure you have installed:
 
 
    ```bash
-   git clone https://github.com/your-username/logisick.git
+   git clone https://github.com/GaurangTyagi123/logisick.git
    cd logisick
 
    ```
@@ -150,13 +150,13 @@ Make sure you have installed:
 ```bash
 
     cd ../frontend
-    npm start
+    npm run dev:react
 
 ```
 
 #### Access the app
 
-> Visit [http://localhost:8000](http://localhost:8000) in your browser.
+> Visit [http://localhost:5173](http://localhost:5173) in your browser.
 
 ----
 
@@ -172,4 +172,4 @@ No permission is granted to use, copy, modify, merge, publish, distribute, subli
 ----
 
 # Contact
-For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](gaurangt.mca25@cs.du.ac.in) or [ravish.mca25@cs.du.ac.in](ravish.mca25@cs.du.ac.in)
+For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](mailto:gaurangt.mca25@cs.du.ac.in) or [ravishr.mca25@cs.du.ac.in](mailto:ravishr.mca25@cs.du.ac.in)
