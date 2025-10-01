@@ -76,7 +76,7 @@
 ---
 ## Documentation
 
-For full API reference and usage examples, see the [API Documentation](https://example.com/api-docs).
+For full API reference and usage examples, see the [API Documentation](https://documenter.getpostman.com/view/47791845/2sB3BLjnwi).
 
 # Getting Started
 
