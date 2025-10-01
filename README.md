@@ -74,6 +74,9 @@
 - **Other Tools:**  REST APIs, Git/GitHub
 
 ---
+## Documentation
+
+For full API reference and usage examples, see the [API Documentation](https://example.com/api-docs).
 
 # Getting Started
 
