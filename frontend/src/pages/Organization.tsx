@@ -77,7 +77,11 @@ function OrgCard({ org, view }: OrgCardProps) {
 		</Card>
 	);
 }
-function Organiztion() {
+/**
+ * @component component which displays all the organizations
+ * @returns react component
+ */
+function Organization() {
 	const [openOrgForm, setOpenOrgForm] = useState(false);
 	const [view, setView] = useState<"grid" | "list">("grid");
 	const navigate = useNavigate();
@@ -161,4 +165,4 @@ function Organiztion() {
 	);
 }
 
-export default Organiztion;
+export default Organization;

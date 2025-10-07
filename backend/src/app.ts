@@ -30,6 +30,7 @@ app.use(express.json());
 // Middleware to parse the cookies sent with the request object
 app.use(cookieParser());
 
+// middleware to parse complex query strings
 app.use(
     (
         req: ExpressTypes.Request,
@@ -79,17 +80,6 @@ app.use(
 
 // Middleware to configure response to cross-origin requests
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
-
-// app.use(
-// 	(
-// 		req: ExpressTypes.Request,
-// 		res: ExpressTypes.Response,
-// 		next: ExpressTypes.NextFn
-// 	) => {
-// 		console.log(req.cookies);
-// 		next();
-// 	}
-// );
 
 // Authentication router
 app.use('/api/v1/auth', authRouter);

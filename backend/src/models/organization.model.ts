@@ -59,7 +59,7 @@ const organizationSchema = new Schema<any, OrgModel>(
         toObject: { virtuals: true },
     }
 );
-
+// index to filter deleted organizations
 organizationSchema.index(
     { owner: 1 },
     { unique: true, partialFilterExpression: { deleted: { $ne: true } } }

@@ -12,15 +12,25 @@ import {
 
 const router = Router();
 
+// end-point to get all the orgs of a particular user
 router.get("/myOrgs", protect, getMyOrgs);
 
+// end-point to invite a user to organization
 router.post("/sendInvite", protect, sendInvite);
+
+// end-point to accept invite to an organization
 router.post("/acceptInvite", protect, joinOrg);
+
+// end-point to get all the employees belonging to a particular organization
 router.get("/:orgid",protect, getEmps);
 
+// end-point to change the role of an employee
 router.patch("/changeRole", protect, changeRole);
+
+// end-point to change manager of an employee
 router.patch("/changeManager", protect, changeManager);
 
+// end-point to delete employee from an organization
 router.delete("/delete", protect, deleteEmp);
 
 export default router;

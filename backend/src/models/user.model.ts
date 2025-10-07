@@ -69,6 +69,7 @@ const userSchema = new Schema<any, UserModel>(
         toObject: { virtuals: true },
     }
 );
+// mongoose delete plugin to implement soft delete 
 // @ts-expect-error: fuck you
 userSchema.plugin(mongooseDelete, {
     deletedAt: true,

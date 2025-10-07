@@ -27,7 +27,12 @@ type OrganizationFormData = {
     description?: string;
     type?: string;
 };
-
+/**
+ * @component a modal for profilepage which prompts user to create their own organization when clicks to do so
+ * @param open a boolean value stating is modal is open
+ * @param setOpen a function to change state of open of modal
+ * @returns gives a components as a create organization modal to put somewhere
+ */
 function OrganizationModal({
     open,
     setOpen,
