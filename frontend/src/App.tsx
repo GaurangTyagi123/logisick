@@ -1,7 +1,6 @@
 import { lazy, Suspense, useEffect } from "react";
 import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
-import { faker } from "@faker-js/faker";
 
 import useModeStore from "@/stores/useModeStore";
 
@@ -24,36 +23,6 @@ const Profile = lazy(() => import("@/pages/Profile"));
 const Organization = lazy(() => import("./pages/Organization"));
 const OrgOverview = lazy(() => import("./pages/OrgOverview"));
 
-const data: DummyOrg[] = [
-	{
-		_id: String(faker.number.bigInt()),
-		name: faker.company.name(),
-		subscription: "Basic",
-		type: "Basic",
-		description: faker.lorem.paragraph(),
-	},
-	{
-		_id: String(faker.number.bigInt()),
-		name: faker.company.name(),
-		subscription: "None",
-		type: "Large-Cap",
-		description: faker.lorem.paragraph(),
-	},
-	{
-		_id: String(faker.number.bigInt()),
-		name: faker.company.name(),
-		subscription: "Pro",
-		type: "Mid-Cap",
-		description: faker.lorem.paragraph(),
-	},
-	{
-		_id: String(faker.number.bigInt()),
-		name: faker.company.name(),
-		subscription: "Basic",
-		type: "Other",
-		description: faker.lorem.paragraph(),
-	},
-];
 
 /**
  * @component a component to serves as base of all pages and handles routing of pages
@@ -96,7 +65,7 @@ function App() {
 							)
 						}
 					>
-						<Route index element={<OrgOverview data={data} />} />
+						<Route index element={<OrgOverview/>} />
 						<Route
 							path="/dashboard/:orgId/analytics"
 							element={<Analytics />}

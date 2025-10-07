@@ -17,6 +17,7 @@ import {
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
 import illus from "@/assets/illus.svg";
+import { Truck, Report } from "@/assets/icons/Homepage";
 
 /**
  * @component a page to be used as home page of app
@@ -113,12 +114,12 @@ function Home() {
 						<div className="flex gap-2 flex-wrap justify-center lg:justify-start">
 							<HexBox
 								heading="Inventory Tracking"
-								icon="truck"
+								icon={<Truck/>}
 								text="Easily track stock levels across multiple locations."
 							/>
 							<HexBox
 								heading="Report & Analytics"
-								icon="report"
+								icon={<Report/>}
 								text="Gain insights with customizable reports & analytics."
 							/>
 						</div>

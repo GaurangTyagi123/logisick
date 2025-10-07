@@ -152,8 +152,8 @@ function OrganizationModal({
                                                 />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {orgTypes.map((type) => (
-                                                    <SelectItem value={type}>
+                                                {orgTypes.map((type,index) => (
+                                                    <SelectItem value={type} key={index}>
                                                         {type}
                                                     </SelectItem>
                                                 ))}

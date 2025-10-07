@@ -1,11 +1,9 @@
 import { PieChart } from "@/components/ui/PieChart";
 import { formatCurrency } from "@/utils/utilfn";
+import { faker } from "@faker-js/faker";
 import { useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-interface OrgOverviewProps {
-	data: DummyOrg[];
-}
 const empData = {
 	labels: ["admin", "manager", "staff"],
 	datasets: [
@@ -26,6 +24,7 @@ const empData = {
 		},
 	],
 };
+
 const inventoryData = {
 	labels: ["inventory1", "inventory2", "inventory3"],
 	datasets: [
@@ -47,7 +46,38 @@ const inventoryData = {
 	],
 };
 
-function OrgOverview({ data }: OrgOverviewProps) {
+const data: DummyOrg[] = [
+	{
+		_id: String(faker.number.bigInt()),
+		name: faker.company.name(),
+		subscription: "Basic",
+		type: "Basic",
+		description: faker.lorem.paragraph(),
+	},
+	{
+		_id: String(faker.number.bigInt()),
+		name: faker.company.name(),
+		subscription: "None",
+		type: "Large-Cap",
+		description: faker.lorem.paragraph(),
+	},
+	{
+		_id: String(faker.number.bigInt()),
+		name: faker.company.name(),
+		subscription: "Pro",
+		type: "Mid-Cap",
+		description: faker.lorem.paragraph(),
+	},
+	{
+		_id: String(faker.number.bigInt()),
+		name: faker.company.name(),
+		subscription: "Basic",
+		type: "Other",
+		description: faker.lorem.paragraph(),
+	},
+];
+
+function OrgOverview() {
 	const { orgId } = useParams();
 	const queryClient = useQueryClient();
 	const user = queryClient.getQueryData<{ user: User }>(["user"]);

@@ -1,7 +1,7 @@
-import { Truck, Report } from "@/assets/icons/Homepage";
+import type {  ReactNode } from "react";
 
 interface HexBoxProps {
-	icon: "truck" | "report";
+	icon: ReactNode;
 	heading: string;
 	text: string;
 }
@@ -23,8 +23,7 @@ function HexBox({ icon, heading, text }: HexBoxProps) {
 			}}
 		>
 			<h3 className="flex text-lg md:text-xl gap-1 items-center font-semibold justify-center king-julian">
-				{icon == "truck" && <Truck />}
-				{icon == "report" && <Report />}
+				{icon}
 				{heading}
 			</h3>
 			<p className="text-center" style={{ fontFamily: "TimesNewRoman" }}>
