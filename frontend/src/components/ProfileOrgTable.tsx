@@ -71,32 +71,20 @@ function roleClasses(role: string): string {
 	}
 }
 
-/**
- * @brief function to give different clasees based on status type
- * @param status type of status of organization
- * @returns string of tailwind classes
- */
-// const getStatusColor = (status: OrgType['status']) => {
-//     switch (status) {
-//         case 'Active':
-//             return 'bg-primary/10 text-primary border-primary/20';
-//         case 'Deactivated':
-//             return 'border-1 border-zinc-400 dark:border-zinc-500 bg-zinc-400 dark:bg-zinc-800';
-//         default:
-//             return 'bg-muted text-muted-foreground';
-//     }
-// };
+
 
 /**
  * @component a table component to display organizations a users is included in along wiht other info of organization
  * @returns react component
  */
 function ProfileOrgTable({
-	setDeleteOpen,
-	setEditOpen,
+    setDeleteOpen,
+    setEditOpen,
+    setOpenTransfer
 }: {
-	setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+    setOpenTransfer: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const { data: organizations, isPending } = useGetOrganizations();
 
@@ -194,7 +182,7 @@ function ProfileOrgTable({
 																organization
 															</DropdownMenuItem>
 															<DropdownMenuSeparator />
-															<DropdownMenuItem className="cursor-pointer">
+															<DropdownMenuItem className="cursor-pointer" onClick={()=>setOpenTransfer(true)}>
 																<Transfer />
 																TRANSFER
 																ownership

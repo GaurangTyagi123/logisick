@@ -120,7 +120,6 @@ export const deleteUser = catchAsync(
 		res: ExpressTypes.Response,
 		next: ExpressTypes.NextFn
 	) => {
-		console.log("getting into controller for user delete");
 		if (!req.user) return next(new AppError("User not authenticated", 401));
 
 		const orgOwner = await Org.findOne({ owner: req.user?._id });

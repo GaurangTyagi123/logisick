@@ -27,7 +27,12 @@ type OrganizationFormData = {
     description?: string;
     type?: string;
 };
-
+/**
+ * @component a modal for profilepage which prompts user to change organization details when clicks to do so
+ * @param open a boolean value stating is modal is open
+ * @param setOpen a function to change state of open of modal
+ * @returns gives a components as a update organization modal to put somewhere
+ */
 function EditOrgModal({
     open,
     setOpen,
@@ -48,6 +53,9 @@ function EditOrgModal({
         onSuccess: () => {
             queryClient.invalidateQueries({
                 queryKey: ['user'],
+            });
+            queryClient.invalidateQueries({
+                queryKey: ['orgs'],
             });
             toast.success('Organization updated successfully', {
                 className: 'toast',
@@ -157,8 +165,8 @@ function EditOrgModal({
                                                 />
                                             </SelectTrigger>
                                             <SelectContent>
-                                                {orgTypes.map((type) => (
-                                                    <SelectItem value={type}>
+                                                {orgTypes.map((type,index) => (
+                                                    <SelectItem value={type} key={index} >
                                                         {type}
                                                     </SelectItem>
                                                 ))}

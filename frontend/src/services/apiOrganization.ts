@@ -67,3 +67,39 @@ export const getAllOrgs = async () => {
         handleError(err);
     }
 };
+export const getAllEmployees = async (orgid: string) => {
+    try {
+        const res = await axinstance.get(`/v1/emp/${orgid}`);
+        console.log(orgid);
+        if (res.status === 200) {
+            return res.data.data.emps;
+        } else {
+            handleError(new Error('There was an error fetching the employees'));
+        }
+    } catch (err) {
+        handleError(err);
+    }
+};
+export const transferOwnership = async ({
+    employee,
+    orgid,
+}: {
+    employee: string;
+    orgid: string;
+}) => {
+    try {
+        const res = await axinstance.patch('/v1/org/transfer', {
+            newOwnerId: employee,
+            orgId: orgid,
+        });
+        if (res.status === 200) {
+            return res.data.data.org;
+        } else {
+            handleError(
+                new Error('There was an error while transfering try again')
+            );
+        }
+    } catch (err) {
+        handleError(err);
+    }
+};

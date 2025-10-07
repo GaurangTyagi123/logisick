@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import BigHeading from "@/components/BigHeading";
 import HexBox from "@/components/HexBox";
+import { Truck, Report } from "@/assets/icons/Homepage";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -17,7 +18,6 @@ import {
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
 import illus from "@/assets/illus.svg";
-import { Truck, Report } from "@/assets/icons/Homepage";
 
 /**
  * @component a page to be used as home page of app

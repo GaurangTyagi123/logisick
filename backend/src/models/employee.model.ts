@@ -43,16 +43,28 @@ const employeeSchema = new Schema<any, EmpModel>(
     { timestamps: true }
 );
 
+// mongoose delete plugin to implement soft delete
 employeeSchema.plugin(MongooseDelete, {
     deletedAt: true,
     deletedBy: false,
     overrideMethods: 'all',
 });
+// static method of employee schema which actually calculate the total number of employees
+/**
+ * @param orgid 
+ * @author Gaurang Tyagi
+ * @brief calculate the total number of employees belonging to organization with ID:orgid
+ * @description It uses aggregate pipeline which includes:
+ *          $match stage to find all the employees belonging to organization with ID:orgid
+ *          $group stage  to group the result of match stage and calculate the number of employees
+ * 
+ */
 employeeSchema.statics.calcNumberOfEmployees = async function (orgid: string) {
     const stats = await this.aggregate([
         {
             $match: {
                 orgid: new Types.ObjectId(orgid),
+                deleted: false,
             },
         },
         {
@@ -86,6 +98,7 @@ employeeSchema.pre('save', async function (this: EmpType, next) {
         next(error as Error);
     }
 });
+// middleware to calculate the total number of employees after insertion of an employee
 employeeSchema.post('save', function () {
     (this.constructor as EmpModel).calcNumberOfEmployees(this.orgid as string);
 });
