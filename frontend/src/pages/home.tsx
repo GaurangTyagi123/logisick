@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import BigHeading from "@/components/BigHeading";
 import HexBox from "@/components/HexBox";
+import { Truck, Report } from "@/assets/icons/Homepage";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -114,12 +115,12 @@ function Home() {
 					<div className="flex gap-2 flex-wrap justify-center lg:justify-start">
 						<HexBox
 							heading="Inventory Tracking"
-							icon="truck"
+							icon={<Truck/>}
 							text="Easily track stock levels across multiple locations."
 						/>
 						<HexBox
 							heading="Report & Analytics"
-							icon="report"
+							icon={<Report/>}
 							text="Gain insights with customizable reports & analytics."
 						/>
 					</div>

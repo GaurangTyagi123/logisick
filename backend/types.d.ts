@@ -1,9 +1,13 @@
 // IMP Express Types
 namespace ExpressTypes {
-    type Request = import('express').Request;
+    type Req = import('express').Request;
     type Response = import('express').Response;
     type NextFn = import('express').NextFn;
 
+    interface Request extends Req {
+        _parsedUrl?: { query?: string };
+        parsedQuery?: import('qs').ParsedQs;
+    }
     interface UserRequest extends Request {
         user?: UserType;
     }

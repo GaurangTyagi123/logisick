@@ -8,7 +8,7 @@ if (workbox) {
 	workbox.setConfig({ debug: false });
 	workbox.routing.registerRoute(
 		({ request }) =>
-			request.destination === "script" || request.destination === "style",
+			request.destination === "style",
 		new workbox.strategies.NetworkFirst({
 			cacheName: "static-resources",
 		})

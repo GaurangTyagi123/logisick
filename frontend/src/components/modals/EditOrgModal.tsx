@@ -49,6 +49,9 @@ function EditOrgModal({
             queryClient.invalidateQueries({
                 queryKey: ['user'],
             });
+            queryClient.invalidateQueries({
+                queryKey: ['orgs'],
+            });
             toast.success('Organization updated successfully', {
                 className: 'toast',
             });

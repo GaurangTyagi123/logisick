@@ -8,6 +8,7 @@ import crypto from 'crypto';
 import { redisClient } from '../app';
 import Email from '../utils/sendEmail';
 import { Types } from 'mongoose';
+import ApiFilter from '../utils/apiFilter';
 
 // Function send emp invite to join org (by email id) (by owner/admin)
 export const sendInvite = catchAsync(
@@ -174,7 +175,7 @@ export const getEmps = catchAsync(
         const { orgid } = req.params;
         if (!orgid) return next(new AppError('orgid field is requied', 404));
 
-        const emps = await Emp.aggregate([
+        const query = Emp.aggregate([
             {
                 $match: {
                     orgid: new Types.ObjectId(orgid),
@@ -191,19 +192,38 @@ export const getEmps = catchAsync(
                     from: 'users',
                     localField: 'userids',
                     foreignField: '_id',
-					as: 'users',
+                    as: 'users',
+                },
+            },
+            {
+                $unwind: {
+                    path: '$users',
+                    preserveNullAndEmptyArrays: false,
+                },
+            },
+            {
+                $replaceRoot: {
+                    newRoot: {
+                        $mergeObjects: ['$users'],
+                    },
                 },
             },
         ]);
-        if (emps && emps[0]?.users)
+        const emps = await new ApiFilter(query, req.parsedQuery!)
+            .filter()
+            .sort()
+            .project()
+            .paginate().query;
+        if (emps.length)
             return res.status(200).json({
                 status: 'success',
                 data: {
-                    emps: emps[0]?.users.map((user:UserType) => {
+                    emps: emps.map((user: UserType) => {
                         return {
                             _id: user._id,
-							name: user.name,
-							email : user.email
+                            name: user.name,
+                            email: user.email,
+                            avatar: user.avatar,
                         };
                     }),
                 },
@@ -226,7 +246,7 @@ export const getMyOrgs = catchAsync(
         res: Response,
         _next: NextFunction
     ) => {
-        const orgs = await Emp.aggregate([
+        const query = Emp.aggregate([
             {
                 $match: {
                     userid: new Types.ObjectId(req.user?._id),
@@ -263,11 +283,16 @@ export const getMyOrgs = catchAsync(
                 },
             },
         ]);
+        const orgs = await new ApiFilter(query, req.parsedQuery!)
+            .filter()
+            .sort()
+            .project()
+            .paginate().query;
 
         return res.status(200).json({
             status: 'success',
             data: {
-                orgs: orgs.map((org) => {
+                orgs: orgs.map((org: OrgType & EmpType) => {
                     return {
                         _id: org._id,
                         name: org.name,
