@@ -481,38 +481,3 @@ export const deleteEmp = catchAsync(
 		return res.status(204).end();
 	}
 );
-
-// TODO employees under me (orgid)
-// role : owner => all
-// role : manager => staffs , owner
-// role : staff => empty , mnager
-export const empUnderMe = catchAsync(
-	async (
-		req: ExpressTypes.UserRequest,
-		_res: Response,
-		next: NextFunction
-	) => {
-		const { orgid } = req.body;
-		if (!orgid) return next(new AppError("All fields are required", 404));
-
-		const meEmp = await Emp.findOne({ orgid, userid: req.user?._id });
-		if (!meEmp)
-			return next(
-				new AppError(
-					"You are not an employee of this organization",
-					403
-				)
-			);
-		
-		switch (meEmp.role){
-			case "Owner":
-				break;
-			case "Manager":
-				break;
-			case "Staff":
-				break;
-			default:
-				
-		}
-	}
-);
