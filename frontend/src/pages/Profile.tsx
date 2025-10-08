@@ -84,7 +84,7 @@ function Profile() {
 			<div className="max-w-6xl p-4 w-full grid place-items-center md:flex gap-4 rounded-2xl shadow-2xl bg-white dark:bg-ls-bg-dark-800">
 				<div className="w-40 h-40 grid place-items-center relative">
 					<UserAvatar
-						customSeed={user?.avatar || "12345678"}
+						customSeed={user?.avatar || user?.email as string}
 						className="w-40 h-40 ring-4 ring-offset-2 ring-ls-sec-500"
 					/>
 					<Button
@@ -92,7 +92,7 @@ function Profile() {
 						className="absolute right-2 bottom-2 rounded-full"
 						onClick={() => {
 							setOpenChangeProfile(true);
-							setModalPic(user?.avatar || "12345678");
+							setModalPic(user?.avatar || user?.email as string);
 						}}
 					>
 						<Edit className="w-5 h-5" />

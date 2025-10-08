@@ -64,6 +64,11 @@ organizationSchema.index(
     { owner: 1 },
     { unique: true, partialFilterExpression: { deleted: { $ne: true } } }
 );
+organizationSchema.virtual("role", {
+    localField: 'owner',
+    foreignField: 'userid',
+    ref : "Employee"
+})
 
 // plugin for soft delete
 organizationSchema.plugin(mongooseDelete, {

@@ -24,6 +24,7 @@ interface OrgCardProps {
 		_id: Org["_id"];
 		name: Org["name"];
 		description: Org["description"];
+		role : "Staff" | "Manager" | "Owner" | "Admin"
 	};
 	view: "grid" | "list";
 }
@@ -56,7 +57,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 						"font-semibold shadow-md ml-auto"
 					)}
 				>
-					Owner
+					{org.role}
 				</Badge>
 				{view === "list" && (
 					<Button asChild variant={"link"}>
