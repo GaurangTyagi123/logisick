@@ -90,7 +90,7 @@ function ProfileOrgTable({
 
 	return (
 		<div className="col-span-1 md:col-span-4">
-			<Card className="bg-white dark:bg-zinc-800 h-full">
+			<Card className="bg-white dark:bg-ls-bg-dark-800 h-full">
 				<CardHeader>
 					<CardTitle className="flex items-center gap-2">
 						<Shield className="h-5 w-5" />
@@ -168,7 +168,7 @@ function ProfileOrgTable({
 														<DropdownMenuTrigger>
 															<Setting className="w-5 h-5 outline rounded-sm cursor-pointer outline-offset-2" />
 														</DropdownMenuTrigger>
-														<DropdownMenuContent className="font-semibold bg-zinc-100 dark:bg-zinc-800">
+														<DropdownMenuContent className="font-semibold bg-ls-bg-100 dark:bg-ls-bg-dark-800">
 															<DropdownMenuItem
 																className="cursor-pointer"
 																onClick={() =>

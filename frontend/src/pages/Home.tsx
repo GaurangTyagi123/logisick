@@ -25,7 +25,7 @@ import illus from "@/assets/illus.svg";
  */
 function Home() {
 	return (
-		<div className="w-full px-4 grid gap-3 h-auto bg-zinc-200 dark:bg-zinc-900">
+		<div className="w-full px-4 grid gap-3 h-auto bg-ls-bg-200 dark:bg-ls-bg-dark-900">
 			{/* topbar */}
 			<Navbar hide={{ logo: true }} />
 			{/* tabs bar */}
@@ -56,26 +56,26 @@ function Home() {
 				{/* tab-bar in large screens */}
 				<div className="hidden gap-2 justify-end mr-5 md:flex">
 					{/* features */}
-					<Button className="text-xl" variant={"link"}>
+					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
 						Product
 					</Button>
 					{/* discord link */}
-					<Button className="text-xl" variant={"link"}>
+					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
 						Community
 					</Button>
 					{/* documentations */}
-					<Button className="text-xl" variant={"link"} asChild>
+					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"} asChild>
 						<Link to={"/docs"}>Docs</Link>
 					</Button>
 					{/* api/feature pricing */}
-					<Button className="text-xl" variant={"link"}>
+					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
 						Pricing
 					</Button>
-					<Button className="text-xl" variant={"link"}>
+					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
 						Contact
 					</Button>
 					{/* social links */}
-					<Button className="text-xl" variant={"link"}>
+					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
 						Link
 					</Button>
 				</div>
@@ -102,11 +102,11 @@ function Home() {
 							Track, manage and analyze your inventory with ease.
 						</p>
 						<div className="flex gap-2 justify-center lg:justify-start">
-							<Button className="shadow-xl bg-green-500 hover:bg-green-600  dark:bg-green-500 border-1 border-black">
+							<Button className="shadow-xl text-black bg-ls-sec-500 hover:bg-ls-sec-600  dark:bg-ls-sec-500">
 								<Star />
 								Get Started
 							</Button>
-							<Button className="shadow-xl border-1 border-black">
+							<Button className="shadow-xl">
 								<BookOpen />
 								Learn More
 							</Button>

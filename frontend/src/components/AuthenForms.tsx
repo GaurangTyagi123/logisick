@@ -178,7 +178,7 @@ export function Login({ setFormType }: FormProps) {
 				type="button"
 				className="font-semibold"
 			>
-				<Google />
+				<Google className="ring-4 ring-white rounded-full bg-white"/>
 				<span>Login with Google account</span>
 			</Button>
 		</form>
@@ -409,7 +409,7 @@ export function Register({ setFormType }: FormProps) {
 				type="button"
 				className="font-semibold"
 			>
-				<Google />
+				<Google className="ring-4 ring-white rounded-full bg-white"/>
 				<span>Register with Google account</span>
 			</Button>
 		</form>

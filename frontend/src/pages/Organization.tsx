@@ -45,7 +45,7 @@ function roleClasses(role: string): string {
 
 function OrgCard({ org, view }: OrgCardProps) {
 	return (
-		<Card className="bg-zinc-300 dark:bg-zinc-800 hover:border-zinc-500 transition-colors duration-100">
+		<Card className="bg-ls-bg-300 dark:bg-ls-bg-dark-800 hover:border-zinc-500 transition-colors duration-100">
 			<CardHeader className="flex items-center">
 				<CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap">
 					<Large>{org.name}</Large>
@@ -98,7 +98,7 @@ function Organization() {
 
 	return (
 		<>
-			<div className="w-full flex flex-col gap-3 min-h-dvh dark:bg-zinc-900 relative">
+			<div className="w-full flex flex-col gap-3 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 relative">
 				<Navbar />
 
 				<Separator />

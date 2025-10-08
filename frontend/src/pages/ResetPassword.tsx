@@ -85,7 +85,7 @@ function ResetPassword() {
 	}, [resetToken, navigate]);
 	
 	return (
-		<div className="w-full px-4 flex flex-col h-auto min-h-screen dark:bg-zinc-900">
+		<div className="w-full px-4 flex flex-col h-auto min-h-screen bg-ls-bg-200 dark:bg-ls-bg-dark-900">
 			<Navbar
 				hide={{
 					userButton: true,

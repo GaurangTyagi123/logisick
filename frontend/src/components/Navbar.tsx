@@ -50,7 +50,7 @@ function Navbar({
                         <img
                             src={logo}
                             alt="applogo"
-                            className="h-full bg-zinc-900 p-0.5 rounded-md"
+                            className="h-full bg-ls-bg-900 p-0.5 rounded-md"
                         />
                         <Large>LogiSick</Large>
                     </Link>

@@ -1,12 +1,19 @@
+import clsx from "clsx";
+
 /**
- * @component a component for big heading of the project name 
+ * @component a component for big heading of the project name
  * @returns a component for use
  */
-function BigHeading() {
+function BigHeading({ small }: { small?: boolean }) {
 	return (
-		<span className="select-none text-6xl ml-0 king-julian md:text-[19vh] md:ml-15 text-black dark:text-white ">
+		<h1
+			className={clsx(
+				"select-none text-6xl ml-0 king-julian md:ml-15 text-black dark:text-white",
+				small ? "ms:text-6xl" : "md:text-9xl "
+			)}
+		>
 			LOG/SICK
-		</span>
+		</h1>
 	);
 }
 

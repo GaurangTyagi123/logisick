@@ -18,7 +18,7 @@ function Authenticate() {
 					loginRegisterButton: true,
 				}}
 			/>
-			<BigHeading />
+			<BigHeading small/>
 			<div className="grid p-4 place-items-center w-full">
 				{formType === "login" ? (
 					<Login setFormType={setFormType} />

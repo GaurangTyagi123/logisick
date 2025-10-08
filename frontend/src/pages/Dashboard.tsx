@@ -99,7 +99,7 @@ function Dashboard() {
         <div>
             <SidebarProvider>
                 <CustomSidebar />
-                <main className="p-2 w-full h-screen bg-zinc-200 dark:bg-zinc-900">
+                <main className="p-2 w-full h-screen bg-ls-bg-200 dark:bg-ls-bg-dark-900">
                     <div className="flex gap-2 items-center">
                         <SidebarTrigger
                             className="p-2 h-10 w-10 rounded-xl"

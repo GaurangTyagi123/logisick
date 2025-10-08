@@ -12,7 +12,7 @@ import { H1, Large } from "@/components/ui/Typography";
  */
 function Notfound() {
 	return (
-		<div className="h-screen w-full flex flex-col justify-between items-center px-4 bg-zinc-300 dark:bg-zinc-900">
+		<div className="h-screen w-full flex flex-col justify-between items-center px-4 bg-ls-bg-300 dark:bg-ls-bg-dark-900">
 			<Navbar hide={{ userButton: true, loginRegisterButton: true }} />
 			<div className="grid place-items-center grid-cols-1 md:grid-cols-5 container">
 				<Button

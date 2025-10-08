@@ -16,7 +16,7 @@ function Footer() {
 	const listContentClass =
 		"dark:text-muted-foreground hover:text-foreground transition-colors";
 	return (
-		<footer className="border-t border-border bg-white dark:bg-zinc-800">
+		<footer className="border-t border-border bg-ls-bg-100 dark:bg-ls-bg-dark-800">
 			<div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
 				<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
 					{/* Company Info */}
