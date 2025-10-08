@@ -36,10 +36,11 @@ function Profile() {
 		| undefined;
 	const user = userData?.user;
 
-	const [open1, setOpen1] = useState<boolean>(false);
-	const [open2, setOpen2] = useState<boolean>(false);
-	const [open3, setOpen3] = useState<boolean>(false);
-	const [open4, setOpen4] = useState<boolean>(false);
+	
+	const [openChangeProfile, setOpenChangeProfile] = useState<boolean>(false);
+	const [openOtp, setOpenOtp] = useState<boolean>(false);
+	const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
+	const [openDeleteMe, setOpenDeleteMe] = useState<boolean>(false);
 	const [openOrgDelete, setOrgDelete] = useState<boolean>(false);
 	const [openEdit, setOpenEdit] = useState<boolean>(false);
 	const [openTransfer, setOpenTransfer] = useState<boolean>(false);
@@ -50,7 +51,7 @@ function Profile() {
 	if (!user) <Navigate to={"/"} />;
 
 	useEffect(() => {
-		if (!user?.isVerified && !open2 && !isVerifingEmail) {
+		if (!user?.isVerified && !openOtp && !isVerifingEmail) {
 			console.log(user?.isVerified, isVerifingEmail);
 			const warning = toast.warning(
 				<div className="grid h-auto">
@@ -61,7 +62,7 @@ function Profile() {
 						onClick={async () => {
 							const res = await verifyEmail({});
 							if (res == "sent") {
-								setOpen2(true);
+								setOpenOtp(true);
 								setOtp("");
 							}
 							toast.dismiss(warning);
@@ -74,7 +75,7 @@ function Profile() {
 			);
 		}
 		return toast.dismiss;
-	}, [isVerifingEmail, user?.isVerified, verifyEmail, open2]);
+	}, [isVerifingEmail, user?.isVerified, verifyEmail, openOtp]);
 
 	return (
 		<div className="w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative bg-ls-bg-200 dark:bg-ls-bg-dark-900">
@@ -90,7 +91,7 @@ function Profile() {
 						size={"sm"}
 						className="absolute right-2 bottom-2 rounded-full"
 						onClick={() => {
-							setOpen1(true);
+							setOpenChangeProfile(true);
 							setModalPic(user?.avatar || "12345678");
 						}}
 					>
@@ -112,7 +113,7 @@ function Profile() {
 									onClick={async () => {
 										const res = await verifyEmail({});
 										if (res == "sent") {
-											setOpen2(true);
+											setOpenOtp(true);
 											setOtp("");
 										}
 									}}
@@ -139,12 +140,12 @@ function Profile() {
 					setOpenTransfer={setOpenTransfer}
 				/>
 				<div className="md:min-h-96 gap-2 flex flex-wrap md:flex-nowrap md:flex-col">
-					<Button onClick={() => setOpen3(true)} className="">
+					<Button onClick={() => setOpenChangePassword(true)} className="">
 						Change Password
 					</Button>
 					<Button
 						variant={"destructive"}
-						onClick={() => setOpen4(true)}
+						onClick={() => setOpenDeleteMe(true)}
 					>
 						<Delete className="h-full aspect-square" />
 						Delete Me
@@ -156,27 +157,27 @@ function Profile() {
 			{/* profile-change modal */}
 			<Suspense>
 				<ProfilePicChangeModal
-					open={open1}
-					setOpen={setOpen1}
+					open={openChangeProfile}
+					setOpen={setOpenChangeProfile}
 					modalPic={modalPic}
 					setModalPic={setModalPic}
 				/>
 				{/* otp modal */}
 				<OtpModal
-					open={open2}
-					setOpen={setOpen2}
+					open={openOtp}
+					setOpen={setOpenOtp}
 					otp={otp}
 					setOtp={setOtp}
 				/>
 				{/* change password modal */}
-				<ChangePasswordModal open={open3} setOpen={setOpen3} />
+				<ChangePasswordModal open={openChangePassword} setOpen={setOpenChangePassword} />
 				{/* confirm delete modal */}
 				<EditOrgModal setOpen={setOpenEdit} open={openEdit} />
 				<TransferOwnershipModal
 					open={openTransfer}
 					setOpen={setOpenTransfer}
 				/>
-				<DeleteMeModal open={open4} setOpen={setOpen4} />
+				<DeleteMeModal open={openDeleteMe} setOpen={setOpenDeleteMe} />
 				<DeleteOrgModal
 					open={openOrgDelete}
 					setOpen={setOrgDelete}
