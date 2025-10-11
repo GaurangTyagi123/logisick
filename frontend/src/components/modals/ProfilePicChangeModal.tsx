@@ -64,7 +64,7 @@ function ProfilePicChangeModal({
 	 */
 	function handleProfilePicChange() {
 		if (modalPic.length > 0 && modalPic !== user?.avatar) {
-			updateUser({ avatar: modalPic });
+			updateUser({ avatar: modalPic,name:modalPic });
 			setOpen(false);
 		} else {
 			toast.error("Changed avatar can't be same or empty", {
