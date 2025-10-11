@@ -179,13 +179,11 @@ function ProfileOrgTable({
 															>
 																<Edit />
 																EDIT
-																organization
 															</DropdownMenuItem>
 															<DropdownMenuSeparator />
 															<DropdownMenuItem className="cursor-pointer" onClick={()=>setOpenTransfer(true)}>
 																<Transfer />
 																TRANSFER
-																ownership
 															</DropdownMenuItem>
 															<DropdownMenuSeparator />
 															<DropdownMenuItem
@@ -199,7 +197,6 @@ function ProfileOrgTable({
 																<Delete className="text-red-500" />
 																<Small className="text-red-500">
 																	DELETE
-																	organization
 																</Small>
 															</DropdownMenuItem>
 															<DropdownMenuSeparator />

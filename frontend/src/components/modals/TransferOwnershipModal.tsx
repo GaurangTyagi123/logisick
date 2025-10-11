@@ -57,7 +57,7 @@ function TransferOwnershipModal({
     });
 
     const onSubmit = (data: OrganizationFormData) => {
-        if (org?._id) transferOwnershipFn({ ...data, orgid: org?._id });
+        if (org?._id) transferOwnershipFn({ ...data });
         setOpen(false);
     };
     return (
@@ -76,7 +76,7 @@ function TransferOwnershipModal({
                             htmlFor="Type"
                             className="grid gap-4 mt-3"
                         >
-                            Type
+                            Employees
                             <div className="flex items-center justify-between w-full gap-1">
                                 <Controller
                                     name="employee"

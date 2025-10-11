@@ -910,7 +910,9 @@ const organization_data = [
 mongoose.connect('mongodb://0.0.0.0:27017/LogiSick');
 export const import_orgs = async () => {
     console.log('IMPORTING ORGS...');
-    await Organization.create(organization_data);
+    for (const data of organization_data) {
+        await Organization.create(data);
+    }
     process.exit();
 };
 export const delete_orgs = async () => {

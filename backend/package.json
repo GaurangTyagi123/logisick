@@ -68,11 +68,13 @@
 		"jsonwebtoken": "^9.0.2",
 		"mongoose": "^8.17.2",
 		"mongoose-delete": "^1.0.2",
+		"nanoid": "^5.1.6",
 		"nodemailer": "^7.0.5",
 		"passport": "^0.7.0",
 		"passport-google-oauth2": "^0.2.0",
 		"qs": "^6.14.0",
 		"redis": "^5.8.2",
+		"slugify": "^1.6.6",
 		"validator": "^13.15.15"
 	}
 }

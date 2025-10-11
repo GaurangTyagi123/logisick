@@ -70,7 +70,7 @@ const userSchema = new Schema<any, UserModel>(
     }
 );
 // mongoose delete plugin to implement soft delete 
-// @ts-expect-error: fuck you
+// @ts-expect-error: NA
 userSchema.plugin(mongooseDelete, {
     deletedAt: true,
     deletedBy: false,

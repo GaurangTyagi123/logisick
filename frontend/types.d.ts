@@ -20,10 +20,20 @@ type Org = {
 	deleted?: boolean;
 	members?: number;
 	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
+	slug: string;
 	createdAt: string;
 	updatedAt: string;
 	deletedAt?: string;
 };
+type Emp = {
+	_id: ObjectId;
+	role: string;
+	user: {
+		name: string;
+		email: string;
+		avatar: string;
+	}
+}
 
 type DummyOrg = {
 	_id: string;

@@ -112,20 +112,19 @@ export const joinOrg = catchAsync(
         if (!token) return next(new AppError('Token not found', 404));
         if (!req.user) return next(new AppError('Unauthenticated', 400));
 
-		if (!req.user.isVerified)
-			return next(
-				new AppError(
-					"User have to be verified to join organiation",
-					403
-				)
-			);
-		const {
-			token: inviteToken,
-			orgid,
-			role,
-			managerid,
-		} = await redisClient.hGetAll(req.user.email);
-
+        if (!req.user.isVerified)
+            return next(
+                new AppError(
+                    'User have to be verified to join organiation',
+                    403
+                )
+            );
+        const {
+            token: inviteToken,
+            orgid,
+            role,
+            managerid,
+        } = await redisClient.hGetAll(req.user.email);
 
         if (!role || !orgid || !inviteToken || token.trim() !== inviteToken)
             return next(new AppError('User not invited in organization', 400));
@@ -184,50 +183,42 @@ export const getEmps = catchAsync(
                 },
             },
             {
-                $group: {
-                    _id: '$orgid',
-                    userids: { $addToSet: '$userid' },
-                },
-            },
-            {
                 $lookup: {
                     from: 'users',
-                    localField: 'userids',
+                    localField: 'userid',
                     foreignField: '_id',
-                    as: 'users',
-                },
+                    as : 'user'
+                }
+            },
+            {
+                $project: {
+                    role : 1,
+                    user: {
+                        name: 1,
+                        email: 1,
+                        avatar: 1
+                    }
+                }
             },
             {
                 $unwind: {
-                    path: '$users',
+                    path: '$user',
                     preserveNullAndEmptyArrays: false,
                 },
-            },
-            {
-                $replaceRoot: {
-                    newRoot: {
-                        $mergeObjects: ['$users'],
-                    },
-                },
-            },
+            }
         ]);
         const emps = await new ApiFilter(query, req.parsedQuery!)
             .filter()
             .sort()
             .project()
-            .paginate().query;
-        if (emps.length)
+            .paginate()
+            .query
+        if (emps)
             return res.status(200).json({
                 status: 'success',
+                results: emps.length,
                 data: {
-                    emps: emps.map((user: UserType) => {
-                        return {
-                            _id: user._id,
-                            name: user.name,
-                            email: user.email,
-                            avatar: user.avatar,
-                        };
-                    }),
+                    emps
                 },
             });
         else {
@@ -293,6 +284,7 @@ export const getMyOrgs = catchAsync(
 
         return res.status(200).json({
             status: 'success',
+            results: orgs.length,
             data: {
                 orgs: orgs.map((org: OrgType & EmpType) => {
                     return {
@@ -303,6 +295,7 @@ export const getMyOrgs = catchAsync(
                         role: org.role,
                         owner: org.owner,
                         admin: org.admin,
+                        slug: org.slug,
                         subscription: org.subscription,
                         totalEmployees: org.totalEmployees,
                         createdAt: org.createdAt,
@@ -343,32 +336,32 @@ export const changeRole = catchAsync(
             manager?: ObjectId;
         } = {};
 
-		if (newRole.trim() === "Manager") {
-			dataToUpdate.role = "Manager";
-			dataToUpdate.manager = req.user?._id;
-		} else if (newRole.trim() === "Staff") {
-			// TODO check if prev its manager
-			dataToUpdate.role = "Staff";
-			if (!managerid)
-				return next(new AppError("Manager field is required", 404));
-			const isManager = await Emp.findOne({
-				orgid: org._id,
-				userid: managerid,
-				role: "Manager",
-			});
-			if (!isManager)
-				return next(new AppError("Not an existing manager", 404));
-			else dataToUpdate.manager = managerid;
-		} else if (newRole.trim() === "Admin") {
-			if (org.owner !== req.user?._id)
-				return next(
-					new AppError("Not authorised to assign admin", 403)
-				);
-			dataToUpdate.role = "Admin";
-			dataToUpdate.manager = req.user?._id;
-		} else {
-			return next(new AppError("Not a valid role change", 400));
-		}
+        if (newRole.trim() === 'Manager') {
+            dataToUpdate.role = 'Manager';
+            dataToUpdate.manager = req.user?._id;
+        } else if (newRole.trim() === 'Staff') {
+            // TODO check if prev its manager
+            dataToUpdate.role = 'Staff';
+            if (!managerid)
+                return next(new AppError('Manager field is required', 404));
+            const isManager = await Emp.findOne({
+                orgid: org._id,
+                userid: managerid,
+                role: 'Manager',
+            });
+            if (!isManager)
+                return next(new AppError('Not an existing manager', 404));
+            else dataToUpdate.manager = managerid;
+        } else if (newRole.trim() === 'Admin') {
+            if (org.owner !== req.user?._id)
+                return next(
+                    new AppError('Not authorised to assign admin', 403)
+                );
+            dataToUpdate.role = 'Admin';
+            dataToUpdate.manager = req.user?._id;
+        } else {
+            return next(new AppError('Not a valid role change', 400));
+        }
 
         const newEmp = await Emp.findOneAndUpdate(
             {

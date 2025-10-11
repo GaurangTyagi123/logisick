@@ -56,7 +56,7 @@ function App() {
 					/>
 					{/* path for all/specific dashboard */}
 					<Route
-						path="/dashboard/:orgId"
+						path="/dashboard/:orgSlug"
 						element={
 							user ? (
 								<Dashboard />
@@ -67,19 +67,19 @@ function App() {
 					>
 						<Route index element={<OrgOverview/>} />
 						<Route
-							path="/dashboard/:orgId/analytics"
+							path="/dashboard/:orgSlug/analytics"
 							element={<Analytics />}
 						/>
 						<Route
-							path="/dashboard/:orgId/user-role"
+							path="/dashboard/:orgSlug/user-role"
 							element={<UserManagement />}
 						/>
 						<Route
-							path="/dashboard/:orgId/product-management"
+							path="/dashboard/:orgSlug/product-management"
 							element={<ProductManagement />}
 						/>
 						<Route
-							path="/dashboard/:orgId/order-sales"
+							path="/dashboard/:orgSlug/order-sales"
 							element={<OrderSales />}
 						/>
 					</Route>

@@ -40,7 +40,7 @@ function OrganizationModal({
     open: boolean;
     setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-    const { register, handleSubmit, formState, control } =
+    const { register, handleSubmit, formState, control,reset } =
         useForm<OrganizationFormData>();
     const { errors } = formState;
     const queryClient = useQueryClient();
@@ -57,6 +57,9 @@ function OrganizationModal({
         onError: (err) => {
             toast.error(err.message);
         },
+        onSettled: () => {
+            reset();
+        }
     });
 
     const onSubmit = (data: OrganizationFormData) => {

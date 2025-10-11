@@ -1,6 +1,5 @@
 import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
 import OrganizationModal from "@/components/modals/CreateOrgModal";
-import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import {
@@ -10,7 +9,6 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Separator } from "@/components/ui/separator";
 import { H2, Large, Muted, Small } from "@/components/ui/Typography";
 import useGetOrganizations from "@/hooks/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
@@ -24,7 +22,8 @@ interface OrgCardProps {
 		_id: Org["_id"];
 		name: Org["name"];
 		description: Org["description"];
-		role : "Staff" | "Manager" | "Owner" | "Admin"
+		role: "Staff" | "Manager" | "Owner" | "Admin"
+		slug: string;
 	};
 	view: "grid" | "list";
 }
@@ -61,7 +60,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 				</Badge>
 				{view === "list" && (
 					<Button asChild variant={"link"}>
-						<Link to={`/dashboard/${org?._id}`}>View</Link>
+						<Link to={`/dashboard/${org?.slug}`}>View</Link>
 					</Button>
 				)}
 			</CardHeader>
@@ -71,7 +70,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 			{view === "grid" && (
 				<CardFooter className="flex justify-end">
 					<Button asChild>
-						<Link to={`/dashboard/${org?._id}`}>View</Link>
+						<Link to={`/dashboard/${org?.slug}`}>View</Link>
 					</Button>
 				</CardFooter>
 			)}
@@ -100,9 +99,7 @@ function Organization() {
 	return (
 		<>
 			<div className="w-full flex flex-col gap-3 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 relative">
-				<Navbar />
-
-				<Separator />
+				
 				<div className="flex flex-col sm:flex-row justify-between items-center king-julian md:px-4 gap-2 px-2">
 					<H2>Organizations</H2>
 					<div className="flex gap-2 justify-between w-full sm:w-fit sm:justify-center">

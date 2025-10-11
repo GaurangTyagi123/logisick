@@ -18,28 +18,28 @@ import { Link, Outlet, useParams } from 'react-router-dom';
 import { useState } from 'react';
 
 function CustomSidebar() {
-    const { orgId } = useParams();
+    const { orgSlug } = useParams();
     const [pathName, setPathName] = useState('overview');
     const sidebarData = [
-        { name: 'Overview', href: `/dashboard/${orgId}`, id: 'overview' },
+        { name: 'Overview', href: `/dashboard/${orgSlug}`, id: 'overview' },
         {
             name: 'Analytics &  Reporting',
-            href: `/dashboard/${orgId}/analytics`,
+            href: `/dashboard/${orgSlug}/analytics`,
             id: 'analytics',
         },
         {
             name: 'User & Role',
-            href: `/dashboard/${orgId}/user-role`,
+            href: `/dashboard/${orgSlug}/user-role`,
             id: 'user-role',
         },
         {
             name: 'Product Management',
-            href: `/dashboard/${orgId}/product-management`,
+            href: `/dashboard/${orgSlug}/product-management`,
             id: 'product-management',
         },
         {
             name: 'Order & Sales',
-            href: `/dashboard/${orgId}/order-sales`,
+            href: `/dashboard/${orgSlug}/order-sales`,
             id: 'order-sales',
         },
     ];
@@ -98,8 +98,8 @@ function Dashboard() {
     return (
         <div>
             <SidebarProvider>
-                <CustomSidebar />
-                <main className="p-2 w-full h-screen bg-ls-bg-200 dark:bg-ls-bg-dark-900">
+                <CustomSidebar/>
+                <main className="flex-1 p-2 h-full bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-64">
                     <div className="flex gap-2 items-center">
                         <SidebarTrigger
                             className="p-2 h-10 w-10 rounded-xl"
@@ -110,7 +110,7 @@ function Dashboard() {
                         </Button>
                         <Navbar hide={{ logo: true }} />
                     </div>
-                    <div className="p-4 m-5 king-julian md:h-10/12 h-screen  overflow-y-auto bg-zinc-300 dark:bg-zinc-900">
+                    <div className="m-5 p-4 king-julian flex flex-col  h-full bg-zinc-300 dark:bg-zinc-900">
                         <Outlet />
                     </div>
                 </main>

@@ -1,5 +1,7 @@
 import { Schema, model, Model } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
+import slugify from 'slugify';
+import {nanoid} from 'nanoid'
 
 export interface OrgDocument extends OrgType, Document {
     delete(): Promise<OrgDocument>; // soft delete
@@ -29,7 +31,7 @@ const organizationSchema = new Schema<any, OrgModel>(
         },
         totalEmployees: {
             type: Number,
-            default : 0
+            default: 0,
         },
         type: {
             type: String,
@@ -52,6 +54,7 @@ const organizationSchema = new Schema<any, OrgModel>(
             required: true,
             default: 'None',
         },
+        slug: String,
     },
     {
         timestamps: true,
@@ -64,11 +67,6 @@ organizationSchema.index(
     { owner: 1 },
     { unique: true, partialFilterExpression: { deleted: { $ne: true } } }
 );
-organizationSchema.virtual("role", {
-    localField: 'owner',
-    foreignField: 'userid',
-    ref : "Employee"
-})
 
 // plugin for soft delete
 organizationSchema.plugin(mongooseDelete, {
@@ -77,6 +75,12 @@ organizationSchema.plugin(mongooseDelete, {
     overrideMethods: 'all',
 });
 
+organizationSchema.pre('save', function (this:OrgType,next) {
+    const slug = slugify(this.name as string, { lower: true });
+    const uuid = nanoid();
+    this.slug = `${slug}-${uuid}`;
+    next();
+});
 const organizationModel = model<OrgDocument, OrgModel>(
     'Organization',
     organizationSchema

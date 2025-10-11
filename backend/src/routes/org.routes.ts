@@ -1,23 +1,26 @@
-import { Router } from "express";
-import { protect } from "../controllers/auth.controller";
+import { Router } from 'express';
+import { protect } from '../controllers/auth.controller';
 import {
-	createOrg,
-	deleteOrg,
-	transferOrg,
-	updateOrg,
-} from "../controllers/org.controller";
+    createOrg,
+    deleteOrg,
+    getOrg,
+    transferOrg,
+    updateOrg,
+} from '../controllers/org.controller';
 
 const router = Router();
+// Endpoint to get organization details of a particular organization
+router.get('/:orgSlug', protect, getOrg);
 
 // Endpoint to create new organization
-router.post("/create", protect, createOrg);
+router.post('/create', protect, createOrg);
 
 // Endpoint to transfer the ownership of an organization
-router.patch("/transfer", protect, transferOrg);
+router.patch('/transfer', protect, transferOrg);
 // Endpoint to update organization data
-router.patch("/:orgid", protect, updateOrg);
+router.patch('/:orgid', protect, updateOrg);
 
 // Endpoint to delete a organization (only by owner)
-router.delete("/:orgid", protect, deleteOrg);
+router.delete('/:orgid', protect, deleteOrg);
 
 export default router;
