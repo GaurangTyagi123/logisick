@@ -1,5 +1,6 @@
 import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
 import OrganizationModal from "@/components/modals/CreateOrgModal";
+import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";
 import {
@@ -9,7 +10,7 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { H2, Large, Muted, Small } from "@/components/ui/Typography";
+import { H2, H3, Large, Muted, Small } from "@/components/ui/Typography";
 import useGetOrganizations from "@/hooks/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
@@ -22,7 +23,7 @@ interface OrgCardProps {
 		_id: Org["_id"];
 		name: Org["name"];
 		description: Org["description"];
-		role: "Staff" | "Manager" | "Owner" | "Admin"
+		role: "Staff" | "Manager" | "Owner" | "Admin";
 		slug: string;
 	};
 	view: "grid" | "list";
@@ -94,12 +95,12 @@ function Organization() {
 	const { data: organizations, isPending } = useGetOrganizations();
 
 	if (!user) navigate("/");
-	if(isPending) return <Loader/>
+	if (isPending) return <Loader />;
 
 	return (
 		<>
 			<div className="w-full flex flex-col gap-3 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 relative">
-				
+				<Navbar />
 				<div className="flex flex-col sm:flex-row justify-between items-center king-julian md:px-4 gap-2 px-2">
 					<H2>Organizations</H2>
 					<div className="flex gap-2 justify-between w-full sm:w-fit sm:justify-center">
@@ -146,9 +147,22 @@ function Organization() {
 							: ""
 					)}
 				>
-					{organizations.map((orgData:Org) => (
-						<OrgCard org={orgData} key={orgData._id} view={view} />
-					))}
+					{organizations.length === 0 ? (
+						<div className="h-full w-full flex flex-col justify-center items-center gap-3">
+							<H3>You are not in any organizations.</H3>
+							<Button onClick={() => setOpenOrgForm(true)}>
+								Create/Join a Organization
+							</Button>
+						</div>
+					) : (
+						organizations.map((orgData: Org) => (
+							<OrgCard
+								org={orgData}
+								key={orgData._id}
+								view={view}
+							/>
+						))
+					)}
 				</div>
 
 				{/* modal to create new org */}

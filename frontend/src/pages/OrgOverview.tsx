@@ -1,6 +1,7 @@
-
 import EmployeeTable from "@/components/EmployeeTable";
 import Loading from "@/components/Loading";
+import { Badge } from "@/components/ui/badge";
+import { H3, Muted, Small } from "@/components/ui/Typography";
 import { getOrganization } from "@/services/apiOrganization";
 import { formatCurrency } from "@/utils/utilfn";
 import { useQuery } from "@tanstack/react-query";
@@ -50,31 +51,34 @@ import { useParams } from "react-router-dom";
 
 function OrgOverview() {
 	const { orgSlug } = useParams();
-	const {data:orgData,isPending:isGettingOrg} = useQuery({
+	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
-	})
-	
+	});
 
-	if (isGettingOrg) return <Loading />
+	if (isGettingOrg) return <Loading />;
 	if (orgData) {
 		return (
-			<div className="flex flex-col items-baseline h-full w-auto  jet-brains">
-				<div className="flex flex-col md:flex-row justify-between items-baseline w-full outline outline-zinc-500 p-5 mt-3">
-					<h1 className="text-2xl font-light tracking-widest p-2">
-						{orgData.name}
-					</h1>
-					<div className="flex justify-evenly gap-3  md:w-[50%] w-full font-semibold text-2xl">
-						<div className=" dark:bg-zinc-800 p-2 rounded-sm uppercase bg-red-400 text-white dark:text-green-500 tracking-widest">
-							{formatCurrency(50000)} Imports
-						</div>
-						<div className=" dark:bg-zinc-800 p-2 rounded-sm uppercase bg-green-400 text-white dark:text-red-500 tracking-widest">
-							{formatCurrency(150000)} Exports
+			<div className="flex flex-col gap-2 items-baseline h-full w-auto jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
+				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
+					<div className="flex flex-col md:flex-row justify-between items-center w-full">
+						<H3 className="overflow-hidden text-ellipsis whitespace-nowrap w-full">
+							{orgData.name}
+						</H3>
+						<div className="flex">
+							<Small className="grid place-items-center gap-2 h-full p-2">
+								Imports
+								<Badge className="p-2">{formatCurrency(500000)}</Badge>
+							</Small>
+							<Small className="grid place-items-center gap-2 h-full p-2">
+								Exports
+								<Badge className="p-2">{formatCurrency(500000)}</Badge>
+							</Small>
 						</div>
 					</div>
-				</div>
-				<div className="tracking-wide md:text-md text-sm mt-3">
-					{orgData.description}
+					<Muted className="overflow-hidden text-ellipsis whitespace-nowrap line-clamp-2">
+						{orgData.description}
+					</Muted>
 				</div>
 				{orgData && <EmployeeTable orgid={orgData?._id} />}
 			</div>
