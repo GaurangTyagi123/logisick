@@ -12,15 +12,11 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import logo from "@/assets/appicon.png";
-import { /* H2, H3,*/ Large, Muted } from "@/components/ui/Typography";
+import { H2, H3, Large, Muted } from "@/components/ui/Typography";
 import Navbar from "@/components/Navbar";
-// import DocSec from "@/components/DocSec";
+import DocSec from "@/components/DocSec";
 import Button from "@/components/ui/button";
 import { Link } from "react-router";
-import CustomTable from "@/components/Table";
-import { Shield } from "@/assets/icons/Profilepage";
-import { Badge } from "@/components/ui/badge";
-import { useState } from "react";
 
 interface TabItem {
 	label: string;
@@ -113,7 +109,6 @@ function CustomSidebar() {
  * @returns page/react component
  */
 function Docs() {
-	const [page, setpage] = useState(1);
 	return (
 		<SidebarProvider>
 			<CustomSidebar />
@@ -128,7 +123,7 @@ function Docs() {
 					</Button>
 					<Navbar hide={{ logo: true }} />
 				</div>
-				{/* <div className="p-4 king-julian h-11/12 overflow-y-auto">
+				<div className="p-4 king-julian h-11/12 overflow-y-auto">
 					<div>
 						<H2>User Guide</H2>
 						<DocSec id="ug-getting-started">
@@ -168,34 +163,7 @@ function Docs() {
 							<H3>Feature-5</H3>
 						</DocSec>
 					</div>
-				</div> */}
-				<CustomTable
-					title="somthing"
-					titleIcon={<Shield />}
-					columns={[
-						{
-							key: "id",
-							header: "Sno.",
-							render: (value, row) => (
-								<Badge>
-									{value}:{row.name}
-								</Badge>
-							),
-						},
-						{ key: "name", header: "Name" },
-						{ key: "age", header: "Age" },
-					]}
-					data={[
-						{ id: "1", name: "Ravish Ranjan a", age: 1 },
-						{ id: "2", name: "Ravish Ranjan b", age: 2 },
-						{ id: "3", name: "Ravish Ranjan c", age: 3 },
-						{ id: "4", name: "Ravish Ranjan d", age: 4 },
-						{ id: "5", name: "Ravish Ranjan e", age: 5 },
-					]}
-					currentPage={page}
-					totalPages={10}
-					setPage={setpage}
-				/>
+				</div>
 			</main>
 		</SidebarProvider>
 	);

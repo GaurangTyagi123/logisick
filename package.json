@@ -10,7 +10,7 @@
 		"lint": "npm run lint --prefix backend && npm run lint --prefix frontend",
 		"test": "cd ./backend && npm run test && cd ../",
 		"build": "npm run build:react --prefix frontend && npm run build --prefix backend",
-		"start": "npm run build --prefix frontend && npm run start --prefix backend"
+		"start": "npm run start --prefix backend"
 	},
 	"repository": {
 		"type": "git",
