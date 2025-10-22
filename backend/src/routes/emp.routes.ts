@@ -7,6 +7,7 @@ import {
     getEmps,
     getMyOrgs,
     joinOrg,
+    searchEmployee,
     sendInvite,
 } from '../controllers/emp.controller';
 
@@ -23,7 +24,9 @@ router.post('/acceptInvite', protect, joinOrg);
 router.post('/acceptInvite', protect, joinOrg);
 
 // end-point to get all the employees belonging to a particular organization
-router.get('/:orgid', protect, restrictTo('Owner'), getEmps);
+router.get('/:orgid', protect, getEmps);
+
+router.get('/:orgid/search', protect, searchEmployee);
 
 // end-point to change the role of an employee
 router.patch('/:orgid/changeRole', protect, restrictTo('Admin'), changeRole);

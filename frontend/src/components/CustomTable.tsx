@@ -62,7 +62,7 @@ interface CustomTableProps<RowType> {
 	clientSide?: boolean;
 }
 
-function CustomTable<RowType extends Record<string, unknown>>({
+function CustomTable<RowType extends Record<string, string>>({
 	title,
 	titleIcon,
 	data,
@@ -76,32 +76,20 @@ function CustomTable<RowType extends Record<string, unknown>>({
 	onFilter,
 	clientSide = false,
 }: CustomTableProps<RowType>) {
-	const [searchStr, setSearchStr] = useState<string>("");
-	const [debouncedSearchStr, setDebouncedSearchStr] = useState(searchStr);
+	const [searchStr, setSearchStr] = useState<string | null>(null);
 	const [sortColumn, setSortColumn] = useState<keyof RowType | null>(null);
 	const [sortOrder, setSortOrder] = useState<SortOrder>(null);
 	const [filters, setFilters] = useState<Record<string, (string | number)[]>>(
 		{}
 	);
 
-	// Debounce search string
-	useEffect(() => {
-		const handler = setTimeout(() => {
-			setDebouncedSearchStr(searchStr);
-		}, 500);
-
-		return () => {
-			clearTimeout(handler);
-		};
-	}, [searchStr]);
-
 	// Trigger search callback
 	useEffect(() => {
-		if (onSearch && !clientSide) {
-			onSearch(debouncedSearchStr);
+		if (searchStr && onSearch) {
+			onSearch(searchStr as string);
 			setPage(1);
 		}
-	}, [debouncedSearchStr, onSearch, clientSide, setPage]);
+	}, [searchStr, onSearch, setPage]);
 
 	// Trigger sort callback
 	useEffect(() => {
@@ -178,8 +166,8 @@ function CustomTable<RowType extends Record<string, unknown>>({
 		let result = [...data];
 
 		// Search
-		if (debouncedSearchStr) {
-			const searchLower = debouncedSearchStr.toLowerCase();
+		if (searchStr) {
+			const searchLower = searchStr.toLowerCase();
 			result = result.filter((row) =>
 				columns.some((col) => {
 					if (col.searchable === false) return false;
@@ -214,7 +202,7 @@ function CustomTable<RowType extends Record<string, unknown>>({
 		return result;
 	}, [
 		data,
-		debouncedSearchStr,
+		searchStr,
 		filters,
 		sortColumn,
 		sortOrder,
@@ -237,7 +225,7 @@ function CustomTable<RowType extends Record<string, unknown>>({
 				<div className="flex gap-2">
 					{/* Search input */}
 					<Input
-						value={searchStr}
+						value={searchStr || ''}
 						onChange={(e) => setSearchStr(e.target.value)}
 						type="text"
 						placeholder="Search..."

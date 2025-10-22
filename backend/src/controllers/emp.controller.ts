@@ -187,38 +187,57 @@ export const getEmps = catchAsync(
                     from: 'users',
                     localField: 'userid',
                     foreignField: '_id',
-                    as : 'user'
-                }
+                    as: 'employees',
+                },
             },
             {
                 $project: {
-                    role : 1,
-                    user: {
+                    role: 1,
+                    employees: {
                         name: 1,
                         email: 1,
-                        avatar: 1
-                    }
-                }
+                        avatar: 1,
+                    },
+                },
             },
             {
                 $unwind: {
-                    path: '$user',
+                    path: '$employees',
                     preserveNullAndEmptyArrays: false,
                 },
+            },
+            {
+                $facet: {
+                    data: [],
+                    totalCount: [{ $count: 'count' }],
+                },
+            },
+            {
+                $project: {
+                    data: 1,
+                    count: { $arrayElemAt: ['$totalCount.count', 0] },
+                },
+            },
+            {
+                $unwind: {
+                    path : "$data"
+                }
             }
         ]);
+
         const emps = await new ApiFilter(query, req.parsedQuery!)
             .filter()
             .sort()
             .project()
-            .paginate()
-            .query
+            .paginate().query;
+
         if (emps)
             return res.status(200).json({
                 status: 'success',
                 results: emps.length,
                 data: {
-                    emps
+                    emps,
+                    count: emps[0]?.count,
                 },
             });
         else {
@@ -494,5 +513,79 @@ export const deleteEmp = catchAsync(
         await oldEmp.delete();
 
         return res.status(204).end();
+    }
+);
+export const searchEmployee = catchAsync(
+    async (
+        req: ExpressTypes.UserRequest,
+        res: Response,
+        next: NextFunction
+    ) => {
+        const { orgid } = req.params;
+        let query = String(req.query.query || '');
+        query = query.replaceAll("'", '');
+
+        if (!orgid) return next(new AppError('Invalid organization', 400));
+
+        const employees = await Emp.aggregate([
+            {
+                $match: {
+                    orgid: new Types.ObjectId(orgid),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userid',
+                    foreignField: '_id',
+                    as: 'employees',
+                },
+            },
+            {
+                $project: {
+                    role: 1,
+                    employees: {
+                        name: 1,
+                        email: 1,
+                        avatar: 1,
+                    },
+                },
+            },
+            {
+                $unwind: '$employees',
+            },
+            {
+                $match: {
+                    $or: [
+                        {
+                            'employees.email': {
+                                $regex: `.*${query}.*`,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            'employees.name': {
+                                $regex: `.*${query}.*`,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            role: {
+                                $regex: `.*${query}.*`,
+                                $options: 'i',
+                            },
+                        },
+                    ],
+                },
+            },
+        ]);
+        console.log(employees)
+        return res.status(200).json({
+            status: 'Success',
+            results: employees.length,
+            data: {
+                 employees,
+            },
+        });
     }
 );

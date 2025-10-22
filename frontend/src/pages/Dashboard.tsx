@@ -15,34 +15,36 @@ import {
 import { Large, Muted } from "@/components/ui/Typography";
 import Button from "@/components/ui/button";
 import { Link, Outlet, useParams } from "react-router-dom";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 
 function CustomSidebar() {
 	const { orgSlug } = useParams();
 	const [pathName, setPathName] = useState("overview");
-	const sidebarData = [
-		{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
-		{
-			name: "Analytics &  Reporting",
-			href: `/dashboard/${orgSlug}/analytics`,
-			id: "analytics",
-		},
-		{
-			name: "User & Role",
-			href: `/dashboard/${orgSlug}/user-role`,
-			id: "user-role",
-		},
-		{
-			name: "Product Management",
-			href: `/dashboard/${orgSlug}/product-management`,
-			id: "product-management",
-		},
-		{
-			name: "Order & Sales",
-			href: `/dashboard/${orgSlug}/order-sales`,
-			id: "order-sales",
-		},
-	];
+	const sidebarData = useMemo(() => {
+		return [
+			{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
+			{
+				name: "Analytics &  Reporting",
+				href: `/dashboard/${orgSlug}/analytics`,
+				id: "analytics",
+			},
+			{
+				name: "User & Role",
+				href: `/dashboard/${orgSlug}/user-role`,
+				id: "user-role",
+			},
+			{
+				name: "Product Management",
+				href: `/dashboard/${orgSlug}/product-management`,
+				id: "product-management",
+			},
+			{
+				name: "Order & Sales",
+				href: `/dashboard/${orgSlug}/order-sales`,
+				id: "order-sales",
+			},
+		];
+	}, [orgSlug]);
 
 	return (
 		<Sidebar>
@@ -110,7 +112,7 @@ function Dashboard() {
 						</Button>
 						<Navbar hide={{ logo: true }} />
 					</div>
-					<div className="m-2 p-4 king-julian flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
+					<div className="m-2 p-4  king-julian flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
 						<Outlet />
 					</div>
 				</main>

@@ -57,7 +57,7 @@ export default class ApiFilter {
         const page: number = Number(this.queryString.page) || 1;
         const limit: number = Number(this.queryString.limit) || 10;
         const skip = (page - 1) * limit;
-        this.query = this.query.skip(skip).limit(limit);
+        this.query.skip(skip).limit(limit);
         return this;
     }
 }

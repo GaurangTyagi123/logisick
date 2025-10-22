@@ -7,47 +7,6 @@ import { formatCurrency } from "@/utils/utilfn";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 
-// const empData = {
-// 	labels: ["admin", "manager", "staff"],
-// 	datasets: [
-// 		{
-// 			label: "No. of Employees",
-// 			data: [5, 8, 10],
-// 			backgroundColor: [
-// 				"rgba(247, 54, 96, 0.2)",
-// 				"rgba(54, 162, 235, 0.2)",
-// 				"rgba(255, 206, 86, 0.2)",
-// 			],
-// 			borderColor: [
-// 				"rgba(255, 99, 132, 1)",
-// 				"rgba(54, 162, 235, 1)",
-// 				"rgba(255, 206, 86, 1)",
-// 			],
-// 			borderWidth: 1,
-// 		},
-// 	],
-// };
-
-// const inventoryData = {
-// 	labels: ["inventory1", "inventory2", "inventory3"],
-// 	datasets: [
-// 		{
-// 			label: "Inventory Capacity %",
-// 			data: [5, 8, 90],
-// 			backgroundColor: [
-// 				"rgba(247, 54, 96, 0.2)",
-// 				"rgba(54, 162, 235, 0.2)",
-// 				"rgba(255, 206, 86, 0.2)",
-// 			],
-// 			borderColor: [
-// 				"rgba(255, 99, 132, 1)",
-// 				"rgba(54, 162, 235, 1)",
-// 				"rgba(255, 206, 86, 1)",
-// 			],
-// 			borderWidth: 1,
-// 		},
-// 	],
-// };
 
 function OrgOverview() {
 	const { orgSlug } = useParams();
@@ -80,7 +39,7 @@ function OrgOverview() {
 						{orgData.description}
 					</Muted>
 				</div>
-				{orgData && <EmployeeTable orgid={orgData?._id} />}
+				{orgData ? <EmployeeTable orgid={orgData?._id} /> : <Loading/>}
 			</div>
 		);
 	} else return <p>Create your own organiztion</p>;

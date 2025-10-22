@@ -79,19 +79,34 @@ export const getOrganization = async (orgSlug: string) => {
         handleError(err);
     }
 };
-export const getAllEmployees = async (orgid: string) => {
+export const getAllEmployees = async (orgid: string,page:number) => {
     try {
-        const res = await axinstance.get(`/v1/emp/${orgid}`);
+        const res = await axinstance.get(`/v1/emp/${orgid}?page=${page}`);
         if (res.status === 200) {
-            return res.data.data.emps;
+            return res.data.data;
         } else {
             handleError(new Error('There was an error fetching the employees'));
         }
     } catch (err) {
-        console.log(err)
         handleError(err);
     }
 };
+export const searchEmployee = async ({ orgid, query, controller }: Record<string, any>) => {
+    try {
+        const res = await axinstance.get(
+            `/v1/emp/${orgid}/search?query=${encodeURIComponent(query)}`,
+            { signal: controller.signal }
+        );
+        if (res.status === 200) {
+            return res.data.data;
+        } else {
+            handleError(new Error('There was an error fetching the employee data'));
+        }
+    } catch (err) {
+        handleError(err);
+    }
+};
+
 export const transferOwnership = async ({
     employee
 }: {
