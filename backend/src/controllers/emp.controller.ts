@@ -359,7 +359,6 @@ export const changeRole = catchAsync(
             dataToUpdate.role = 'Manager';
             dataToUpdate.manager = req.user?._id;
         } else if (newRole.trim() === 'Staff') {
-            // TODO check if prev its manager
             dataToUpdate.role = 'Staff';
             if (!managerid)
                 return next(new AppError('Manager field is required', 404));

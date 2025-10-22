@@ -55,7 +55,7 @@ export default class ApiFilter {
     }
     paginate() {
         const page: number = Number(this.queryString.page) || 1;
-        const limit: number = Number(this.queryString.limit) || 10;
+        const limit: number = Number(this.queryString.limit) || 5;
         const skip = (page - 1) * limit;
         this.query.skip(skip).limit(limit);
         return this;

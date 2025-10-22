@@ -14,7 +14,6 @@ import {
 const router = Router();
 
 router.get('/myOrgs', protect, getMyOrgs);
-// TODO employees under me
 
 // end-point to invite a user to organization
 router.post('/sendInvite', protect, sendInvite);

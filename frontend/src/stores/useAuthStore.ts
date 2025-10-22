@@ -4,8 +4,6 @@ import { toast } from "react-toastify";
 // import { userDb } from "@/utils/db";
 import { create } from "zustand";
 
-// TODO: clean this file
-
 
 interface AuthProps {
 	isVerifingEmail: boolean;

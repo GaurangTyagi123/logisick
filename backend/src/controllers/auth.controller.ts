@@ -428,7 +428,6 @@ export const forgotPassword = catchAsync(
         await user.save({ validateBeforeSave: false });
 
         // const url = `${req.protocol}//${req.host}/resetpassword/${resetToken}`;
-        // TODO : make it work for production
         const url = `${req.protocol}://localhost:5173/resetpassword/${resetToken}`;
         try {
             await new Email(

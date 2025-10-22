@@ -1,12 +1,17 @@
+// HOOKS
 import useGetEmployees from "@/hooks/useGetEmployees";
-import Loading from "./Loading";
-import { toast } from "react-toastify";
-import CustomTable from "./CustomTable";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { searchEmployee } from "@/services/apiOrganization";
 import { useMutation } from "@tanstack/react-query";
-import { debounce } from 'lodash';
+import { searchEmployee } from "@/services/apiOrganization";
+
+// COMPONENTS
+import Loading from "./Loading";
 import UserAvatar from "./UserAvatar";
+import CustomTable from "./CustomTable";
+
+
+import { toast } from "react-toastify";
+import { debounce } from 'lodash';
 
 interface Employee{
 	[key: string]: string;
@@ -16,6 +21,7 @@ interface Employee{
 	avatar: string;
 }
 
+// unwinds employee data
 function deconstructEmployee(employees: Array<{
 	data: {
 		role: string;
@@ -28,7 +34,6 @@ function deconstructEmployee(employees: Array<{
 		count: string;
 	}
 }>) {
-	console.log(employees)
 	return employees.map((employee : {data: {
 		role: string;
 		employees: {
@@ -42,12 +47,27 @@ function deconstructEmployee(employees: Array<{
 		return newE;
 	})
 }
+/**
+ * @component Employee table displays all the employees belonging to an organization including the owner
+ * @param orgid (string) id of the organization
+ * @returns JSX
+ */
 function EmployeeTable({ orgid }: { orgid: string }) {
 
-	const PAGESIZE = 10;
+	/**
+	 * @method if there is no search query then display data recieved from the server (employees)
+	 * else send the query to the server and store the result in searchResults after deconstructing
+	 */
+	// size of each page in the table
+	const PAGESIZE = 5;
+
+	// total number of pages in the table
 	const [totalPages,setTotalPages] = useState<number>(1)
+
+	// current page
 	const [page, setPage] = useState<number>(1);
 
+	// employee data
 	const {
 		data: employees,
 		count,
@@ -55,8 +75,11 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		error,
 	} = useGetEmployees(orgid as string,page);
 
+	// stores the search results
 	const [searchResults, setSearchResults] = useState<
 		Employee[] | null>(null);
+	
+	// handles the search query request
 	const { mutate: search } = useMutation({
 		mutationFn: searchEmployee,
 		onSettled: (data) => {
@@ -67,27 +90,35 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 				return;
 		}
 	})
+
+	// stores reference to search request controller
 	const controllerRef = useRef<AbortController>(null);
+
+	// handles search query in the table
 	const handleSearch = useCallback(async (query: string) => {
 		if (controllerRef.current) {
 			controllerRef.current.abort();
 		}
 		const controller = new AbortController();
 		controllerRef.current = controller;
-		if(query)
+		if(query.trim().length)
 			search({ orgid, query, controller });
 	}, [orgid, search])
 
+	// debounce handle search function
 	const debouncedSearch = useMemo(() => {
 		return debounce(handleSearch, 500);
 	}, [handleSearch]) as ((searchTerm: string) => void) & { cancel: () => void };
 
 
+	// calculates and sets the totalPage number based on the employee data recieved from the server
 	useEffect(() => {
 		if (!isGettingEmployees) {
 			setTotalPages(count > PAGESIZE ? Math.ceil(count / PAGESIZE) : 1);
 		}
 	}, [count, isGettingEmployees])
+
+	// aborts incomplete search requests
 	useEffect(() => {
 		return () => {
 			debouncedSearch.cancel();

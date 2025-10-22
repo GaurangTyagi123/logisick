@@ -1,37 +1,5 @@
-IMP TECH STACK - Mongo | Express | React | Node
+1. Employee CRUD
+2. Assign manager / Change Role
 
-TODO 1. Create Organization - 
-    ? Number of employees
-    ? Description of organization
-    ? type
-    ? Admin will create user signup
-
-TODO 2. User & Role Management -
-    ? Access Control - admin | manager | Staff
-    ? Permissions - read-only | write | read / write
-    ! manager & staff signup through admin
-
-    
- Auth:
-    cookies, JWT, bcryptjs, indexedDB,
-
-Security:
-    helmetJS, cors, rate-limit(prod),
-
-features:
-    electronbase, react-nice-avatar
-
-technologies used
-1. NodeJS
-2. Typescript
-3. ReactJS
-4. TailwindCSS
-5. ShadcnUI
-6. Google Authentication
-7. MongoDB
-8. Mongoose ODM
-9. MongoDB Atlas 
-10. ElectronJS
-11. JWT Authentication
-12. ExpressJS
-13. 
+3. inventory model
+4. Inventory Controllers
