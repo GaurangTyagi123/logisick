@@ -34,6 +34,25 @@ type Emp = {
 		avatar: string;
 	}
 }
+type Item =  {
+    _id: ObjectId;
+    name: string;
+    organization: ObjectId;
+    costPrice: number;
+    sellingPrice: number;
+    quantity: number;
+    inventoryCategory: string;
+    importedOn: Date;
+    expiresOn: Date;
+    colour?: string;
+    weight?: number;
+    reorderLevel?: number;
+    batchNumber?: number;
+    importance?: string;
+    origin?: string;
+	SKU?: string;
+	infoQR?: string;
+}
 
 type DummyOrg = {
 	_id: string;

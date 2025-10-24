@@ -339,11 +339,11 @@ function CustomTable<RowType extends Record<string, string>>({
 			<Separator />
 
 			<CardContent className="">
-				{(clientSide ? processedData : data).length === 0 ? (
+				{ (clientSide ? processedData : data).length === 0 ? (
 					<div className="h-64 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
 					</div>
-				) : (
+				) :  (
 					<Table>
 						<TableHeader>
 							<TableRow>

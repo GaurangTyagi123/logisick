@@ -19,6 +19,7 @@ import passport from 'passport';
 // Open Authentication Routes
 import oauthRouter from './routes/oauth.routes';
 import userRouter from './routes/user.routes';
+import itemRouter from './routes/item.routes';
 
 // Initialize the application
 const app = express();
@@ -89,6 +90,8 @@ app.use('/api/v1/org', orgRouter);
 app.use('/api/v1/users', userRouter);
 // Employee router
 app.use('/api/v1/emp', empRouter);
+// Item Router
+app.use('/api/v1/item',itemRouter)
 
 // Open Authentication Routes
 app.use('/auth', oauthRouter);

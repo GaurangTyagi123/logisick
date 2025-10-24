@@ -34,7 +34,7 @@ function deconstructEmployee(employees: Array<{
 		count: string;
 	}
 }>) {
-	return employees.map((employee : {data: {
+	return employees?.map((employee : {data: {
 		role: string;
 		employees: {
 		name: string;
@@ -45,7 +45,7 @@ function deconstructEmployee(employees: Array<{
 	}}) => {
 		const newE = { role : employee?.data?.role,...employee?.data?.employees };
 		return newE;
-	})
+	}) || []
 }
 /**
  * @component Employee table displays all the employees belonging to an organization including the owner

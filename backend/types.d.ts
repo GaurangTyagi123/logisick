@@ -89,3 +89,42 @@ declare interface EmpType {
     deleted?: boolean;
     deletedAt?: Date | null;
 }
+
+declare interface ItemType extends Document {
+    _id: ObjectId;
+    name: string;
+    organization: ObjectId;
+    costPrice: number;
+    sellingPrice: number;
+    quantity: number;
+    inventoryCategory: string;
+    importedOn: Date;
+    expiresOn: Date;
+    colour?: string;
+    weight?: number;
+    reorderLevel?: number;
+    batchNumber?: number;
+    importance?: string;
+    origin?: string;
+    SKU?: string;
+    infoQR?: string;
+
+    generateQRUrl : ()=>Promise<void>
+}
+
+declare interface deliveryType {
+    _id: string;
+    fromOrgId: ObjectId;
+    toOrgId: ObjectId;
+    shipmentId: ObjectId;
+    startDate: Date;
+    status: 'shipped' | 'in-transit' | 'out-for-delivery' | 'Delivered';
+    trackUrl?: string;
+    ETA: Date;
+}
+
+declare interface shipmentType {
+    _id: string;
+    items: Array<string>;
+    transferQuantities: number; 
+}

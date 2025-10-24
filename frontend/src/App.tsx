@@ -9,6 +9,7 @@ import Analytics from "./pages/Analytics";
 import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import OrderSales from "./pages/OrderSales";
+import ItemPage from "./pages/ItemPage";
 
 const Loading = lazy(() => import("@/components/Loading"));
 
@@ -110,6 +111,7 @@ function App() {
 					/>
 					{/* path for documentation */}
 					<Route path="/docs" element={<Docs />} />
+					<Route path="/item/:SKU" element={<ItemPage/>} />
 					{/* default path for paths that are not found/defined/allowed */}
 					<Route path="*" element={<Notfound />} />
 				</Routes>
