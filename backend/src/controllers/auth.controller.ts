@@ -82,7 +82,7 @@ const sendNewToken = (
 
 /**
  * @obective To restrict according to the roles
- * @param roles admin | manager | staff
+ * @param roles admin | manager | staff | owner
  * @returns NA
  */
 export const restrictTo: (
@@ -342,7 +342,7 @@ export const verifyEmail = catchAsync(
         const isOtpGen = await redisClient.hGet(req.user?.id, 'otp');
         if (isVerified)
             return res.status(200).json({
-                status: 'successfull',
+                status: 'success',
                 data: {
                     message: 'Your email is already verified',
                 },

@@ -40,6 +40,7 @@ export const deleteOrg: deleteOrg = async (id: string) => {
         if (err instanceof Error) handleError(err);
     }
 };
+
 export const updateOrg: updateOrg = async ({ id, data }) => {
     try {
         const res = await axinstance.patch(`/v1/org/${id}`, data);
@@ -53,6 +54,7 @@ export const updateOrg: updateOrg = async ({ id, data }) => {
         if (err instanceof Error) handleError(err);
     }
 };
+
 export const getAllOrgs = async () => {
     try {
         const res = await axinstance.get('/v1/emp/myOrgs');
@@ -67,6 +69,7 @@ export const getAllOrgs = async () => {
         handleError(err);
     }
 };
+
 export const getOrganization = async (orgSlug: string) => {
     try {
         const res = await axinstance.get(`/v1/org/${orgSlug}`);
@@ -79,6 +82,7 @@ export const getOrganization = async (orgSlug: string) => {
         handleError(err);
     }
 };
+
 export const getAllEmployees = async (orgid: string,page:number) => {
     try {
         const res = await axinstance.get(`/v1/emp/${orgid}?page=${page}`);
@@ -91,6 +95,7 @@ export const getAllEmployees = async (orgid: string,page:number) => {
         handleError(err);
     }
 };
+
 export const searchEmployee = async ({ orgid, query, controller }: Record<string, any>) => {
     try {
         const res = await axinstance.get(
