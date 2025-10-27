@@ -51,7 +51,6 @@ type Item =  {
     importance?: string;
     origin?: string;
 	SKU?: string;
-	infoQR?: string;
 }
 
 type DummyOrg = {

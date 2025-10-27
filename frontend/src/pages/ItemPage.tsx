@@ -88,7 +88,8 @@ function ItemPage() {
         <Button variant={"link"} className="mb-5" >
           <Link to={"/"} replace={true} className="outline p-3 rounded-xl dark:bg-ls-ter-800 bg-ls-ter-700 text-white king-julian">View More</Link>
         </Button>
-      <img src={item?.infoQR} alt="qr code" className="aspect-square h-32 w-32 self-start absolute right-10"/>
+
+      <img src={`https://encode-9qc6.onrender.com/api/create/text_url?text_url=http://localhost:5173/item/${item?.SKU}&fg=%23bde0b4&bg=%231c3f72`} alt="qr code" className="aspect-square h-32 w-32 self-start absolute right-10"/>
       </div>
     </div>
   )

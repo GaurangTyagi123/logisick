@@ -1,6 +1,9 @@
 # ![alt text](frontend/src/assets/icon@4x.png)LogiSick
------
+
+---
+
 ## Product Management
+
 * Add, update, and delete products
 * Categorization & tags (e.g., electronics, perishables)
 * QR code support
@@ -13,6 +16,7 @@
 * Preferred supplier tagging
 
 ## Analytics & Reporting
+
 * Dashboards
 * Total stock value
 * Fast-moving vs. slow-moving items
@@ -23,6 +27,7 @@
 * Purchase history
 
 ## Order & Sales Features
+
 * Purchase Orders
 * Create and track purchase orders
 * Supplier confirmation status
@@ -31,12 +36,14 @@
 * Customer order management
 
 ## User & Role Management
+
 * Access Control
 * Admin, Manager, Staff roles
 * Permissions for editing vs. view-only
 * Activity logs
 
 ## Advanced/Optional Features
+
 * QR Code Scanning
 * Integration with barcode scanners or camera-based scanning
 * Print qrcodes/labels for products

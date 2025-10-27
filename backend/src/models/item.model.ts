@@ -57,7 +57,6 @@ const itemSchema = new Schema<any, ItemModel>({
         default: 'India',
     },
     SKU: String,
-    infoQR: String,
 });
 itemSchema.index({
     SKU:1
@@ -76,13 +75,7 @@ itemSchema.pre('save', function (this: ItemDocument,next) {
     const SKU = `${this._id}-${CAT}-${COL || ''}-${WGT || ''}-${ORG || ''}`
     this.SKU = SKU;
     next();
-
 });
-itemSchema.pre('save', function (this: ItemDocument,next) {
-    const qrURL = `https://encode-9qc6.onrender.com/api/create/text_url?text_url=http://localhost:5173/item/${this.SKU}`
-    this.infoQR = qrURL;
-    next();
-})
 
 
 const itemModel = model<ItemDocument, ItemModel>('Item', itemSchema);

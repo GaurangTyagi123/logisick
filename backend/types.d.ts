@@ -107,9 +107,7 @@ declare interface ItemType extends Document {
     importance?: string;
     origin?: string;
     SKU?: string;
-    infoQR?: string;
 
-    generateQRUrl : ()=>Promise<void>
 }
 
 declare interface deliveryType {
