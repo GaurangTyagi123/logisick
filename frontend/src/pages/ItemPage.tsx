@@ -67,7 +67,7 @@ function ItemPage() {
               <Category />
               <span>Category &rarr;</span>
             </div>
-            <span>Perishable</span>
+            <span>{item?.inventoryCategory}</span>
           </div>
           <div className="px-5 py-3 flex  justify-between w-full border-y-2 border-ls-bg-700 dark:border-ls-bg-dark-500 rounded-1xl">
             <div className="flex space-x-2">
