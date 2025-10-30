@@ -82,7 +82,6 @@ export const updateUser = catchAsync(
 			"role",
 			"passwordUpdatedAt",
 		]);
-
 		let updatedUser;
 		if (newData.email) {
 			newData.isVerified = false;

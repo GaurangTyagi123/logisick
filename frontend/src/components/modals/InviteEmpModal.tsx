@@ -31,15 +31,17 @@ function InviteEmpModal({
 	const { sendInvitation, isPending } = useSendInvite();
 
 	/**
-	 * @brief async function to handle the user request to delete account
+	 * @brief async function to handle the user request to send invite
 	 */
-	async function handleSendInvite() {
+	function handleSendInvite() {
 		if (
 			form.empEmail.trim() !== "" &&
 			["Admin", "Manager", "Staff"].includes(form.role.trim())
 		) {
-			await sendInvitation(form);
+			sendInvitation(form);
 			setOpen(false);
+			// console.log(form);
+			setForm({ empEmail: "", role: "Staff", managerid: "" });
 		} else {
 			toast.error("Enter the text first", { className: "toast" });
 		}
@@ -50,7 +52,10 @@ function InviteEmpModal({
 			<Card className="min-w-md">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Send Invite</CardTitle>
-					<Button onClick={() => setOpen(false)} variant={"secondary"}>
+					<Button
+						onClick={() => setOpen(false)}
+						variant={"secondary"}
+					>
 						<Close />
 					</Button>
 				</CardHeader>
@@ -75,7 +80,7 @@ function InviteEmpModal({
 					<Label title="New Employee's role" className="grid">
 						<span>Enter new employee's role</span>
 						<RadioGroup
-							defaultValue="Staff"
+							defaultValue={form.role}
 							className="flex"
 							onValueChange={(e) =>
 								setForm({

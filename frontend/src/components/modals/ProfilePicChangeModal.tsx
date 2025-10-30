@@ -23,7 +23,7 @@ interface ChangeProps {
 }
 
 /**
- * @component a modal for profilepage which prompts user to change profile picture when user want to do so 
+ * @component a modal for profilepage which prompts user to change profile picture when user want to do so
  * @param open a boolean value stating is modal is open
  * @param setOpen a function to change state of open of modal
  * @param modalPic a string state for user input of avatar seed
@@ -64,7 +64,7 @@ function ProfilePicChangeModal({
 	 */
 	function handleProfilePicChange() {
 		if (modalPic.length > 0 && modalPic !== user?.avatar) {
-			updateUser({ avatar: modalPic,name:modalPic });
+			updateUser({ avatar: modalPic });
 			setOpen(false);
 		} else {
 			toast.error("Changed avatar can't be same or empty", {
@@ -78,7 +78,10 @@ function ProfilePicChangeModal({
 			<Card className="min-w-md">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Change Profile Picture</CardTitle>
-					<Button onClick={() => setOpen(false)} variant={"secondary"}>
+					<Button
+						onClick={() => setOpen(false)}
+						variant={"secondary"}
+					>
 						<Close />
 					</Button>
 				</CardHeader>

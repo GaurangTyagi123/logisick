@@ -246,6 +246,8 @@ export const transferOrg = catchAsync(
             role: 'Admin',
             deleted: false,
         });
+
+        // TODO : check if the newOwner is already an existing owner
         if (newOwner) {
             // delete old owner emp
             await Emp.delete({ userid: oldOwner._id, role: 'Owner' });
