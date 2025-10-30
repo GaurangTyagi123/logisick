@@ -166,16 +166,16 @@ function CustomTable<RowType extends Record<string, string>>({
 		let result = [...data];
 
 		// Search
-		if (searchStr) {
-			const searchLower = searchStr.toLowerCase();
-			result = result.filter((row) =>
-				columns.some((col) => {
-					if (col.searchable === false) return false;
-					const value = row[col.key];
-					return String(value).toLowerCase().includes(searchLower);
-				})
-			);
-		}
+		// if (searchStr) {
+		// 	const searchLower = searchStr.toLowerCase();
+		// 	result = result.filter((row) =>
+		// 		columns.some((col) => {
+		// 			if (col.searchable === false) return false;
+		// 			const value = row[col.key];
+		// 			return String(value).toLowerCase().includes(searchLower);
+		// 		})
+		// 	);
+		// }
 
 		// Filter
 		Object.entries(filters).forEach(([key, values]) => {
