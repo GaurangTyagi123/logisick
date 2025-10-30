@@ -47,7 +47,7 @@ function DeleteMeModal({
 			<Card>
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Delete My Account</CardTitle>
-					<Button onClick={() => setOpen(false)}>
+					<Button onClick={() => setOpen(false)} variant={"secondary"}>
 						<Close />
 					</Button>
 				</CardHeader>
@@ -76,7 +76,7 @@ function DeleteMeModal({
 					</Label>
 				</CardContent>
 				<CardFooter className="flex gap-2">
-					<Button onClick={() => setOpen(false)}>Cancel</Button>
+					<Button onClick={() => setOpen(false)} variant={"secondary"}>Cancel</Button>
 					<Button
 						type="button"
 						onClick={handleDeleteAccount}

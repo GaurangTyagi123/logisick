@@ -57,7 +57,7 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 			<Card className="min-w-md">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Verify Email</CardTitle>
-					<Button onClick={() => setOpen(false)}>
+					<Button onClick={() => setOpen(false)} variant={"secondary"}>
 						<Close />
 					</Button>
 				</CardHeader>

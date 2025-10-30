@@ -16,9 +16,7 @@ function useSendInvite() {
 		onSuccess: (data) => {
 			toast.success(data?.message, { className: "toast" });
 		},
-		onError: (err: any) => {
-			toast.error(err.message, { className: "toast" });
-		},
+		onError: (err: any) => toast.error(err.message, { className: "toast" }),
 	});
 	return { sendInvitation, isPending };
 }

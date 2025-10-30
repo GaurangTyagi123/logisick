@@ -98,10 +98,10 @@ function CustomSidebar() {
 }
 function Dashboard() {
 	return (
-		<div>
+		<div className="">
 			<SidebarProvider>
 				<CustomSidebar />
-				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-64">
+				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-64 relative">
 					<div className="flex gap-2 items-center">
 						<SidebarTrigger
 							className="p-2 h-10 w-10 rounded-xl"
@@ -112,7 +112,7 @@ function Dashboard() {
 						</Button>
 						<Navbar hide={{ logo: true }} />
 					</div>
-					<div className="m-2 p-4  king-julian flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
+					<div className="m-2 p-4 flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
 						<Outlet />
 					</div>
 				</main>

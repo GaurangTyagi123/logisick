@@ -15,7 +15,7 @@ function Modal({ openModal, children }: ModalProps) {
 		<div
 			style={{ backgroundColor: "#00000088" }}
 			className={clsx(
-				"h-full w-full absolute place-items-center",
+				"h-full w-full absolute top-0 left-0 place-items-center z-50",
 				openModal ? "grid" : "hidden"
 			)}
 		>

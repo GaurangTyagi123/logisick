@@ -101,7 +101,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
             <Card className="min-w-md">
                 <CardHeader className="flex justify-between items-center">
                     <CardTitle>Change Password</CardTitle>
-                    <Button onClick={() => setOpen(false)}>
+                    <Button onClick={() => setOpen(false)} variant={"secondary"}>
                         <Close />
                     </Button>
                 </CardHeader>

@@ -78,7 +78,7 @@ function ProfilePicChangeModal({
 			<Card className="min-w-md">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Change Profile Picture</CardTitle>
-					<Button onClick={() => setOpen(false)} variant={"ghost"}>
+					<Button onClick={() => setOpen(false)} variant={"secondary"}>
 						<Close />
 					</Button>
 				</CardHeader>

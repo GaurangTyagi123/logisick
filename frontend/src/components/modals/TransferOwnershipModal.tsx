@@ -65,7 +65,7 @@ function TransferOwnershipModal({
             <Card className="min-w-md">
                 <CardHeader className="flex justify-between items-center">
                     <CardTitle>Transfer Ownership To</CardTitle>
-                    <Button onClick={() => setOpen(false)}>
+                    <Button onClick={() => setOpen(false)} variant={"secondary"}>
                         <Close />
                     </Button>
                 </CardHeader>

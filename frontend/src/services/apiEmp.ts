@@ -139,6 +139,6 @@ export const deleteEmployee: deleteEmployee = async (userid, orgid) => {
 			});
 		} 
 	} catch (error) {
-		handleError(error,"Thier was an error deleting employee");
+		handleError(error,"There was an error deleting employee");
 	}
 };
