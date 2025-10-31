@@ -176,54 +176,54 @@ export const getEmps = catchAsync(
 		const { orgid } = req.params;
 		if (!orgid) return next(new AppError("orgid field is requied", 404));
 
-		const query = Emp.aggregate([
-			{
-				$match: {
-					orgid: new Types.ObjectId(orgid),
-				},
-			},
-			{
-				$lookup: {
-					from: "users",
-					localField: "userid",
-					foreignField: "_id",
-					as: "employees",
-				},
-			},
-			{
-				$project: {
-					role: 1,
-					employees: {
-						name: 1,
-						email: 1,
-						avatar: 1,
-					},
-				},
-			},
-			{
-				$unwind: {
-					path: "$employees",
-					preserveNullAndEmptyArrays: false,
-				},
-			},
-			{
-				$facet: {
-					data: [],
-					totalCount: [{ $count: "count" }],
-				},
-			},
-			{
-				$project: {
-					data: 1,
-					count: { $arrayElemAt: ["$totalCount.count", 0] },
-				},
-			},
-			{
-				$unwind: {
-					path: "$data",
-				},
-			},
-		]);
+        const query = Emp.aggregate([
+            {
+                $match: {
+                    orgid: new Types.ObjectId(orgid),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'users',
+                    localField: 'userid',
+                    foreignField: '_id',
+                    as: 'employees',
+                },
+            },
+            {
+                $project: {
+                    role: 1,
+                    employees: {
+                        name: 1,
+                        email: 1,
+                        avatar: 1,
+                    },
+                },
+            },
+            {
+                $unwind: {
+                    path: '$employees',
+                    preserveNullAndEmptyArrays: false,
+                },
+            },
+            {
+                $facet: {
+                    data: [],
+                    totalCount: [{ $count: 'count' }],
+                },
+            },
+            {
+                $project: {
+                    data: 1,
+                    count: { $arrayElemAt: ['$totalCount.count', 0] },
+                },
+            },
+            {
+                $unwind: {
+                    path: '$data',
+                },
+            },
+        ]);
 
 		const emps = await new ApiFilter(query, req.parsedQuery!)
 			.filter()
@@ -524,65 +524,135 @@ export const searchEmployee = catchAsync(
 
 		if (!orgid) return next(new AppError("Invalid organization", 400));
 
-		const employees = await Emp.aggregate([
-			{
-				$match: {
-					orgid: new Types.ObjectId(orgid),
-				},
-			},
-			{
-				$lookup: {
-					from: "users",
-					localField: "userid",
-					foreignField: "_id",
-					as: "employees",
-				},
-			},
-			{
-				$project: {
-					role: 1,
-					employees: {
-						name: 1,
-						email: 1,
-						avatar: 1,
-					},
-				},
-			},
-			{
-				$unwind: "$employees",
-			},
-			{
-				$match: {
-					$or: [
-						{
-							"employees.email": {
-								$regex: `.*${query}.*`,
-								$options: "i",
-							},
-						},
-						{
-							"employees.name": {
-								$regex: `.*${query}.*`,
-								$options: "i",
-							},
-						},
-						{
-							role: {
-								$regex: `.*${query}.*`,
-								$options: "i",
-							},
-						},
-					],
-				},
-			},
-		]);
-		console.log(employees);
-		return res.status(200).json({
-			status: "success",
-			results: employees.length,
-			data: {
-				employees,
-			},
-		});
-	}
+        let employees;
+        if (redisClient.isReady) {
+            employees = await redisClient.hGet(
+                `organization-${orgid}`,
+                'employees'
+            );
+            if (!employees) {
+                employees = await Emp.aggregate([
+                    {
+                        $match: {
+                            orgid: new Types.ObjectId(orgid),
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userid',
+                            foreignField: '_id',
+                            as: 'employees',
+                        },
+                    },
+                    {
+                        $project: {
+                            role: 1,
+                            employees: {
+                                name: 1,
+                                email: 1,
+                                avatar: 1,
+                            },
+                        },
+                    },
+                    {
+                        $unwind: '$employees',
+                    },
+                    {
+                        $match: {
+                            $or: [
+                                {
+                                    'employees.email': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    'employees.name': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    role: {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ]);
+                await redisClient.hSet(
+                    `organization-${orgid}`,
+                    'employees',
+                    JSON.stringify(employees)
+                );
+                console.log(employees)
+            }
+            else {
+                employees = JSON.parse(employees)
+            }
+        }
+        else {
+            employees = await Emp.aggregate([
+                    {
+                        $match: {
+                            orgid: new Types.ObjectId(orgid),
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userid',
+                            foreignField: '_id',
+                            as: 'employees',
+                        },
+                    },
+                    {
+                        $project: {
+                            role: 1,
+                            employees: {
+                                name: 1,
+                                email: 1,
+                                avatar: 1,
+                            },
+                        },
+                    },
+                    {
+                        $unwind: '$employees',
+                    },
+                    {
+                        $match: {
+                            $or: [
+                                {
+                                    'employees.email': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    'employees.name': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    role: {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ]);
+        }
+        return res.status(200).json({
+            status: 'Success',
+            data: {
+                employees,
+            },
+        });
+    }
 );
