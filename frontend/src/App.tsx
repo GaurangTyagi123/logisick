@@ -10,6 +10,7 @@ import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import OrderSales from "./pages/OrderSales";
 import ItemPage from "./pages/ItemPage";
+import AcceptInvite from "./pages/AcceptInvite";
 
 const Loading = lazy(() => import("@/components/Loading"));
 
@@ -23,7 +24,6 @@ const Authenticate = lazy(() => import("@/pages/Authenticate"));
 const Profile = lazy(() => import("@/pages/Profile"));
 const Organization = lazy(() => import("./pages/Organization"));
 const OrgOverview = lazy(() => import("./pages/OrgOverview"));
-
 
 /**
  * @component a component to serves as base of all pages and handles routing of pages
@@ -66,7 +66,7 @@ function App() {
 							)
 						}
 					>
-						<Route index element={<OrgOverview/>} />
+						<Route index element={<OrgOverview />} />
 						<Route
 							path="/dashboard/:orgSlug/analytics"
 							element={<Analytics />}
@@ -84,6 +84,11 @@ function App() {
 							element={<OrderSales />}
 						/>
 					</Route>
+					{/* path for invitation acceptence */}
+					<Route
+						path="/acceptInvite/:token"
+						element={<AcceptInvite />}
+					/>
 					{/* path for uesr authentication */}
 					<Route
 						path="/authenticate"
@@ -111,7 +116,7 @@ function App() {
 					/>
 					{/* path for documentation */}
 					<Route path="/docs" element={<Docs />} />
-					<Route path="/item/:SKU" element={<ItemPage/>} />
+					<Route path="/item/:SKU" element={<ItemPage />} />
 					{/* default path for paths that are not found/defined/allowed */}
 					<Route path="*" element={<Notfound />} />
 				</Routes>

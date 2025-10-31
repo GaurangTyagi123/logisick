@@ -67,6 +67,10 @@ export const sendInvite = catchAsync(
 			});
 		}
 
+		const exists = await redisClient.exists(empEmail);
+		if (!exists)
+			return next(new AppError("Unable to save invite ",500));
+
 		const expireTime = await redisClient.expire(
 			empEmail,
 			parseInt(process.env.OTP_EXPIRE_TIME as string) *
@@ -125,6 +129,9 @@ export const joinOrg = catchAsync(
 			role,
 			managerid,
 		} = await redisClient.hGetAll(req.user.email);
+
+		console.log()
+		console.log({role,orgid,inviteToken,token});
 
 		if (!role || !orgid || !inviteToken || token.trim() !== inviteToken)
 			return next(new AppError("User not invited in organization", 400));
