@@ -2,18 +2,20 @@ import clsx from "clsx";
 
 interface LoadingProps {
 	className?: string;
+	fullscreen?: boolean;
 }
 
 /**
  * @component a aninated loading component to use as a placeholder when other compoennts are loading
- * @param className extra classes added at parent component at whihc it is used 
+ * @param className extra classes added at parent component at whihc it is used
  * @returns react component
  */
-function Loading({ className }: LoadingProps) {
+function Loading({ className, fullscreen }: LoadingProps) {
 	return (
 		<div
 			className={clsx(
-				"flex items-center gap-2 h-screen w-screen",
+				"flex items-center gap-2 h-full w-full bg-ls-bg-300 dark:bg-ls-bg-dark-900",
+				fullscreen ? "h-screen w-screen" : "w-full h-full",
 				className
 			)}
 		>

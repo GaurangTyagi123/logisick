@@ -37,11 +37,11 @@ function App() {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
 
-	if (isCheckingAuth) return <Loading />;
+	if (isCheckingAuth) return <Loading fullscreen/>;
 
 	return (
 		<>
-			<Suspense fallback={<Loading />}>
+			<Suspense fallback={<Loading fullscreen/>}>
 				<Routes>
 					{/* path for homepage */}
 					<Route index path="/" element={<Home />} />

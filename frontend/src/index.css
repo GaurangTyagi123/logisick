@@ -9,6 +9,7 @@
 *::after {
 	/* padding: 0; */
 	/* margin: 0; */
+	scrollbar-width:none;
 	box-sizing: border-box;
 }
 
@@ -18,6 +19,7 @@ body,
 	/* width: 100vw; */
 	/* min-height: 100dvh; */
 	/* scrollbar-gutter: stable; */
+	scrollbar-width:none;
 	scroll-behavior: smooth;
 }
 .highlight,
