@@ -220,9 +220,9 @@ export const getEmps = catchAsync(
             },
             {
                 $unwind: {
-                    path : "$data"
-                }
-            }
+                    path: '$data',
+                },
+            },
         ]);
 
         const emps = await new ApiFilter(query, req.parsedQuery!)
@@ -526,64 +526,134 @@ export const searchEmployee = catchAsync(
 
         if (!orgid) return next(new AppError('Invalid organization', 400));
 
-        const employees = await Emp.aggregate([
-            {
-                $match: {
-                    orgid: new Types.ObjectId(orgid),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'userid',
-                    foreignField: '_id',
-                    as: 'employees',
-                },
-            },
-            {
-                $project: {
-                    role: 1,
-                    employees: {
-                        name: 1,
-                        email: 1,
-                        avatar: 1,
+        let employees;
+        if (redisClient.isReady) {
+            employees = await redisClient.hGet(
+                `organization-${orgid}`,
+                'employees'
+            );
+            if (!employees) {
+                employees = await Emp.aggregate([
+                    {
+                        $match: {
+                            orgid: new Types.ObjectId(orgid),
+                        },
                     },
-                },
-            },
-            {
-                $unwind: '$employees',
-            },
-            {
-                $match: {
-                    $or: [
-                        {
-                            'employees.email': {
-                                $regex: `.*${query}.*`,
-                                $options: 'i',
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userid',
+                            foreignField: '_id',
+                            as: 'employees',
+                        },
+                    },
+                    {
+                        $project: {
+                            role: 1,
+                            employees: {
+                                name: 1,
+                                email: 1,
+                                avatar: 1,
                             },
                         },
-                        {
-                            'employees.name': {
-                                $regex: `.*${query}.*`,
-                                $options: 'i',
+                    },
+                    {
+                        $unwind: '$employees',
+                    },
+                    {
+                        $match: {
+                            $or: [
+                                {
+                                    'employees.email': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    'employees.name': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    role: {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                            ],
+                        },
+                    },
+                ]);
+                await redisClient.hSet(
+                    `organization-${orgid}`,
+                    'employees',
+                    JSON.stringify(employees)
+                );
+                console.log(employees)
+            }
+            else {
+                employees = JSON.parse(employees)
+            }
+        }
+        else {
+            employees = await Emp.aggregate([
+                    {
+                        $match: {
+                            orgid: new Types.ObjectId(orgid),
+                        },
+                    },
+                    {
+                        $lookup: {
+                            from: 'users',
+                            localField: 'userid',
+                            foreignField: '_id',
+                            as: 'employees',
+                        },
+                    },
+                    {
+                        $project: {
+                            role: 1,
+                            employees: {
+                                name: 1,
+                                email: 1,
+                                avatar: 1,
                             },
                         },
-                        {
-                            role: {
-                                $regex: `.*${query}.*`,
-                                $options: 'i',
-                            },
+                    },
+                    {
+                        $unwind: '$employees',
+                    },
+                    {
+                        $match: {
+                            $or: [
+                                {
+                                    'employees.email': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    'employees.name': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    role: {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                            ],
                         },
-                    ],
-                },
-            },
-        ]);
-        console.log(employees)
+                    },
+                ]);
+        }
         return res.status(200).json({
             status: 'Success',
-            results: employees.length,
             data: {
-                 employees,
+                employees,
             },
         });
     }
