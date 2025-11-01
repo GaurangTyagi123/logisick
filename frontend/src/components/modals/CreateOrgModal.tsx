@@ -19,7 +19,7 @@ import {
 	SelectValue,
 } from "@/components/ui/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrg } from "@/services/apiOrganization";
+import { createOrg } from "@/services/apiOrg";
 import { toast } from "react-toastify";
 const orgTypes = ["Basic", "Small-Cap", "Mid-Cap", "Large-Cap", "Other"];
 type OrganizationFormData = {
@@ -71,7 +71,10 @@ function OrganizationModal({
 			<Card className="min-w-md">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Create Organization</CardTitle>
-					<Button onClick={() => setOpen(false)} variant={"secondary"}>
+					<Button
+						onClick={() => setOpen(false)}
+						variant={"secondary"}
+					>
 						<Close />
 					</Button>
 				</CardHeader>

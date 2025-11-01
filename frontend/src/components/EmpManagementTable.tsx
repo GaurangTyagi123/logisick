@@ -11,6 +11,12 @@ import CustomTable from "./CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
+import Button from "./ui/button";
+import useDeleteEmployee from "@/hooks/emp/useDeleteEmployee";
+import DeleteEmpModal from "./modals/DeleteEmpModal";
+import { Delete } from "@/assets/icons/Profilepage";
+import useChangeRole from "@/hooks/emp/useChangeRole";
+import ChangeEmpRoleModal from "./modals/ChangeEmpRoleModal";
 
 interface Employee {
 	[key: string]: string;
@@ -31,6 +37,7 @@ function deconstructEmployee(
 				role: string;
 				avatar: string;
 			};
+			_id: string;
 			count: string;
 		};
 	}>
@@ -45,11 +52,13 @@ function deconstructEmployee(
 						email: string;
 						avatar: string;
 					};
+					_id: string;
 					count: string;
 				};
 			}) => {
 				const newE = {
 					role: employee?.data?.role,
+					_id: employee.data._id,
 					...employee?.data?.employees,
 				};
 				return newE;
@@ -76,6 +85,22 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	// current page
 	const [page, setPage] = useState<number>(1);
 
+	const [deleteEmpModalOpen, setDeleteEmpModalOpen] =
+		useState<boolean>(false);
+	const [changeRoleModalOpen, setChangeRoleModalOpen] =
+		useState<boolean>(false);
+
+	const [empData, setEmpData] = useState<{
+		_id: string;
+		name: string;
+		email: string;
+	}>({
+		_id: "",
+		name: "",
+		email: "",
+	});
+	const [oldRole, setOldRole] = useState<"Admin" | "Manager" | "Staff">();
+
 	// employee data
 	const {
 		data: employees,
@@ -83,6 +108,9 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		isPending: isGettingEmployees,
 		error,
 	} = useGetEmployees(orgid as string, page);
+
+	const { deleteEmp, isPending: pendingDeleteEmp } = useDeleteEmployee();
+	const { changeEmpRole, isPending: pendingChangeRole } = useChangeRole();
 
 	// stores the search results
 	const [searchResults, setSearchResults] = useState<Employee[] | null>(null);
@@ -161,7 +189,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 										customSeed={row.avatar}
 									/>
 									<span className="hidden sm:flex">
-										{row?.name}
+										{row?.name} - ( {row?.role} )
 									</span>
 								</div>
 							);
@@ -172,8 +200,51 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 						header: "email",
 					},
 					{
-						key: "role",
-						header: "role",
+						key: "Manage Employee",
+						header: "Manage Rmployee",
+						render: (_, row) => {
+							console.log(row);
+							return (
+								<div className="flex gap-2 justify-end items-center">
+									{row.role !== "Owner" && (
+										<Button
+											disabled={pendingChangeRole}
+											onClick={() => {
+												setEmpData({
+													_id: row._id,
+													name: row.name,
+													email: row.email,
+												});
+												setOldRole(
+													row.role as
+														| "Admin"
+														| "Manager"
+														| "Staff"
+												);
+												setChangeRoleModalOpen(true);
+											}}
+										>
+											Change Role
+										</Button>
+									)}
+									<Button
+										disabled={pendingDeleteEmp}
+										onClick={() => {
+											setEmpData({
+												_id: row._id,
+												name: row.name,
+												email: row.email,
+											});
+											setDeleteEmpModalOpen(true);
+										}}
+										variant={"destructive"}
+										title={`Remove ${row.name} from organization`}
+									>
+										<Delete />
+									</Button>
+								</div>
+							);
+						},
 					},
 				]}
 				clientSide
@@ -182,6 +253,23 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 				totalPages={totalPages}
 				setPage={setPage}
 				onSearch={debouncedSearch}
+			/>
+			<DeleteEmpModal
+				open={deleteEmpModalOpen}
+				setOpen={setDeleteEmpModalOpen}
+				orgid={orgid}
+				empData={empData}
+				deleteEmp={deleteEmp}
+				isPending={pendingDeleteEmp}
+			/>
+			<ChangeEmpRoleModal
+				open={changeRoleModalOpen}
+				setOpen={setChangeRoleModalOpen}
+				changeRole={changeEmpRole}
+				empData={empData}
+				isPending={pendingChangeRole}
+				oldRole={oldRole || "Staff"}
+				orgid={orgid}
 			/>
 		</div>
 	);

@@ -68,8 +68,7 @@ export const sendInvite = catchAsync(
 		}
 
 		const exists = await redisClient.exists(empEmail);
-		if (!exists)
-			return next(new AppError("Unable to save invite ",500));
+		if (!exists) return next(new AppError("Unable to save invite ", 500));
 
 		const expireTime = await redisClient.expire(
 			empEmail,
@@ -130,8 +129,8 @@ export const joinOrg = catchAsync(
 			managerid,
 		} = await redisClient.hGetAll(req.user.email);
 
-		console.log()
-		console.log({role,orgid,inviteToken,token});
+		console.log();
+		console.log({ role, orgid, inviteToken, token });
 
 		if (!role || !orgid || !inviteToken || token.trim() !== inviteToken)
 			return next(new AppError("User not invited in organization", 400));
@@ -183,54 +182,54 @@ export const getEmps = catchAsync(
 		const { orgid } = req.params;
 		if (!orgid) return next(new AppError("orgid field is requied", 404));
 
-        const query = Emp.aggregate([
-            {
-                $match: {
-                    orgid: new Types.ObjectId(orgid),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'users',
-                    localField: 'userid',
-                    foreignField: '_id',
-                    as: 'employees',
-                },
-            },
-            {
-                $project: {
-                    role: 1,
-                    employees: {
-                        name: 1,
-                        email: 1,
-                        avatar: 1,
-                    },
-                },
-            },
-            {
-                $unwind: {
-                    path: '$employees',
-                    preserveNullAndEmptyArrays: false,
-                },
-            },
-            {
-                $facet: {
-                    data: [],
-                    totalCount: [{ $count: 'count' }],
-                },
-            },
-            {
-                $project: {
-                    data: 1,
-                    count: { $arrayElemAt: ['$totalCount.count', 0] },
-                },
-            },
-            {
-                $unwind: {
-                    path: '$data',
-                },
-            },
-        ]);
+		const query = Emp.aggregate([
+			{
+				$match: {
+					orgid: new Types.ObjectId(orgid),
+				},
+			},
+			{
+				$lookup: {
+					from: "users",
+					localField: "userid",
+					foreignField: "_id",
+					as: "employees",
+				},
+			},
+			{
+				$project: {
+					role: 1,
+					employees: {
+						name: 1,
+						email: 1,
+						avatar: 1,
+					},
+				},
+			},
+			{
+				$unwind: {
+					path: "$employees",
+					preserveNullAndEmptyArrays: false,
+				},
+			},
+			{
+				$facet: {
+					data: [],
+					totalCount: [{ $count: "count" }],
+				},
+			},
+			{
+				$project: {
+					data: 1,
+					count: { $arrayElemAt: ["$totalCount.count", 0] },
+				},
+			},
+			{
+				$unwind: {
+					path: "$data",
+				},
+			},
+		]);
 
 		const emps = await new ApiFilter(query, req.parsedQuery!)
 			.filter()
@@ -334,6 +333,7 @@ export const getMyOrgs = catchAsync(
 );
 
 // Function to change roles of user (by owner/admin)
+// TODO : bug in it
 export const changeRole = catchAsync(
 	async (
 		req: ExpressTypes.UserRequest,
@@ -350,7 +350,7 @@ export const changeRole = catchAsync(
 
 		const oldEmp = await Emp.findOne({
 			orgid: org._id,
-			userid,
+			_id: userid,
 			deleted: false,
 		});
 		if (!oldEmp) return next(new AppError("Not an existing employee", 404));
@@ -499,10 +499,11 @@ export const deleteEmp = catchAsync(
 			);
 
 		const oldEmp = await Emp.findOne({
-			userid,
+			_id: userid,
 			orgid: org._id,
-			deleted: { $ne: true },
+			deleted: false,
 		});
+		console.log(oldEmp);
 		if (!oldEmp)
 			return next(new AppError("User id not an employee of org", 400));
 		if (oldEmp.role === "Owner" || oldEmp.role === "Manager")
@@ -531,135 +532,133 @@ export const searchEmployee = catchAsync(
 
 		if (!orgid) return next(new AppError("Invalid organization", 400));
 
-        let employees;
-        if (redisClient.isReady) {
-            employees = await redisClient.hGet(
-                `organization-${orgid}`,
-                'employees'
-            );
-            if (!employees) {
-                employees = await Emp.aggregate([
-                    {
-                        $match: {
-                            orgid: new Types.ObjectId(orgid),
-                        },
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            localField: 'userid',
-                            foreignField: '_id',
-                            as: 'employees',
-                        },
-                    },
-                    {
-                        $project: {
-                            role: 1,
-                            employees: {
-                                name: 1,
-                                email: 1,
-                                avatar: 1,
-                            },
-                        },
-                    },
-                    {
-                        $unwind: '$employees',
-                    },
-                    {
-                        $match: {
-                            $or: [
-                                {
-                                    'employees.email': {
-                                        $regex: `.*${query}.*`,
-                                        $options: 'i',
-                                    },
-                                },
-                                {
-                                    'employees.name': {
-                                        $regex: `.*${query}.*`,
-                                        $options: 'i',
-                                    },
-                                },
-                                {
-                                    role: {
-                                        $regex: `.*${query}.*`,
-                                        $options: 'i',
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ]);
-                await redisClient.hSet(
-                    `organization-${orgid}`,
-                    'employees',
-                    JSON.stringify(employees)
-                );
-                console.log(employees)
-            }
-            else {
-                employees = JSON.parse(employees)
-            }
-        }
-        else {
-            employees = await Emp.aggregate([
-                    {
-                        $match: {
-                            orgid: new Types.ObjectId(orgid),
-                        },
-                    },
-                    {
-                        $lookup: {
-                            from: 'users',
-                            localField: 'userid',
-                            foreignField: '_id',
-                            as: 'employees',
-                        },
-                    },
-                    {
-                        $project: {
-                            role: 1,
-                            employees: {
-                                name: 1,
-                                email: 1,
-                                avatar: 1,
-                            },
-                        },
-                    },
-                    {
-                        $unwind: '$employees',
-                    },
-                    {
-                        $match: {
-                            $or: [
-                                {
-                                    'employees.email': {
-                                        $regex: `.*${query}.*`,
-                                        $options: 'i',
-                                    },
-                                },
-                                {
-                                    'employees.name': {
-                                        $regex: `.*${query}.*`,
-                                        $options: 'i',
-                                    },
-                                },
-                                {
-                                    role: {
-                                        $regex: `.*${query}.*`,
-                                        $options: 'i',
-                                    },
-                                },
-                            ],
-                        },
-                    },
-                ]);
-        }
-        return res.status(200).json({
-            status: 'Success',
-            data: {
-                employees,
-            },
-        });
-    }
+		let employees;
+		if (redisClient.isReady) {
+			employees = await redisClient.hGet(
+				`organization-${orgid}`,
+				"employees"
+			);
+			if (!employees) {
+				employees = await Emp.aggregate([
+					{
+						$match: {
+							orgid: new Types.ObjectId(orgid),
+						},
+					},
+					{
+						$lookup: {
+							from: "users",
+							localField: "userid",
+							foreignField: "_id",
+							as: "employees",
+						},
+					},
+					{
+						$project: {
+							role: 1,
+							employees: {
+								name: 1,
+								email: 1,
+								avatar: 1,
+							},
+						},
+					},
+					{
+						$unwind: "$employees",
+					},
+					{
+						$match: {
+							$or: [
+								{
+									"employees.email": {
+										$regex: `.*${query}.*`,
+										$options: "i",
+									},
+								},
+								{
+									"employees.name": {
+										$regex: `.*${query}.*`,
+										$options: "i",
+									},
+								},
+								{
+									role: {
+										$regex: `.*${query}.*`,
+										$options: "i",
+									},
+								},
+							],
+						},
+					},
+				]);
+				await redisClient.hSet(
+					`organization-${orgid}`,
+					"employees",
+					JSON.stringify(employees)
+				);
+				console.log(employees);
+			} else {
+				employees = JSON.parse(employees);
+			}
+		} else {
+			employees = await Emp.aggregate([
+				{
+					$match: {
+						orgid: new Types.ObjectId(orgid),
+					},
+				},
+				{
+					$lookup: {
+						from: "users",
+						localField: "userid",
+						foreignField: "_id",
+						as: "employees",
+					},
+				},
+				{
+					$project: {
+						role: 1,
+						employees: {
+							name: 1,
+							email: 1,
+							avatar: 1,
+						},
+					},
+				},
+				{
+					$unwind: "$employees",
+				},
+				{
+					$match: {
+						$or: [
+							{
+								"employees.email": {
+									$regex: `.*${query}.*`,
+									$options: "i",
+								},
+							},
+							{
+								"employees.name": {
+									$regex: `.*${query}.*`,
+									$options: "i",
+								},
+							},
+							{
+								role: {
+									$regex: `.*${query}.*`,
+									$options: "i",
+								},
+							},
+						],
+					},
+				},
+			]);
+		}
+		return res.status(200).json({
+			status: "Success",
+			data: {
+				employees,
+			},
+		});
+	}
 );

@@ -2,11 +2,10 @@ import EmployeeTable from "@/components/EmployeeTable";
 import Loading from "@/components/Loading";
 import { Badge } from "@/components/ui/badge";
 import { H3, Muted, Small } from "@/components/ui/Typography";
-import { getOrganization } from "@/services/apiOrganization";
+import { getOrganization } from "@/services/apiOrg";
 import { formatCurrency } from "@/utils/utilfn";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
-
 
 function OrgOverview() {
 	const { orgSlug } = useParams();
@@ -27,11 +26,15 @@ function OrgOverview() {
 						<div className="flex">
 							<Small className="grid place-items-center gap-2 h-full p-2">
 								Imports
-								<Badge className="p-2">{formatCurrency(500000)}</Badge>
+								<Badge className="p-2">
+									{formatCurrency(500000)}
+								</Badge>
 							</Small>
 							<Small className="grid place-items-center gap-2 h-full p-2">
 								Exports
-								<Badge className="p-2">{formatCurrency(500000)}</Badge>
+								<Badge className="p-2">
+									{formatCurrency(500000)}
+								</Badge>
 							</Small>
 						</div>
 					</div>
@@ -39,7 +42,7 @@ function OrgOverview() {
 						{orgData.description}
 					</Muted>
 				</div>
-				{orgData ? <EmployeeTable orgid={orgData?._id} /> : <Loading/>}
+				{orgData ? <EmployeeTable orgid={orgData?._id} /> : <Loading />}
 			</div>
 		);
 	} else return <p>Create your own organiztion</p>;

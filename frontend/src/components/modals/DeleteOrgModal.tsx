@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { deleteOrg } from "@/services/apiOrganization";
+import { deleteOrg } from "@/services/apiOrg";
 
 /**
  * @component a modal for profilepage which prompts user to delete organization when clicked to do so
@@ -83,17 +83,17 @@ function DeleteOrgModal({
 							" in the input below to delete account
 						</span>
 						<Input
-							placeholder="Enter Your Email"
-							type="email"
+							placeholder="Enter Text"
+							type="text"
 							value={text}
-							name="email"
+							name="org text"
 							required
 							className="text-sm md:text-md"
-							onChange={(e) => setText(e.target.value.trim())}
+							onChange={(e) => setText(e.target.value)}
 						/>
 					</Label>
 				</CardContent>
-				<CardFooter className="flex gap-2">
+				<CardFooter className="flex gap-2 w-full">
 					<Button
 						onClick={() => setOpen(false)}
 						variant={"secondary"}

@@ -1,10 +1,10 @@
-import EmployeeTable from "@/components/EmployeeTable";
+import EmpManagementTable from "@/components/EmpManagementTable";
 import Loading from "@/components/Loading";
 import InviteEmpModal from "@/components/modals/InviteEmpModal";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import { checkAuth } from "@/services/apiAuth";
-import { getOrganization } from "@/services/apiOrganization";
+import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useState } from "react";
@@ -50,7 +50,7 @@ function UserManagement() {
 			{isGettingOrg ? (
 				<Loading />
 			) : orgData ? (
-				<EmployeeTable orgid={orgData?._id} />
+				<EmpManagementTable orgid={orgData?._id} />
 			) : (
 				<div className="h-full w-full grid place-items-center gap-3">
 					<H3>Organization doesn't have any employee.</H3>
