@@ -102,6 +102,7 @@ export const searchEmployee = async ({ orgid, query, controller }: Record<string
             `/v1/emp/${orgid}/search?query=${encodeURIComponent(query)}`,
             { signal: controller.signal }
         );
+        console.log("fetched emp search data",res.data);
         if (res.status === 200) {
             return res.data.data;
         } else {

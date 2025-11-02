@@ -82,7 +82,7 @@ declare interface EmpType {
     userid: ObjectId;
     orgid: ObjectId;
     role: 'Owner' | 'Admin' | 'Manager' | 'Staff';
-    manager: ObjectId;
+    manager?: ObjectId;
     createdAt: Date;
     updatedAt: Date;
 

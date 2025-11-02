@@ -13,13 +13,12 @@ type acceptInvite = (token: string) => Promise<Emp | void>;
 type changeRole = (
 	orgid: string,
 	newRole: "Admin" | "Manager" | "Staff",
-	userid: string,
-	managerid?: string
+	userid: string
 ) => Promise<Emp | void>;
 
 type changeManager = (
 	userid: string,
-	managerid: string,
+	managerEmail: string,
 	orgid: string
 ) => Promise<Emp | void>;
 
@@ -74,12 +73,7 @@ export const acceptInvite: acceptInvite = async (token) => {
  * @brief async function to request api to change role of employee
  * @returns (Emp) data of new employee
  */
-export const changeRole: changeRole = async (
-	orgid,
-	newRole,
-	userid,
-	managerid
-) => {
+export const changeRole: changeRole = async (orgid, newRole, userid) => {
 	try {
 		const res = await axinstance.patch<{
 			status: string;
@@ -87,7 +81,6 @@ export const changeRole: changeRole = async (
 		}>(`/v1/emp/${orgid}/changeRole`, {
 			newRole,
 			userid,
-			managerid,
 		});
 		if (res.status === 200) {
 			return res.data.data.emp;
@@ -103,7 +96,7 @@ export const changeRole: changeRole = async (
  */
 export const changeManager: changeManager = async (
 	userid,
-	managerid,
+	managerEmail,
 	orgid
 ) => {
 	try {
@@ -112,7 +105,7 @@ export const changeManager: changeManager = async (
 			data: { emp: Emp };
 		}>(`/v1/emp/${orgid}/changeManager`, {
 			userid,
-			managerid,
+			managerEmail,
 		});
 		if (res.status === 200) {
 			return res.data.data.emp;
@@ -137,8 +130,8 @@ export const deleteEmployee: deleteEmployee = async (userid, orgid) => {
 			toast.success("Employee deleted successfully", {
 				className: "toast",
 			});
-		} 
+		}
 	} catch (error) {
-		handleError(error,"There was an error deleting employee");
+		handleError(error, "There was an error deleting employee");
 	}
 };

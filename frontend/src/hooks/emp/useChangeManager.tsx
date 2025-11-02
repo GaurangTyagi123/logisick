@@ -7,17 +7,17 @@ function useChangeManager() {
 	const { mutate: changeEmpManager, isPending } = useMutation({
 		mutationFn: ({
 			userid,
-			managerid,
+			managerEmail,
 			orgid,
 		}: {
 			userid: string;
-			managerid: string;
+			managerEmail: string;
 			orgid: string;
-		}) => changeManager(userid, managerid, orgid),
+		}) => changeManager(userid, managerEmail, orgid),
 		onSuccess: (_data) => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					query.queryKey[0]?.toString().startsWith("emps-") ?? false,
+					query.queryKey[0]?.toString() === "emps",
 			});
 			toast.success("Manager Changed successfully", {
 				className: "toast",

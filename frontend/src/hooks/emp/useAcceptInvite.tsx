@@ -10,8 +10,7 @@ function useAcceptInvite() {
 		mutationFn: ({ token }: { token: string }) => acceptInvite(token),
 		onSuccess: (_data) => {
 			queryClient.invalidateQueries({
-				predicate: (query) =>
-					query.queryKey[0]?.toString().startsWith("emps-") ?? false,
+				predicate: (query) => query.queryKey[0]?.toString() === "emps",
 			});
 			toast.success("Invite Accepted", { className: "toast" });
 			navigate("/dashboard");

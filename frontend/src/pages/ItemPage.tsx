@@ -27,7 +27,7 @@ function ItemPage() {
 	return (
 		<div className="flex flex-col gap-3 items-center bg-ls-bg-300 dark:bg-ls-bg-dark-800 min-h-screen">
 			<Navbar hide={{ userButton: true }} />
-			{item ? <ItemCard item={item} small barebone/> : <div>Not Item Found</div>}
+			{item ? <ItemCard item={item} barebone small/> : <div>Not Item Found</div>}
 		</div>
 	);
 }

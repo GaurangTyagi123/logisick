@@ -54,7 +54,7 @@ const organizationSchema = new Schema<any, OrgModel>(
             required: true,
             default: 'None',
         },
-        slug: String,
+        slug: String, // TODO : add event listener to update slug on update of org
     },
     {
         timestamps: true,

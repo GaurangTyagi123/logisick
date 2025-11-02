@@ -95,7 +95,7 @@ function TransferOwnershipModal({
 													defaultValue={user?._id}
 												/>
 											</SelectTrigger>
-											<SelectContent>
+											<SelectContent className="overflow-y-auto grid">
 												{(employees || isFetching) &&
 													employees?.map(
 														(emp: User) =>

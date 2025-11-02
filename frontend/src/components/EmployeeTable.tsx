@@ -152,7 +152,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 				columns={[
 					{
 						key: "name",
-						header: "name",
+						header: "Name",
 						render: (_, row) => {
 							return (
 								<div className="flex gap-2 items-center">
@@ -169,11 +169,11 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 					},
 					{
 						key: "email",
-						header: "email",
+						header: "Email",
 					},
 					{
 						key: "role",
-						header: "role",
+						header: "Role",
 					},
 				]}
 				clientSide

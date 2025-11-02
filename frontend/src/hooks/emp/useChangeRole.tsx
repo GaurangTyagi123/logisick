@@ -9,17 +9,15 @@ function useChangeRole() {
 			orgid,
 			newRole,
 			userid,
-			managerid,
 		}: {
 			orgid: string;
 			newRole: "Admin" | "Manager" | "Staff";
 			userid: string;
-			managerid?: string;
-		}) => changeRole(orgid, newRole, userid, managerid),
+		}) => changeRole(orgid, newRole, userid),
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					query.queryKey[0]?.toString().startsWith("emps-") ?? false,
+					query.queryKey[0]?.toString() === "emps" ,
 			});
 			toast.success("Role changed successfully", { className: "toast" });
 		},

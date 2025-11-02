@@ -61,7 +61,7 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
-
+// TODO : make it responsive
 function CustomTable<RowType extends Record<string, string>>({
 	title,
 	titleIcon,
@@ -200,15 +200,7 @@ function CustomTable<RowType extends Record<string, string>>({
 		}
 
 		return result;
-	}, [
-		data,
-		searchStr,
-		filters,
-		sortColumn,
-		sortOrder,
-		columns,
-		clientSide,
-	]);
+	}, [data, filters, sortColumn, sortOrder, clientSide]);
 
 	const activeFilterCount = Object.values(filters).reduce(
 		(sum, arr) => sum + arr.length,
@@ -225,7 +217,7 @@ function CustomTable<RowType extends Record<string, string>>({
 				<div className="flex gap-2">
 					{/* Search input */}
 					<Input
-						value={searchStr || ''}
+						value={searchStr || ""}
 						onChange={(e) => setSearchStr(e.target.value)}
 						type="text"
 						placeholder="Search..."
@@ -339,11 +331,11 @@ function CustomTable<RowType extends Record<string, string>>({
 			<Separator />
 
 			<CardContent className="">
-				{ (clientSide ? processedData : data).length === 0 ? (
+				{(clientSide ? processedData : data).length === 0 ? (
 					<div className="h-64 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
 					</div>
-				) :  (
+				) : (
 					<Table>
 						<TableHeader>
 							<TableRow>

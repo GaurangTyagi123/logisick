@@ -13,10 +13,12 @@ import { toast } from "react-toastify";
 import { debounce } from "lodash";
 import Button from "./ui/button";
 import useDeleteEmployee from "@/hooks/emp/useDeleteEmployee";
-import DeleteEmpModal from "./modals/DeleteEmpModal";
+import DeleteEmpModal from "./modals/emp/DeleteEmpModal";
 import { Delete } from "@/assets/icons/Profilepage";
 import useChangeRole from "@/hooks/emp/useChangeRole";
-import ChangeEmpRoleModal from "./modals/ChangeEmpRoleModal";
+import ChangeEmpRoleModal from "./modals/emp/ChangeEmpRoleModal";
+import useChangeManager from "@/hooks/emp/useChangeManager";
+import ChangeEmpManagerModal from "./modals/emp/ChangeEmpManagerModal";
 
 interface Employee {
 	[key: string]: string;
@@ -36,8 +38,8 @@ function deconstructEmployee(
 				email: string;
 				role: string;
 				avatar: string;
+				_id: string;
 			};
-			_id: string;
 			count: string;
 		};
 	}>
@@ -51,14 +53,13 @@ function deconstructEmployee(
 						name: string;
 						email: string;
 						avatar: string;
+						_id: string;
 					};
-					_id: string;
 					count: string;
 				};
 			}) => {
 				const newE = {
 					role: employee?.data?.role,
-					_id: employee.data._id,
 					...employee?.data?.employees,
 				};
 				return newE;
@@ -71,7 +72,13 @@ function deconstructEmployee(
  * @param orgid (string) id of the organization
  * @returns JSX
  */
-function EmployeeTable({ orgid }: { orgid: string }) {
+function EmployeeTable({
+	orgid,
+	isAuthorized,
+}: {
+	orgid: string;
+	isAuthorized: () => boolean;
+}) {
 	/**
 	 * @method if there is no search query then display data recieved from the server (employees)
 	 * else send the query to the server and store the result in searchResults after deconstructing
@@ -88,6 +95,8 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	const [deleteEmpModalOpen, setDeleteEmpModalOpen] =
 		useState<boolean>(false);
 	const [changeRoleModalOpen, setChangeRoleModalOpen] =
+		useState<boolean>(false);
+	const [changeManagerModalOpen, setChangeManagerModalOpen] =
 		useState<boolean>(false);
 
 	const [empData, setEmpData] = useState<{
@@ -111,6 +120,8 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 
 	const { deleteEmp, isPending: pendingDeleteEmp } = useDeleteEmployee();
 	const { changeEmpRole, isPending: pendingChangeRole } = useChangeRole();
+	const { changeEmpManager, isPending: pendingChangeManager } =
+		useChangeManager();
 
 	// stores the search results
 	const [searchResults, setSearchResults] = useState<Employee[] | null>(null);
@@ -177,76 +188,143 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		<div className=" w-full">
 			<CustomTable<Record<string, string>>
 				title="Employees"
-				columns={[
-					{
-						key: "name",
-						header: "name",
-						render: (_, row) => {
-							return (
-								<div className="flex gap-2 items-center">
-									<UserAvatar
-										className="w-10 h-10"
-										customSeed={row.avatar}
-									/>
-									<span className="hidden sm:flex">
-										{row?.name} - ( {row?.role} )
-									</span>
-								</div>
-							);
-						},
-					},
-					{
-						key: "email",
-						header: "email",
-					},
-					{
-						key: "Manage Employee",
-						header: "Manage Rmployee",
-						render: (_, row) => {
-							console.log(row);
-							return (
-								<div className="flex gap-2 justify-end items-center">
-									{row.role !== "Owner" && (
-										<Button
-											disabled={pendingChangeRole}
-											onClick={() => {
-												setEmpData({
-													_id: row._id,
-													name: row.name,
-													email: row.email,
-												});
-												setOldRole(
-													row.role as
-														| "Admin"
-														| "Manager"
-														| "Staff"
-												);
-												setChangeRoleModalOpen(true);
-											}}
-										>
-											Change Role
-										</Button>
-									)}
-									<Button
-										disabled={pendingDeleteEmp}
-										onClick={() => {
-											setEmpData({
-												_id: row._id,
-												name: row.name,
-												email: row.email,
-											});
-											setDeleteEmpModalOpen(true);
-										}}
-										variant={"destructive"}
-										title={`Remove ${row.name} from organization`}
-									>
-										<Delete />
-									</Button>
-								</div>
-							);
-						},
-					},
-				]}
+				columns={
+					isAuthorized()
+						? [
+								{
+									key: "name",
+									header: "Name",
+									render: (_, row) => {
+										return (
+											<div className="flex gap-2 items-center">
+												<UserAvatar
+													className="w-10 h-10"
+													customSeed={row.avatar}
+												/>
+												<span className="hidden sm:flex">
+													{row?.name} - ( {row?.role}{" "}
+													)
+												</span>
+											</div>
+										);
+									},
+								},
+								{
+									key: "email",
+									header: "Email",
+								},
+								{
+									key: "Manage Employee",
+									header: "Manage Employee",
+									render: (_, row) => {
+										console.log("Emp row :", row);
+										return (
+											<div className="flex gap-2 justify-end items-center">
+												{row.role !== "Owner" && (
+													<>
+														{/* change role */}
+														<Button
+															disabled={
+																pendingChangeRole
+															}
+															onClick={() => {
+																setEmpData({
+																	_id: row._id,
+																	name: row.name,
+																	email: row.email,
+																});
+																setOldRole(
+																	row.role as
+																		| "Admin"
+																		| "Manager"
+																		| "Staff"
+																);
+																setChangeRoleModalOpen(
+																	true
+																);
+															}}
+															variant={
+																"secondary"
+															}
+														>
+															Change Role
+														</Button>
+														{/* change manager */}
+														<Button
+															disabled={
+																pendingChangeManager
+															}
+															onClick={() => {
+																setEmpData({
+																	_id: row._id,
+																	name: row.name,
+																	email: row.email,
+																});
+																setChangeManagerModalOpen(
+																	true
+																);
+															}}
+															variant={
+																"secondary"
+															}
+															title={`Remove ${row.name} from organization`}
+														>
+															Change Manager
+														</Button>
+														{/* delete employee */}
+														<Button
+															disabled={
+																pendingDeleteEmp
+															}
+															onClick={() => {
+																setEmpData({
+																	_id: row._id,
+																	name: row.name,
+																	email: row.email,
+																});
+																setDeleteEmpModalOpen(
+																	true
+																);
+															}}
+															variant={
+																"destructive"
+															}
+															title={`Remove ${row.name} from organization`}
+														>
+															<Delete />
+														</Button>
+													</>
+												)}
+											</div>
+										);
+									},
+								},
+						  ]
+						: [
+								{
+									key: "name",
+									header: "Name",
+									render: (_, row) => {
+										return (
+											<div className="flex gap-2 items-center">
+												<UserAvatar
+													className="w-10 h-10"
+													customSeed={row.avatar}
+												/>
+												<span className="hidden sm:flex">
+													{row?.name} - ( {row?.role}{" "}
+													)
+												</span>
+											</div>
+										);
+									},
+								},
+								{
+									key: "email",
+									header: "Email",
+								},
+						  ]
+				}
 				clientSide
 				data={searchResults ? searchResults : deconstructedEmployees}
 				currentPage={page}
@@ -270,6 +348,14 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 				isPending={pendingChangeRole}
 				oldRole={oldRole || "Staff"}
 				orgid={orgid}
+			/>
+			<ChangeEmpManagerModal
+				changeManager={changeEmpManager}
+				empData={empData}
+				isPending={pendingChangeManager}
+				open={changeManagerModalOpen}
+				orgid={orgid}
+				setOpen={setChangeManagerModalOpen}
 			/>
 		</div>
 	);

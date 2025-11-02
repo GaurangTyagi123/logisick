@@ -12,6 +12,7 @@ function AcceptInvite() {
 		if (!token) toast.error("No invitation token found");
 		else acceptInvitation({ token });
 	};
+	// TODO : if not authenticated navigate to authenticate page
 
 	return (
 		<div className="h-dvh bg-ls-bg-300 dark:bg-ls-bg-dark-800 flex flex-col justify-center items-center">

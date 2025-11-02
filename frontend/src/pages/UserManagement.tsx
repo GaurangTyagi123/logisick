@@ -50,7 +50,7 @@ function UserManagement() {
 			{isGettingOrg ? (
 				<Loading />
 			) : orgData ? (
-				<EmpManagementTable orgid={orgData?._id} />
+				<EmpManagementTable orgid={orgData?._id} isAuthorized={isAuthorized}/>
 			) : (
 				<div className="h-full w-full grid place-items-center gap-3">
 					<H3>Organization doesn't have any employee.</H3>

@@ -1,12 +1,12 @@
-import Modal from "../Modal";
-import Button from "../ui/button";
+import Modal from "../../Modal";
+import Button from "../../ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../ui/card";
+} from "../../ui/card";
 import { Close } from "@/assets/icons/Close";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -15,10 +15,8 @@ import {
 	DropdownMenuContent,
 	DropdownMenuItem,
 	DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
+} from "../../ui/dropdown-menu";
 import type { UseMutateFunction } from "@tanstack/react-query";
-import { Label } from "../ui/label";
-import { Input } from "../ui/input";
 
 interface ChangeEmpRole {
 	open: boolean;
@@ -37,7 +35,6 @@ interface ChangeEmpRole {
 			orgid: string;
 			newRole: "Admin" | "Manager" | "Staff";
 			userid: string;
-			managerid?: string;
 		},
 		unknown
 	>;
@@ -54,7 +51,6 @@ function ChangeEmpRoleModal({
 	isPending,
 }: ChangeEmpRole) {
 	const [role, setRole] = useState<"Admin" | "Manager" | "Staff">(oldRole);
-	const [managerid, setmanagerid] = useState<string>("");
 
 	const handleChangeRole = () => {
 		if (role) {
@@ -62,7 +58,6 @@ function ChangeEmpRoleModal({
 				orgid,
 				newRole: role,
 				userid: empData._id,
-				managerid,
 			});
 		} else {
 			toast.error("Select role first", { className: "toast" });
@@ -114,24 +109,6 @@ function ChangeEmpRoleModal({
 								})}
 						</DropdownMenuContent>
 					</DropdownMenu>
-					{role === "Staff" && (
-						<Label
-							title="Enter Manager Id"
-							htmlFor="managerid"
-							className="grid"
-						>
-							<span>Manager ID</span>
-							<Input
-								placeholder="Enter Manager Id"
-								type="text"
-								value={managerid}
-								name="name"
-								required
-								className="text-sm md:text-md"
-								onChange={(e) => setmanagerid(e.target.value)}
-							/>
-						</Label>
-					)}
 				</CardContent>
 				<CardFooter className="flex gap-2">
 					<Button

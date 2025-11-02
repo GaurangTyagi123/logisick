@@ -10,6 +10,22 @@ import Email from "../utils/sendEmail";
 import { Types } from "mongoose";
 import ApiFilter from "../utils/apiFilter";
 
+function returnChangedRoleEmp(emp: EmpType, res: Response) {
+	return res.status(200).json({
+		status: "success",
+		data: {
+			emp: {
+				userid: emp.userid,
+				orgid: emp.orgid,
+				role: emp.role,
+				manager: emp.manager,
+				createdAt: emp.createdAt,
+				updatedAt: emp.updatedAt,
+			},
+		},
+	});
+}
+
 // Function send emp invite to join org (by email id) (by owner/admin)
 export const sendInvite = catchAsync(
 	async (
@@ -48,7 +64,7 @@ export const sendInvite = catchAsync(
 		const inviteToken = crypto.randomBytes(32).toString("hex");
 		if (!["Manager", "Staff", "Admin"].includes(role))
 			return next(new AppError("Not a valid role", 400));
-
+		// TODO : not necessary that staff has a managher
 		if (role === "Staff" && !managerid)
 			return next(new AppError("Manager is required", 400));
 
@@ -200,6 +216,7 @@ export const getEmps = catchAsync(
 				$project: {
 					role: 1,
 					employees: {
+						_id:1,
 						name: 1,
 						email: 1,
 						avatar: 1,
@@ -333,83 +350,167 @@ export const getMyOrgs = catchAsync(
 );
 
 // Function to change roles of user (by owner/admin)
-// TODO : bug in it
 export const changeRole = catchAsync(
 	async (
 		req: ExpressTypes.UserRequest,
 		res: Response,
 		next: NextFunction
 	) => {
-		const { newRole, userid, managerid } = req.body;
+		const { newRole, userid } = req.body;
 		const { orgid } = req.params;
 		if (!newRole || !userid || !orgid)
-			return next(new AppError("Neccessary fields not found", 404));
+			return next(new AppError("Necessary fields not found", 404));
 
 		const org = await Org.findOne({ _id: orgid, deleted: false });
 		if (!org) return next(new AppError("No organization found", 404));
 
+		const userData = await User.findOne({
+			_id: userid,
+			deleted: false,
+		});
+		if (!userData)
+			return next(new AppError("Employee can't be found", 404));
+
 		const oldEmp = await Emp.findOne({
 			orgid: org._id,
-			_id: userid,
+			userid: userData._id,
 			deleted: false,
 		});
 		if (!oldEmp) return next(new AppError("Not an existing employee", 404));
 
-		const dataToUpdate: {
-			role?: "Manager" | "Staff" | "Admin";
-			manager?: ObjectId;
-		} = {};
-
-		if (newRole.trim() === "Manager") {
-			dataToUpdate.role = "Manager";
-			dataToUpdate.manager = req.user?._id;
-		} else if (newRole.trim() === "Staff") {
-			dataToUpdate.role = "Staff";
-			if (!managerid)
-				return next(new AppError("Manager field is required", 404));
-			const isManager = await Emp.findOne({
-				orgid: org._id,
-				userid: managerid,
-				role: "Manager",
-			});
-			if (!isManager)
-				return next(new AppError("Not an existing manager", 404));
-			else dataToUpdate.manager = managerid;
-		} else if (newRole.trim() === "Admin") {
-			if (org.owner !== req.user?._id)
-				return next(
-					new AppError("Not authorised to assign admin", 403)
-				);
-			dataToUpdate.role = "Admin";
-			dataToUpdate.manager = req.user?._id;
-		} else {
-			return next(new AppError("Not a valid role change", 400));
+		// * till now user exists and emp is of the given org
+		const newEmpRole = newRole.trim();
+		if (newEmpRole === "Manager") {
+			switch (oldEmp.role) {
+				case "Staff": {
+					// ? from staff to manager
+					oldEmp.role = "Manager";
+					oldEmp.manager = org.owner;
+					await oldEmp.save();
+					return returnChangedRoleEmp(oldEmp, res);
+				}
+				case "Manager": {
+					// ? from Manager to Manager
+					return next(
+						new AppError("Employee is already a manager", 400)
+					);
+				}
+				case "Admin": {
+					// ? from Admin to Manager
+					oldEmp.role = "Manager";
+					await oldEmp.save();
+					org.admin = null;
+					await org.save();
+					return returnChangedRoleEmp(oldEmp, res);
+				}
+				default: {
+					// ? invalid emp role
+					return next(
+						new AppError("Employee's role can't be changed", 400)
+					);
+				}
+			}
+		} else if (newEmpRole === "Staff") {
+			switch (oldEmp.role) {
+				case "Staff": {
+					// ? from Staff to Staff
+					return next(
+						new AppError("Employee is already a staff", 400)
+					);
+				}
+				case "Admin": {
+					// ? from Admin to Staff
+					oldEmp.role = "Staff";
+					await oldEmp.save();
+					org.admin = null;
+					await org.save();
+					return returnChangedRoleEmp(oldEmp, res);
+				}
+				case "Manager": {
+					// ? from Manager to Staff
+					const hasEmpUnder = await Emp.findOne({
+						manager: userData._id,
+						orgid,
+						deleted: false,
+					});
+					if (hasEmpUnder)
+						return next(
+							new AppError(
+								"Employee has employees under him (change thier manager first)",
+								400
+							)
+						);
+					oldEmp.role = "Staff";
+					oldEmp.manager = undefined;
+					await oldEmp.save();
+					return returnChangedRoleEmp(oldEmp, res);
+				}
+				default:
+					return next(
+						new AppError("Employee's role can't be changed", 400)
+					);
+			}
+		} else if (newEmpRole === "Admin") {
+			switch (oldEmp.role) {
+				case "Staff": {
+					// ? from Staff to Admin
+					console.log("org to change admin of",org)
+					if (org.admin)
+						return next(
+							new AppError(
+								"Organization already have a admin",
+								400
+							)
+						);
+					oldEmp.role = "Admin";
+					oldEmp.manager = org.owner;
+					await oldEmp.save();
+					org.admin = userData._id;
+					await org.save();
+					return returnChangedRoleEmp(oldEmp, res);
+				}
+				case "Admin": {
+					// ? from Admin to Admin
+					return next(
+						new AppError("Employee is already a admin", 400)
+					);
+				}
+				case "Manager": {
+					// ? from Manager to Admin
+					if (org.admin)
+						return next(
+							new AppError(
+								"Organiation already have a admin",
+								400
+							)
+						);
+					const hasEmpUnder = await Emp.findOne({
+						managerid: userData._id,
+						orgid,
+						deleted: false,
+					});
+					if (hasEmpUnder)
+						return next(
+							new AppError(
+								"Employee has employees under him (change thier manager first)",
+								400
+							)
+						);
+					oldEmp.role = "Admin";
+					oldEmp.manager = org.owner;
+					await oldEmp.save();
+					org.admin = userData._id;
+					await org.save();
+					return returnChangedRoleEmp(oldEmp, res);
+				}
+				default:
+					return next(
+						new AppError("Employee's role can't be changed", 400)
+					);
+			}
 		}
 
-		const newEmp = await Emp.findOneAndUpdate(
-			{
-				orgid: org._id,
-				userid,
-				deleted: false,
-			},
-			dataToUpdate,
-			{ new: true }
-		);
-		if (!newEmp) return next(new AppError("Error changing role", 500));
-
-		return res.status(200).json({
-			status: "success",
-			data: {
-				emp: {
-					userid: newEmp.userid,
-					orgid: newEmp.orgid,
-					role: newEmp.role,
-					manager: newEmp.manager,
-					createdAt: newEmp.createdAt,
-					updatedAt: newEmp.updatedAt,
-				},
-			},
-		});
+		return next(new AppError("Not a valid role change", 400));
 	}
 );
 
@@ -420,60 +521,52 @@ export const changeManager = catchAsync(
 		res: Response,
 		next: NextFunction
 	) => {
-		const { userid, managerid } = req.body;
+		const { userid, managerEmail } = req.body;
 		const { orgid } = req.params;
-		if (!userid || !managerid || !orgid)
+		if (!userid || !managerEmail || !orgid)
 			return next(new AppError("All fields are required", 404));
 
-		const org = await Org.findOne({ _id: orgid, deleted: false });
-		if (!org)
-			return next(
-				new AppError("Only owner/admin can change manager", 403)
-			);
+		// ? check if the given emp is as emp or not
+		const oldEmp = await Emp.findOne({ userid, orgid, deleted: false });
+		if (!oldEmp) return next(new AppError("Employee not found", 404));
 
-		const [isEmp, isManager] = await Promise.all([
-			Emp.findOne({ userid, orgid: org._id }),
-			Emp.findOne({ userid: managerid, orgid: org._id, role: "Manager" }),
-		]);
-
-		if (!isEmp)
-			return next(new AppError("User is not in organization", 400));
-		if (!isManager)
-			return next(new AppError("Manager is not in organization", 400));
-
-		const managerManager = await Emp.findOne({
-			userid: req.user?._id,
-			orgid: org._id,
-			role: "Owner",
+		// ? check if given manageremail has a user or not
+		const managerUserData = await User.findOne({
+			email: managerEmail,
+			deleted: false,
 		});
+		if (!managerUserData)
+			return next(new AppError("No such user found", 404));
 
-		if (!managerManager)
+		// ? check if given manager can manager other or not
+		const oldManager = await Emp.findOne({
+			userid: managerUserData._id,
+			orgid,
+			$or: [{ role: "Manager" }, { role: "Owner" }],
+			deleted: false,
+		});
+		if (!oldManager)
 			return next(
-				new AppError("New manager is not reporting to owner", 400)
+				new AppError(
+					"Given Manager is neither a manager nor owner (change thier role first)",
+					404
+				)
 			);
 
-		const newEmp = await Emp.findOneAndUpdate(
-			{
-				userid,
-				orgid: org._id,
-				deleted: false,
-			},
-			{ $set: { manager: managerid } },
-			{ new: true }
-		);
-
-		if (!newEmp) return next(new AppError("Error changing role", 500));
+		// * now user is their & manager is their and manager can have emp under them
+		oldEmp.manager = oldManager.userid;
+		await oldEmp.save();
 
 		return res.status(200).json({
 			status: "success",
 			data: {
 				emp: {
-					userid: newEmp.userid,
-					orgid: newEmp.orgid,
-					role: newEmp.role,
-					manager: newEmp.manager,
-					createdAt: newEmp.createdAt,
-					updatedAt: newEmp.updatedAt,
+					userid: oldEmp.userid,
+					orgid: oldEmp.orgid,
+					role: oldEmp.role,
+					manager: oldEmp.manager,
+					createdAt: oldEmp.createdAt,
+					updatedAt: oldEmp.updatedAt,
 				},
 			},
 		});
@@ -557,6 +650,7 @@ export const searchEmployee = catchAsync(
 						$project: {
 							role: 1,
 							employees: {
+								_id:1,
 								name: 1,
 								email: 1,
 								avatar: 1,
@@ -619,6 +713,7 @@ export const searchEmployee = catchAsync(
 					$project: {
 						role: 1,
 						employees: {
+							_id:1,
 							name: 1,
 							email: 1,
 							avatar: 1,

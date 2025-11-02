@@ -9,8 +9,7 @@ function useDeleteEmployee() {
 			deleteEmployee(userid, orgid),
 		onSuccess: (_data) => {
 			queryClient.invalidateQueries({
-				predicate: (query) =>
-					query.queryKey[0]?.toString().startsWith("emps-") ?? false,
+				predicate: (query) => query.queryKey[0]?.toString() === "emps",
 			});
 			toast.success("Employee deleted successfully", {
 				className: "toast",
