@@ -39,7 +39,6 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 	async function handleVerifyEmail() {
 		if (otp.trim() !== "" && otp.length === 4) {
 			const res = await verifyEmail({ otp });
-			console.log(res);
 			if (res == "verified") {
 				queryClient.refetchQueries({
 					queryKey: ["user"],

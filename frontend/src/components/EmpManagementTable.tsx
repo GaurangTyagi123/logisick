@@ -180,7 +180,7 @@ function EmployeeTable({
 
 	if (isGettingEmployees) return <Loading />;
 	if (error) {
-		toast.error(error.message);
+		toast.error(error.message, { className: "toast" });
 		return;
 	}
 	const deconstructedEmployees = deconstructEmployee(employees);
@@ -217,7 +217,6 @@ function EmployeeTable({
 									key: "Manage Employee",
 									header: "Manage Employee",
 									render: (_, row) => {
-										console.log("Emp row :", row);
 										return (
 											<div className="flex gap-2 justify-end items-center">
 												{row.role !== "Owner" && (

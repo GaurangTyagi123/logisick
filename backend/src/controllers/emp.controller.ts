@@ -34,7 +34,6 @@ export const sendInvite = catchAsync(
 		next: NextFunction
 	) => {
 		let { empEmail, role } = req.body;
-		const { managerid } = req.body;
 		if (!empEmail || !role)
 			return next(new AppError("All fields are required", 404));
 		empEmail = empEmail.trim();
@@ -64,24 +63,12 @@ export const sendInvite = catchAsync(
 		const inviteToken = crypto.randomBytes(32).toString("hex");
 		if (!["Manager", "Staff", "Admin"].includes(role))
 			return next(new AppError("Not a valid role", 400));
-		// TODO : not necessary that staff has a managher
-		if (role === "Staff" && !managerid)
-			return next(new AppError("Manager is required", 400));
 
-		if (role === "Staff") {
-			await redisClient.hSet(empEmail, {
-				token: inviteToken,
-				orgid: org._id.toString(),
-				role,
-				managerid,
-			});
-		} else {
-			await redisClient.hSet(empEmail, {
-				token: inviteToken,
-				orgid: org._id.toString(),
-				role,
-			});
-		}
+		await redisClient.hSet(empEmail, {
+			token: inviteToken,
+			orgid: org._id.toString(),
+			role,
+		});
 
 		const exists = await redisClient.exists(empEmail);
 		if (!exists) return next(new AppError("Unable to save invite ", 500));
@@ -142,31 +129,21 @@ export const joinOrg = catchAsync(
 			token: inviteToken,
 			orgid,
 			role,
-			managerid,
 		} = await redisClient.hGetAll(req.user.email);
-
-		console.log();
-		console.log({ role, orgid, inviteToken, token });
 
 		if (!role || !orgid || !inviteToken || token.trim() !== inviteToken)
 			return next(new AppError("User not invited in organization", 400));
 
-		if (role == "Staff" && !managerid)
-			return next(
-				new AppError("Invalid invitation (no manager assigned)", 400)
-			);
 
 		const newEmpData: {
 			userid: ObjectId;
 			orgid: string;
 			role: string;
-			manager?: string;
 		} = {
 			userid: req.user._id,
 			orgid,
 			role,
 		};
-		if (managerid) newEmpData.manager = managerid;
 		const newEmp = await Emp.create(newEmpData);
 		if (!newEmp)
 			return next(new AppError("Error adding new Employee", 500));
@@ -216,7 +193,7 @@ export const getEmps = catchAsync(
 				$project: {
 					role: 1,
 					employees: {
-						_id:1,
+						_id: 1,
 						name: 1,
 						email: 1,
 						avatar: 1,
@@ -428,18 +405,15 @@ export const changeRole = catchAsync(
 				}
 				case "Manager": {
 					// ? from Manager to Staff
-					const hasEmpUnder = await Emp.findOne({
-						manager: userData._id,
-						orgid,
-						deleted: false,
-					});
-					if (hasEmpUnder)
-						return next(
-							new AppError(
-								"Employee has employees under him (change thier manager first)",
-								400
-							)
-						);
+					// ? changed manager of all emp under user to null
+					await Emp.updateMany(
+						{
+							manager: userData._id,
+							orgid: org._id,
+							deleted: false,
+						},
+						{ manager: null }
+					);
 					oldEmp.role = "Staff";
 					oldEmp.manager = undefined;
 					await oldEmp.save();
@@ -454,7 +428,6 @@ export const changeRole = catchAsync(
 			switch (oldEmp.role) {
 				case "Staff": {
 					// ? from Staff to Admin
-					console.log("org to change admin of",org)
 					if (org.admin)
 						return next(
 							new AppError(
@@ -484,18 +457,15 @@ export const changeRole = catchAsync(
 								400
 							)
 						);
-					const hasEmpUnder = await Emp.findOne({
-						managerid: userData._id,
-						orgid,
-						deleted: false,
-					});
-					if (hasEmpUnder)
-						return next(
-							new AppError(
-								"Employee has employees under him (change thier manager first)",
-								400
-							)
-						);
+					// ? changed manager of all emp under user to null
+					await Emp.updateMany(
+						{
+							manager: userData._id,
+							orgid: org._id,
+							deleted: false,
+						},
+						{ manager: null }
+					);
 					oldEmp.role = "Admin";
 					oldEmp.manager = org.owner;
 					await oldEmp.save();
@@ -596,7 +566,6 @@ export const deleteEmp = catchAsync(
 			orgid: org._id,
 			deleted: false,
 		});
-		console.log(oldEmp);
 		if (!oldEmp)
 			return next(new AppError("User id not an employee of org", 400));
 		if (oldEmp.role === "Owner" || oldEmp.role === "Manager")
@@ -650,7 +619,7 @@ export const searchEmployee = catchAsync(
 						$project: {
 							role: 1,
 							employees: {
-								_id:1,
+								_id: 1,
 								name: 1,
 								email: 1,
 								avatar: 1,
@@ -690,7 +659,6 @@ export const searchEmployee = catchAsync(
 					"employees",
 					JSON.stringify(employees)
 				);
-				console.log(employees);
 			} else {
 				employees = JSON.parse(employees);
 			}
@@ -713,7 +681,7 @@ export const searchEmployee = catchAsync(
 					$project: {
 						role: 1,
 						employees: {
-							_id:1,
+							_id: 1,
 							name: 1,
 							email: 1,
 							avatar: 1,

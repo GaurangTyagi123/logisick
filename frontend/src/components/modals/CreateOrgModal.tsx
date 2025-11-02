@@ -55,7 +55,7 @@ function OrganizationModal({
 			});
 		},
 		onError: (err) => {
-			toast.error(err.message);
+			toast.error(err.message, { className: "toast" });
 		},
 		onSettled: () => {
 			reset();

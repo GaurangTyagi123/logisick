@@ -1,5 +1,5 @@
 import { lazy, Suspense, useEffect, useState } from "react";
-import { toast } from "react-toastify";
+import { toast, type Id } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -51,9 +51,9 @@ function Profile() {
 	if (!user) <Navigate to={"/"} />;
 
 	useEffect(() => {
+		let ts:Id;
 		if (!user?.isVerified && !openOtp && !isVerifingEmail) {
-			console.log(user?.isVerified, isVerifingEmail);
-			const warning = toast.warning(
+			ts = toast.warning(
 				<div className="grid h-auto">
 					Your Email is not verified
 					<Button
@@ -74,7 +74,7 @@ function Profile() {
 				{ className: "toast" }
 			);
 		}
-		return toast.dismiss;
+		return () => toast.dismiss(ts);
 	}, [isVerifingEmail, user?.isVerified, verifyEmail, openOtp]);
 
 	return (

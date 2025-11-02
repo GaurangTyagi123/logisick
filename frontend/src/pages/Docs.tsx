@@ -119,7 +119,7 @@ function Docs() {
 						variant={"outline"}
 					/>
 					<Button variant={"link"} asChild>
-						<Link to={"/"}>Go to Homepage</Link>
+						<Link to={"/"}>Homepage</Link>
 					</Button>
 					<Navbar hide={{ logo: true }} />
 				</div>

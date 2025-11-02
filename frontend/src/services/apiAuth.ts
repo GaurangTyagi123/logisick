@@ -137,7 +137,7 @@ export const sendForgotToken: sendForgotPassword = async (form) => {
 export const resetPassword: resetPassword = async (resetToken, form) => {
 	try {
 		if (!resetToken.trim()) {
-			toast.error("Invalid password reset url");
+			toast.error("Invalid password reset url", { className: "toast" });
 			return;
 		}
 		// set({ isResettingPassword: true });

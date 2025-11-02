@@ -10,19 +10,12 @@ import Button from "../ui/button";
 import { Close } from "@/assets/icons/Close";
 import { useForm, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "@/components/ui/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { transferOwnership } from "@/services/apiOrg";
 import { toast } from "react-toastify";
-import useGetEmployees from "@/hooks/useGetEmployees";
+import { Input } from "../ui/input";
 type OrganizationFormData = {
-	employee: string;
+	newOwnerEmail: string;
 };
 
 function TransferOwnershipModal({
@@ -34,12 +27,6 @@ function TransferOwnershipModal({
 }) {
 	const { handleSubmit, control } = useForm<OrganizationFormData>();
 	const queryClient = useQueryClient();
-	const userData = queryClient.getQueryData<{ user: User }>(["user"]);
-	const user = userData?.user;
-	const org = user?.myOrg;
-	const { data: employees, isPending: isFetching } = useGetEmployees(
-		org?._id as string
-	);
 
 	const { mutate: transferOwnershipFn, isPending } = useMutation({
 		mutationFn: transferOwnership,
@@ -52,12 +39,12 @@ function TransferOwnershipModal({
 			});
 		},
 		onError: (err) => {
-			toast.error(err.message);
+			toast.error(err.message, { className: "toast" });
 		},
 	});
 
 	const onSubmit = (data: OrganizationFormData) => {
-		if (org?._id) transferOwnershipFn({ ...data });
+		transferOwnershipFn({ ...data });
 		setOpen(false);
 	};
 	return (
@@ -75,49 +62,26 @@ function TransferOwnershipModal({
 				<CardContent className="grid gap-2">
 					<form>
 						<Label
-							title="Previous Password field is required"
-							htmlFor="Type"
-							className="grid gap-4 mt-3"
+							title="transfer ownership"
+							htmlFor="transferownership"
+							className="grid"
 						>
-							Employees
-							<div className="flex items-center justify-between w-full gap-1">
-								<Controller
-									name="employee"
-									control={control}
-									render={({ field }) => (
-										<Select
-											onValueChange={field.onChange}
-											value={field.value}
-										>
-											<SelectTrigger className="w-[180px]">
-												<SelectValue
-													placeholder={user?.name}
-													defaultValue={user?._id}
-												/>
-											</SelectTrigger>
-											<SelectContent className="overflow-y-auto grid">
-												{(employees || isFetching) &&
-													employees?.map(
-														(emp: User) =>
-															emp._id !==
-																user?._id && (
-																<SelectItem
-																	value={
-																		emp._id
-																	}
-																	key={
-																		emp._id
-																	}
-																>
-																	{emp.name}
-																</SelectItem>
-															)
-													)}
-											</SelectContent>
-										</Select>
-									)}
-								/>
-							</div>
+							<span>New owner's email id</span>
+							<Controller
+								name="newOwnerEmail"
+								control={control}
+								render={({ field }) => (
+									<Input
+										placeholder="Enter new owner's email id"
+										type="email"
+										value={field.value}
+										name="newOwnerEmail"
+										required
+										className="text-sm md:text-md"
+										onChange={field.onChange}
+									/>
+								)}
+							/>
 						</Label>
 					</form>
 				</CardContent>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
-import Navbar from "@/components/Navbar"
+import Navbar from "@/components/Navbar";
 import { H2 } from "@/components/ui/Typography";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -76,14 +76,11 @@ function ResetPassword() {
 	};
 
 	useEffect(() => {
-		console.log("checking reset token");
-
 		if (!resetToken.trim()) {
-			console.log("noreset token");
 			navigate("/");
 		}
 	}, [resetToken, navigate]);
-	
+
 	return (
 		<div className="w-full px-4 flex flex-col h-auto min-h-screen bg-ls-bg-200 dark:bg-ls-bg-dark-900">
 			<Navbar

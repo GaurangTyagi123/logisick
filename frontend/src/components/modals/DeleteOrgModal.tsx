@@ -38,10 +38,10 @@ function DeleteOrgModal({
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
-			toast.success("Organization deleted successfully");
+			toast.success("Organization deleted successfully", { className: "toast" });
 		},
 		onError: (err) => {
-			toast.error(err.message);
+			toast.error(err.message, { className: "toast" });
 		},
 	});
 

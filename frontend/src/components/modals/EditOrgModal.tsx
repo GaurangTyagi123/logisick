@@ -62,7 +62,7 @@ function EditOrgModal({
 			});
 		},
 		onError: (err) => {
-			toast.error(err.message);
+			toast.error(err.message, { className: "toast" });
 		},
 	});
 

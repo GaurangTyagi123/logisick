@@ -141,7 +141,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 
 	if (isGettingEmployees) return <Loading />;
 	if (error) {
-		toast.error(error.message);
+		toast.error(error.message, { className: "toast" });
 		return;
 	}
 	const deconstructedEmployees = deconstructEmployee(employees);

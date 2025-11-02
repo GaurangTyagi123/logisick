@@ -7,12 +7,10 @@ function useSendInvite() {
 		mutationFn: ({
 			empEmail,
 			role,
-			managerid,
 		}: {
 			empEmail: string;
 			role: "Admin" | "Manager" | "Staff";
-			managerid?: string;
-		}) => sendInvite(empEmail, role, managerid),
+		}) => sendInvite(empEmail, role),
 		onSuccess: (data) => {
 			toast.success(data?.message, { className: "toast" });
 		},

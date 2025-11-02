@@ -61,7 +61,6 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
-// TODO : make it responsive
 function CustomTable<RowType extends Record<string, string>>({
 	title,
 	titleIcon,
@@ -209,19 +208,19 @@ function CustomTable<RowType extends Record<string, string>>({
 
 	return (
 		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800">
-			<CardHeader className="flex flex-row items-center justify-between space-y-0">
+			<CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
 				<div className="flex items-center gap-2">
 					{titleIcon}
 					<Large>{title}</Large>
 				</div>
-				<div className="flex gap-2">
+				<div className="flex gap-2 flex-wrap">
 					{/* Search input */}
 					<Input
 						value={searchStr || ""}
 						onChange={(e) => setSearchStr(e.target.value)}
 						type="text"
 						placeholder="Search..."
-						className="w-64"
+						className="w-full md:w-64"
 					/>
 
 					{/* Sort by column */}
@@ -330,7 +329,7 @@ function CustomTable<RowType extends Record<string, string>>({
 
 			<Separator />
 
-			<CardContent className="">
+			<CardContent className="overflow-x-auto">
 				{(clientSide ? processedData : data).length === 0 ? (
 					<div className="h-64 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
@@ -349,10 +348,11 @@ function CustomTable<RowType extends Record<string, string>>({
 						<TableBody>
 							{(clientSide ? processedData : data).map(
 								(row, index) => (
-									<TableRow key={index}>
+									<TableRow key={index} className="">
 										{columns.map((col) => (
 											<TableCell
 												key={String(col.key) + index}
+												className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10"
 											>
 												{col.render
 													? col.render(

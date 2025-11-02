@@ -25,8 +25,7 @@ function InviteEmpModal({
 	const [form, setForm] = useState<{
 		empEmail: string;
 		role: "Admin" | "Manager" | "Staff";
-		managerid?: string;
-	}>({ empEmail: "", role: "Staff", managerid: "" });
+	}>({ empEmail: "", role: "Staff" });
 
 	const { sendInvitation, isPending } = useSendInvite();
 
@@ -40,8 +39,7 @@ function InviteEmpModal({
 		) {
 			sendInvitation(form);
 			setOpen(false);
-			// console.log(form);
-			setForm({ empEmail: "", role: "Staff", managerid: "" });
+			setForm({ empEmail: "", role: "Staff" });
 		} else {
 			toast.error("Enter the text first", { className: "toast" });
 		}
@@ -116,22 +114,6 @@ function InviteEmpModal({
 								<Label>Admin</Label>
 							</div>
 						</RadioGroup>
-					</Label>
-					<Label title="New employee's manager ID" className="grid">
-						<span>Employee's manager ID</span>
-						<Input
-							placeholder="Enter new employee's manager ID"
-							type="text"
-							value={form.managerid}
-							name="managerid"
-							className="text-sm md:text-md"
-							onChange={(e) =>
-								setForm({
-									...form,
-									managerid: e.target.value.trim(),
-								})
-							}
-						/>
 					</Label>
 				</CardContent>
 				<CardFooter className="flex gap-2">

@@ -5,7 +5,6 @@ import { toast } from "react-toastify";
 type sendInvite = (
 	empEmail: string,
 	role: "Admin" | "Manager" | "Staff",
-	managerid?: string
 ) => Promise<{ message: string } | void>;
 
 type acceptInvite = (token: string) => Promise<Emp | void>;
@@ -29,7 +28,7 @@ type deleteEmployee = (userid: string, orgid: string) => Promise<void>;
  * @return ({message:string}) message data
  * @effect raises toast on failiure
  */
-export const sendInvite: sendInvite = async (empEmail, role, managerid) => {
+export const sendInvite: sendInvite = async (empEmail, role) => {
 	try {
 		const res = await axinstance.post<{
 			status: "success" | "fail";
@@ -37,7 +36,6 @@ export const sendInvite: sendInvite = async (empEmail, role, managerid) => {
 		}>("/v1/emp/sendInvite", {
 			empEmail,
 			role,
-			managerid,
 		});
 		if (res.data.status === "success") {
 			return res.data.data;

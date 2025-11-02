@@ -1,5 +1,6 @@
 import Org from "../models/organization.model";
 import Emp from "../models/employee.model";
+import User from "../models/user.model";
 import AppError from "../utils/appError";
 import catchAsync from "../utils/catchAsync";
 import type { NextFunction, Response } from "express";
@@ -229,79 +230,96 @@ export const transferOrg = catchAsync(
 		res: Response,
 		next: NextFunction
 	) => {
-		const { newOwnerId } = req.body;
-		if (!newOwnerId)
-			return next(new AppError("New Owner's details is required", 404));
+		const { newOwnerEmail } = req.body;
+		if (!newOwnerEmail)
+			return next(new AppError("New Owner's email is required", 404));
 
 		const oldOwner = req.user;
 		if (!oldOwner) return next(new AppError("Unauthenticated", 403));
 
-		const org = req.user?.myOrg;
+		const userHasOrg = req.user?.myOrg;
+		if (!userHasOrg)
+			return next(new AppError("You don't own any organization", 404));
+
+		const org = await Org.findOne({ _id: userHasOrg._id, deleted: false });
 		if (!org)
 			return next(new AppError("You don't own any organization", 404));
 
-		const canBeNewOwner = await Emp.findOne({
-			userid: newOwnerId,
-			orgid: org._id,
-			role: "Admin",
+		const newOwnerUserData = await User.findOne({
+			email: newOwnerEmail,
 			deleted: false,
 		});
-		if (!canBeNewOwner)
+		if (!newOwnerUserData)
+			return next(new AppError("New Owner is not a user", 404));
+
+		const isAlreadyOwner = await Org.findOne({
+			owner: newOwnerUserData._id,
+			deleted: false,
+		});
+		if (isAlreadyOwner)
+			return next(new AppError("New Owner is already a owner", 400));
+
+		const newOwnerEmpData = await Emp.findOne({
+			userid: newOwnerUserData._id,
+			orgid: org._id,
+			deleted: false,
+		});
+		if (!newOwnerEmpData)
 			return next(
 				new AppError(
-					"Only admin of same organization can be new owner",
+					"New Owner is not a employee of the organization",
 					400
 				)
 			);
 
-		// TODO : check if the newOwner is already an existing owner
-		// if (newOwner) {
-		// 	// delete old owner emp
-		// 	await Emp.delete({ userid: oldOwner._id, role: "Owner" });
-		// 	// change role of newOwner to "Owner"
-		// 	newOwner.role = "Owner";
-		// 	await newOwner.save();
-		// 	// change owner of org to newowner id
-		// 	const newOrgData = await Org.findByIdAndUpdate(
-		// 		org._id,
-		// 		{ owner: newOwner._id },
-		// 		{ new: true }
-		// 	);
-		// 	if (!newOrgData)
-		// 		return next(new AppError("Error transfering ownership", 500));
-		// 	// return org data of new org
-		// 	return returnOrgRes(res, 200, newOrgData);
-		// } else {
-		// 	// new Owner is any employee
-		// 	const isEmp = await Emp.findOne({ userid: newOwnerId });
-		// 	if (isEmp)
-		// 		return next(
-		// 			new AppError(
-		// 				"Employee of other organization can't become owner",
-		// 				400
-		// 			)
-		// 		);
-		// 	// delete old owner
-		// 	await Emp.delete({ userid: oldOwner._id, role: "Owner" });
-		// 	// make new employee of owner
-		// 	const brandNewOwner = await Emp.create({
-		// 		userid: newOwnerId,
-		// 		orgid: org._id,
-		// 		role: "Owner",
-		// 	});
-		// 	if (!brandNewOwner)
-		// 		return next(new AppError("Error adding new Owner", 500));
-		// 	// if not update org to have new owner
-		// 	const newOrgData = await Org.findByIdAndUpdate(
-		// 		org._id,
-		// 		{ owner: brandNewOwner._id },
-		// 		{ new: true }
-		// 	);
-		// 	if (!newOrgData)
-		// 		return next(new AppError("Error transfering ownership", 500));
-		// 	// return org data of new org
-		// 	return returnOrgRes(res, 200, newOrgData);
-		// }
+		switch (newOwnerEmpData.role) {
+			case "Owner":
+				return next(
+					new AppError(
+						"New Owner is already owner of the organization",
+						400
+					)
+				);
+			case "Admin": {
+				newOwnerEmpData.role = "Owner";
+				newOwnerEmpData.manager = undefined;
+				await newOwnerEmpData.save();
+				org.owner = newOwnerUserData._id;
+				org.admin = null;
+				await org.save();
+				return returnOrgRes(res, 200, org);
+			}
+			case "Manager": {
+				// ? changed manager of all emp under user to null
+				await Emp.updateMany(
+					{
+						manager: newOwnerUserData._id,
+						orgid: org._id,
+						deleted: false,
+					},
+					{ manager: null }
+				);
+				newOwnerEmpData.role = "Owner";
+				newOwnerEmpData.manager = undefined;
+				await newOwnerEmpData.save();
+				org.owner = newOwnerUserData._id;
+				org.admin = null;
+				await org.save();
+				return returnOrgRes(res, 200, org);
+			}
+			case "Staff": {
+				newOwnerEmpData.role = "Owner";
+				newOwnerEmpData.manager = undefined;
+				await newOwnerEmpData.save();
+				org.owner = newOwnerUserData._id;
+				org.admin = null;
+				await org.save();
+				return returnOrgRes(res, 200, org);
+			}
+			default: {
+				return next(new AppError("New Owner has wrong data", 500));
+			}
+		}
 	}
 );
 
