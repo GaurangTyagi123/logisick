@@ -1,11 +1,11 @@
 // HOOKS
 import useGetEmployees from "@/hooks/useGetEmployees";
-import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-const Loading = lazy(() => import("./Loading"));
+import Loading from "./Loading";
 import UserAvatar from "./UserAvatar";
 import CustomTable from "./CustomTable";
 

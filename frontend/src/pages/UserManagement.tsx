@@ -1,6 +1,6 @@
-import { lazy, useState } from "react";
+import { useState } from "react";
 import EmpManagementTable from "@/components/EmpManagementTable";
-const Loading = lazy(() => import("@/components/Loading"));
+import Loading from "@/components/Loading";
 import InviteEmpModal from "@/components/modals/InviteEmpModal";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
@@ -50,7 +50,10 @@ function UserManagement() {
 			{isGettingOrg ? (
 				<Loading />
 			) : orgData ? (
-				<EmpManagementTable orgid={orgData?._id} isAuthorized={isAuthorized}/>
+				<EmpManagementTable
+					orgid={orgData?._id}
+					isAuthorized={isAuthorized}
+				/>
 			) : (
 				<div className="h-full w-full grid place-items-center gap-3">
 					<H3>Organization doesn't have any employee.</H3>

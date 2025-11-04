@@ -1,6 +1,6 @@
 import BigHeading from "@/components/BigHeading";
-import { lazy, useEffect } from "react";
-const Loading = lazy(() => import("@/components/Loading"));
+import { useEffect } from "react";
+import Loading from "@/components/Loading";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import useAcceptInvite from "@/hooks/emp/useAcceptInvite";

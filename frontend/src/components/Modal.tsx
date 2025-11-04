@@ -1,6 +1,6 @@
 import clsx from "clsx";
-import { lazy, Suspense } from "react";
-const Loading = lazy(() => import("@/components/Loading"));
+import { Suspense } from "react";
+import Loading from "./Loading";
 
 interface ModalProps {
 	openModal: boolean;
