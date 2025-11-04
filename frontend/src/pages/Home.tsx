@@ -5,19 +5,25 @@ import { Separator } from "@/components/ui/separator";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import BigHeading from "@/components/BigHeading";
-import HexBox from "@/components/HexBox";
 import { Truck, Report } from "@/assets/icons/Homepage";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
 	DropdownMenuItem,
-	DropdownMenuLabel,
-	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
 import illus from "@/assets/illus.svg";
+
+const tabLinks: { path: string; name: string }[] = [
+	{ path: "#", name: "Products" },
+	{ path: "#", name: "Community" },
+	{ path: "/docs", name: "Docs" },
+	{ path: "#", name: "Pricing" },
+	{ path: "#", name: "Contacts" },
+	{ path: "#", name: "Links" },
+];
 
 /**
  * @component a page to be used as home page of app
@@ -40,44 +46,26 @@ function Home() {
 							</Button>
 						</DropdownMenuTrigger>
 						<DropdownMenuContent>
-							<DropdownMenuLabel>Options</DropdownMenuLabel>
-							<DropdownMenuSeparator />
-							<DropdownMenuItem>Product</DropdownMenuItem>
-							<DropdownMenuItem>Community</DropdownMenuItem>
-							<DropdownMenuItem>
-								<Link to={"/docs"}></Link>
-							</DropdownMenuItem>
-							<DropdownMenuItem>Pricing</DropdownMenuItem>
-							<DropdownMenuItem>Contact</DropdownMenuItem>
-							<DropdownMenuItem>Link</DropdownMenuItem>
+							{tabLinks.map((link, i) => (
+								<DropdownMenuItem key={i}>
+									<Link to={link.path}>{link.name}</Link>
+								</DropdownMenuItem>
+							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
 				{/* tab-bar in large screens */}
 				<div className="hidden gap-2 justify-end mr-5 md:flex">
-					{/* features */}
-					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
-						Product
-					</Button>
-					{/* discord link */}
-					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
-						Community
-					</Button>
-					{/* documentations */}
-					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"} asChild>
-						<Link to={"/docs"}>Docs</Link>
-					</Button>
-					{/* api/feature pricing */}
-					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
-						Pricing
-					</Button>
-					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
-						Contact
-					</Button>
-					{/* social links */}
-					<Button className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200" variant={"link"}>
-						Link
-					</Button>
+					{tabLinks.map((link, i) => (
+						<Link to={link.path} key={i}>
+							<Button
+								className="text-xl text-ls-bg-dark-600 dark:text-white hover:dark:text-ls-sec-200"
+								variant={"link"}
+							>
+								{link.name}
+							</Button>
+						</Link>
+					))}
 				</div>
 			</div>
 			<Separator className="mt-0 md:mt-6" />
@@ -102,26 +90,58 @@ function Home() {
 							Track, manage and analyze your inventory with ease.
 						</p>
 						<div className="flex gap-2 justify-center lg:justify-start">
-							<Button className="shadow-xl text-black bg-ls-sec-500 hover:bg-ls-sec-600  dark:bg-ls-sec-500">
-								<Star />
-								Get Started
-							</Button>
-							<Button className="shadow-xl">
-								<BookOpen />
-								Learn More
-							</Button>
+							<Link to={"/dashboard"}>
+								<Button className="shadow-xl text-black bg-ls-sec-500 hover:bg-ls-sec-600  dark:bg-ls-sec-500">
+									<Star />
+									Get Started
+								</Button>
+							</Link>
+							<Link to={"/docs"}>
+								<Button className="shadow-xl">
+									<BookOpen />
+									Learn More
+								</Button>
+							</Link>
 						</div>
 						<div className="flex gap-2 flex-wrap justify-center lg:justify-start">
-							<HexBox
-								heading="Inventory Tracking"
-								icon={<Truck/>}
-								text="Easily track stock levels across multiple locations."
-							/>
-							<HexBox
-								heading="Report & Analytics"
-								icon={<Report/>}
-								text="Gain insights with customizable reports & analytics."
-							/>
+							<div
+								className="bg-zinc-300 p-3 shadow-2xl max-w-73 h-25 "
+								style={{
+									clipPath:
+										"polygon(1rem 0%, calc(100% - 1rem) 0%, 100% 50%, calc(100% - 1rem) 100%, 1rem 100%, 0% 50%)",
+								}}
+							>
+								<h3 className="flex text-lg md:text-xl gap-1 items-center font-semibold justify-center king-julian">
+									<Truck />
+									Inventory Tracking
+								</h3>
+								<p
+									className="text-center"
+									style={{ fontFamily: "TimesNewRoman" }}
+								>
+									Easily track stock levels across multiple
+									locations.
+								</p>
+							</div>
+							<div
+								className="bg-zinc-300 p-3 shadow-2xl max-w-73 h-25 "
+								style={{
+									clipPath:
+										"polygon(1rem 0%, calc(100% - 1rem) 0%, 100% 50%, calc(100% - 1rem) 100%, 1rem 100%, 0% 50%)",
+								}}
+							>
+								<h3 className="flex text-lg md:text-xl gap-1 items-center font-semibold justify-center king-julian">
+									<Report />
+									Report & Analytics
+								</h3>
+								<p
+									className="text-center"
+									style={{ fontFamily: "TimesNewRoman" }}
+								>
+									Gain insights with customizable reports &
+									analytics..
+								</p>
+							</div>
 						</div>
 					</div>
 					<img

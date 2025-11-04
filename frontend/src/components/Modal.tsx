@@ -1,4 +1,6 @@
 import clsx from "clsx";
+import { lazy, Suspense } from "react";
+const Loading = lazy(() => import("@/components/Loading"));
 
 interface ModalProps {
 	openModal: boolean;
@@ -7,7 +9,7 @@ interface ModalProps {
 
 /**
  * @component a component wrapper to convert them to modal
- * @param openModal boolean state to indicate weather modal is open or close 
+ * @param openModal boolean state to indicate weather modal is open or close
  * @returns react component
  */
 function Modal({ openModal, children }: ModalProps) {
@@ -19,7 +21,7 @@ function Modal({ openModal, children }: ModalProps) {
 				openModal ? "grid" : "hidden"
 			)}
 		>
-			{children}
+			<Suspense fallback={<Loading />}>{children}</Suspense>
 		</div>
 	);
 }

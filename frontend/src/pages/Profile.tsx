@@ -1,4 +1,4 @@
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, useEffect, useState } from "react";
 import { toast, type Id } from "react-toastify";
 import { Navigate } from "react-router-dom";
 import { useQueryClient } from "@tanstack/react-query";
@@ -21,9 +21,14 @@ const ProfilePicChangeModal = lazy(
 
 import useAuthStore from "@/stores/useAuthStore";
 import ProfileOrgTable from "@/components/ProfileOrgTable";
-import DeleteOrgModal from "@/components/modals/DeleteOrgModal";
-import EditOrgModal from "@/components/modals/EditOrgModal";
-import TransferOwnershipModal from "@/components/modals/TransferOwnershipModal";
+const DeleteOrgModal = lazy(() => import("@/components/modals/DeleteOrgModal"));
+const EditOrgModal = lazy(() => import("@/components/modals/EditOrgModal"));
+const TransferOwnershipModal = lazy(
+	() => import("@/components/modals/TransferOwnershipModal")
+);
+const UpdateUserModal = lazy(
+	() => import("@/components/modals/user/UpdateUserModal")
+);
 /**
  * @component a page to be used a profile page for users where they can modify their information
  * @returns page/react component
@@ -36,10 +41,12 @@ function Profile() {
 		| undefined;
 	const user = userData?.user;
 
-	
-	const [openChangeProfile, setOpenChangeProfile] = useState<boolean>(false);
+	const [openChangeProfilePic, setOpenChangeProfilePic] =
+		useState<boolean>(false);
+	const [openUpdateUser, setOpenUpdateUser] = useState<boolean>(false);
 	const [openOtp, setOpenOtp] = useState<boolean>(false);
-	const [openChangePassword, setOpenChangePassword] = useState<boolean>(false);
+	const [openChangePassword, setOpenChangePassword] =
+		useState<boolean>(false);
 	const [openDeleteMe, setOpenDeleteMe] = useState<boolean>(false);
 	const [openOrgDelete, setOrgDelete] = useState<boolean>(false);
 	const [openEdit, setOpenEdit] = useState<boolean>(false);
@@ -51,7 +58,7 @@ function Profile() {
 	if (!user) <Navigate to={"/"} />;
 
 	useEffect(() => {
-		let ts:Id;
+		let ts: Id;
 		if (!user?.isVerified && !openOtp && !isVerifingEmail) {
 			ts = toast.warning(
 				<div className="grid h-auto">
@@ -65,7 +72,7 @@ function Profile() {
 								setOpenOtp(true);
 								setOtp("");
 							}
-							toast.dismiss(warning);
+							toast.dismiss(ts);
 						}}
 					>
 						Click to Verify
@@ -84,15 +91,17 @@ function Profile() {
 			<div className="max-w-6xl p-4 w-full grid place-items-center md:flex gap-4 rounded-2xl shadow-2xl bg-white dark:bg-ls-bg-dark-800">
 				<div className="w-40 h-40 grid place-items-center relative">
 					<UserAvatar
-						customSeed={user?.avatar || user?.email as string}
+						customSeed={user?.avatar || (user?.email as string)}
 						className="w-40 h-40 ring-4 ring-offset-2 ring-ls-sec-500"
 					/>
 					<Button
 						size={"sm"}
 						className="absolute right-2 bottom-2 rounded-full"
 						onClick={() => {
-							setOpenChangeProfile(true);
-							setModalPic(user?.avatar || user?.email as string);
+							setOpenChangeProfilePic(true);
+							setModalPic(
+								user?.avatar || (user?.email as string)
+							);
 						}}
 					>
 						<Edit className="w-5 h-5" />
@@ -140,7 +149,16 @@ function Profile() {
 					setOpenTransfer={setOpenTransfer}
 				/>
 				<div className="md:min-h-96 gap-2 flex flex-wrap md:flex-nowrap md:flex-col">
-					<Button onClick={() => setOpenChangePassword(true)} className="">
+					<Button
+						onClick={() => setOpenUpdateUser(true)}
+						className=""
+					>
+						Update User
+					</Button>
+					<Button
+						onClick={() => setOpenChangePassword(true)}
+						className=""
+					>
 						Change Password
 					</Button>
 					<Button
@@ -155,35 +173,40 @@ function Profile() {
 
 			{/* MODALS */}
 			{/* profile-change modal */}
-			<Suspense>
-				<ProfilePicChangeModal
-					open={openChangeProfile}
-					setOpen={setOpenChangeProfile}
-					modalPic={modalPic}
-					setModalPic={setModalPic}
-				/>
-				{/* otp modal */}
-				<OtpModal
-					open={openOtp}
-					setOpen={setOpenOtp}
-					otp={otp}
-					setOtp={setOtp}
-				/>
-				{/* change password modal */}
-				<ChangePasswordModal open={openChangePassword} setOpen={setOpenChangePassword} />
-				{/* confirm delete modal */}
-				<EditOrgModal setOpen={setOpenEdit} open={openEdit} />
-				<TransferOwnershipModal
-					open={openTransfer}
-					setOpen={setOpenTransfer}
-				/>
-				<DeleteMeModal open={openDeleteMe} setOpen={setOpenDeleteMe} />
-				<DeleteOrgModal
-					open={openOrgDelete}
-					setOpen={setOrgDelete}
-					orgId={user?.myOrg?._id}
-				/>
-			</Suspense>
+			<ProfilePicChangeModal
+				open={openChangeProfilePic}
+				setOpen={setOpenChangeProfilePic}
+				modalPic={modalPic}
+				setModalPic={setModalPic}
+			/>
+			{/* otp modal */}
+			<OtpModal
+				open={openOtp}
+				setOpen={setOpenOtp}
+				otp={otp}
+				setOtp={setOtp}
+			/>
+			{/* change password modal */}
+			<ChangePasswordModal
+				open={openChangePassword}
+				setOpen={setOpenChangePassword}
+			/>
+			{/* confirm delete modal */}
+			<EditOrgModal setOpen={setOpenEdit} open={openEdit} />
+			<TransferOwnershipModal
+				open={openTransfer}
+				setOpen={setOpenTransfer}
+			/>
+			<DeleteMeModal open={openDeleteMe} setOpen={setOpenDeleteMe} />
+			<DeleteOrgModal
+				open={openOrgDelete}
+				setOpen={setOrgDelete}
+				orgId={user?.myOrg?._id}
+			/>
+			<UpdateUserModal
+				open={openUpdateUser}
+				setOpen={setOpenUpdateUser}
+			/>
 		</div>
 	);
 }

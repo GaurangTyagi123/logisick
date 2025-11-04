@@ -13,7 +13,7 @@ import { Input } from "@/components/ui/input";
 import { Dice } from "@/assets/icons/Profilepage";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
-import useUpdateUser from "@/hooks/useUpdateUser";
+import useUpdateUser from "@/hooks/user/useUpdateUser";
 
 interface ChangeProps {
 	open: boolean;

@@ -11,7 +11,7 @@ export function H1({
 	return (
 		<h1
 			className={cn(
-				"text-4xl font-extrabold tracking-tight scroll-m-20 lg:text-5xl",
+				"text-4xl font-extrabold tracking-tight my-3 lg:text-5xl",
 				className
 			)}
 		>
@@ -29,7 +29,7 @@ export function H2({
 	return (
 		<h2
 			className={cn(
-				"king-julian pb-2 text-3xl font-semibold tracking-tight border-b scroll-m-20 first:mt-0",
+				"king-julian pb-2 text-3xl font-semibold tracking-tight border-b my-3 first:mt-0",
 				className
 			)}
 		>
@@ -47,7 +47,7 @@ export function H3({
 	return (
 		<h3
 			className={cn(
-				"king-julian text-2xl font-semibold tracking-tight scroll-m-20",
+				"king-julian text-2xl font-semibold tracking-tight my-3",
 				className
 			)}
 		>
@@ -65,7 +65,7 @@ export function H4({
 	return (
 		<h4
 			className={cn(
-				"king-julian text-xl font-semibold tracking-tight scroll-m-20",
+				"king-julian text-xl font-semibold tracking-tight my-3",
 				className
 			)}
 		>
