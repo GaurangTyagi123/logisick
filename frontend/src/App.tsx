@@ -5,14 +5,14 @@ import { ToastContainer } from "react-toastify";
 import useModeStore from "@/stores/useModeStore";
 import useCheckAuth from "@/hooks/useCheckAuth";
 
+import Loading from "@/components/Loading";
+
 const Analytics = lazy(() => import("./pages/Analytics"));
 const UserManagement = lazy(() => import("./pages/UserManagement"));
 const ProductManagement = lazy(() => import("./pages/ProductManagement"));
 const OrderSales = lazy(() => import("./pages/OrderSales"));
 const ItemPage = lazy(() => import("./pages/ItemPage"));
 const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
-
-const Loading = lazy(() => import("@/components/Loading"));
 
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Notfound = lazy(() => import("@/pages/NotFound"));
