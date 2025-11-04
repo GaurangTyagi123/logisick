@@ -65,7 +65,7 @@ function Profile() {
 								setOpenOtp(true);
 								setOtp("");
 							}
-							toast.dismiss(warning);
+							toast.dismiss(ts);
 						}}
 					>
 						Click to Verify
