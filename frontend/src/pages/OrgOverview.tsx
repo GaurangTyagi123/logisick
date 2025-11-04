@@ -1,12 +1,11 @@
 import EmployeeTable from "@/components/EmployeeTable";
-const Loading = lazy(() => import("@/components/Loading"));
 import { Badge } from "@/components/ui/badge";
 import { H3, Muted, Small } from "@/components/ui/Typography";
 import { getOrganization } from "@/services/apiOrg";
 import { formatCurrency } from "@/utils/utilfn";
 import { useQuery } from "@tanstack/react-query";
-import { lazy } from "react";
 import { useParams } from "react-router-dom";
+import Loading from "@/components/Loading";
 
 function OrgOverview() {
 	const { orgSlug } = useParams();

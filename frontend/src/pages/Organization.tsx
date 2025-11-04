@@ -11,7 +11,7 @@ import {
 	CardTitle,
 } from "@/components/ui/card";
 import { H2, H3, Large, Muted, Small } from "@/components/ui/Typography";
-import useGetOrganizations from "@/hooks/useGetOrganizations";
+import useGetOrganizations from "@/hooks/organization/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Loader } from "lucide-react";

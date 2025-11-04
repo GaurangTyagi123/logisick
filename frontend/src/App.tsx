@@ -4,15 +4,15 @@ import { ToastContainer } from "react-toastify";
 
 import useModeStore from "@/stores/useModeStore";
 
-import useCheckAuth from "@/hooks/useCheckAuth";
+import useCheckAuth from "@/hooks/user/useCheckAuth";
 import Analytics from "./pages/Analytics";
 import UserManagement from "./pages/UserManagement";
 import ProductManagement from "./pages/ProductManagement";
 import OrderSales from "./pages/OrderSales";
 import ItemPage from "./pages/ItemPage";
 import AcceptInvite from "./pages/AcceptInvite";
+import Loading from "./components/Loading";
 
-const Loading = lazy(() => import("@/components/Loading"));
 
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Notfound = lazy(() => import("@/pages/NotFound"));
@@ -37,11 +37,11 @@ function App() {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
 
-	if (isCheckingAuth) return <Loading fullscreen/>;
+	if (isCheckingAuth) return <Loading fullscreen />;
 
 	return (
 		<>
-			<Suspense fallback={<Loading fullscreen/>}>
+			<Suspense fallback={<Loading fullscreen />}>
 				<Routes>
 					{/* path for homepage */}
 					<Route index path="/" element={<Home />} />

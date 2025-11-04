@@ -49,7 +49,7 @@ const sendNewToken = (
     const token = signToken(user._id);
     const cookieOptions: cookieOptionsType = {
         httpOnly: true,
-        expires: new Date(
+        expire: new Date(
             Date.now() +
                 parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
                     24 *
@@ -198,7 +198,7 @@ export const logout = catchAsync(
     ) => {
         const cookieOptions: cookieOptionsType = {
             httpOnly: true,
-            expires: new Date(Date.now() + 10),
+            expire: new Date(Date.now() + 10),
         };
         res.cookie('jwt', undefined, cookieOptions);
         return res.status(200).json({

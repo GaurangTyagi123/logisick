@@ -19,7 +19,7 @@ namespace ExpressTypes {
 // type declaration for http-only cookie
 declare type cookieOptionsType = {
     httpOnly: boolean;
-    expires: Date;
+    expire: Date;
     secure?: boolean;
 };
 
