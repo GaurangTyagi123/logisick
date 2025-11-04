@@ -1,10 +1,10 @@
+import { lazy, useEffect } from "react";
 import BigHeading from "@/components/BigHeading";
 const Loading = lazy(() => import("@/components/Loading"));
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import useAcceptInvite from "@/hooks/emp/useAcceptInvite";
 import useCheckAuth from "@/hooks/useCheckAuth";
-import { lazy, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast, type Id } from "react-toastify";
 
