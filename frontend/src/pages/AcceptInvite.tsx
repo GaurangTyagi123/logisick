@@ -1,10 +1,10 @@
 import BigHeading from "@/components/BigHeading";
-import Loading from "@/components/Loading";
+import { lazy, useEffect } from "react";
+const Loading = lazy(() => import("@/components/Loading"));
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import useAcceptInvite from "@/hooks/emp/useAcceptInvite";
 import useCheckAuth from "@/hooks/useCheckAuth";
-import { useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { toast, type Id } from "react-toastify";
 
@@ -14,14 +14,17 @@ function AcceptInvite() {
 	const { user, isPending: isCheckingAuth } = useCheckAuth();
 
 	const handleAcceptInvite = () => {
-		if (!token) toast.error("No invitation token found", { className: "toast" });
+		if (!token)
+			toast.error("No invitation token found", { className: "toast" });
 		else acceptInvitation({ token });
 	};
 
 	useEffect(() => {
 		let ts: Id;
 		if (!user)
-			ts = toast.error("Login/Register first to accept invitatation", { className: "toast" });
+			ts = toast.error("Login/Register first to accept invitatation", {
+				className: "toast",
+			});
 		return () => toast.dismiss(ts);
 	}, [user]);
 

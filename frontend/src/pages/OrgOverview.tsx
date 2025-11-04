@@ -1,5 +1,6 @@
+import { lazy } from "react";
 import EmployeeTable from "@/components/EmployeeTable";
-import Loading from "@/components/Loading";
+const Loading = lazy(() => import("@/components/Loading"));
 import { Badge } from "@/components/ui/badge";
 import { H3, Muted, Small } from "@/components/ui/Typography";
 import { getOrganization } from "@/services/apiOrg";

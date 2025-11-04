@@ -3,14 +3,14 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import useModeStore from "@/stores/useModeStore";
-
 import useCheckAuth from "@/hooks/useCheckAuth";
-import Analytics from "./pages/Analytics";
-import UserManagement from "./pages/UserManagement";
-import ProductManagement from "./pages/ProductManagement";
-import OrderSales from "./pages/OrderSales";
-import ItemPage from "./pages/ItemPage";
-import AcceptInvite from "./pages/AcceptInvite";
+
+const Analytics = lazy(() => import("./pages/Analytics"));
+const UserManagement = lazy(() => import("./pages/UserManagement"));
+const ProductManagement = lazy(() => import("./pages/ProductManagement"));
+const OrderSales = lazy(() => import("./pages/OrderSales"));
+const ItemPage = lazy(() => import("./pages/ItemPage"));
+const AcceptInvite = lazy(() => import("./pages/AcceptInvite"));
 
 const Loading = lazy(() => import("@/components/Loading"));
 
@@ -37,11 +37,11 @@ function App() {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
 
-	if (isCheckingAuth) return <Loading fullscreen/>;
+	if (isCheckingAuth) return <Loading fullscreen />;
 
 	return (
 		<>
-			<Suspense fallback={<Loading fullscreen/>}>
+			<Suspense fallback={<Loading fullscreen />}>
 				<Routes>
 					{/* path for homepage */}
 					<Route index path="/" element={<Home />} />

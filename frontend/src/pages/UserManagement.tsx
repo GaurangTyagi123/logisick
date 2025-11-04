@@ -1,5 +1,6 @@
+import { lazy, useState } from "react";
 import EmpManagementTable from "@/components/EmpManagementTable";
-import Loading from "@/components/Loading";
+const Loading = lazy(() => import("@/components/Loading"));
 import InviteEmpModal from "@/components/modals/InviteEmpModal";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
@@ -7,7 +8,6 @@ import { checkAuth } from "@/services/apiAuth";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 
 function UserManagement() {

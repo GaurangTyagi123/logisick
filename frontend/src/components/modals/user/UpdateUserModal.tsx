@@ -37,10 +37,8 @@ function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
 		email: "",
 	});
 	const [valid, setValid] = useState<{
-		name: boolean;
 		email: boolean;
 	}>({
-		name: true,
 		email: true,
 	});
 
@@ -57,12 +55,18 @@ function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
 	 * @brief function to handle the submittion of change password form
 	 */
 	function handleSubmit() {
-		if (form.name.trim() != "" && form.email.trim() !== "" && valid.email) {
-			updateUser(form);
-		} else {
-			toast.error("All fields are required", { className: "toast" });
-			setForm({ name: "", email: "" });
-		}
+		if (form.name.trim() == "" && form.email.trim() == "")
+			toast.error("Atleast one field is required", {
+				className: "toast",
+			});
+		const submitForm: { name?: string; email?: string } = {};
+
+		if (form.email.trim() !== "" && valid.email)
+			submitForm.email = form.email.trim();
+
+		if (form.name.trim() !== "") submitForm.name = form.name.trim();
+		updateUser(submitForm);
+		setForm({ name: "", email: "" });
 	}
 
 	return (
@@ -83,7 +87,7 @@ function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
 						htmlFor="name"
 						className="grid"
 					>
-						Full Name *
+						Full Name
 						<Input
 							placeholder="Enter Your Full Name"
 							type="text"
@@ -96,27 +100,15 @@ function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
 									...form,
 									name: e.target.value,
 								});
-								if (e.target.value.trim() === "")
-									setValid({ ...valid, name: true });
-								else if (e.target.value.trim().length < 8) {
-									setValid({ ...valid, name: false });
-								} else {
-									setValid({ ...valid, name: true });
-								}
 							}}
 						/>
-						{!valid.name && (
-							<span className="text-xs text-red-500">
-								*Not a valid Name
-							</span>
-						)}
 					</Label>
 					<Label
 						title="Email field is required"
 						htmlFor="email"
 						className="grid"
 					>
-						Email *
+						Email
 						<Input
 							placeholder="Enter Your Email"
 							type="email"
