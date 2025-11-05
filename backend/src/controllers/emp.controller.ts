@@ -565,7 +565,6 @@ export const deleteEmp = catchAsync(
             orgid: org._id,
             deleted: false,
         });
-        console.log(oldEmp);
         if (!oldEmp)
             return next(new AppError('User id not an employee of org', 400));
         if (oldEmp.role === 'Owner' || oldEmp.role === 'Manager')
@@ -595,12 +594,20 @@ export const searchEmployee = catchAsync(
         if (!orgid) return next(new AppError('Invalid organization', 400));
 
         let employees;
+        const regex = new RegExp(`.*${query}.*`, 'i');
         if (redisClient.isReady) {
             employees = await redisClient.hGet(
                 `organization-${orgid}`,
                 'employees'
             );
-            if (!employees) {
+            if (employees && query.length) {
+                employees = JSON.parse(employees);
+                employees = employees.filter((employee: any) => {
+                    const employeeStr = JSON.stringify(employee);
+                    return regex.test(employeeStr);
+                });
+            }
+            if (!employees || !employees.length || !query.length) {
                 employees = await Emp.aggregate([
                     {
                         $match: {
@@ -630,21 +637,38 @@ export const searchEmployee = catchAsync(
                     {
                         $unwind: '$employees',
                     },
+                    {
+                        $match: {
+                            $or: [
+                                {
+                                    'employees.email': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    'employees.name': {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                                {
+                                    role: {
+                                        $regex: `.*${query}.*`,
+                                        $options: 'i',
+                                    },
+                                },
+                            ],
+                        },
+                    },
                 ]);
-                employees = JSON.stringify(employees);
+                const employeesStr = JSON.stringify(employees);
                 await redisClient.hSet(
                     `organization-${orgid}`,
                     'employees',
-                    employees
+                    employeesStr
                 );
             }
-            const regex = new RegExp(`.*${query}.*`, 'i');
-            employees = JSON.parse(employees);
-            employees = employees.filter((employee: any) => {
-                const employeeStr = JSON.stringify(employee);
-                console.log(employeeStr);
-                return regex.test(employeeStr);
-            });
         } else {
             employees = await Emp.aggregate([
                 {

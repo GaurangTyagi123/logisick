@@ -112,7 +112,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 			}
 			const controller = new AbortController();
 			controllerRef.current = controller;
-			if (query.trim().length) search({ orgid, query, controller });
+			if (query.length) search({ orgid, query:query.trim(), controller });
 		},
 		[orgid, search]
 	);

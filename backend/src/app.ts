@@ -21,9 +21,20 @@ import oauthRouter from './routes/oauth.routes';
 import userRouter from './routes/user.routes';
 import itemRouter from './routes/item.routes';
 
+console.log(process.env.REDIS_URL_DEV)
 // Initialize the application
 const app = express();
-const redisClient = createClient();
+const redisClient = createClient({
+    socket: {
+        reconnectStrategy(times) {
+            if (times > 3) {
+                return new Error('Retries exhausted');
+            }
+            const delay = Math.min(times * 50, 2000);
+            return delay;
+        },
+    },
+});
 
 // Middleware for parsing json in request body
 app.use(express.json());
@@ -38,7 +49,7 @@ app.use(
         _res: ExpressTypes.Response,
         next: ExpressTypes.NextFn
     ) => {
-		req.parsedQuery = qs.parse(req._parsedUrl!.query || '');
+        req.parsedQuery = qs.parse(req._parsedUrl!.query || '');
         next();
     }
 );
@@ -91,7 +102,7 @@ app.use('/api/v1/users', userRouter);
 // Employee router
 app.use('/api/v1/emp', empRouter);
 // Item Router
-app.use('/api/v1/item',itemRouter)
+app.use('/api/v1/item', itemRouter);
 
 // Open Authentication Routes
 app.use('/auth', oauthRouter);
