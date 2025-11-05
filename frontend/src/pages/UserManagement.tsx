@@ -8,7 +8,7 @@ import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { Link, useParams } from "react-router-dom";
-import Loading from "@/components/Loading";
+import { LazyLoad } from "@/components/LazyLoad";
 
 function UserManagement() {
 	const [openInviteModal, setOpenInviteModal] = useState<boolean>(false);
@@ -48,7 +48,7 @@ function UserManagement() {
 			</div>
 
 			{isGettingOrg ? (
-				<Loading />
+				<LazyLoad />
 			) : orgData ? (
 				<EmpManagementTable orgid={orgData?._id} isAuthorized={isAuthorized} />
 			) : (

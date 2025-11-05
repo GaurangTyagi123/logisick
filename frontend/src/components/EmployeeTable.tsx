@@ -5,12 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import Loading from "@/components/Loading";
 import UserAvatar from "./UserAvatar";
 import CustomTable from "./CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
+import { LazyLoad } from "./LazyLoad";
 
 interface Employee {
 	[key: string]: string;
@@ -139,7 +139,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		};
 	}, [debouncedSearch]);
 
-	if (isGettingEmployees) return <Loading />;
+	if (isGettingEmployees) return <LazyLoad />;
 	if (error) {
 		toast.error(error.message, { className: "toast" });
 		return;

@@ -1,6 +1,7 @@
 import { Schema, model, Model, Types } from 'mongoose';
 import organizationModel from './organization.model';
 import MongooseDelete from 'mongoose-delete';
+import { redisClient } from '../app';
 
 export interface EmpDocument extends EmpType, Document {
     delete(): Promise<EmpDocument>; // soft delete
@@ -51,13 +52,13 @@ employeeSchema.plugin(MongooseDelete, {
 });
 // static method of employee schema which actually calculate the total number of employees
 /**
- * @param orgid 
+ * @param orgid
  * @author Gaurang Tyagi
  * @brief calculate the total number of employees belonging to organization with ID:orgid
  * @description It uses aggregate pipeline which includes:
  *          $match stage to find all the employees belonging to organization with ID:orgid
  *          $group stage  to group the result of match stage and calculate the number of employees
- * 
+ *
  */
 employeeSchema.statics.calcNumberOfEmployees = async function (orgid: string) {
     const stats = await this.aggregate([
@@ -99,8 +100,9 @@ employeeSchema.pre('save', async function (this: EmpType, next) {
     }
 });
 // middleware to calculate the total number of employees after insertion of an employee
-employeeSchema.post('save', function () {
-    (this.constructor as EmpModel).calcNumberOfEmployees(this.orgid as string);
+employeeSchema.post(['save', 'findOneAndDelete','deleteOne'], function (doc) {
+    (this.constructor as EmpModel).calcNumberOfEmployees(doc.orgid as string);
+    redisClient.del(`organization-${doc.orgid}`);   
 });
 
 const employeeModel = model<EmpDocument, EmpModel>('Employee', employeeSchema);
