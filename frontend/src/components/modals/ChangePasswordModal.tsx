@@ -13,7 +13,7 @@ import { Close } from '@/assets/icons/Close';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
 import { Eye, EyeClosed } from '@/assets/icons/Authenticatepage';
-import useUpdatePassword from '@/hooks/useUpdatePassword';
+import useUpdatePassword from '@/hooks/user/useUpdatePassword';
 
 interface ChangePasswordProps {
     open: boolean;

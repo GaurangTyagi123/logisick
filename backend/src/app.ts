@@ -23,7 +23,49 @@ import itemRouter from './routes/item.routes';
 
 // Initialize the application
 const app = express();
-const redisClient = createClient();
+// const redisClient = createClient({
+//     socket: {
+//         reconnectStrategy(times) {
+//             if (times > 3) {
+//                 return new Error('Retries exhausted');
+//             }
+//             const delay = Math.min(times * 50, 2000);
+//             return delay;
+//         },
+//     },
+// });
+const devOptions = {
+    socket: {
+        reconnectStrategy(times: number) {
+            if (times > 3) {
+                return new Error('Retries exhausted');
+            }
+            const delay = Math.min(times * 50, 2000);
+            return delay;
+        },
+    },
+};
+const prodOptions = {
+    username: 'default',
+    password: process.env.REDIS_PASS,
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        reconnectStrategy(times: number) {
+            if (times > 3) {
+                return new Error('Retries exhausted');
+            }
+            const delay = Math.min(times * 50, 2000);
+            return delay;
+        },
+    },
+};
+const socketOptions =
+    process.env.NODE_ENV === 'production'
+        ? prodOptions
+        : devOptions;
+console.log(socketOptions);
+const redisClient = createClient(socketOptions);
 
 // Middleware for parsing json in request body
 app.use(express.json());
@@ -38,7 +80,7 @@ app.use(
         _res: ExpressTypes.Response,
         next: ExpressTypes.NextFn
     ) => {
-		req.parsedQuery = qs.parse(req._parsedUrl!.query || '');
+        req.parsedQuery = qs.parse(req._parsedUrl!.query || '');
         next();
     }
 );
@@ -91,7 +133,7 @@ app.use('/api/v1/users', userRouter);
 // Employee router
 app.use('/api/v1/emp', empRouter);
 // Item Router
-app.use('/api/v1/item',itemRouter)
+app.use('/api/v1/item', itemRouter);
 
 // Open Authentication Routes
 app.use('/auth', oauthRouter);

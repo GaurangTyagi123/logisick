@@ -1,12 +1,12 @@
 import { lazy } from "react";
 import EmployeeTable from "@/components/EmployeeTable";
-const Loading = lazy(() => import("@/components/Loading"));
 import { Badge } from "@/components/ui/badge";
 import { H3, Muted, Small } from "@/components/ui/Typography";
 import { getOrganization } from "@/services/apiOrg";
 import { formatCurrency } from "@/utils/utilfn";
 import { useQuery } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { LazyLoad } from "@/components/LazyLoad";
 
 function OrgOverview() {
 	const { orgSlug } = useParams();
@@ -15,7 +15,7 @@ function OrgOverview() {
 		queryFn: () => getOrganization(orgSlug as string),
 	});
 
-	if (isGettingOrg) return <Loading />;
+	if (isGettingOrg) return <LazyLoad />;
 	if (orgData) {
 		return (
 			<div className="flex flex-col gap-2 items-baseline h-full w-auto jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
@@ -43,7 +43,7 @@ function OrgOverview() {
 						{orgData.description}
 					</Muted>
 				</div>
-				{orgData ? <EmployeeTable orgid={orgData?._id} /> : <Loading />}
+				{orgData ? <EmployeeTable orgid={orgData?._id} /> : <LazyLoad />}
 			</div>
 		);
 	} else return <p>Create your own organiztion</p>;

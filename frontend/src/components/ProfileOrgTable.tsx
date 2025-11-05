@@ -19,7 +19,7 @@ import { Badge } from "@/components/ui/badge";
 import { H3, Small } from "./ui/Typography";
 import Button from "./ui/button";
 import { Link } from "react-router-dom";
-import useGetOrganizations from "@/hooks/useGetOrganizations";
+import useGetOrganizations from "@/hooks/organization/useGetOrganizations";
 import clsx from "clsx";
 import {
 	DropdownMenu,
@@ -78,13 +78,13 @@ function roleClasses(role: string): string {
  * @returns react component
  */
 function ProfileOrgTable({
-    setDeleteOpen,
-    setEditOpen,
-    setOpenTransfer
+	setDeleteOpen,
+	setEditOpen,
+	setOpenTransfer
 }: {
-    setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
-    setOpenTransfer: React.Dispatch<React.SetStateAction<boolean>>;
+	setDeleteOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
+	setOpenTransfer: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
 	const { data: organizations, isPending } = useGetOrganizations();
 
@@ -163,47 +163,47 @@ function ProfileOrgTable({
 											</TableCell>
 											{org.role.toLowerCase() ===
 												"owner" && (
-												<TableCell className="w-[5px]">
-													<DropdownMenu>
-														<DropdownMenuTrigger>
-															<Setting className="w-5 h-5 outline rounded-sm cursor-pointer outline-offset-2" />
-														</DropdownMenuTrigger>
-														<DropdownMenuContent className="font-semibold bg-ls-bg-100 dark:bg-ls-bg-dark-800">
-															<DropdownMenuItem
-																className="cursor-pointer"
-																onClick={() =>
-																	setEditOpen(
-																		true
-																	)
-																}
-															>
-																<Edit />
-																EDIT
-															</DropdownMenuItem>
-															<DropdownMenuSeparator />
-															<DropdownMenuItem className="cursor-pointer" onClick={()=>setOpenTransfer(true)}>
-																<Transfer />
-																TRANSFER
-															</DropdownMenuItem>
-															<DropdownMenuSeparator />
-															<DropdownMenuItem
-																className="cursor-pointer"
-																onClick={() =>
-																	setDeleteOpen(
-																		true
-																	)
-																}
-															>
-																<Delete className="text-red-500" />
-																<Small className="text-red-500">
-																	DELETE
-																</Small>
-															</DropdownMenuItem>
-															<DropdownMenuSeparator />
-														</DropdownMenuContent>
-													</DropdownMenu>
-												</TableCell>
-											)}
+													<TableCell className="w-[5px]">
+														<DropdownMenu>
+															<DropdownMenuTrigger>
+																<Setting className="w-5 h-5 outline rounded-sm cursor-pointer outline-offset-2" />
+															</DropdownMenuTrigger>
+															<DropdownMenuContent className="font-semibold bg-ls-bg-100 dark:bg-ls-bg-dark-800">
+																<DropdownMenuItem
+																	className="cursor-pointer"
+																	onClick={() =>
+																		setEditOpen(
+																			true
+																		)
+																	}
+																>
+																	<Edit />
+																	EDIT
+																</DropdownMenuItem>
+																<DropdownMenuSeparator />
+																<DropdownMenuItem className="cursor-pointer" onClick={() => setOpenTransfer(true)}>
+																	<Transfer />
+																	TRANSFER
+																</DropdownMenuItem>
+																<DropdownMenuSeparator />
+																<DropdownMenuItem
+																	className="cursor-pointer"
+																	onClick={() =>
+																		setDeleteOpen(
+																			true
+																		)
+																	}
+																>
+																	<Delete className="text-red-500" />
+																	<Small className="text-red-500">
+																		DELETE
+																	</Small>
+																</DropdownMenuItem>
+																<DropdownMenuSeparator />
+															</DropdownMenuContent>
+														</DropdownMenu>
+													</TableCell>
+												)}
 										</TableRow>
 									))}
 								</TableBody>
