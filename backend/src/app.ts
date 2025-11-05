@@ -34,21 +34,38 @@ const app = express();
 //         },
 //     },
 // });
-const redisClient = createClient({
-    username: 'default',
-    password: process.env.REDIS_PASS,
+const devOptions = {
     socket: {
-        host: process.env.REDIS_HOST,
-        port: Number(process.env.REDIS_PORT),
-         reconnectStrategy(times) {
+        reconnectStrategy(times: number) {
             if (times > 3) {
                 return new Error('Retries exhausted');
             }
             const delay = Math.min(times * 50, 2000);
             return delay;
         },
-    }
-});
+    },
+};
+const prodOptions = {
+    username: 'default',
+    password: process.env.REDIS_PASS,
+    socket: {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+        reconnectStrategy(times: number) {
+            if (times > 3) {
+                return new Error('Retries exhausted');
+            }
+            const delay = Math.min(times * 50, 2000);
+            return delay;
+        },
+    },
+};
+const socketOptions =
+    process.env.NODE_ENV === 'production'
+        ? prodOptions
+        : devOptions;
+console.log(socketOptions);
+const redisClient = createClient(socketOptions);
 
 // Middleware for parsing json in request body
 app.use(express.json());
