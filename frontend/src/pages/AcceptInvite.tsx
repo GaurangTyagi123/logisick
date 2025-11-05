@@ -1,12 +1,12 @@
-import BigHeading from "@/components/BigHeading";
 import { useEffect } from "react";
-import Loading from "@/components/Loading";
+import BigHeading from "@/components/BigHeading";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import useAcceptInvite from "@/hooks/emp/useAcceptInvite";
-import useCheckAuth from "@/hooks/useCheckAuth";
+import useCheckAuth from "@/hooks/user/useCheckAuth";
 import { useParams } from "react-router-dom";
 import { toast, type Id } from "react-toastify";
+import Loading from "@/components/Loading";
 
 function AcceptInvite() {
 	const { token } = useParams();

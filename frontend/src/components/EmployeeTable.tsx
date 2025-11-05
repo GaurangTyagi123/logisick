@@ -1,16 +1,16 @@
 // HOOKS
-import useGetEmployees from "@/hooks/useGetEmployees";
+import useGetEmployees from "@/hooks/emp/useGetEmployees";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import Loading from "./Loading";
 import UserAvatar from "./UserAvatar";
 import CustomTable from "./CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
+import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
 
 interface Employee {
 	[key: string]: string;
@@ -112,7 +112,8 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 			}
 			const controller = new AbortController();
 			controllerRef.current = controller;
-			if (query.trim().length) search({ orgid, query, controller });
+			if (query.length)
+				search({ orgid, query: query.trim(), controller });
 		},
 		[orgid, search]
 	);
@@ -139,7 +140,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		};
 	}, [debouncedSearch]);
 
-	if (isGettingEmployees) return <Loading />;
+	if (isGettingEmployees) return <CustomTableSkeleton />;
 	if (error) {
 		toast.error(error.message, { className: "toast" });
 		return;

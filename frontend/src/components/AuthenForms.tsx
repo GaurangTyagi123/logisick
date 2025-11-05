@@ -9,9 +9,9 @@ import { Separator } from "@/components/ui/separator";
 import { Eye, EyeClosed, Google } from "@/assets/icons/Authenticatepage";
 // import useAuthStore from "@/stores/useAuthStore";
 
-import useLogin from "@/hooks/useLogin";
-import useResetPassword from "@/hooks/useSendForgotPassword";
-import useSignup from "@/hooks/useSignup";
+import useLogin from "@/hooks/user/useLogin";
+import useResetPassword from "@/hooks/user/useSendForgotPassword";
+import useSignup from "@/hooks/user/useSignup";
 
 interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
@@ -178,7 +178,7 @@ export function Login({ setFormType }: FormProps) {
 				type="button"
 				className="font-semibold"
 			>
-				<Google className="ring-4 ring-white rounded-full bg-white"/>
+				<Google className="ring-4 ring-white rounded-full bg-white" />
 				<span>Login with Google account</span>
 			</Button>
 		</form>
@@ -409,7 +409,7 @@ export function Register({ setFormType }: FormProps) {
 				type="button"
 				className="font-semibold"
 			>
-				<Google className="ring-4 ring-white rounded-full bg-white"/>
+				<Google className="ring-4 ring-white rounded-full bg-white" />
 				<span>Register with Google account</span>
 			</Button>
 		</form>

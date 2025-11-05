@@ -12,7 +12,7 @@ import Button from "@/components/ui/button";
 import type React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 // import useAuthStore from '@/stores/useAuthStore';
-import useLogout from "@/hooks/useLogout";
+import useLogout from "@/hooks/user/useLogout";
 import { Separator } from "@/components/ui/separator";
 
 /**

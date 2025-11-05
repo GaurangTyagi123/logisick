@@ -1,11 +1,10 @@
 // HOOKS
-import useGetEmployees from "@/hooks/useGetEmployees";
+import useGetEmployees from "@/hooks/emp/useGetEmployees";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import Loading from "./Loading";
 import UserAvatar from "./UserAvatar";
 import CustomTable from "./CustomTable";
 
@@ -19,6 +18,7 @@ import useChangeRole from "@/hooks/emp/useChangeRole";
 import ChangeEmpRoleModal from "./modals/emp/ChangeEmpRoleModal";
 import useChangeManager from "@/hooks/emp/useChangeManager";
 import ChangeEmpManagerModal from "./modals/emp/ChangeEmpManagerModal";
+import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
 
 interface Employee {
 	[key: string]: string;
@@ -178,7 +178,7 @@ function EmployeeTable({
 		};
 	}, [debouncedSearch]);
 
-	if (isGettingEmployees) return <Loading />;
+	if (isGettingEmployees) return <CustomTableSkeleton />;
 	if (error) {
 		toast.error(error.message, { className: "toast" });
 		return;
