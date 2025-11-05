@@ -23,16 +23,31 @@ import itemRouter from './routes/item.routes';
 
 // Initialize the application
 const app = express();
+// const redisClient = createClient({
+//     socket: {
+//         reconnectStrategy(times) {
+//             if (times > 3) {
+//                 return new Error('Retries exhausted');
+//             }
+//             const delay = Math.min(times * 50, 2000);
+//             return delay;
+//         },
+//     },
+// });
 const redisClient = createClient({
+    username: 'default',
+    password: process.env.REDIS_PASS,
     socket: {
-        reconnectStrategy(times) {
+        host: process.env.REDIS_HOST,
+        port: Number(process.env.REDIS_PORT),
+         reconnectStrategy(times) {
             if (times > 3) {
                 return new Error('Retries exhausted');
             }
             const delay = Math.min(times * 50, 2000);
             return delay;
         },
-    },
+    }
 });
 
 // Middleware for parsing json in request body
