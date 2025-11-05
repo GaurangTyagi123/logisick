@@ -21,7 +21,6 @@ import oauthRouter from './routes/oauth.routes';
 import userRouter from './routes/user.routes';
 import itemRouter from './routes/item.routes';
 
-console.log(process.env.REDIS_URL_DEV)
 // Initialize the application
 const app = express();
 const redisClient = createClient({

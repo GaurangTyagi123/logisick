@@ -139,7 +139,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		};
 	}, [debouncedSearch]);
 
-	if (isGettingEmployees) return <LazyLoad />;
+	if (!isGettingEmployees) return <LazyLoad />;
 	if (error) {
 		toast.error(error.message, { className: "toast" });
 		return;

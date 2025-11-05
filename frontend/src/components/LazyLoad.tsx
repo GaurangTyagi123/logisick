@@ -9,7 +9,7 @@ export function LazyLoad() {
                 <Skeleton className="w-30 h-10" />
                 <Skeleton className="w-10 h-10" />
             </div>
-            <div className="h-screen w-[90%] flex flex-col justify-evenly">
+            <div className="h-screen w-[90%] flex flex-col justify-evenly items-end">
                 <div className="flex h-20 justify-center space-x-2">
                     <div className="w-full h-10"><Skeleton className="h-full" /></div>
                     <div className="w-full h-10"><Skeleton className="h-full" /></div>

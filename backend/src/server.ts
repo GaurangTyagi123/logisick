@@ -35,7 +35,9 @@ redisClient.on('reconnecting', () => {
     console.log('Reconnecting to redis');
 });
 
-redisClient.connect();
+redisClient.connect().catch(err => {
+	console.log(err.message)
+});
 
 // start the server
 const server = app.listen(PORT, () => {
