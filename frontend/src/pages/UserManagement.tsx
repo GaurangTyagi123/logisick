@@ -7,8 +7,8 @@ import { checkAuth } from "@/services/apiAuth";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Link, useParams } from "react-router-dom";
-import { LazyLoad } from "@/components/LazyLoad";
+import { useParams } from "react-router-dom";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 
 function UserManagement() {
 	const [openInviteModal, setOpenInviteModal] = useState<boolean>(false);
@@ -48,16 +48,17 @@ function UserManagement() {
 			</div>
 
 			{isGettingOrg ? (
-				<LazyLoad />
+				<CustomTableSkeleton />
 			) : orgData ? (
-				<EmpManagementTable orgid={orgData?._id} isAuthorized={isAuthorized} />
+				<EmpManagementTable
+					orgid={orgData?._id}
+					isAuthorized={isAuthorized}
+				/>
 			) : (
-				<div className="h-full w-full grid place-items-center gap-3">
-					<H3>Organization doesn't have any employee.</H3>
-					<Button asChild>
-						<Link to={`/dashboard/${orgSlug}/user-role`}>
-							Add an Employee
-						</Link>
+				<div className="h-96 w-full flex flex-col justify-center items-center gap-3 outline-1">
+					<H3>Your Organization doesn't have any employees</H3>
+					<Button onClick={() => setOpenInviteModal(true)}>
+						Invite Employees
 					</Button>
 				</div>
 			)}

@@ -18,7 +18,7 @@ import useChangeRole from "@/hooks/emp/useChangeRole";
 import ChangeEmpRoleModal from "./modals/emp/ChangeEmpRoleModal";
 import useChangeManager from "@/hooks/emp/useChangeManager";
 import ChangeEmpManagerModal from "./modals/emp/ChangeEmpManagerModal";
-import Loading from "./Loading";
+import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
 
 interface Employee {
 	[key: string]: string;
@@ -178,7 +178,7 @@ function EmployeeTable({
 		};
 	}, [debouncedSearch]);
 
-	if (isGettingEmployees) return <Loading />;
+	if (isGettingEmployees) return <CustomTableSkeleton />;
 	if (error) {
 		toast.error(error.message, { className: "toast" });
 		return;
@@ -191,138 +191,138 @@ function EmployeeTable({
 				columns={
 					isAuthorized()
 						? [
-							{
-								key: "name",
-								header: "Name",
-								render: (_, row) => {
-									return (
-										<div className="flex gap-2 items-center">
-											<UserAvatar
-												className="w-10 h-10"
-												customSeed={row.avatar}
-											/>
-											<span className="hidden sm:flex">
-												{row?.name} - ( {row?.role}{" "}
-												)
-											</span>
-										</div>
-									);
+								{
+									key: "name",
+									header: "Name",
+									render: (_, row) => {
+										return (
+											<div className="flex gap-2 items-center">
+												<UserAvatar
+													className="w-10 h-10"
+													customSeed={row.avatar}
+												/>
+												<span className="hidden sm:flex">
+													{row?.name} - ( {row?.role}{" "}
+													)
+												</span>
+											</div>
+										);
+									},
 								},
-							},
-							{
-								key: "email",
-								header: "Email",
-							},
-							{
-								key: "Manage Employee",
-								header: "Manage Employee",
-								render: (_, row) => {
-									return (
-										<div className="flex gap-2 justify-end items-center">
-											{row.role !== "Owner" && (
-												<>
-													{/* change role */}
-													<Button
-														disabled={
-															pendingChangeRole
-														}
-														onClick={() => {
-															setEmpData({
-																_id: row._id,
-																name: row.name,
-																email: row.email,
-															});
-															setOldRole(
-																row.role as
-																| "Admin"
-																| "Manager"
-																| "Staff"
-															);
-															setChangeRoleModalOpen(
-																true
-															);
-														}}
-														variant={
-															"secondary"
-														}
-													>
-														Change Role
-													</Button>
-													{/* change manager */}
-													<Button
-														disabled={
-															pendingChangeManager
-														}
-														onClick={() => {
-															setEmpData({
-																_id: row._id,
-																name: row.name,
-																email: row.email,
-															});
-															setChangeManagerModalOpen(
-																true
-															);
-														}}
-														variant={
-															"secondary"
-														}
-														title={`Remove ${row.name} from organization`}
-													>
-														Change Manager
-													</Button>
-													{/* delete employee */}
-													<Button
-														disabled={
-															pendingDeleteEmp
-														}
-														onClick={() => {
-															setEmpData({
-																_id: row._id,
-																name: row.name,
-																email: row.email,
-															});
-															setDeleteEmpModalOpen(
-																true
-															);
-														}}
-														variant={
-															"destructive"
-														}
-														title={`Remove ${row.name} from organization`}
-													>
-														<Delete />
-													</Button>
-												</>
-											)}
-										</div>
-									);
+								{
+									key: "email",
+									header: "Email",
 								},
-							},
-						]
+								{
+									key: "Manage Employee",
+									header: "Manage Employee",
+									render: (_, row) => {
+										return (
+											<div className="flex gap-2 justify-end items-center">
+												{row.role !== "Owner" && (
+													<>
+														{/* change role */}
+														<Button
+															disabled={
+																pendingChangeRole
+															}
+															onClick={() => {
+																setEmpData({
+																	_id: row._id,
+																	name: row.name,
+																	email: row.email,
+																});
+																setOldRole(
+																	row.role as
+																		| "Admin"
+																		| "Manager"
+																		| "Staff"
+																);
+																setChangeRoleModalOpen(
+																	true
+																);
+															}}
+															variant={
+																"secondary"
+															}
+														>
+															Change Role
+														</Button>
+														{/* change manager */}
+														<Button
+															disabled={
+																pendingChangeManager
+															}
+															onClick={() => {
+																setEmpData({
+																	_id: row._id,
+																	name: row.name,
+																	email: row.email,
+																});
+																setChangeManagerModalOpen(
+																	true
+																);
+															}}
+															variant={
+																"secondary"
+															}
+															title={`Remove ${row.name} from organization`}
+														>
+															Change Manager
+														</Button>
+														{/* delete employee */}
+														<Button
+															disabled={
+																pendingDeleteEmp
+															}
+															onClick={() => {
+																setEmpData({
+																	_id: row._id,
+																	name: row.name,
+																	email: row.email,
+																});
+																setDeleteEmpModalOpen(
+																	true
+																);
+															}}
+															variant={
+																"destructive"
+															}
+															title={`Remove ${row.name} from organization`}
+														>
+															<Delete />
+														</Button>
+													</>
+												)}
+											</div>
+										);
+									},
+								},
+						  ]
 						: [
-							{
-								key: "name",
-								header: "Name",
-								render: (_, row) => {
-									return (
-										<div className="flex gap-2 items-center">
-											<UserAvatar
-												className="w-10 h-10"
-												customSeed={row.avatar}
-											/>
-											<span className="hidden sm:flex">
-												{row?.name} - ( {row?.role}{" "}
-												)
-											</span>
-										</div>
-									);
+								{
+									key: "name",
+									header: "Name",
+									render: (_, row) => {
+										return (
+											<div className="flex gap-2 items-center">
+												<UserAvatar
+													className="w-10 h-10"
+													customSeed={row.avatar}
+												/>
+												<span className="hidden sm:flex">
+													{row?.name} - ( {row?.role}{" "}
+													)
+												</span>
+											</div>
+										);
+									},
 								},
-							},
-							{
-								key: "email",
-								header: "Email",
-							},
-						]
+								{
+									key: "email",
+									header: "Email",
+								},
+						  ]
 				}
 				clientSide
 				data={searchResults ? searchResults : deconstructedEmployees}

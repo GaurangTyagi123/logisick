@@ -10,7 +10,7 @@ import CustomTable from "./CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
-import { LazyLoad } from "./LazyLoad";
+import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
 
 interface Employee {
 	[key: string]: string;
@@ -112,7 +112,8 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 			}
 			const controller = new AbortController();
 			controllerRef.current = controller;
-			if (query.length) search({ orgid, query:query.trim(), controller });
+			if (query.length)
+				search({ orgid, query: query.trim(), controller });
 		},
 		[orgid, search]
 	);
@@ -139,7 +140,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 		};
 	}, [debouncedSearch]);
 
-	if (isGettingEmployees) return <LazyLoad />;
+	if (isGettingEmployees) return <CustomTableSkeleton />;
 	if (error) {
 		toast.error(error.message, { className: "toast" });
 		return;
