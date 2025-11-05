@@ -1,7 +1,7 @@
 import { Schema, model, Model } from 'mongoose';
 import mongooseDelete from 'mongoose-delete';
 import slugify from 'slugify';
-import {nanoid} from 'nanoid'
+import { nanoid } from 'nanoid';
 
 export interface OrgDocument extends OrgType, Document {
     delete(): Promise<OrgDocument>; // soft delete
@@ -54,7 +54,7 @@ const organizationSchema = new Schema<any, OrgModel>(
             required: true,
             default: 'None',
         },
-        slug: String, // TODO : add event listener to update slug on update of org
+        slug: String,
     },
     {
         timestamps: true,
@@ -75,12 +75,15 @@ organizationSchema.plugin(mongooseDelete, {
     overrideMethods: 'all',
 });
 
-organizationSchema.pre('save', function (this:OrgType,next) {
-    const slug = slugify(this.name as string, { lower: true });
-    const uuid = nanoid();
-    this.slug = `${slug}-${uuid}`;
-    next();
-});
+organizationSchema.pre(
+    ['save', 'findOneAndUpdate', 'updateOne'],
+    function (this: OrgType, next) {
+        const slug = slugify(this.name as string, { lower: true });
+        const uuid = nanoid();
+        this.slug = `${slug}-${uuid}`;
+        next();
+    }
+);
 const organizationModel = model<OrgDocument, OrgModel>(
     'Organization',
     organizationSchema
