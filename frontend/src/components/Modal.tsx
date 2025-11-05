@@ -1,7 +1,6 @@
 import clsx from "clsx";
 import { Suspense } from "react";
 import Loading from "./Loading";
-
 interface ModalProps {
 	openModal: boolean;
 	children: React.ReactNode;

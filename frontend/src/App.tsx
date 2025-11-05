@@ -3,17 +3,15 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 
 import useModeStore from "@/stores/useModeStore";
-
-import useCheckAuth from "@/hooks/user/useCheckAuth";
-import Analytics from "./pages/Analytics";
-import UserManagement from "./pages/UserManagement";
-import ProductManagement from "./pages/ProductManagement";
-import OrderSales from "./pages/OrderSales";
-import ItemPage from "./pages/ItemPage";
-import AcceptInvite from "./pages/AcceptInvite";
 import Loading from "./components/Loading";
+import useCheckAuth from "@/hooks/user/useCheckAuth";
 
-
+const Analytics = lazy(() => import("@/pages/Analytics"));
+const UserManagement = lazy(() => import("@/pages/UserManagement"));
+const ProductManagement = lazy(() => import("@/pages/ProductManagement"));
+const OrderSales = lazy(() => import("@/pages/OrderSales"));
+const ItemPage = lazy(() => import("@/pages/ItemPage"));
+const AcceptInvite = lazy(() => import("@/pages/AcceptInvite"));
 const ResetPassword = lazy(() => import("@/pages/ResetPassword"));
 const Notfound = lazy(() => import("@/pages/NotFound"));
 const Docs = lazy(() => import("@/pages/Docs"));
@@ -22,8 +20,8 @@ const Home = lazy(() => import("@/pages/Home"));
 const Dashboard = lazy(() => import("@/pages/Dashboard"));
 const Authenticate = lazy(() => import("@/pages/Authenticate"));
 const Profile = lazy(() => import("@/pages/Profile"));
-const Organization = lazy(() => import("./pages/Organization"));
-const OrgOverview = lazy(() => import("./pages/OrgOverview"));
+const Organization = lazy(() => import("@/pages/Organization"));
+const OrgOverview = lazy(() => import("@/pages/OrgOverview"));
 
 /**
  * @component a component to serves as base of all pages and handles routing of pages
