@@ -64,7 +64,6 @@ const socketOptions =
     process.env.NODE_ENV === 'production'
         ? prodOptions
         : devOptions;
-console.log(socketOptions);
 const redisClient = createClient(socketOptions);
 
 // Middleware for parsing json in request body
