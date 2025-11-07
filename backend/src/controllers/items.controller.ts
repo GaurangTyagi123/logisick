@@ -1,4 +1,5 @@
 import Item from '../models/item.model';
+import ApiFilter from '../utils/apiFilter';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import checkRequestBody from '../utils/checkRequestBody';
@@ -36,7 +37,7 @@ export const addItem = catchAsync(
                 'weight',
                 'colour',
                 'batchNumber',
-                'origin'
+                'origin',
             ],
             true
         );
@@ -57,7 +58,13 @@ export const getAllItems = catchAsync(
             return next(
                 new AppError('Please provide a valid organization id', 400)
             );
-        const items = await Item.find({ organization: orgId });
+        const query = Item.find({ organizationId: orgId });
+        const items = await new ApiFilter(query, req.parsedQuery!)
+            .filter()
+            .project()
+            .sort()
+            .paginate().query;
+        
         if (!items) sendItem(res, [], 200);
         else sendItem(res, items, 200);
     }
@@ -97,7 +104,24 @@ export const updateItem = catchAsync(
         res: ExpressTypes.Response,
         next: ExpressTypes.NextFn
     ) => {
-        const updatedItem = checkRequestBody(req.body, ['name', 'costPrice', 'sellingPrice', 'quantity', 'inventoryCategory', 'importance', 'importedOn', 'expiresOn', 'weight', 'colour', 'reorderLevel', 'origin'], true);
+        const updatedItem = checkRequestBody(
+            req.body,
+            [
+                'name',
+                'costPrice',
+                'sellingPrice',
+                'quantity',
+                'inventoryCategory',
+                'importance',
+                'importedOn',
+                'expiresOn',
+                'weight',
+                'colour',
+                'reorderLevel',
+                'origin',
+            ],
+            true
+        );
         const { itemId } = req.params;
 
         if (!itemId)

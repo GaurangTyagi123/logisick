@@ -11,8 +11,8 @@ import { protect } from '../controllers/auth.controller';
 
 const itemRouter = Router();
 itemRouter.route('/:SKU').get(getItemBySKU);
+itemRouter.route('/allItems/:orgId').get(protect, getAllItems);
 itemRouter.route('/').post(protect, addItem);
-itemRouter.route('/:orgId').get(protect, getAllItems);
 itemRouter.route('/:itemId')
     .get(protect, getItem)
     .patch(protect,updateItem)
