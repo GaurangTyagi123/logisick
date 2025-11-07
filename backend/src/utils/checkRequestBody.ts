@@ -1,9 +1,11 @@
 /**
- * @brief Function to remove illegal fields from body
- * @params request body(object), illegalFields (array of strings)
+ * @brief Function to remove/include fields from body
+ * @param request body(object), 
+ * @param fields (array of strings)
+ * @param include (boolean)
  * @approach create a new object (newBody).
- *          iterate through the fields of body and check whether illegalFields array contains that field
- *          If it does not contain that field then add it to the newBody object
+ *          iterate through the fields of body and check whether fields array contains that field
+ *          If it does not contain that field and include is true then add it to the newBody object
  * @returns newBody(Object)
  */
 export default (body: Record<string, string>, fields: Array<string>,include:boolean=false) => {

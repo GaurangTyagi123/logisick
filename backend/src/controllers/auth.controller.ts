@@ -82,12 +82,12 @@ const sendNewToken = (
 
 /**
  * @obective To restrict according to the roles
- * @param roles admin | manager | staff | owner
+ * @param roles Admin | Manager | Staff | Owner
  * @returns NA
  */
-export const restrictTo: (
+export const restrictTo: (...roles: string[]) => RequestHandler = (
     ...roles: string[]
-) => RequestHandler = (...roles: string[]) => {
+) => {
     return (async (
         req: ExpressTypes.UserRequest,
         res: ExpressTypes.Response,
@@ -99,7 +99,7 @@ export const restrictTo: (
         })) as EmpType;
         if (roles.includes(role as string)) return next();
         return next(new AppError('You are not authorized', 401));
-    }) as RequestHandler; 
+    }) as RequestHandler;
 };
 
 /**
@@ -150,7 +150,7 @@ export const protect = catchAsync(
 );
 
 /**
- * @brief Function to loginexisting users
+ * @brief Function to login existing users
  * @param req(Express Request)
  * @param res(Express Response)
  * @param next(Express Next Function)

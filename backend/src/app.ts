@@ -23,17 +23,8 @@ import itemRouter from './routes/item.routes';
 
 // Initialize the application
 const app = express();
-// const redisClient = createClient({
-//     socket: {
-//         reconnectStrategy(times) {
-//             if (times > 3) {
-//                 return new Error('Retries exhausted');
-//             }
-//             const delay = Math.min(times * 50, 2000);
-//             return delay;
-//         },
-//     },
-// });
+
+// redis connection configuration for development environment
 const devOptions = {
     socket: {
         reconnectStrategy(times: number) {
@@ -45,6 +36,8 @@ const devOptions = {
         },
     },
 };
+
+// redis connection configuration for production environment
 const prodOptions = {
     username: 'default',
     password: process.env.REDIS_PASS,
@@ -60,10 +53,11 @@ const prodOptions = {
         },
     },
 };
+
 const socketOptions =
-    process.env.NODE_ENV === 'production'
-        ? prodOptions
-        : devOptions;
+    process.env.NODE_ENV === 'production' ? prodOptions : devOptions;
+
+// create redis client
 const redisClient = createClient(socketOptions);
 
 // Middleware for parsing json in request body
@@ -122,6 +116,7 @@ app.use(
 
 // Middleware to configure response to cross-origin requests
 app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+app.options('/api/v1',cors());
 
 // Authentication router
 app.use('/api/v1/auth', authRouter);
