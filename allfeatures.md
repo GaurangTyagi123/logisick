@@ -13,13 +13,11 @@
 * Suppliers & Vendors
 * Supplier database
 * Contact info & order history
-* Preferred supplier tagging
 
 ## Analytics & Reporting
 
 * Dashboards
 * Total stock value
-* Fast-moving vs. slow-moving items
 * Out-of-stock alerts
 * Reports
 * Sales reports
