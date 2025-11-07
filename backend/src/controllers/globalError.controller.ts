@@ -3,19 +3,33 @@ import AppError from '../utils/appError';
 /**
  * @brief Function to generate app error if user's token is invalid
  * @param _e error object
- * @returns
  */
 const handleTokenError = (_e: Error) => {
     return new AppError('Invalid token... please login again', 401);
 };
+
+/**
+ * @brief Function to generate app error if there are duplicate keys in a mongo document
+ * @param _e error object
+ */
 const handleDuplicateKeyError = (_e: Error) => {
     const message = `Cannot have duplicate entries`;
     return new AppError(message, 400);
 };
+
+/**
+ * @brief Function to generate app error if user input exceeds the input limit
+ * @param _e error object
+ */
 const handleLimitError = (_e: Error) => {
     const message = _e.message;
     return new AppError(message, 400);
 };
+
+/**
+ * @brief Function to generate app error if user provides invalid objectId
+ * @param _e error object
+ */
 const handleObjectIDError = (_e: Error) => {
     return new AppError("Invalid id", 400);
 }
