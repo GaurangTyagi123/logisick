@@ -4,7 +4,8 @@ import ApiFilter from '../utils/apiFilter';
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import checkRequestBody from '../utils/checkRequestBody';
-
+import { redisClient } from '../app';
+// import { redisClient } from '../app';
 
 /**
  * @brief sends item document as json response
@@ -28,9 +29,9 @@ const sendItem = (
 
 /**
  * @brief function to add item to the inventory of an organization
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @body name (string) organizationId (organization ID) costPrice (number)
  * sellingPrice (number) quantity (number) inventoryCategory (string) importedOn (date)
  * expiresOn (string) importance (string) weight (string) colour (string) batchNumber (number)
@@ -71,9 +72,9 @@ export const addItem = catchAsync(
 
 /**
  * @brief Function to get all items belonging to an organization
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @param orgId (string) Organization id
  * @sideEffect calls sendItem function
  */
@@ -102,9 +103,9 @@ export const getAllItems = catchAsync(
 
 /**
  * @brief Function to get all item with a specific ID
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @param itemId (string)
  * @sideEffect calls sendItem function
  */
@@ -124,9 +125,9 @@ export const getItem = catchAsync(
 );
 /**
  * @brief Function to get an Item with a specified SKU (Stock Keeping Unit)
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @param SKU (string) Stock Keeping Unit
  * @sideEffect calls sendItem function
  */
@@ -147,9 +148,9 @@ export const getItemBySKU = catchAsync(
 );
 /**
  * @brief Function to get update an items with a given ID
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @param itemId (string)
  * @sideEffect calls sendItem function
  */
@@ -193,9 +194,9 @@ export const updateItem = catchAsync(
 
 /**
  * @brief Function to get an Item with a given ID
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @param itemId (string)
  * @sideEffect soft deletes the item
  */
@@ -216,9 +217,9 @@ export const deleteItem = catchAsync(
 
 /**
  * @brief Function to generate a report for the items in the inventory of an organization
- * @param req (Express Request Object) 
- * @param res (Express Response Object) 
- * @param next (Express Next function) 
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
  * @param orgId (string) Organization id
  * @returns json response
  */
@@ -269,6 +270,58 @@ export const itemsReport = catchAsync(
             status: 'success',
             data: {
                 report: report.at(0),
+            },
+        });
+    }
+);
+export const searchItem = catchAsync(
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { orgid } = req.params;
+        let queryStr = String(req.query.query || '');
+        queryStr = queryStr.replaceAll("'", '');
+
+        const regex = new RegExp(`.*${queryStr}.*`, 'i');
+        if (!orgid) return next(new AppError('Invalid organization', 400));
+
+        let items;
+        if (redisClient.isReady) {
+            items = await redisClient.hGet(`organization-${orgid}`, 'items');
+            if (items && queryStr.length) {
+                items = JSON.parse(items);
+                items = items.filter((employee: any) => {
+                    const employeeStr = JSON.stringify(employee);
+                    return regex.test(employeeStr);
+                });
+            }
+            if (!items || !items.length || !queryStr.length) {
+                const query = Item.find({ $text: { $search: queryStr } });
+                items = await new ApiFilter(query, req.parsedQuery!)
+                    .sort()
+                    .project()
+                    .paginate().query;
+                const itemsStr = JSON.stringify(items);
+                await redisClient.hSet(
+                    `organization-${orgid}`,
+                    'items',
+                    itemsStr
+                );
+            }
+        } else {
+            const query = Item.find({ $text: { $search: queryStr } });
+            items = await new ApiFilter(query, req.parsedQuery!)
+                .sort()
+                .project()
+                .paginate().query;
+        }
+        return res.status(200).json({
+            status: 'success',
+            results: items.length,
+            data: {
+                items,
             },
         });
     }
