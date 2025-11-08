@@ -148,8 +148,8 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		submitForm.colour = submitForm.colour?.trim();
 		submitForm.origin = submitForm.origin?.trim();
 		submitForm.SKU = submitForm.SKU?.trim();
-        console.log(submitForm)
 		addItemFn(submitForm);
+		setOpen(false);		
 	};
 
 	return (

@@ -103,10 +103,10 @@ function CustomSidebar() {
 }
 function Dashboard() {
 	return (
-		<div className="">
+		<>
 			<SidebarProvider>
 				<CustomSidebar />
-				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-64 relative">
+				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-full relative">
 					<div className="flex gap-2 items-center">
 						<SidebarTrigger
 							className="p-2 h-10 w-10 rounded-xl"
@@ -122,7 +122,7 @@ function Dashboard() {
 					</div>
 				</main>
 			</SidebarProvider>
-		</div>
+		</>
 	);
 }
 

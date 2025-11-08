@@ -74,6 +74,7 @@ export const getOrganization = async (orgSlug: string) => {
 	try {
 		const res = await axinstance.get(`/v1/org/${orgSlug}`);
 		if (res.status === 200) {
+			console.log(res.data)
 			return res.data.data.org;
 		} else {
 			handleError(

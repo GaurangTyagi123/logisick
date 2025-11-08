@@ -238,7 +238,7 @@ function ItemCard({
 							Show Qrcode
 						</Button>
 						<Button
-							onClick={() => navigate("/")}
+							onClick={() => navigate("/authenticate")}
 							className="flex-1"
 						>
 							View More
