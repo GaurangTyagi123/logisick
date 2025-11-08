@@ -102,7 +102,8 @@ employeeSchema.pre('save', async function (this: EmpType, next) {
 // middleware to calculate the total number of employees after insertion of an employee
 employeeSchema.post(['save', 'findOneAndDelete','deleteOne'], function (doc) {
     (this.constructor as EmpModel).calcNumberOfEmployees(doc.orgid as string);
-    redisClient.del(`organization-${doc.orgid}`);   
+    if(redisClient.isReady)
+        redisClient.del(`organization-${doc.orgid}`);   
 });
 
 const employeeModel = model<EmpDocument, EmpModel>('Employee', employeeSchema);
