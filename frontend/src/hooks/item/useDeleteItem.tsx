@@ -10,10 +10,10 @@ function useDeleteItem() {
             queryClient.invalidateQueries({
                 queryKey: ['items']
             })
-            toast.success("Item added successfully");
+            toast.success("Item added successfully",{className:"toast"});
         },
         onError: (err) => {
-            toast.error(err.message);
+            toast.error(err.message,{className:"toast"});
         }
     })
     return { deleteItemFn, isPending }

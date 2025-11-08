@@ -18,7 +18,7 @@ function OrgOverview() {
 
 	if (isGettingOrg)
 		return (
-			<div className="flex flex-col gap-2 items-baseline h-full w-autorounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
+			<div className="flex flex-col gap-2  items-baseline h-full w-autorounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
 				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
 					<div className="flex flex-col md:flex-row justify-between items-center w-full">
 						<Skeleton className="w-1/3 h-10" />

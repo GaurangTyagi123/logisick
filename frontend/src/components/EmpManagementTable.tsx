@@ -243,7 +243,7 @@ function EmployeeTable({
 																);
 															}}
 															variant={
-																"secondary"
+																"outline"
 															}
 														>
 															Change Role
@@ -264,7 +264,7 @@ function EmployeeTable({
 																);
 															}}
 															variant={
-																"secondary"
+																"outline"
 															}
 															title={`Remove ${row.name} from organization`}
 														>

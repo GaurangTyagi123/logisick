@@ -1,19 +1,19 @@
-import Modal from "../Modal";
+import Modal from "@/components/Modal";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../ui/card";
-import Button from "../ui/button";
+} from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import { Close } from "@/assets/icons/Close";
 import { useForm, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { transferOwnership } from "@/services/apiOrg";
 import { toast } from "react-toastify";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 type OrganizationFormData = {
 	newOwnerEmail: string;
 };

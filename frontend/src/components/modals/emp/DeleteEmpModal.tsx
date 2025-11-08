@@ -1,18 +1,18 @@
 import { Close } from "@/assets/icons/Close";
-import Modal from "../../Modal";
-import Button from "../../ui/button";
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../../ui/card";
-import { Label } from "../../ui/label";
-import { Input } from "../../ui/input";
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 import { useState } from "react";
 import type { UseMutateFunction } from "@tanstack/react-query";
-import { Small } from "../../ui/Typography";
+import { Small } from "@/components/ui/Typography";
 
 interface DeleteEmpProps {
 	open: boolean;

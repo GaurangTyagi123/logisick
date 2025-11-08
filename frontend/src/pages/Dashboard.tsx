@@ -16,11 +16,15 @@ import { Large, Muted } from "@/components/ui/Typography";
 import Button from "@/components/ui/button";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
+import useCheckAuth from "@/hooks/user/useCheckAuth";
 
 function CustomSidebar() {
 	const { orgSlug } = useParams();
 	const [pathName, setPathName] = useState("overview");
-	const sidebarData = useMemo(() => {
+	const { user: userData } = useCheckAuth();
+	const user = userData?.user;
+
+	let sidebarData = useMemo(() => {
 		return [
 			{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
 			{
@@ -46,15 +50,16 @@ function CustomSidebar() {
 		];
 	}, [orgSlug]);
 
+	if (user?._id === user?.myOrg?.admin)
+		sidebarData = sidebarData.filter((data) =>
+			["overview", "user-role"].includes(data.id)
+		);
+
 	return (
 		<Sidebar>
 			<SidebarHeader>
 				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-800">
-					<img
-						src={logo}
-						alt="logo"
-						className="h-12 drop-shadow-sm drop-shadow-black"
-					/>
+					<img src={logo} alt="logo" className="h-12" />
 					<div className="grid gap-1 pt-2">
 						<Large className="leading-4 king-julian">
 							Logisick
