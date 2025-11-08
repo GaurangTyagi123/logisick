@@ -274,6 +274,14 @@ export const itemsReport = catchAsync(
         });
     }
 );
+/**
+ * @brief Function to find a particular item in the inventory
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
+ * @param orgId (string) Organization id
+ * @return json reponse
+ */
 export const searchItem = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
