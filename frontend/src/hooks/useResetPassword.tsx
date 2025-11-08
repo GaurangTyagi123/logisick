@@ -5,8 +5,8 @@ import { toast } from 'react-toastify';
 
 // form type fof reset password
 type PasswordResetForm = {
-	password: string;
-	confirmPassword: string;
+    password: string;
+    confirmPassword: string;
 };
 
 /**
@@ -22,11 +22,17 @@ function useResetPassword() {
             form: PasswordResetForm;
         }) => resetPassword(variables.resetToken, variables.form),
         onSuccess: (data) => {
-            toast.success('Password reset successfully', {
-                className: 'toast',
-            });
-            queryClient.setQueryData(['user'], data);
-            navigate("/");
+            if (data) {
+                toast.success('Password reset successfully', {
+                    className: 'toast',
+                });
+                queryClient.setQueryData(['user'], data);
+                navigate("/");
+            }
+            else {
+                toast.error('Error updating the password')
+                navigate('/authenticate')
+            }
         },
         onError: (err) => {
             toast.error(err.message, { className: 'toast' });
