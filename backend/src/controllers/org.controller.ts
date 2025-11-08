@@ -32,6 +32,15 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
 	});
 }
 
+/**
+ * @brief function to get organization using organization slug
+ * @param req(UserRequest)
+ * @param res(ExpressRexponse)
+ * @param next(Express Next Function)
+ * @param orgSlug (string)
+ * @return IF (no organization is found ) return error with status 404
+ * 			ELSE call returnOrgRes Function with user's org and status 200
+ */
 export const getOrg = catchAsync(
 	async (
 		req: ExpressTypes.UserRequest,
@@ -138,27 +147,8 @@ export const createOrg = catchAsync(
 	}
 );
 
-/**
- * @brief function to get organization of which user is owner of
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- * @return IF (user dont have any orgs ) return error with status 404
- * 			ELSE call returnOrgRes Function with user's org and status 200
- */
-// export const getUserOrg = catchAsync(
-//     async (
-//         req: ExpressTypes.UserRequest,
-//         res: Response,
-//         next: NextFunction
-//     ) => {
-//         const org = await Org.findOne({ owner: req.user?._id });
 
-//         if (!org)
-//             return next(new AppError("User doesn't own any organization", 404));
-//         return returnOrgRes(res, 200, org);
-//     }
-// );
+
 
 /**
  * @brief function to update data of organization like (name,description,type)
