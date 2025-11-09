@@ -8,7 +8,8 @@ function useUpdateItem() {
 		mutationFn: updateItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["items"],
+				predicate: (query) =>
+					query.queryKey[0]?.toString().startsWith("item") || false,
 			});
 			toast.success("Item updated successfully", { className: "toast" });
 		},

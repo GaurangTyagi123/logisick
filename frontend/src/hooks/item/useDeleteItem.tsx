@@ -8,7 +8,7 @@ function useDeleteItem() {
 		mutationFn: deleteItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["items"],
+				predicate: (query) => query.queryKey[0]?.toString() === "items",
 			});
 			toast.success("Item deleted successfully", { className: "toast" });
 		},

@@ -228,7 +228,6 @@ export const itemsReport = catchAsync(
 		next: ExpressTypes.NextFn
 	) => {
 		const { orgid } = req.params;
-
 		if (!orgid)
 			return next(
 				new AppError("please provide a valid organization id", 400)
@@ -244,6 +243,9 @@ export const itemsReport = catchAsync(
 					_id: "$organizationId",
 					numOfItems: {
 						$sum: 1,
+					},
+					totalQuantity: {
+						$sum: "$quantity",
 					},
 					averageQuantity: {
 						$avg: "$quantity",
@@ -263,7 +265,6 @@ export const itemsReport = catchAsync(
 				},
 			},
 		]);
-
 		return res.status(200).json({
 			status: "success",
 			data: {

@@ -8,7 +8,8 @@ function useAddItem() {
 		mutationFn: addItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
-				queryKey: ["items"],
+				predicate: (query) =>
+					query.queryKey[0]?.toString() === "items" ,
 			});
 			toast.success("Item added successfully", { className: "toast" });
 		},
