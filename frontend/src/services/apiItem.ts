@@ -8,7 +8,7 @@ type updateItem = ({
 	newItem,
 	itemId,
 }: {
-	newItem: Record<string, string | number>;
+	newItem: Record<string, string | number | Date>;
 	itemId: string;
 }) => Promise<any>;
 type deleteItem = (orgId: string) => Promise<any>;

@@ -4,8 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
 import CustomTable from "./CustomTable";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { debounce } from "lodash";
+import { /*useCallback, useMemo, useRef,*/ useEffect,useState } from "react";
+// import { debounce } from "lodash";
 import { Muted } from "./ui/Typography";
 import Button from "./ui/button";
 import { Edit } from "@/assets/icons/Profilepage";
@@ -46,25 +46,26 @@ function ItemsTable() {
 	// 		} else return;
 	// 	},
 	// });
-	const controllerRef = useRef<AbortController>(null);
-	const handleSearch = useCallback(
-		async (query: string) => {
-			if (controllerRef.current) {
-				controllerRef.current.abort();
-			}
-			const controller = new AbortController();
-			controllerRef.current = controller;
-			if (query.trim().length) return; //search({ orgid:orgData._id, query, controller });
-		},
-		[
-			/*orgData, search*/
-		]
-	);
-	const debouncedSearch = useMemo(() => {
-		return debounce(handleSearch, 500);
-	}, [handleSearch]) as ((searchTerm: string) => void) & {
-		cancel: () => void;
-	};
+	// const controllerRef = useRef<AbortController>(null);
+	// const handleSearch = useCallback(
+	// 	async (query: string) => {
+	// 		if (controllerRef.current) {
+	// 			controllerRef.current.abort();
+	// 		}
+	// 		const controller = new AbortController();
+	// 		controllerRef.current = controller;
+	// 		if (query.trim().length) return; //search({ orgid:orgData._id, query, controller });
+	// 	},
+	// 	[
+	// 		/*orgData, search*/
+	// 	]
+	// );
+	const debouncedSearch = () => {};
+	// const debouncedSearch = useMemo(() => {
+	// 	return debounce(handleSearch, 500);
+	// }, [handleSearch]) as ((searchTerm: string) => void) & {
+	// 	cancel: () => void;
+	// };
 
 	useEffect(() => {
 		if (!isGettingItems && items) {

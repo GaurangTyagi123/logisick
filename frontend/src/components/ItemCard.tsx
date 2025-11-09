@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Large } from "./ui/Typography";
+import { H3, Large, Muted } from "./ui/Typography";
 import Button from "./ui/button";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
@@ -34,7 +34,7 @@ function ListItem({
 	suffix,
 	small,
 }: {
-	field: string | number;
+	field?: string | number;
 	fieldName: string;
 	suffix?: string;
 	small?: boolean;
@@ -50,7 +50,7 @@ function ListItem({
 				{fieldName} :{" "}
 			</span>
 			<span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10">
-				{field}
+				{field || <Muted>NA</Muted>}
 				{suffix}
 			</span>
 		</Large>
@@ -130,6 +130,17 @@ function ItemCard({
 					<H3 className="text-center jet-brains">
 						{item?.SKU?.substring(25)}
 					</H3>
+					{item.expiresOn && dateDifference(item.expiresOn) <= 15 && (
+						<div
+							className={clsx(
+								"bg-ls-sec-400 dark:bg-ls-sec-900 rounded-lg w-full flex items-center justify-center gap-1 jet-brains",
+								small ? "p-1 text-sm" : "p-1 text-md"
+							)}
+						>
+							<Hint /> item exipres in{" "}
+							{dateDifference(item.expiresOn)} days
+						</div>
+					)}
 				</CardHeader>
 				<CardContent className="w-full h-full gap-2 flex flex-col overflow-y-auto p-4 rounded-2xl">
 					<ListItem
@@ -146,7 +157,7 @@ function ItemCard({
 					{!small && <Separator />}
 					<ListItem
 						small={small}
-						field={item.origin || "NA"}
+						field={item.origin}
 						fieldName="Origin"
 					/>
 					{item?.expiresOn && (
@@ -195,47 +206,42 @@ function ItemCard({
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.colour || "NA"}
+								field={item.colour}
 								fieldName="Colour"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.weight || "NA"}
+								field={item.weight}
 								fieldName="Weight"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.importance || "NA"}
+								field={item.importance}
 								fieldName="Importance"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.reorderLevel || "NA"}
+								field={item.reorderLevel}
 								fieldName="Reorder Level"
 							/>
 						</>
 					)}
 				</CardContent>
 				<CardFooter className="w-full flex flex-col justify-between px-0 gap-2">
-					{item.expiresOn && dateDifference(item.expiresOn) <= 15 && (
-						<div
-							className={clsx(
-								"bg-ls-sec-400 dark:bg-ls-sec-900 rounded-lg w-full flex items-center justify-center gap-1 jet-brains",
-								small ? "p-1 text-sm" : "p-2 text-md"
-							)}
-						>
-							<Hint /> item exipres in{" "}
-							{dateDifference(item.expiresOn)} days
-						</div>
-					)}
 					<div className="w-full grid grid-cols-2 gap-2">
-						<Button onClick={() => setShowQr(true)} className="w-full">
+						<Button
+							onClick={() => setShowQr(true)}
+							className="w-full"
+						>
 							Show Qrcode
 						</Button>
-						<Link to={viewMorePath || "/authenticate"} className="w-full">
+						<Link
+							to={viewMorePath || "/authenticate"}
+							className="w-full"
+						>
 							<Button className="w-full">View More</Button>
 						</Link>
 					</div>

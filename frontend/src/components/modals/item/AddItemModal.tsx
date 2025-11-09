@@ -74,7 +74,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		sellingPrice: 0,
 		quantify: 1,
 		inventoryCategory: "",
-		importance: "A",
+		importance: "C",
 		importedOn: new Date(),
 		weight: 1,
 	});

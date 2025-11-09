@@ -10,7 +10,7 @@ function ProductManagement() {
 	return (
 		<div className="grid gap-2 min-h-96 w-full ">
 			{/* top tab */}
-			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl flex justify-between items-center">
+			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full h-20 p-3 rounded-2xl flex justify-between items-center">
 				<H3>Product Management</H3>
 				<Button onClick={() => setOpenAddItemModal(true)}>
 					Add New Item

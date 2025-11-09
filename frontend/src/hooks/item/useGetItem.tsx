@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query"
 
 function useGetItem(SKU: string) {
     const { data: item, isPending } = useQuery({
-        queryKey: ['item'],
+        queryKey: ['items'],
         queryFn: () => getItem(SKU)
     })
     return { item, isPending }

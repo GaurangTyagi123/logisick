@@ -11,7 +11,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Small } from "@/components/ui/Typography";
-import type { UseMutateFunction } from "@tanstack/react-query";
+import useDeleteItem from "@/hooks/item/useDeleteItem";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,19 +19,12 @@ interface DeleteItemModalProps {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	itemData: Item;
-	deleteItem: UseMutateFunction<any, Error, string, unknown>;
-	isPending: boolean;
 }
 
-function DeleteItemModal({
-	open,
-	setOpen,
-	itemData,
-	deleteItem,
-	isPending,
-}: DeleteItemModalProps) {
+function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 	const [text, setText] = useState<string>("");
-    const navigate = useNavigate();
+	const navigate = useNavigate();
+	const { deleteItemFn, isPending: isDeletingItem } = useDeleteItem();
 
 	return (
 		<Modal openModal={open}>
@@ -81,13 +74,13 @@ function DeleteItemModal({
 					<Button
 						type="button"
 						onClick={() => {
-							deleteItem(itemData._id);
+							deleteItemFn(itemData._id);
 							setText("");
 							setOpen(false);
-                            navigate(-1);
+							navigate(-1);
 						}}
 						disabled={
-							isPending ||
+							isDeletingItem ||
 							text.trim() !== `remove ${itemData.name}`
 						}
 						variant={"destructive"}
