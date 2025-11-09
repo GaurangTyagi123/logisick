@@ -3,7 +3,7 @@ import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
 import { H3, Large } from "./ui/Typography";
 import Button from "./ui/button";
 import clsx from "clsx";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import { Hint } from "@/assets/icons/Profilepage";
 
@@ -58,26 +58,27 @@ function ListItem({
 }
 
 /**
- * 
+ *
  * @param string className? : to modify className from parent
  * @param Item item : item data
  * @param boolean small? : to keep small size
  * @param boolean barebone? : to show only small set of data
- * @returns 
+ * @returns
  */
 function ItemCard({
 	className,
 	item,
 	small,
 	barebone = false,
+	viewMorePath,
 }: {
 	item: Item;
 	barebone?: boolean;
 	small?: boolean;
 	className?: string;
+	viewMorePath?: string;
 }) {
 	const [showQr, setShowQr] = useState<boolean>(false);
-	const navigate = useNavigate();
 
 	return (
 		<div
@@ -105,7 +106,7 @@ function ItemCard({
 					)}
 				>
 					<img
-						src={`https://encode-9qc6.onrender.com/api/create/text_url?text_url=http://localhost:5173/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
+						src={`https://encode.ravishdev.org/api/create/text_url?text_url=http://localhost:5173/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
 						alt={item?.name.substring(0, 10)}
 						className="w-full rounded-2xl"
 					/>
@@ -230,19 +231,13 @@ function ItemCard({
 							{dateDifference(item.expiresOn)} days
 						</div>
 					)}
-					<div className="w-full flex gap-2">
-						<Button
-							onClick={() => setShowQr(true)}
-							className="flex-1"
-						>
+					<div className="w-full grid grid-cols-2 gap-2">
+						<Button onClick={() => setShowQr(true)} className="w-full">
 							Show Qrcode
 						</Button>
-						<Button
-							onClick={() => navigate("/authenticate")}
-							className="flex-1"
-						>
-							View More
-						</Button>
+						<Link to={viewMorePath || "/authenticate"} className="w-full">
+							<Button className="w-full">View More</Button>
+						</Link>
 					</div>
 				</CardFooter>
 			</Card>

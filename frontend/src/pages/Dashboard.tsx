@@ -115,6 +115,9 @@ function Dashboard() {
 						<Button variant={"link"} asChild>
 							<Link to={"/"}>Homepage</Link>
 						</Button>
+						<Button variant={"link"} asChild>
+							<Link to={"/dashboard"}>Dashboard</Link>
+						</Button>
 						<Navbar hide={{ logo: true }} />
 					</div>
 					<div className="m-2 p-4 flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">

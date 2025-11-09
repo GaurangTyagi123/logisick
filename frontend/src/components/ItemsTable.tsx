@@ -133,11 +133,11 @@ function ItemsTable() {
 					),
 				},
 				{
-					key: "Item Management",
-					header: "Item Management",
+					key: "Manage",
+					header: "Manage",
 					render: (_, row) => (
 						<Link to={`/item/${row.SKU}`}>
-							<Button variant={"outline"}>
+							<Button variant={"link"}>
 								<Edit />
 							</Button>
 						</Link>

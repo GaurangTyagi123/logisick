@@ -208,7 +208,7 @@ export const deleteItem = catchAsync(
 
 		if (!itemId)
 			return next(new AppError("please provide a valid item id", 400));
-		await Item.findByIdAndDelete(itemId);
+		await Item.deleteById(itemId);
 		return res.status(204).end();
 	}
 );
