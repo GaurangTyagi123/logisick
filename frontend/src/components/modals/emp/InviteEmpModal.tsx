@@ -6,14 +6,14 @@ import {
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../ui/card";
-import Modal from "../Modal";
-import Button from "../ui/button";
+} from "@/components/ui/card";
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/button";
 import { Close } from "@/assets/icons/Close";
 import { Label } from "@radix-ui/react-dropdown-menu";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import useSendInvite from "@/hooks/emp/useSendInvite";
-import { RadioGroup, RadioGroupItem } from "../ui/radio-group";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 function InviteEmpModal({
 	open,

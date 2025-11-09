@@ -1,5 +1,5 @@
 import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
-import OrganizationModal from "@/components/modals/CreateOrgModal";
+import OrganizationModal from "@/components/modals/org/CreateOrgModal";
 import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";

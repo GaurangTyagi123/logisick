@@ -1,16 +1,16 @@
-import Modal from "../Modal";
+import Modal from "@/components/Modal";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../ui/card";
-import Button from "../ui/button";
+} from "@/components/ui/card";
+import Button from "@/components/ui/button";
 import { Close } from "@/assets/icons/Close";
 import { useForm, Controller } from "react-hook-form";
 import { Label } from "@/components/ui/label";
-import { Input } from "../ui/input";
+import { Input } from "@/components/ui/input";
 import {
 	Select,
 	SelectContent,
@@ -19,7 +19,7 @@ import {
 	SelectValue,
 } from "@/components/ui/Select";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createOrg } from "@/services/apiOrg";
+import { updateOrg } from "@/services/apiOrg";
 import { toast } from "react-toastify";
 const orgTypes = ["Basic", "Small-Cap", "Mid-Cap", "Large-Cap", "Other"];
 type OrganizationFormData = {
@@ -28,42 +28,46 @@ type OrganizationFormData = {
 	type?: string;
 };
 /**
- * @component a modal for profilepage which prompts user to create their own organization when clicks to do so
+ * @component a modal for profilepage which prompts user to change organization details when clicks to do so
  * @param open a boolean value stating is modal is open
  * @param setOpen a function to change state of open of modal
- * @returns gives a components as a create organization modal to put somewhere
+ * @returns gives a components as a update organization modal to put somewhere
  */
-function OrganizationModal({
+function EditOrgModal({
 	open,
 	setOpen,
 }: {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-	const { register, handleSubmit, formState, control, reset } =
-		useForm<OrganizationFormData>();
-	const { errors } = formState;
 	const queryClient = useQueryClient();
-	const { mutate: createOrgFn, isPending } = useMutation({
-		mutationFn: createOrg,
+	const userObj = queryClient.getQueryData<{ user: User }>(["user"]);
+	const organization = userObj?.user.myOrg;
+	const { register, formState, handleSubmit, control } =
+		useForm<OrganizationFormData>({
+			defaultValues: organization,
+		});
+	const { errors } = formState;
+	const { mutate: updateOrgFn, isPending: isUpdating } = useMutation({
+		mutationFn: updateOrg,
 		onSuccess: () => {
+			queryClient.invalidateQueries({
+				queryKey: ["user"],
+			});
 			queryClient.invalidateQueries({
 				queryKey: ["orgs"],
 			});
-			toast.success("Organization created successfully", {
+			toast.success("Organization updated successfully", {
 				className: "toast",
 			});
 		},
 		onError: (err) => {
 			toast.error(err.message, { className: "toast" });
 		},
-		onSettled: () => {
-			reset();
-		},
 	});
 
 	const onSubmit = (data: OrganizationFormData) => {
-		createOrgFn(data);
+		if (organization) updateOrgFn({ id: organization?._id, data });
 		setOpen(false);
 	};
 	return (
@@ -144,7 +148,7 @@ function OrganizationModal({
 						<Label
 							title="Previous Password field is required"
 							htmlFor="Type"
-							className="grid gap-4 mt-3 w-full"
+							className="grid gap-4 mt-3"
 						>
 							Type
 							<div className="flex items-center justify-between w-full gap-1">
@@ -156,7 +160,7 @@ function OrganizationModal({
 											onValueChange={field.onChange}
 											value={field.value}
 										>
-											<SelectTrigger className="w-full">
+											<SelectTrigger className="w-[180px]">
 												<SelectValue
 													placeholder="Basic"
 													defaultValue="Basic"
@@ -184,7 +188,7 @@ function OrganizationModal({
 						className="w-full"
 						type="submit"
 						onClick={handleSubmit(onSubmit)}
-						disabled={isPending}
+						disabled={isUpdating}
 					>
 						Submit
 					</Button>
@@ -194,4 +198,4 @@ function OrganizationModal({
 	);
 }
 
-export default OrganizationModal;
+export default EditOrgModal;

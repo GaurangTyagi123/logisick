@@ -3,7 +3,7 @@ import { Skeleton } from "../ui/skeleton";
 
 function CustomTableSkeleton() {
 	return (
-		<div className="outline-1 rounded-2xl min-h-96">
+		<div className="outline-1 rounded-2xl min-h-96 w-full">
 			<div className="flex justify-between items-center p-4 h-22">
 				<Skeleton className="w-1/3 h-8" />
 				<div className="w-1/2 flex justify-end gap-1">

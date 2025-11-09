@@ -16,11 +16,15 @@ import { Large, Muted } from "@/components/ui/Typography";
 import Button from "@/components/ui/button";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
+import useCheckAuth from "@/hooks/user/useCheckAuth";
 
 function CustomSidebar() {
 	const { orgSlug } = useParams();
 	const [pathName, setPathName] = useState("overview");
-	const sidebarData = useMemo(() => {
+	const { user: userData } = useCheckAuth();
+	const user = userData?.user;
+
+	let sidebarData = useMemo(() => {
 		return [
 			{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
 			{
@@ -46,15 +50,16 @@ function CustomSidebar() {
 		];
 	}, [orgSlug]);
 
+	if (user?._id === user?.myOrg?.admin)
+		sidebarData = sidebarData.filter((data) =>
+			["overview", "user-role"].includes(data.id)
+		);
+
 	return (
 		<Sidebar>
 			<SidebarHeader>
 				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-800">
-					<img
-						src={logo}
-						alt="logo"
-						className="h-12 drop-shadow-sm drop-shadow-black"
-					/>
+					<img src={logo} alt="logo" className="h-12" />
 					<div className="grid gap-1 pt-2">
 						<Large className="leading-4 king-julian">
 							Logisick
@@ -98,10 +103,10 @@ function CustomSidebar() {
 }
 function Dashboard() {
 	return (
-		<div className="">
+		<>
 			<SidebarProvider>
 				<CustomSidebar />
-				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-64 relative">
+				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-full relative">
 					<div className="flex gap-2 items-center">
 						<SidebarTrigger
 							className="p-2 h-10 w-10 rounded-xl"
@@ -110,6 +115,9 @@ function Dashboard() {
 						<Button variant={"link"} asChild>
 							<Link to={"/"}>Homepage</Link>
 						</Button>
+						<Button variant={"link"} asChild>
+							<Link to={"/dashboard"}>Dashboard</Link>
+						</Button>
 						<Navbar hide={{ logo: true }} />
 					</div>
 					<div className="m-2 p-4 flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
@@ -117,7 +125,7 @@ function Dashboard() {
 					</div>
 				</main>
 			</SidebarProvider>
-		</div>
+		</>
 	);
 }
 

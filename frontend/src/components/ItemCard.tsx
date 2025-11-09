@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Large } from "./ui/Typography";
+import { H3, Large, Muted } from "./ui/Typography";
 import Button from "./ui/button";
 import clsx from "clsx";
-import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import { Hint } from "@/assets/icons/Profilepage";
 
@@ -34,7 +34,7 @@ function ListItem({
 	suffix,
 	small,
 }: {
-	field: string | number;
+	field?: string | number;
 	fieldName: string;
 	suffix?: string;
 	small?: boolean;
@@ -50,7 +50,7 @@ function ListItem({
 				{fieldName} :{" "}
 			</span>
 			<span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10">
-				{field}
+				{field || <Muted>NA</Muted>}
 				{suffix}
 			</span>
 		</Large>
@@ -58,26 +58,27 @@ function ListItem({
 }
 
 /**
- * 
+ *
  * @param string className? : to modify className from parent
  * @param Item item : item data
  * @param boolean small? : to keep small size
  * @param boolean barebone? : to show only small set of data
- * @returns 
+ * @returns
  */
 function ItemCard({
 	className,
 	item,
 	small,
 	barebone = false,
+	viewMorePath,
 }: {
 	item: Item;
 	barebone?: boolean;
 	small?: boolean;
 	className?: string;
+	viewMorePath?: string;
 }) {
 	const [showQr, setShowQr] = useState<boolean>(false);
-	const navigate = useNavigate();
 
 	return (
 		<div
@@ -105,7 +106,7 @@ function ItemCard({
 					)}
 				>
 					<img
-						src={`https://encode-9qc6.onrender.com/api/create/text_url?text_url=http://localhost:5173/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
+						src={`https://encode.ravishdev.org/api/create/text_url?text_url=http://localhost:5173/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
 						alt={item?.name.substring(0, 10)}
 						className="w-full rounded-2xl"
 					/>
@@ -129,6 +130,17 @@ function ItemCard({
 					<H3 className="text-center jet-brains">
 						{item?.SKU?.substring(25)}
 					</H3>
+					{item.expiresOn && dateDifference(item.expiresOn) <= 15 && (
+						<div
+							className={clsx(
+								"bg-ls-sec-400 dark:bg-ls-sec-900 rounded-lg w-full flex items-center justify-center gap-1 jet-brains",
+								small ? "p-1 text-sm" : "p-1 text-md"
+							)}
+						>
+							<Hint /> item exipres in{" "}
+							{dateDifference(item.expiresOn)} days
+						</div>
+					)}
 				</CardHeader>
 				<CardContent className="w-full h-full gap-2 flex flex-col overflow-y-auto p-4 rounded-2xl">
 					<ListItem
@@ -145,7 +157,7 @@ function ItemCard({
 					{!small && <Separator />}
 					<ListItem
 						small={small}
-						field={item.origin || "NA"}
+						field={item.origin}
 						fieldName="Origin"
 					/>
 					{item?.expiresOn && (
@@ -194,55 +206,44 @@ function ItemCard({
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.colour || "NA"}
+								field={item.colour}
 								fieldName="Colour"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.weight || "NA"}
+								field={item.weight}
 								fieldName="Weight"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.importance || "NA"}
+								field={item.importance}
 								fieldName="Importance"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.reorderLevel || "NA"}
+								field={item.reorderLevel}
 								fieldName="Reorder Level"
 							/>
 						</>
 					)}
 				</CardContent>
 				<CardFooter className="w-full flex flex-col justify-between px-0 gap-2">
-					{item.expiresOn && dateDifference(item.expiresOn) <= 15 && (
-						<div
-							className={clsx(
-								"bg-ls-sec-400 dark:bg-ls-sec-900 rounded-lg w-full flex items-center justify-center gap-1 jet-brains",
-								small ? "p-1 text-sm" : "p-2 text-md"
-							)}
-						>
-							<Hint /> item exipres in{" "}
-							{dateDifference(item.expiresOn)} days
-						</div>
-					)}
-					<div className="w-full flex gap-2">
+					<div className="w-full grid grid-cols-2 gap-2">
 						<Button
 							onClick={() => setShowQr(true)}
-							className="flex-1"
+							className="w-full"
 						>
 							Show Qrcode
 						</Button>
-						<Button
-							onClick={() => navigate("/")}
-							className="flex-1"
+						<Link
+							to={viewMorePath || "/authenticate"}
+							className="w-full"
 						>
-							View More
-						</Button>
+							<Button className="w-full">View More</Button>
+						</Link>
 					</div>
 				</CardFooter>
 			</Card>

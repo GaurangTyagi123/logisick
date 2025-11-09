@@ -15,16 +15,16 @@ import { redisClient } from '../app';
  * @returns response object
  */
 const sendItem = (
-    res: ExpressTypes.Response,
-    item: ItemType | ItemType[],
-    status: number
+	res: ExpressTypes.Response,
+	item: ItemType | ItemType[],
+	status: number
 ) => {
-    return res.status(status).json({
-        status: 'success',
-        data: {
-            item,
-        },
-    });
+	return res.status(status).json({
+		status: "success",
+		data: {
+			item,
+		},
+	});
 };
 
 /**
@@ -39,35 +39,35 @@ const sendItem = (
  * @sideeffect calls sendItem function
  */
 export const addItem = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const newItem = checkRequestBody(
-            req.body,
-            [
-                'name',
-                'organizationId',
-                'costPrice',
-                'sellingPrice',
-                'quantity',
-                'inventoryCategory',
-                'importedOn',
-                'expiresOn',
-                'importance',
-                'weight',
-                'colour',
-                'batchNumber',
-                'origin',
-            ],
-            true
-        );
-        if (!newItem)
-            return next(new AppError('Please provide complete details', 400));
-        const item = await Item.create(newItem);
-        sendItem(res, item, 201);
-    }
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const newItem = checkRequestBody(
+			req.body,
+			[
+				"name",
+				"organizationId",
+				"costPrice",
+				"sellingPrice",
+				"quantity",
+				"inventoryCategory",
+				"importedOn",
+				"expiresOn",
+				"importance",
+				"weight",
+				"colour",
+				"batchNumber",
+				"origin",
+			],
+			true
+		);
+		if (!newItem)
+			return next(new AppError("Please provide complete details", 400));
+		const item = await Item.create(newItem);
+		sendItem(res, item, 201);
+	}
 );
 
 /**
@@ -79,26 +79,26 @@ export const addItem = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const getAllItems = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { orgid } = req.params;
-        if (!orgid)
-            return next(
-                new AppError('Please provide a valid organization id', 400)
-            );
-        const query = Item.find({ organizationId: orgid });
-        const items = await new ApiFilter(query, req.parsedQuery!)
-            .filter()
-            .project()
-            .sort()
-            .paginate().query;
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { orgid } = req.params;
+		if (!orgid)
+			return next(
+				new AppError("Please provide a valid organization id", 400)
+			);
+		const query = Item.find({ organizationId: orgid });
+		const items = await new ApiFilter(query, req.parsedQuery!)
+			.filter()
+			.project()
+			.sort()
+			.paginate().query;
 
-        if (!items) sendItem(res, [], 200);
-        else sendItem(res, items, 200);
-    }
+		if (!items) sendItem(res, [], 200);
+		else sendItem(res, items, 200);
+	}
 );
 
 /**
@@ -110,18 +110,18 @@ export const getAllItems = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const getItem = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { itemId } = req.params;
-        if (!itemId)
-            return next(new AppError('Please provide a valid item id', 400));
-        const item = (await Item.findById(itemId)) as ItemType;
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { itemId } = req.params;
+		if (!itemId)
+			return next(new AppError("Please provide a valid item id", 400));
+		const item = (await Item.findById(itemId)) as ItemType;
 
-        sendItem(res, item, 200);
-    }
+		sendItem(res, item, 200);
+	}
 );
 /**
  * @brief Function to get an Item with a specified SKU (Stock Keeping Unit)
@@ -132,19 +132,19 @@ export const getItem = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const getItemBySKU = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { SKU } = req.params;
-        if (!SKU)
-            return next(new AppError('Please provide a valid item SKU', 400));
-        const item = (await Item.findOne({ SKU })) as any | null;
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { SKU } = req.params;
+		if (!SKU)
+			return next(new AppError("Please provide a valid item SKU", 400));
+		const item = (await Item.findOne({ SKU })) as any | null;
 
-        if (!item) return next(new AppError('Item not found', 404));
-        sendItem(res, item as ItemType, 200);
-    }
+		if (!item) return next(new AppError("Item not found", 404));
+		sendItem(res, item as ItemType, 200);
+	}
 );
 /**
  * @brief Function to get update an items with a given ID
@@ -155,41 +155,41 @@ export const getItemBySKU = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const updateItem = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const updatedItem = checkRequestBody(
-            req.body,
-            [
-                'name',
-                'costPrice',
-                'sellingPrice',
-                'quantity',
-                'inventoryCategory',
-                'importance',
-                'importedOn',
-                'expiresOn',
-                'weight',
-                'colour',
-                'reorderLevel',
-                'origin',
-            ],
-            true
-        );
-        const { itemId } = req.params;
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const updatedItem = checkRequestBody(
+			req.body,
+			[
+				"name",
+				"costPrice",
+				"sellingPrice",
+				"quantity",
+				"inventoryCategory",
+				"importance",
+				"importedOn",
+				"expiresOn",
+				"weight",
+				"colour",
+				"reorderLevel",
+				"origin",
+			],
+			true
+		);
+		const { itemId } = req.params;
 
-        if (!itemId)
-            return next(new AppError('please provide a valid item id', 400));
-        if (!updatedItem)
-            return next(new AppError('please provide valid data', 400));
-        const newItem = (await Item.findByIdAndUpdate(itemId, updatedItem, {
-            new: true,
-            runValidators: true,
-        })) as ItemType;
-        sendItem(res, newItem, 200);
-    }
+		if (!itemId)
+			return next(new AppError("please provide a valid item id", 400));
+		if (!updatedItem)
+			return next(new AppError("please provide valid data", 400));
+		const newItem = (await Item.findByIdAndUpdate(itemId, updatedItem, {
+			new: true,
+			runValidators: true,
+		})) as ItemType;
+		sendItem(res, newItem, 200);
+	}
 );
 
 /**
@@ -201,18 +201,18 @@ export const updateItem = catchAsync(
  * @sideEffect soft deletes the item
  */
 export const deleteItem = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { itemId } = req.params;
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { itemId } = req.params;
 
-        if (!itemId)
-            return next(new AppError('please provide a valid item id', 400));
-        await Item.findByIdAndDelete(itemId);
-        return res.status(204).end();
-    }
+		if (!itemId)
+			return next(new AppError("please provide a valid item id", 400));
+		await Item.deleteById(itemId);
+		return res.status(204).end();
+	}
 );
 
 /**
@@ -224,55 +224,56 @@ export const deleteItem = catchAsync(
  * @returns json response
  */
 export const itemsReport = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { orgid } = req.params;
-
-        if (!orgid)
-            return next(
-                new AppError('please provide a valid organization id', 400)
-            );
-        const report = await Item.aggregate([
-            {
-                $match: {
-                    organizationId: new Types.ObjectId(orgid),
-                },
-            },
-            {
-                $group: {
-                    _id: '$organizationId',
-                    numOfItems: {
-                        $sum: 1,
-                    },
-                    averageQuantity: {
-                        $avg: '$quantity',
-                    },
-                    totalCostPrice: {
-                        $sum: '$costPrice',
-                    },
-                    totalSellingPrice: {
-                        $sum: '$sellingPrice',
-                    },
-                    averageCostPrice: {
-                        $avg: '$costPrice',
-                    },
-                    averageSellingPrice: {
-                        $avg: '$sellingPrice',
-                    },
-                },
-            },
-        ]);
-
-        return res.status(200).json({
-            status: 'success',
-            data: {
-                report: report.at(0),
-            },
-        });
-    }
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { orgid } = req.params;
+		if (!orgid)
+			return next(
+				new AppError("please provide a valid organization id", 400)
+			);
+		const report = await Item.aggregate([
+			{
+				$match: {
+					organizationId: new Types.ObjectId(orgid),
+				},
+			},
+			{
+				$group: {
+					_id: "$organizationId",
+					numOfItems: {
+						$sum: 1,
+					},
+					totalQuantity: {
+						$sum: "$quantity",
+					},
+					averageQuantity: {
+						$avg: "$quantity",
+					},
+					totalCostPrice: {
+						$sum: "$costPrice",
+					},
+					totalSellingPrice: {
+						$sum: "$sellingPrice",
+					},
+					averageCostPrice: {
+						$avg: "$costPrice",
+					},
+					averageSellingPrice: {
+						$avg: "$sellingPrice",
+					},
+				},
+			},
+		]);
+		return res.status(200).json({
+			status: "success",
+			data: {
+				report: report.at(0),
+			},
+		});
+	}
 );
 /**
  * @brief Function to find a particular item in the inventory

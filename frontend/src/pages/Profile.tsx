@@ -10,21 +10,21 @@ import Navbar from "@/components/Navbar";
 import UserAvatar from "@/components/UserAvatar";
 import { H2, Large, Muted } from "@/components/ui/Typography";
 
-const OtpModal = lazy(() => import("@/components/modals/OtpModal"));
-const DeleteMeModal = lazy(() => import("@/components/modals/DeleteMeModal"));
+const OtpModal = lazy(() => import("@/components/modals/user/OtpModal"));
+const DeleteMeModal = lazy(() => import("@/components/modals/user/DeleteMeModal"));
 const ChangePasswordModal = lazy(
-	() => import("@/components/modals/ChangePasswordModal")
+	() => import("@/components/modals/user/ChangePasswordModal")
 );
 const ProfilePicChangeModal = lazy(
-	() => import("@/components/modals/ProfilePicChangeModal")
+	() => import("@/components/modals/user/ProfilePicChangeModal")
 );
 
 import useAuthStore from "@/stores/useAuthStore";
 import ProfileOrgTable from "@/components/ProfileOrgTable";
-const DeleteOrgModal = lazy(() => import("@/components/modals/DeleteOrgModal"));
-const EditOrgModal = lazy(() => import("@/components/modals/EditOrgModal"));
+const DeleteOrgModal = lazy(() => import("@/components/modals/org/DeleteOrgModal"));
+const EditOrgModal = lazy(() => import("@/components/modals/org/EditOrgModal"));
 const TransferOwnershipModal = lazy(
-	() => import("@/components/modals/TransferOwnershipModal")
+	() => import("@/components/modals/org/TransferOwnershipModal")
 );
 const UpdateUserModal = lazy(
 	() => import("@/components/modals/user/UpdateUserModal")

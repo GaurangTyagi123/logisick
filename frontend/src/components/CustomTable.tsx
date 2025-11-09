@@ -1,6 +1,6 @@
 import { useEffect, useState, useMemo, type ReactNode } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Large } from "./ui/Typography";
+import { H3, Large, Muted } from "./ui/Typography";
 import { Separator } from "./ui/separator";
 import { Input } from "./ui/input";
 import {
@@ -25,7 +25,7 @@ import {
 import Pagination from "./Pagination";
 
 export interface Column<RowType> {
-	key: keyof RowType;
+	key: string | keyof RowType;
 	header: string;
 	sortable?: boolean; // whether this column is sortable
 	searchable?: boolean; // whether to include this column in search
@@ -61,7 +61,7 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
-function CustomTable<RowType extends Record<string, string>>({
+function CustomTable<RowType extends Record<string, string | number | Date>>({
 	title,
 	titleIcon,
 	data,
@@ -127,8 +127,7 @@ function CustomTable<RowType extends Record<string, string>>({
 				setSortOrder("desc");
 				break;
 			case "desc":
-				setSortOrder(null);
-				setSortColumn(null);
+				setSortOrder("asc");
 				break;
 			case null:
 				if (sortColumn) {
@@ -207,7 +206,7 @@ function CustomTable<RowType extends Record<string, string>>({
 	);
 
 	return (
-		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800">
+		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800 w-full">
 			<CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
 				<div className="flex items-center gap-2">
 					{titleIcon}
@@ -231,7 +230,7 @@ function CustomTable<RowType extends Record<string, string>>({
 								{sortColumn ? String(sortColumn) : "None"}
 							</Button>
 						</DropdownMenuTrigger>
-						<DropdownMenuContent>
+						<DropdownMenuContent className="max-h-48 overflow-y-auto">
 							<DropdownMenuItem
 								className="cursor-pointer"
 								onClick={() => {
@@ -329,13 +328,13 @@ function CustomTable<RowType extends Record<string, string>>({
 
 			<Separator />
 
-			<CardContent className="overflow-x-auto">
+			<CardContent className="w-full">
 				{(clientSide ? processedData : data).length === 0 ? (
 					<div className="h-64 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
 					</div>
 				) : (
-					<Table>
+					<Table className="overflow-x-scroll w-full">
 						<TableHeader>
 							<TableRow>
 								{columns.map((col) => (
@@ -345,10 +344,10 @@ function CustomTable<RowType extends Record<string, string>>({
 								))}
 							</TableRow>
 						</TableHeader>
-						<TableBody>
+						<TableBody className="w-full overflow-x-auto">
 							{(clientSide ? processedData : data).map(
 								(row, index) => (
-									<TableRow key={index} className="">
+									<TableRow key={index}>
 										{columns.map((col) => (
 											<TableCell
 												key={String(col.key) + index}
@@ -361,7 +360,9 @@ function CustomTable<RowType extends Record<string, string>>({
 													  )
 													: (row[
 															col.key
-													  ] as React.ReactNode)}
+													  ] as React.ReactNode) || (
+															<Muted>NA</Muted>
+													  )}
 											</TableCell>
 										))}
 									</TableRow>

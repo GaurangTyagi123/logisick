@@ -147,7 +147,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	}
 	const deconstructedEmployees = deconstructEmployee(employees);
 	return (
-		<div className=" w-full">
+		<div className="w-full">
 			<CustomTable<Record<string, string>>
 				title="Employees"
 				columns={[

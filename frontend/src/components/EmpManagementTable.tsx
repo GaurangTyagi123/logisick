@@ -242,9 +242,7 @@ function EmployeeTable({
 																	true
 																);
 															}}
-															variant={
-																"secondary"
-															}
+															variant={"outline"}
 														>
 															Change Role
 														</Button>
@@ -263,9 +261,7 @@ function EmployeeTable({
 																	true
 																);
 															}}
-															variant={
-																"secondary"
-															}
+															variant={"outline"}
 															title={`Remove ${row.name} from organization`}
 														>
 															Change Manager

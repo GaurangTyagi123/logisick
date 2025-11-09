@@ -9,11 +9,11 @@
 *::after {
 	/* padding: 0; */
 	/* margin: 0; */
-	scrollbar-width: none;
+	/* scrollbar-width: none; */
 	box-sizing: border-box;
 }
-.scrollbar{
-	scrollbar-width:auto;
+.scrollbar {
+	scrollbar-width: auto;
 }
 
 html,
@@ -22,11 +22,11 @@ body,
 	/* width: 100vw; */
 	/* min-height: 100dvh; */
 	/* scrollbar-gutter: stable; */
-	
+
 	scroll-behavior: smooth;
 }
-#root::-webkit-scrollbar{
-	width:5px;
+#root::-webkit-scrollbar {
+	width: 5px;
 	background-color: red;
 	color: red;
 }
@@ -174,4 +174,18 @@ body,
 	body {
 		@apply bg-background text-foreground;
 	}
+}
+
+/* target the calendar icon area */
+input[type="date"]::-webkit-calendar-picker-indicator {
+	cursor: pointer;
+	background: url("../public/assets/calender.svg") center/1em no-repeat; /* custom icon
+	opacity: 0.7;
+	color: var(--color-ls-sec-500);
+	filter: invert(0.6); /* adjust color if needed */
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover {
+	opacity: 1;
+	filter: invert(0);
 }

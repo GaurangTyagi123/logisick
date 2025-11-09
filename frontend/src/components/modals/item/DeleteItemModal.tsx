@@ -8,48 +8,29 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import type { UseMutateFunction } from "@tanstack/react-query";
+import { Label } from "@/components/ui/label";
 import { Small } from "@/components/ui/Typography";
+import useDeleteItem from "@/hooks/item/useDeleteItem";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-interface DeleteEmpProps {
+interface DeleteItemModalProps {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	empData: {
-		_id: string;
-		name: string;
-		email: string;
-	};
-	orgid: string;
-	deleteEmp: UseMutateFunction<
-		void,
-		any,
-		{
-			userid: string;
-			orgid: string;
-		},
-		unknown
-	>;
-	isPending: boolean;
+	itemData: Item;
 }
 
-function DeleteEmpModal({
-	open,
-	setOpen,
-	empData,
-	orgid,
-	deleteEmp,
-	isPending,
-}: DeleteEmpProps) {
+function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 	const [text, setText] = useState<string>("");
+	const navigate = useNavigate();
+	const { deleteItemFn, isPending: isDeletingItem } = useDeleteItem();
 
 	return (
 		<Modal openModal={open}>
 			<Card>
 				<CardHeader className="flex justify-between items-center">
-					<CardTitle>Remove Employee {empData.name}</CardTitle>
+					<CardTitle>Remove Item</CardTitle>
 					<Button
 						onClick={() => setOpen(false)}
 						variant={"secondary"}
@@ -57,19 +38,20 @@ function DeleteEmpModal({
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid gap-2">
-					<Small>Employee Email : {empData.email}</Small>
+				<CardContent className="grid gap-4">
+					<Small>Item's Name : {itemData.name}</Small>
+					<Small>Item's SKU : {itemData.SKU?.substring(25)}</Small>
 					<Label
-						title="remove employee"
-						htmlFor="removeemp"
+						title="remove item"
+						htmlFor="removeitem"
 						className="grid"
 					>
 						<span>
 							Enter "
 							<span className="text-red-500">
-								remove {empData.name}
+								remove {itemData.name}
 							</span>
-							" in the input below to remove employee
+							" in the input below to remove item
 						</span>
 						<Input
 							placeholder="Enter Text"
@@ -92,17 +74,18 @@ function DeleteEmpModal({
 					<Button
 						type="button"
 						onClick={() => {
-							deleteEmp({ userid: empData._id, orgid: orgid });
+							deleteItemFn(itemData._id);
 							setText("");
 							setOpen(false);
+							navigate(-1);
 						}}
 						disabled={
-							isPending ||
-							text.trim() !== `remove ${empData.name}`
+							isDeletingItem ||
+							text.trim() !== `remove ${itemData.name}`
 						}
 						variant={"destructive"}
 					>
-						Remove Employee
+						Remove Item
 					</Button>
 				</CardFooter>
 			</Card>
@@ -110,4 +93,4 @@ function DeleteEmpModal({
 	);
 }
 
-export default DeleteEmpModal;
+export default DeleteItemModal;
