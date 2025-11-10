@@ -1,9 +1,11 @@
-import { Types } from "mongoose";
-import Item from "../models/item.model";
-import ApiFilter from "../utils/apiFilter";
-import AppError from "../utils/appError";
-import catchAsync from "../utils/catchAsync";
-import checkRequestBody from "../utils/checkRequestBody";
+import { Types } from 'mongoose';
+import Item from '../models/item.model';
+import ApiFilter from '../utils/apiFilter';
+import AppError from '../utils/appError';
+import catchAsync from '../utils/catchAsync';
+import checkRequestBody from '../utils/checkRequestBody';
+import { redisClient } from '../app';
+// import { redisClient } from '../app';
 
 /**
  * @brief sends item document as json response
@@ -272,4 +274,64 @@ export const itemsReport = catchAsync(
 			},
 		});
 	}
+);
+/**
+ * @brief Function to find a particular item in the inventory
+ * @param req (Express Request Object)
+ * @param res (Express Response Object)
+ * @param next (Express Next function)
+ * @param orgId (string) Organization id
+ * @return json reponse
+ */
+export const searchItem = catchAsync(
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { orgid } = req.params;
+        let queryStr = String(req.query.query || '');
+        queryStr = queryStr.replaceAll("'", '');
+
+        const regex = new RegExp(`.*${queryStr}.*`, 'i');
+        if (!orgid) return next(new AppError('Invalid organization', 400));
+
+        let items;
+        if (redisClient.isReady) {
+            items = await redisClient.hGet(`organization-${orgid}`, 'items');
+            if (items && queryStr.length) {
+                items = JSON.parse(items);
+                items = items.filter((employee: any) => {
+                    const employeeStr = JSON.stringify(employee);
+                    return regex.test(employeeStr);
+                });
+            }
+            if (!items || !items.length || !queryStr.length) {
+                const query = Item.find({ $text: { $search: queryStr } });
+                items = await new ApiFilter(query, req.parsedQuery!)
+                    .sort()
+                    .project()
+                    .paginate().query;
+                const itemsStr = JSON.stringify(items);
+                await redisClient.hSet(
+                    `organization-${orgid}`,
+                    'items',
+                    itemsStr
+                );
+            }
+        } else {
+            const query = Item.find({ $text: { $search: queryStr } });
+            items = await new ApiFilter(query, req.parsedQuery!)
+                .sort()
+                .project()
+                .paginate().query;
+        }
+        return res.status(200).json({
+            status: 'success',
+            results: items.length,
+            data: {
+                items,
+            },
+        });
+    }
 );

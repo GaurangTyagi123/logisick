@@ -10,6 +10,6 @@ export function handleError(error: unknown, message?: string) {
         const msg = error.response?.data?.message || message;
         throw new Error(msg);
     } else {
-        console.log(error);
+        throw new Error((error as Error).message)
     }
 }

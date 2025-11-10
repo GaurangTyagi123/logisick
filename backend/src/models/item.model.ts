@@ -59,24 +59,26 @@ const itemSchema = new Schema<any, ItemModel>({
     SKU: String,
 });
 itemSchema.index({
-    SKU:1
-})
+    SKU: 1,
+});
+itemSchema.index({
+    '$**': 'text',
+});
 itemSchema.plugin(MongooseDelete, {
     deletedAt: true,
     deletedBy: false,
     overrideMethods: 'all',
 });
-itemSchema.pre('save', function (this: ItemDocument,next) {
+itemSchema.pre('save', function (this: ItemDocument, next) {
     const CAT = this.inventoryCategory.substring(0, 3).toUpperCase();
     const COL = this.colour?.substring(0, 3).toUpperCase();
     const WGT = this.weight?.toString().substring(0, 3).toUpperCase();
     const ORG = this.origin?.substring(0, 3).toUpperCase();
 
-    const SKU = `${this._id}-${CAT}-${COL || ''}-${WGT || ''}-${ORG || ''}`
+    const SKU = `${this._id}-${CAT}-${COL || ''}-${WGT || ''}-${ORG || ''}`;
     this.SKU = SKU;
     next();
 });
-
 
 const itemModel = model<ItemDocument, ItemModel>('Item', itemSchema);
 export default itemModel;

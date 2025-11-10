@@ -65,7 +65,7 @@ class Email {
 			user_name: this.user.userName,
 			otp_code: this.user.otp,
 			reset_ttl_minutes: 10,
-			verify_url: "https://localhost:5173/otp",
+			verify_url: `${process.env.FRONTEND_URL}/otp`,
 			support_email: "ravishranjan2003@gmail.com",
 			year: new Date().getFullYear(),
 		};

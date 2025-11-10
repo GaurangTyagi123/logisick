@@ -115,11 +115,27 @@ app.use(
 );
 
 // Middleware to configure response to cross-origin requests
-app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
-app.options(
-    '/api/v1',
-    cors({ origin: 'http://localhost:5173', credentials: true })
-);
+if (process.env.NODE_ENV === 'production') {
+    app.use(
+        cors({
+            origin: process.env.FRONTEND_URL,
+            credentials: true,
+        })
+    );
+    app.options(
+        '/api/v1/',
+        cors({
+            origin: process.env.FRONTEND_URL,
+            credentials: true,
+        })
+    );
+} else {
+    app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
+    app.options(
+        '/api/v1/',
+        cors({ origin: 'http://localhost:5173', credentials: true })
+    );
+}
 
 // Authentication router
 app.use('/api/v1/auth', authRouter);

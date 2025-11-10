@@ -75,15 +75,13 @@ organizationSchema.plugin(mongooseDelete, {
     overrideMethods: 'all',
 });
 
-organizationSchema.pre(
-    ['save', 'findOneAndUpdate', 'updateOne'],
-    function (this: OrgType, next) {
-        const slug = slugify(this.name as string, { lower: true });
-        const uuid = nanoid();
-        this.slug = `${slug}-${uuid}`;
-        next();
-    }
-);
+organizationSchema.pre('save', function (this: OrgType, next) {
+    console.log(this.name);
+    const slug = slugify(this.name as string, { lower: true });
+    const uuid = nanoid();
+    this.slug = `${slug}-${uuid}`;
+    next();
+});
 const organizationModel = model<OrgDocument, OrgModel>(
     'Organization',
     organizationSchema

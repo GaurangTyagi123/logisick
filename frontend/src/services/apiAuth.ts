@@ -66,10 +66,10 @@ export const signup: signup = async (form) => {
 		// set({ isRegistering: true });
 		const res = await axinstance.post<{
 			status: string;
+			accessToken: string;
 			data: { user: User };
 		}>("/v1/auth/signup", form);
-
-		// set({ user: res.data.data.user });
+		setAccessToken(res.data.accessToken);
 		return res.data.data.user;
 	} catch (error) {
 		handleError(error, "Error registering new user");
@@ -152,7 +152,7 @@ export const resetPassword: resetPassword = async (resetToken, form) => {
 			status: string;
 			data: { user: User };
 		}>(`/v1/auth/resetPassword/${resetToken}`, form);
-		if (res.data.status === "success") {
+		if (res && res.data.status === "success") {
 			return res.data.data.user;
 		} else {
 			throw new Error("Error in resetting password");
