@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
-import illus from "@/assets/illus.svg";
+import illus from "@/assets/hero.gif";
 
 const tabLinks: { path: string; name: string }[] = [
 	{ path: "#", name: "Products" },
