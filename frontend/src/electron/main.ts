@@ -22,7 +22,7 @@ app.on("ready", () => {
 
 	// setting view in different environment
 	if (isDev()) {
-		main.loadURL("http://localhost:5173");
+		main.loadURL(process.env.FRONTEND_URL as string);
 	} else {
 		Menu.setApplicationMenu(null);
 		main.loadFile(getUIPath());

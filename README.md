@@ -115,48 +115,45 @@ Make sure you have installed:
    > Create a .env file in the backend folder with:
    >
 
-   ```
-       NODE_ENV = development
-       PORT = 8000
-       DB_URL = <mongodb database-url>
-       JWT_SIGN = <jwt secret>
-       JWT_EXPIRE_TIME = 30d
-       COOKIE_EXPIRE_TIME = 2
+```js
+NODE_ENV = production
+FRONTEND_URL = http://localhost:8000
+PORT = 8000
+DB_URL = <mongodb--prod-url>
+DB_URL_DEV = <mongodb-dev-url>
+REDIS_HOST = <redis-prod-url>
+REDIS_PORT = <redis-prod-port>
+REDIS_PASS = <redis-prod-pass>
 
-       DEV_MAIL_HOST = <mail-host>
-       DEV_MAIL_PORT = <mail-port>
-       DEV_MAIL_USER = <mail-user-id>
-       DEV_MAIL_PASSWORD = <mail-pass>
+JWT_SIGN = <jwt-sign>
+JWT_REFRESH_EXPIRE_TIME = 1d // s->seconds | m-> minutes | d -> days | y->year
+JWT_ACCESS_EXPIRE_TIME = 7d // s->seconds | m-> minutes | d -> days | y->year
 
-       OAUTH_CLIENT_ID = <oauth-client-id>
-       OAUTH_CLIENT_SECRET = <oauth-client-secret>
-       OAUTH_CALLBACK_URL = <oauth-callback-url>
-   ```
+COOKIE_EXPIRE_TIME = 7 // days
+INVITE_EXPIRE_TIME = 1 // days
 
-   ---
+OTP_EXPIRE_TIME = 2 // days
+
+DEV_MAIL_HOST = <mail-dev-host>
+DEV_MAIL_PORT = <mail-dev-port>
+DEV_MAIL_USER = <mail-dev-user>
+DEV_MAIL_PASSWORD = <mail-dev-password>
+
+OAUTH_CLIENT_ID = <google-oauth-client-id>
+OAUTH_CLIENT_SECRET = <google-oauth-client-secret>
+OAUTH_CALLBACK_URL = <google-oauth-callback>
+```
 
 # Run the project (IN DEVELOPMENT):
 
-#### Start backend
-
+#### Start backend & frontend
 ```bash
-
-    cd backend
-    npm run dev
-```
-
-#### Start frontend
-
-```bash
-
-    cd frontend
-    npm run dev:react
-
+npm run dev
 ```
 
 #### Access the app
 
-> Visit [http://localhost:5173](http://localhost:5173) in your browser.
+> Visit [http://localhost:8000](http://localhost:8000) in your browser.
 
 ----
 

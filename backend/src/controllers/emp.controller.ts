@@ -86,8 +86,7 @@ export const sendInvite = catchAsync(
                 new AppError('Failed to generate and save invite token', 500)
             );
         }
-        // TODO make it work for production
-        const url = `${req.protocol}://localhost:5173/acceptInvite/${inviteToken}`;
+        const url = `${process.env.FRONTEND_URL}/acceptInvite/${inviteToken}`;
         await new Email(
             {
                 userName: req.user?.name as string,

@@ -106,7 +106,7 @@ function ItemCard({
 					)}
 				>
 					<img
-						src={`https://encode.ravishdev.org/api/create/text_url?text_url=http://localhost:5173/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
+						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${process.env.FRONTEND_URL}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
 						alt={item?.name.substring(0, 10)}
 						className="w-full rounded-2xl"
 					/>

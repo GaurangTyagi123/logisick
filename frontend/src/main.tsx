@@ -12,7 +12,7 @@ const NotFound = lazy(() => import("@/pages/NotFound.tsx"));
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
-            staleTime: 50000,
+            staleTime: 5 * 60 * 1000,
         },
     },
 });
