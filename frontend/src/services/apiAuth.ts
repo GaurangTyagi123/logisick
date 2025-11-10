@@ -1,4 +1,4 @@
-import axinstance from "@/utils/axios";
+import axinstance, { setAccessToken } from "@/utils/axios";
 import { handleError } from "@/utils/handleError";
 import { toast } from "react-toastify";
 
@@ -44,8 +44,13 @@ export const checkAuth: checkAuth = async () => {
 		const res = await axinstance.get<{ data: { user: User } }>(
 			"v1/auth/isLoggedIn"
 		);
-		const user = res.data.data.user;
-		return { user };
+		if (res.status === 200) {
+			const user = res.data.data.user;
+			return { user };
+		}
+		else {
+			handleError("You are not logged in")
+		}
 	} catch (err) {
 		handleError(err, "You are not logged in");
 	}
@@ -83,8 +88,10 @@ export const login: login = async (form: {
 	try {
 		const res = await axinstance.post<{
 			status: string;
+			accessToken: string;
 			data: { user: User };
 		}>("/v1/auth/login", form);
+		setAccessToken(res.data.accessToken);
 		return res.data.data.user;
 	} catch (error) {
 		handleError(error, "error logging in user");

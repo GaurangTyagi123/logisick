@@ -18,11 +18,9 @@ import { redisClient } from '../app';
 import { RequestHandler } from 'express';
 
 /**  @returns json-webtoken with user-id as payload */
-const signToken = (id: ObjectId, access: boolean = false) => {
+const signToken = (id: ObjectId) => {
     const JWTSign = process.env.JWT_SIGN as string;
-    const JWTExpire = access
-        ? (process.env.JWT_ACCESS_EXPIRE_TIME as StringValue)
-        : (process.env.JWT_REFRESH_EXPIRE_TIME as StringValue);
+    const JWTExpire = process.env.JWT_EXPIRE_TIME as StringValue;
     return jwt.sign({ id }, JWTSign, { expiresIn: JWTExpire });
 };
 
@@ -43,15 +41,12 @@ const signToken = (id: ObjectId, access: boolean = false) => {
  *                  updatedAt: datet,
  *      }
  */
-const sendNewToken = async (
+const sendNewToken = (
     user: UserType,
     res: ExpressTypes.Response,
     statusCode: number
 ) => {
-    const refreshToken = signToken(user._id);
-    const accessToken = signToken(user._id, true);
-
-    await User.findByIdAndUpdate(user._id, { refreshToken });
+    const token = signToken(user._id);
     const cookieOptions: cookieOptionsType = {
         httpOnly: true,
         expire: new Date(
@@ -65,12 +60,11 @@ const sendNewToken = async (
         secure: process.env.NODE_ENV === 'production',
     };
 
-    res.cookie('jwt', refreshToken, cookieOptions);
+    res.cookie('jwt', token, cookieOptions);
 
     return res.status(statusCode).json({
         status: 'success',
-        refreshToken,
-        accessToken,
+        token,
         data: {
             user: {
                 _id: user._id,
@@ -85,54 +79,6 @@ const sendNewToken = async (
         },
     });
 };
-
-export const refresh = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        let token: string | undefined;
-        if (req.cookies) {
-            token = req.cookies?.jwt;
-        }
-        if (!token)
-            return next(new AppError('Invalid Token please login again', 403));
-
-        const verifyAsync = promisify(jwt.verify) as (
-            token: string,
-            secret: string
-        ) => Promise<JwtPayload>;
-        let jt;
-        try {
-            jt = await verifyAsync(token, process.env.JWT_SIGN as string);
-        } catch {
-            res.clearCookie('jwt');
-            return next(new AppError('Session expired', 403));
-        }
-        const id = jt?.id;
-        const issuedAt = jt?.iat;
-
-        const user = await User.findOne({ _id: id, refreshToken: token });
-        if (!user) {
-            res.clearCookie('jwt');
-            return next(
-                new AppError('Session expired... Please login again', 403)
-            );
-        }
-
-        if (user.passwordUpdatedAfter(issuedAt as number))
-            return next(new AppError('Password updated recently', 403));
-
-        const accessToken = signToken(user._id, true);
-        return res.status(200).json({
-            status: 'success',
-            data: {
-                accessToken,
-            },
-        });
-    }
-);
 
 /**
  * @obective To restrict according to the roles
@@ -180,14 +126,18 @@ export const protect = catchAsync(
         ) {
             token = req.headers.authorization.split(' ').at(1);
         }
+        if (req.cookies) {
+            token = req.cookies?.jwt;
+        }
         if (!token) return next(new AppError('Invalid Token', 401));
         const verifyAsync = promisify(jwt.verify) as (
             token: string,
             secret: string
         ) => Promise<JwtPayload>;
-        const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
-        const id = jt?.id;
-        const issuedAt = jt?.iat;
+        const { id, iat: issuedAt } = await verifyAsync(
+            token,
+            process.env.JWT_SIGN as string
+        );
         const user = await User.findById(id);
         if (!user) return next(new AppError('Unauthenticated', 401));
 
@@ -227,7 +177,7 @@ export const login = catchAsync(
         )
             return next(new AppError('No such user exists', 401));
 
-        await sendNewToken(user, res, 200);
+        sendNewToken(user, res, 200);
     }
 );
 
@@ -246,7 +196,11 @@ export const logout = catchAsync(
         res: ExpressTypes.Response,
         _next: ExpressTypes.NextFn
     ) => {
-        res.clearCookie('jwt');
+        const cookieOptions: cookieOptionsType = {
+            httpOnly: true,
+            expire: new Date(Date.now() + 10),
+        };
+        res.cookie('jwt', undefined, cookieOptions);
         return res.status(200).json({
             status: 'success',
         });
@@ -283,9 +237,10 @@ export const isLoggedIn = catchAsync(
             token: string,
             secret: string
         ) => Promise<JwtPayload>;
-        const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
-        const id = jt?.id;
-        const issuedAt = jt?.iat;
+        const { id, iat: issuedAt } = await verifyAsync(
+            token,
+            process.env.JWT_SIGN as string
+        );
         const user = await User.findOne({ _id: id });
         if (!user) {
             return res.status(401).json({
@@ -357,7 +312,7 @@ export const signup = catchAsync(
             avatar: genProfileString(12),
         });
         if (!newUser) return next(new AppError('Failed to signup', 500));
-        await sendNewToken(newUser, res, 201);
+        sendNewToken(newUser, res, 201);
     }
 );
 
@@ -543,7 +498,7 @@ export const resetPassword = catchAsync(
         user.resetPasswordToken = undefined;
 
         await user.save();
-        await sendNewToken(user, res, 200);
+        sendNewToken(user, res, 200);
     }
 );
 
@@ -584,6 +539,6 @@ export const updatePassword = catchAsync(
         await user!.save();
 
         user!.password = undefined;
-        await sendNewToken(user, res, 200);
+        sendNewToken(user, res, 200);
     }
 );
