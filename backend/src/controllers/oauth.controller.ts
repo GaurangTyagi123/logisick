@@ -24,7 +24,7 @@ const googleSignup = catchAsync(
             { id: user._id },
             process.env.JWT_SIGN as string,
             {
-                expiresIn: process.env.JWT_EXPIRE_TIME as StringValue,
+                expiresIn: process.env.JWT_REFRESH_EXPIRE_TIME as StringValue,
             }
         );
 
