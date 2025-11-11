@@ -50,7 +50,6 @@ export const getAllItems: getAllItemsProps = async (orgId, page = 1) => {
 
 export const addItem: addItemProps = async (itemDetails) => {
 	try {
-		console.log("Item Details", itemDetails);
 		const res = await axinstance.post("/v1/item", itemDetails);
 		if (res.status === 201) return res.data.data.item;
 		else handleError("There was an error while adding item");
@@ -90,5 +89,27 @@ export const getReport: getReportProps = async (orgId) => {
 	} catch (err) {
 		handleError(err);
 		return null;
+	}
+};
+
+export const searchItems = async ({
+	orgid,
+	query,
+	controller,
+}: Record<string, any>) => {
+	try {
+		const res = await axinstance.get(
+			`/v1/item/search/${orgid}?query=${encodeURIComponent(query)}`,
+			{ signal: controller.signal }
+		);
+		if (res.status === 200) {
+			return res.data.data;
+		} else {
+			handleError(
+				new Error("There was an error fetching the items data")
+			);
+		}
+	} catch (err) {
+		handleError(err);
 	}
 };

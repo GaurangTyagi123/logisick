@@ -1,14 +1,15 @@
 import useGetAllItems from "@/hooks/item/useGetAllItems";
 import { getOrganization } from "@/services/apiOrg";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
 import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
 import CustomTable from "./CustomTable";
-import { /*useCallback, useMemo, useRef,*/ useEffect,useState } from "react";
-// import { debounce } from "lodash";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Muted } from "./ui/Typography";
 import Button from "./ui/button";
 import { Edit } from "@/assets/icons/Profilepage";
+import { debounce } from "lodash";
+import { searchItems } from "@/services/apiItem";
 
 function prefereableWeightUnits(weight: number): string {
 	if (weight >= 1000) return `${Math.round(weight / 10) / 100} Kg(s)`;
@@ -32,40 +33,34 @@ function ItemsTable() {
 		page
 	);
 
-	// const [searchResult, setSearchResults] = useState<Item[] | null>(null);
+	const [searchResult, setSearchResults] = useState<Item[] | null>(null);
 
-	// const { mutate: search } = useMutation({
-	// 	mutationFn: searchEmployee,
-	// 	onSettled: (data) => {
-	// 		if (data) {
-	// 			setSearchResults(
-	// 				deconstructEmployee(
-	// 					data.employees.map((d: any) => ({ data: d }))
-	// 				)
-	// 			);
-	// 		} else return;
-	// 	},
-	// });
-	// const controllerRef = useRef<AbortController>(null);
-	// const handleSearch = useCallback(
-	// 	async (query: string) => {
-	// 		if (controllerRef.current) {
-	// 			controllerRef.current.abort();
-	// 		}
-	// 		const controller = new AbortController();
-	// 		controllerRef.current = controller;
-	// 		if (query.trim().length) return; //search({ orgid:orgData._id, query, controller });
-	// 	},
-	// 	[
-	// 		/*orgData, search*/
-	// 	]
-	// );
-	const debouncedSearch = () => {};
-	// const debouncedSearch = useMemo(() => {
-	// 	return debounce(handleSearch, 500);
-	// }, [handleSearch]) as ((searchTerm: string) => void) & {
-	// 	cancel: () => void;
-	// };
+	const { mutate: search } = useMutation({
+		mutationFn: searchItems,
+		onSettled: (data) => {
+			if (data) {
+				setSearchResults(data.items);
+			} else return;
+		},
+	});
+	const controllerRef = useRef<AbortController>(null);
+	const handleSearch = useCallback(
+		async (query: string) => {
+			if (controllerRef.current) {
+				controllerRef.current.abort();
+			}
+			const controller = new AbortController();
+			controllerRef.current = controller;
+			if (query.trim().length)
+				return search({ orgid: orgData._id, query, controller });
+		},
+		[orgData._id, search]
+	);
+	const debouncedSearch = useMemo(() => {
+		return debounce(handleSearch, 500);
+	}, [handleSearch]) as ((searchTerm: string) => void) & {
+		cancel: () => void;
+	};
 
 	useEffect(() => {
 		if (!isGettingItems && items) {
@@ -74,8 +69,9 @@ function ItemsTable() {
 					? Math.ceil(items?.length / PAGESIZE)
 					: 1
 			);
+			console.log(totalPages, items.length);
 		}
-	}, [items, isGettingItems]);
+	}, [items, isGettingItems, totalPages]);
 
 	if (isGettingItems || isGettingOrg) return <CustomTableSkeleton />;
 	return (
@@ -146,7 +142,7 @@ function ItemsTable() {
 				},
 			]}
 			clientSide
-			data={items || []}
+			data={searchResult ? searchResult : items || []}
 			currentPage={page}
 			totalPages={totalPages}
 			setPage={setPage}

@@ -1,10 +1,10 @@
-import { Types } from 'mongoose';
-import Item from '../models/item.model';
-import ApiFilter from '../utils/apiFilter';
-import AppError from '../utils/appError';
-import catchAsync from '../utils/catchAsync';
-import checkRequestBody from '../utils/checkRequestBody';
-import { redisClient } from '../app';
+import { Types } from "mongoose";
+import Item from "../models/item.model";
+import ApiFilter from "../utils/apiFilter";
+import AppError from "../utils/appError";
+import catchAsync from "../utils/catchAsync";
+import checkRequestBody from "../utils/checkRequestBody";
+import { redisClient } from "../app";
 // import { redisClient } from '../app';
 
 /**
@@ -284,54 +284,71 @@ export const itemsReport = catchAsync(
  * @return json reponse
  */
 export const searchItem = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { orgid } = req.params;
-        let queryStr = String(req.query.query || '');
-        queryStr = queryStr.replaceAll("'", '');
+	async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { orgid } = req.params;
+		let queryStr = String(req.query.query || "");
+		queryStr = queryStr.replaceAll("'", "");
 
-        const regex = new RegExp(`.*${queryStr}.*`, 'i');
-        if (!orgid) return next(new AppError('Invalid organization', 400));
+		const regex = new RegExp(`.*${queryStr}.*`, "i");
+		if (!orgid) return next(new AppError("Invalid organization", 400));
 
-        let items;
-        if (redisClient.isReady) {
-            items = await redisClient.hGet(`organization-${orgid}`, 'items');
-            if (items && queryStr.length) {
-                items = JSON.parse(items);
-                items = items.filter((employee: any) => {
-                    const employeeStr = JSON.stringify(employee);
-                    return regex.test(employeeStr);
-                });
-            }
-            if (!items || !items.length || !queryStr.length) {
-                const query = Item.find({ $text: { $search: queryStr } });
-                items = await new ApiFilter(query, req.parsedQuery!)
-                    .sort()
-                    .project()
-                    .paginate().query;
-                const itemsStr = JSON.stringify(items);
-                await redisClient.hSet(
-                    `organization-${orgid}`,
-                    'items',
-                    itemsStr
-                );
-            }
-        } else {
-            const query = Item.find({ $text: { $search: queryStr } });
-            items = await new ApiFilter(query, req.parsedQuery!)
-                .sort()
-                .project()
-                .paginate().query;
-        }
-        return res.status(200).json({
-            status: 'success',
-            results: items.length,
-            data: {
-                items,
-            },
-        });
-    }
+		let items;
+		if (redisClient.isReady) {
+			items = await redisClient.hGet(`organization-${orgid}`, "items");
+			if (items && queryStr.length) {
+				items = JSON.parse(items);
+				items = items.values().filter((items: any) => {
+					const itemsStr = JSON.stringify(items);
+					return regex.test(itemsStr);
+				});
+			}
+			if (!items || !items.length || !queryStr.length) {
+				const query = Item.find({
+					organizationId: orgid,
+					$or: [
+						{ name: { $regex: regex } },
+						{ inventoryCategory: { $regex: regex } },
+						{ origin: { $regex: regex } },
+						{ SKU: { $regex: regex } },
+					],
+				});
+				items = await new ApiFilter(query, req.parsedQuery!)
+					.sort()
+					.project()
+					.paginate().query;
+				const itemsStr = JSON.stringify(items);
+				await redisClient.hSet(
+					`organization-${orgid}`,
+					"items",
+					itemsStr
+				);
+			}
+		} else {
+			const query = Item.find({
+				organizationId: orgid,
+				$or: [
+					{ name: { $regex: regex, $options: "i" } },
+					{ inventoryCategory: { $regex: regex, $options: "i" } },
+					{ origin: { $regex: regex, $options: "i" } },
+					{ SKU: { $regex: regex, $options: "i" } },
+					{ batchNumber: { $regex: regex, $options: "i" } },
+				],
+			});
+			items = await new ApiFilter(query, req.parsedQuery!)
+				.sort()
+				.project()
+				.paginate().query;
+		}
+		return res.status(200).json({
+			status: "success",
+			results: items.length,
+			data: {
+				items,
+			},
+		});
+	}
 );
