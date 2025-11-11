@@ -24,11 +24,23 @@ class Email {
 		// create a new transport
 		// transport is used to configure the way this application will send email
 		const transport = nodemailer.createTransport({
-			host: process.env.DEV_MAIL_HOST,
-			port: process.env.DEV_MAIL_PORT,
+			host:
+				process.env.NODE_ENV === "production"
+					? process.env.MAIL_HOST
+					: process.env.DEV_MAIL_HOST,
+			port:
+				process.env.NODE_ENV === "production"
+					? process.env.MAIL_PORT
+					: process.env.DEV_MAIL_PORT,
 			auth: {
-				user: process.env.DEV_MAIL_USER,
-				pass: process.env.DEV_MAIL_PASSWORD,
+				user:
+					process.env.NODE_ENV === "production"
+						? process.env.MAIL_USER
+						: process.env.DEV_MAIL_USER,
+				pass:
+					process.env.NODE_ENV === "production"
+						? process.env.MAIL_PASSWORD
+						: process.env.DEV_MAIL_PASSWORD,
 			},
 		} as TransportOptions);
 		return transport;
@@ -46,8 +58,10 @@ class Email {
 				html: template,
 				text: convert(template),
 			};
+			console.log(sendOptions);
 			await this.newTransport().sendMail(sendOptions);
-		} catch (_err) {
+		} catch (err) {
+			console.log("SERVER : error sending email \n",err)
 			console.log(template);
 		}
 	}
@@ -57,7 +71,13 @@ class Email {
 	 */
 	public async sendVerification() {
 		const verificationHtml = readFileSync(
-			path.join(__dirname, "emailTemplates", "verification.html"),
+			path.join(
+				__dirname,
+				process.env.NODE_ENV === "production"
+					? "../../../src/utils/emailTemplates"
+					: "emailTemplates",
+				"verification.html"
+			),
 			{ encoding: "utf-8" }
 		);
 		const options = {
@@ -76,7 +96,13 @@ class Email {
 	// send reset link to the user
 	public async sendResetLink() {
 		const verificationHtml = readFileSync(
-			path.join(__dirname, "emailTemplates", "resetPassword.html"),
+			path.join(
+				__dirname,
+				process.env.NODE_ENV === "production"
+					? "../../../src/utils/emailTemplates"
+					: "emailTemplates",
+				"resetPassword.html"
+			),
 			{ encoding: "utf-8" }
 		);
 		const options = {
@@ -94,7 +120,13 @@ class Email {
 	// send org invite link to user
 	public async sendOrgInviteLink() {
 		const verificationHtml = readFileSync(
-			path.join(__dirname, "emailTemplates", "orgInvite.html"),
+			path.join(
+				__dirname,
+				process.env.NODE_ENV === "production"
+					? "../../../src/utils/emailTemplates"
+					: "emailTemplates",
+				"orgInvite.html"
+			),
 			{ encoding: "utf-8" }
 		);
 		const options = {
