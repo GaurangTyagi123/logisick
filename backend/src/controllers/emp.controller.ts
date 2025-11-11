@@ -26,7 +26,43 @@ function returnChangedRoleEmp(emp: EmpType, res: Response) {
     });
 }
 
-// Function send emp invite to join org (by email id) (by owner/admin)
+/**
+ * @brief Function for an organization owner or admin to send an invitation email to a new employee.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ *      user: UserObject, 
+ *      body: {
+ *          empEmail: "employee@example.com", 
+ *          role: "Manager"
+ *      }
+ * }
+ * ```
+ * request containing the authenticated user (inviter) and the employee's email and intended role.
+ * @param {Response} res - response object to set and return response.
+ * @param {NextFunction} next - next function to pass control to error handler.
+ * @approach
+ * ```
+ * if (empEmail OR role is missing) => return with error code 404
+ * if (authenticated user is neither owner nor admin of an organization) => return with error code 404
+ * if (invited user exists AND is already an employee in this organization) => return with error code 404
+ * if (an invite for this email already exists in Redis) => return with error code 200
+ * if (role is not 'Manager', 'Staff', or 'Admin') => return with error code 400
+ * if (failed to save invite token and details to Redis) => return with error code 500
+ * if (failed to set expiration time for the invite token in Redis) => return with error code 500
+ * else 'invite sent successfully'
+ * ```
+ * @return {json}
+ * ```
+ * {
+ *      status: 'success',
+ *      data: {
+ *          message: 'invite sent successfully',
+ *      },
+ * }
+ * ```
+ * @author `Ravish Ranjan`
+ */
 export const sendInvite = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -106,7 +142,48 @@ export const sendInvite = catchAsync(
     }
 );
 
-// Function to join new employee (only by verified user)
+/**
+ * @brief Function for a user to accept an organization invitation and join as an employee.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ *      user: UserObject, 
+ *      body: {
+ *          token: "inviteToken"
+ *      }
+ * }
+ * ``` 
+ * request containing the authenticated user object and the invite token.
+ * @param {Response} res - response object to set and return response.
+ * @param {NextFunction} next - next function to pass control to error handler.
+ * @approach
+ * ```
+ * 1. Retrieve the invite data (token, orgid, role) from Redis using the authenticated user's email.
+ * if (token is missing from request body) => return error 404 with "Token not found"
+ * if (user is not authenticated) => return error 400 with "Unauthenticated"
+ * if (authenticated user's email is not verified) => return error 403 with "User have to be verified to join organiation"
+ * if (invite data is incomplete OR the provided token does not match the stored token) => return error 400 with "User not invited in organization"
+ * if (error occurs while creating the new Employee document) => return error 500 with "Error adding new Employee"
+ * else 'employee details on successful join'
+ * ```
+ * @return {json}
+ * ```
+ * {
+ *      status: 'success',
+ *      data: {
+ *          emps: {
+ *              userid: newEmp.userid,
+ *              orgid: newEmp.orgid,
+ *              role: newEmp.role,
+ *              manager: newEmp.manager,
+ *              createdAt: newEmp.createdAt,
+ *              updatedAt: newEmp.updatedAt,
+ *          },
+ *      },
+ * }
+ * ```
+ * @author `Ravish Ranjan`
+ */
 export const joinOrg = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -163,7 +240,50 @@ export const joinOrg = catchAsync(
     }
 );
 
-// Function to get emps by orgid
+/**
+ * @brief Function to retrieve a list of employees for a specific organization, with support for filtering, sorting, projection, and pagination via aggregation pipeline.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ *      params: {
+ *          orgid: "organizationId"
+ *      }, 
+ *      parsedQuery: ApiQueryObject
+ * }
+ * ```
+ * request containing the organization ID and query parameters for filtering/pagination.
+ * @param {Response} res - response object to set and return employee data.
+ * @param {NextFunction} next - next function to pass control to error handler.
+ * @approach
+ * ```
+ * if (orgid is missing in request parameters) => return with error code 404
+ * if (employees are successfully retrieved) => 'list of employees and total count'
+ * else 'empty list of employees' 
+ * ```
+ * @return {json}
+ * ```
+ * {
+ *      status: 'success',
+ *      results: 10, // Number of results returned in this page
+ *      data: {
+ *          emps: [
+ *              {
+ *                  role: 'Manager',
+ *                  employees: { 
+ *                      _id: '...', 
+ *                      name: '...', 
+ *                      email: '...', 
+ *                  avatar: '...' },
+ *                  count: 42 // Total count (only present on first element if result is not empty)
+ *              },
+ *              // ... other employees
+ *          ],
+ *          count: 42 // Total count
+ *      },
+ * }
+ * ```
+ * @author `Ravish Ranjan`
+ */
 export const getEmps = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
