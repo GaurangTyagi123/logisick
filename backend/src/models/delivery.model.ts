@@ -12,6 +12,10 @@ export interface deliveryModel extends Model<deliveryDocument>{
     deleteById(id: string): Promise<any>;
 }
 
+/**
+ * @brief Delivery mongoose schema
+ * @author `Gaurang Tyagi`
+ */
 const deliverySchema = new Schema<any,deliveryModel>({
     fromOrganization: {
         type: Schema.ObjectId,
@@ -37,11 +41,16 @@ const deliverySchema = new Schema<any,deliveryModel>({
     }
 });
 
+/**
+ * @brief adding soft delete plugin
+ * @author `Gaurang Tyagi` 
+ */
 deliverySchema.plugin(MongooseDelete as any, {
     deletedAt: true,
     deletedBy: false,
     overrideMethods: 'all'
 })
+
 
 const deliveryModel = model<deliveryDocument,deliveryModel>('Delivery', deliverySchema);
 export default deliveryModel;

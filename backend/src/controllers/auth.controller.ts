@@ -102,13 +102,6 @@ const sendNewToken = async (
  * @param {ExpressTypes.UserRequest} req - `{cookies:{token:string}}` - request with cookies containing jwt token
  * @param {ExpressTypes.Response} res
  * @param {ExpressTypes.NextFn} next
- * @approach
- * ```
- * if no cookies with jwt token => return with error code 403
- * if jwt token expired => return with error code 403
- * if password recently updated => return with error code 403
- * else return with status code 200
- * ```
  * @return {json} ```
  *  {
  *		status: 'success',
@@ -172,11 +165,6 @@ export const refresh = catchAsync(
  * @param {string} orgid - organization's id of which the restriction is applied for
  * @param {string} userid - user's id to which the restriction is applied
  * @param {Admin | Manager | Staff | Owner} roles Admin | Manager | Staff | Owner to allow for (comma seperated)
- * @approach
- * ```
- * if (user role in allowed) => `next function is called`
- * else 401 status returned`
- * ```
  * @return none
  * @author `Gaurang Tyagi`
  */
@@ -210,12 +198,6 @@ export const restrictTo: (...roles: string[]) => RequestHandler = (
  * request with authorization token
  * @param {ExpressRexponse} res - response to set and return response to
  * @param {ExpressNextFunction} next - next function to chain request
- * @approach
- * ```
- * if (the json-webtoken not in the header) => return with error code 401
- * if (no user founf with id) => return with error code 401
- * else `next function is called`
- * ```
  * @return NA
  * @sideEffect attaches user data to the request object of the subsequent middlewares
  * @author `Gaurang Tyagi`
@@ -266,12 +248,6 @@ export const protect = catchAsync(
  * request with email and password
  * @param {ExpressRexponse} res - response to set and return response to
  * @param {ExpressNextFunction} next - next function to chain request
- * @approach
- * ```
- * if (no email or password) => return with error code 400
- * if (no user or users password don't match) =>  return with error code 401
- * else 'sendNewToken function called with user data and 200 status'
- * ```
  * @return NA
  * @author `Gaurang Tyagi`
  */
@@ -303,10 +279,6 @@ export const login = catchAsync(
  * @param {UserRequest} req - request
  * @param {ExpressRexponse} res - response to set and return response to
  * @param {ExpressNextFunction} next - next function to chain request
- * @approach
- * ```
- * remove json-webtoken cookie from request header
- * ```
  * @return NA
  * @author `Gaurang Tyagi`
  */
@@ -328,13 +300,6 @@ export const logout = catchAsync(
  * @param {UserRequest} req - `{cookies: {jwt: "jwt token"}}` - request
  * @param {ExpressRexponse} res - response to set and return response to
  * @param {ExpressNextFunction} next - next function to chain request
- * @approach
- * ```
- * if (no token found) => return with error code 200
- * if (no user found with token) => return with error code 401
- * if (password recently updated) => return with error code 200
- * else 'return user data in response'
- * ```
  * @return {json}
  * ```
  * {
@@ -434,12 +399,6 @@ export const isLoggedIn = catchAsync(
  * request containing user details.
  * @param {ExpressTypes.Response} res - response object to set and return response to.
  * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
- * @approach
- * ```
- * if (name, email, password, or confirmPassword is missing OR password !== confirmPassword) => return with error 400
- * if (User creation fails) => return with error code 500
- * else 'Send a new JWT token to the user and respond with status 201'
- * ```
  * @return {json}
  * ```
  * {
@@ -501,12 +460,6 @@ export const signup = catchAsync(
  * request containing the authenticated user object and potentially the user-submitted OTP.
  * @param {ExpressTypes.Response} res - response object to set and return response to.
  * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
- * @approach
- * ```
- * if (users email is already verified) => return status code 200 
- * if (user not found OR provided OTP does not match stored OTP after bcrypt comparison) => return with error code 400
- * else 'return status 200'
- * ```
  * @return {json}
  * ```
  *  {
@@ -601,12 +554,6 @@ export const verifyEmail = catchAsync(
  * request containing the email address of the user.
  * @param {ExpressTypes.Response} res - response object to set and return response to.
  * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
- * @approach
- * ```
- * if (email is missing from request body) => return with error code 400
- * if (user not found with that email) => return with error code 400
- * else 'status 200 with "Mail sent successfully"' 
- * ```
  * @return {json}
  * ```
  * {
@@ -683,12 +630,6 @@ export const forgotPassword = catchAsync(
  * request containing new password details and the token from the URL.
  * @param {ExpressTypes.Response} res - response object to set and return response to.
  * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
- * @approach
- * ```
- * if (password OR confirmPassword is missing) => return with error code 400
- * if (user not found with valid/non-expired token) => return with error code 400
- * else 'JWT token to the user and respond with status 200'
- * ```
  * @return {json}
  * ```
  * {
@@ -752,12 +693,6 @@ export const resetPassword = catchAsync(
  * request containing the authenticated user object and new/previous password details.
  * @param {ExpressTypes.Response} res - response object to set and return response to.
  * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
- * @approach
- * ```
- * if (any of prevPassword, password, or confirmPassword is missing) => return with error code 400
- * if (user is not found OR prevPassword does not match stored password) => return with error code 400
- * else'new JWT token to the user and respond with status 200'
- * ```
  * @return {json}
  * ```
  * {

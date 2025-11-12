@@ -5,11 +5,15 @@ import checkRequestBody from "../utils/checkRequestBody";
 import Emp from "../models/employee.model";
 import Org from "../models/organization.model";
 
+// TODO : function not request anywhere
 /**
- * @brief Function to get User who are not admin
- * @params req(Request) res(Express Response) next(Express Next Function)
- * @preCondition user is logged in && user is an admin
- * @return (TO BE IMPLEMENTED) all the users working for the organization of admin
+ * @brief Controller Function to retrieve a list of all non-admin users in the system.
+ * @param {ExpressTypes.Request} req - request (body and params are ignored, authorization token is used for context).
+ * @param {ExpressTypes.Response} res - response to set and return response to
+ * @param {ExpressTypes.NextFn} _next - next function to chain request
+ * @return NA
+ * @sideEffect Queries the database for all User documents where the role is *not* 'admin'. Sends a 200 JSON response with the total number of users found and the user list.
+ * @author `Gaurang Tyagi`
  */
 export const getUsers = catchAsync(
 	async (
@@ -28,14 +32,23 @@ export const getUsers = catchAsync(
 		});
 	}
 );
-// Function to Add a route to the request handler below
+
 /**
- * @brief Function to get user data from request body added before
- * @params req(Request) res(Express Response) next(Express Next Function)
- * @preCondition user is logged in & user is an admin
- * @requestParams user id
- * @return IF (id is correct) then return the user data with that id
- *         ELSE return status:400 message:incorrect id
+ * @brief Controller Function to retrieve a single user's details by their unique ID.
+ * @param {ExpressTypes.Request} req
+ * ```
+ * {
+ * 		params: {
+ * 			id: 'user_mongo_id'
+ * 		}
+ * }
+ * ```
+ * request containing the user ID in params.
+ * @param {ExpressTypes.Response} res - response to set and return response to
+ * @param {ExpressTypes.NextFn} next - next function to chain request
+ * @return NA
+ * @sideEffect Finds the User document by ID. Sends a 200 JSON response with the user data if found, or a 400 error otherwise.
+ * @author `Gaurang Tyagi`
  */
 export const getUser = catchAsync(
 	async (
@@ -60,13 +73,31 @@ export const getUser = catchAsync(
 );
 
 /**
- * @brief Function to update the data (not isVerified,rol or passwordUpdatedAt) of user
- * @params req(User Request) res(Express Response) next(Express Next Function)
- * @preCondition user is logged in
- * @body new data
- * @approach If the body contains any sensitive field like isVerified | role | passwordUpdatedAt then checkRequestBody removes them from the body. If the body contains email as one of the field then we update the isVerified field and set it to false and then we update the user details
- * @return IF (details were updated successfully) send the new user-data as JSON response
- *         ELSE return status:500 message:internal error
+ * @brief Controller Function to update the authenticated user's profile details (excluding password).
+ * @param {UserRequest} req
+ * ```
+ * {
+ * 		user: {
+ * 			_id: 'authenticated_user_mongo_id'
+ * 		},
+ * 		body: {
+ * 			name?: 'New Name',
+ * 			email?: 'new@email.com',
+ * 			avatar?: 'new_avatar_url'
+ * 			* Note: password/confirmPassword are strictly forbidden. *
+ * 		}
+ * }
+ * ```
+ * request containing fields to update in the body.
+ * @param {ExpressTypes.Response} res - response to set and return response to
+ * @param {ExpressTypes.NextFn} next - next function to chain request
+ * @return NA
+ * @sideEffect
+ * - Updates the authenticated user's document with valid fields from the request body.
+ * - **Crucially, if the email field is updated, the `isVerified` flag is automatically set to `false`, requiring re-verification.**
+ * - If only non-email fields are updated, the function selects fields excluding `__v` for the response.
+ * - Sends a 200 JSON response with the updated user data.
+ * @author `Gaurang Tyagi`
  */
 export const updateUser = catchAsync(
 	async (
@@ -105,13 +136,25 @@ export const updateUser = catchAsync(
 );
 
 /**
- * @brief Function to delete user
- * @params req(User Request) res(Express Response) next(Express Next Function)
- * @preCondition user is logged in
- * @body new data
- * @return if (owner of an org) error with status 400
- * 			if (employee of an org) error with status 400
- * 			else user deleted with status 204
+ * @brief Controller Function to soft-delete the authenticated user's account. This action is blocked if the user is currently an owner or an employee of any organization.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ *		user: {
+ * 			_id: 'authenticated_user_mongo_id'
+ * 		}
+ * }
+ * ```
+ * request containing the authenticated user object.
+ * @param {ExpressTypes.Response} res - response to set and return response to
+ * @param {ExpressTypes.NextFn} next - next function to chain request
+ * @return NA
+ * @sideEffect 
+ * - Checks for active organization ownership (Org.findOne). If found, returns 400 error.
+ * - Checks for any existing employee association (Emp.findOne). If found, returns 400 error.
+ * - If checks pass, soft-deletes the User document using `User.deleteById()`.
+ * - Sends a **204 No Content** response upon successful deletion.
+ * @author `Gaurang Tyagi`
  */
 export const deleteUser = catchAsync(
 	async (

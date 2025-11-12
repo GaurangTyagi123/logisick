@@ -12,6 +12,11 @@ export interface ShipmentModel extends Model<shipmentDocument> {
     deleteById(id: string): Promise<any>;
 }
 
+/**
+ * @brief Shipment mongoose schema
+ * @author `Gaurang Tyagi`
+ */
+// TODO : the quantity should be with the items because different items can have differnt quantities
 const shipmentSchema = new Schema<any, ShipmentModel>({
     items: [
         {

@@ -13,6 +13,10 @@ export interface ItemModel extends Model<ItemDocument> {
     deleteById(id: string): Promise<any>;
 }
 
+/**
+ * @brief Items mongoose schema
+ * @author `Gaurang Tyagi`
+ */
 const itemSchema = new Schema<any, ItemModel>(
     {
         createdAt: {
@@ -78,6 +82,11 @@ itemSchema.plugin(MongooseDelete, {
     deletedBy: false,
     overrideMethods: 'all',
 });
+
+/**
+ * @brief functiont to genereate sku on save of document
+ * @author `Gaurang Tyagi`` 
+ */
 itemSchema.pre('save', function (this: ItemDocument, next) {
     const CAT = this.inventoryCategory.substring(0, 3).toUpperCase();
     const COL = this.colour?.substring(0, 3).toUpperCase();

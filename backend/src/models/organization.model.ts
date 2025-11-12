@@ -15,6 +15,9 @@ export interface OrgModel extends Model<OrgDocument> {
     deleteById(id: string): Promise<any>;
 }
 
+/**
+ * @brief Organization mongoose schema
+ */
 const organizationSchema = new Schema<any, OrgModel>(
     {
         name: {

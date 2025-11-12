@@ -6,11 +6,13 @@ import catchAsync from "../utils/catchAsync";
 import type { NextFunction, Response } from "express";
 
 /**
- * @brief Function to return organization in the response of api request
- * @param res Express response of API request
- * @param status numberical status code
- * @param org data of organization to send to client
- * @returns returns the response with added data as json format
+ * @brief Utility function to structure and return a JSON response containing organization data.
+ * @param {ExpressRexponse} res - The Express response object.
+ * @param {number} status - The HTTP status code to return (e.g., 200, 201).
+ * @param {OrgType} org - The Organization object to include in the response body.
+ * @return {Response} The Express Response object sent to the client.
+ * @sideEffect Sends a JSON response to the client with the specified status code and a simplified organization object.
+ * @author `Ravish Ranjan`
  */
 function returnOrgRes(res: Response, status: number, org: OrgType): Response {
 	return res.status(status).json({
@@ -33,13 +35,21 @@ function returnOrgRes(res: Response, status: number, org: OrgType): Response {
 }
 
 /**
- * @brief function to get organization using organization slug
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- * @param orgSlug (string)
- * @return IF (no organization is found ) return error with status 404
- * 			ELSE call returnOrgRes Function with user's org and status 200
+ * @brief Controller Function to retrieve a single organization's details using its unique URL slug.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		params: {
+ * 			orgSlug: 'unique-organization-slug'
+ * 		}
+ * }
+ * ```
+ * request containing the organization slug in params.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect Finds the Organization document by slug and uses `returnOrgRes` to send a 200 JSON response with the organization data.
+ * @author `Ravish Ranjan`
  */
 export const getOrg = catchAsync(
 	async (
@@ -60,15 +70,31 @@ export const getOrg = catchAsync(
 );
 
 /**
- * @brief Function to create new organization by verified user who has no organization prior as owner
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- * @return IF (user not verified ) return error with status 400
- * 			ELSE IF (user already an owner) return error with status 400
- * 			ELSE IF (name is not given in body) return error with status 404
- * 			ELSE IF (org or emp creation fails) return error with status 500
- * 			ELSE call returnOrgRes Function with new org details and 201 status
+ * @brief Controller Function to create a new organization (Org) and automatically enroll the verified, authenticated user as the 'Owner'.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		user: {
+ * 			_id: 'user_mongo_id',
+ * 			isVerified: true
+ * 		},
+ * 		body: {
+ * 			name: 'New Org Name',
+ * 			description: 'A brief description of the organization.',
+ * 			type: 'Basic' | 'Small-Cap' | 'Mid-Cap' | 'Large-Cap' | 'Other',
+ * 			...other fields
+ * 		}
+ * }
+ * ```
+ * request containing organization details in the body.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect 
+ * - Creates a new Organization document.
+ * - Creates a corresponding Employee (Emp) document linking the user to the new organization with 'Owner' role.
+ * - Sends a 201 JSON response with the newly created organization data.
+ * @author `Ravish Ranjan`
  */
 export const createOrg = catchAsync(
 	async (
@@ -148,13 +174,27 @@ export const createOrg = catchAsync(
 );
 
 /**
- * @brief function to update data of organization like (name,description,type)
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- * @return IF (name and is not valid) return error with 400
- * 			IF (description and not valid description) return error with 400
- * 			ELSE return the updated
+ * @brief Controller Function to update the name, description, and/or type of an existing organization.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		params: {
+ * 			orgid: 'organization_mongo_id'
+ * 		},
+ * 		body: {
+ * 			name?: 'New Organization Name',
+ * 			description?: 'Updated description',
+ * 			type?: 'Small-Cap' | 'Mid-Cap' | 'Large-Cap' // Optional fields to update
+ * 			...other updatable fields
+ * 		}
+ * }
+ * ```
+ * request containing the organization ID in params and fields to update in the body.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect Updates the specified Organization document in the database and sends a 200 JSON response with the updated organization data via `returnOrgRes`.
+ * @author `Ravish Ranjan`
  */
 export const updateOrg = catchAsync(
 	async (
@@ -205,11 +245,33 @@ export const updateOrg = catchAsync(
 );
 
 /**
- * @brief Function to transfer ownership of an organization
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- *
+ * @brief Controller Function to transfer ownership of the organization from the current user to an existing employee.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		user: {
+ * 			_id: 'current_owner_mongo_id',
+ * 			myOrg: {
+ * 				 _id: 'org_mongo_id' 
+ * 			} // Must contain the organization ID
+ * 		},
+ * 		body: {
+ * 			newOwnerEmail: 'email_of_employee_to_transfer_to'
+ * 		}
+ * }
+ * ```
+ * request containing the new owner's email in the body.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect 
+ * - Updates the **Organization** document's `owner` field to the new user's ID.
+ * - Updates the old owner's **Employee** record (if it exists) to a new non-Owner role (implied, but not explicitly handled here; *must* be done by subsequent logic or middleware).
+ * - Updates the new owner's **Employee** record's `role` to 'Owner' and clears their `manager`.
+ * - If the new owner was a Manager, clears the `manager` field for all their previous subordinates.
+ * - Clears the `admin` field on the Organization document upon transfer.
+ * - Sends a 200 JSON response with the updated organization data via `returnOrgRes`.
+ * @author `Ravish Ranjan`
  */
 export const transferOrg = catchAsync(
 	async (
@@ -311,15 +373,27 @@ export const transferOrg = catchAsync(
 );
 
 /**
- * @brief Function to delete an organization (done by only owner)
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- * @return IF (orgid is not given in body) return error with status(404)
- * 			ELSE if (User don't have any org with given id as owner) return error with status(404)
- * 			ELSE if (org didn't delete after query) return error with status(500)
- * 			ELSE if (related employees didn't delete after query) return error with status(500)
- * 			ELSE return status(204)
+ * @brief Controller Function to soft-delete an organization and all associated employee records.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		user: {
+ * 			_id: 'owner_mongo_id' // Must match the organization's owner field
+ * 		},
+ * 		params: {
+ * 			orgid: 'organization_mongo_id'
+ * 		}
+ * }
+ * ```
+ * request containing the organization ID in params.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect 
+ * - Soft-deletes the Organization document by the given ID, verifying that the authenticated user is the **owner**.
+ * - Soft-deletes all associated Employee documents for that organization ID.
+ * - Sends a **204 No Content** response upon successful operation.
+ * @author `Ravish Ranjan`
  */
 export const deleteOrg = catchAsync(
 	async (
