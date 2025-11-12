@@ -1,5 +1,6 @@
 import axinstance from "@/utils/axios";
 import { handleError } from "@/utils/handleError";
+import axios from "axios";
 
 export type ReportType = {
 	numOfItems: number;
@@ -116,3 +117,29 @@ export const searchItems = async ({
 		handleError(err);
 	}
 };
+
+export const addItemByBarcode = async (barcode:string) => {
+	try {
+		const res = await axios.get(`https://world.openfoodfacts.org/api/v0/product/${barcode}`);
+		if (res.status === 200) {
+			const product = res.data;
+			const data = {
+            name:
+                product.product.product_name ||
+                product.product.product_name_en ||
+                'Unknown Product',
+            origin: product.product.countries?.replace('en:', '') || 'Unknown',
+            brand: product.product.brands || 'Unknown',
+            inventoryCategory: product.product.product_type || 'unknown',
+            weight: product.product.quantity || null,
+        };
+			return data;
+		} else {
+			handleError(
+				new Error("There was an error while adding the item to inventory")
+			);
+		}
+	} catch (err) {
+		handleError(err);
+	}
+}

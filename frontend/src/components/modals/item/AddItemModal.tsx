@@ -1,3 +1,4 @@
+import { Scan } from "@/assets/icons/Barcode";
 import { Close } from "@/assets/icons/Close";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/button";
@@ -17,12 +18,15 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Small } from "@/components/ui/Typography";
 import useAddItem from "@/hooks/item/useAddItem";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
+import BarcodeScannerModal from "./BarcodeScannerModal";
+import { Separator } from "@/components/ui/separator";
 
 interface AddItemModalProps {
 	open: boolean;
@@ -48,6 +52,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
+	const [openScannerModal, setOpenScannerModal] = useState<boolean>(false);
 
 	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG">("KG");
 
@@ -66,7 +71,6 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		reorderLevel?: number;
 		batchNumber?: number;
 		origin?: string;
-		SKU?: string;
 	}>({
 		name: "",
 		organizationId: "",
@@ -149,7 +153,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		submitForm.origin = submitForm.origin?.trim();
 		submitForm.SKU = submitForm.SKU?.trim();
 		addItemFn(submitForm);
-		setOpen(false);		
+		setOpen(false);
 	};
 
 	return (
@@ -164,7 +168,16 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid gap-2 max-h-96 overflow-auto">
+				<CardContent className="grid gap-2 max-h-80 overflow-auto">
+					<Button
+						onClick={() => setOpenScannerModal(true)}
+						variant={"outline"}
+						className="flex gap-2 items-center"
+					>
+						<Small>Scan Item's Barcode</Small>
+						<Scan className="h-5 w-5" />
+					</Button>
+					<Separator />
 					<div className="grid gap-2 grid-cols-2">
 						<Label htmlFor="name" className="grid">
 							<span>Name *</span>
@@ -195,19 +208,6 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item's inventory category"
 								required
-							/>
-						</Label>
-						<Label htmlFor="sku" className="grid col-span-2">
-							<span>Item's SKU</span>
-							<Input
-								id="sku"
-								name="SKU"
-								type="text"
-								value={form.SKU}
-								onChange={(e) =>
-									setForm({ ...form, SKU: e.target.value })
-								}
-								placeholder="Enter item's SKU"
 							/>
 						</Label>
 					</div>
@@ -498,6 +498,11 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 					</Button>
 				</CardFooter>
 			</Card>
+			<BarcodeScannerModal
+				open={openScannerModal}
+				setOpen={setOpenScannerModal}
+				setForm={setForm}
+			/>
 		</Modal>
 	);
 }

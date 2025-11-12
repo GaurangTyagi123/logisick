@@ -1,9 +1,6 @@
+
 function OrderSales() {
-  return (
-    <div>
-      Order & Sales
-    </div>
-  )
+  return <h1>Order Sales</h1>
 }
 
 export default OrderSales
