@@ -19,7 +19,7 @@ itemRouter.route('/:SKU').get(getItemBySKU);
 itemRouter.route('/allItems/:orgid').get(protect, getAllItems);
 
 // end-point to search items
-itemRouter.route('/search/:orgid').get(searchItem);
+itemRouter.route('/search/:orgid').get(protect, searchItem);
 
 // end-point to generate report for an inventory
 itemRouter

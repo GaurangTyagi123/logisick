@@ -19,6 +19,10 @@ const itemSchema = new Schema<any, ItemModel>(
             type: Date,
             default: Date.now(),
         },
+        barcode: {
+            type: String,
+            unique: true,
+        },
         name: {
             type: String,
             required: [true, 'Item must have a name'],

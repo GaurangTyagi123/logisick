@@ -1,4 +1,5 @@
 import { Close } from "@/assets/icons/Close";
+import BarcodeScan from "@/components/BarcodeScan";
 import Modal from "@/components/Modal";
 import Button from "@/components/ui/button";
 import {
@@ -66,7 +67,6 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		reorderLevel?: number;
 		batchNumber?: number;
 		origin?: string;
-		SKU?: string;
 	}>({
 		name: "",
 		organizationId: "",
@@ -149,12 +149,15 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		submitForm.origin = submitForm.origin?.trim();
 		submitForm.SKU = submitForm.SKU?.trim();
 		addItemFn(submitForm);
-		setOpen(false);		
+		setOpen(false);
 	};
 
 	return (
 		<Modal openModal={open}>
 			<Card className="min-w-lg max-w-screen">
+				<div>
+					<BarcodeScan setForm={setForm} />
+				</div>
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Add new item</CardTitle>
 					<Button
@@ -195,19 +198,6 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item's inventory category"
 								required
-							/>
-						</Label>
-						<Label htmlFor="sku" className="grid col-span-2">
-							<span>Item's SKU</span>
-							<Input
-								id="sku"
-								name="SKU"
-								type="text"
-								value={form.SKU}
-								onChange={(e) =>
-									setForm({ ...form, SKU: e.target.value })
-								}
-								placeholder="Enter item's SKU"
 							/>
 						</Label>
 					</div>
@@ -297,6 +287,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 										defaultValue={weightUnit}
 										onValueChange={(value) =>
 											setWeightUnit(
+
 												value as "KG" | "MG" | "G"
 											)
 										}
@@ -379,7 +370,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 										...form,
 										importedOn: new Date(
 											e.target.valueAsDate ||
-												form.importedOn
+											form.importedOn
 										),
 									});
 								}}

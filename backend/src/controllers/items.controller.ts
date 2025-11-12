@@ -97,8 +97,7 @@ export const getAllItems = catchAsync(
             .filter()
             .project()
             .sort()
-			.paginate(totalCount)
-			.query;
+            .paginate(totalCount).query;
 
         if (!items) sendItem(res, [], 200);
         else {
@@ -330,8 +329,7 @@ export const searchItem = catchAsync(
                     .sort()
                     .project()
                     .filter()
-					.paginate(totalCount)
-					.query;
+                    .paginate(totalCount).query;
                 const itemsStr = JSON.stringify(items);
                 await redisClient.hSet(
                     `organization-${orgid}`,
@@ -343,11 +341,10 @@ export const searchItem = catchAsync(
             const query = Item.find({
                 organizationId: orgid,
                 $or: [
-                    { name: { $regex: regex, $options: 'i' } },
-                    { inventoryCategory: { $regex: regex, $options: 'i' } },
-                    { origin: { $regex: regex, $options: 'i' } },
-                    { SKU: { $regex: regex, $options: 'i' } },
-                    { batchNumber: { $regex: regex, $options: 'i' } },
+                    { name: { $regex: regex } },
+                    { inventoryCategory: { $regex: regex} },
+                    { origin: { $regex: regex } },
+                    { SKU: { $regex: regex } },
                 ],
             });
             const totalCount = await Item.countDocuments({
@@ -367,85 +364,3 @@ export const searchItem = catchAsync(
         });
     }
 );
-// "item": [
-//             {
-//                 "_id": "6910af1f9c1fcc2931600fc8",
-//                 "name": "Weight"
-//             },
-//             {
-//                 "_id": "6910af1f9c1fcc2931600fca",
-//                 "name": "Put"
-//             },
-//             {
-//                 "_id": "6910af209c1fcc2931600fd0",
-//                 "name": "Simple"
-//             },
-//             {
-//                 "_id": "6910af209c1fcc2931600fd6",
-//                 "name": "International"
-//             },
-//             {
-//                 "_id": "6910af219c1fcc2931600fde",
-//                 "name": "Trip"
-//             },
-//             {
-//                 "_id": "6910af219c1fcc2931600fe0",
-//                 "name": "Positive"
-//             },
-//             {
-//                 "_id": "6910af229c1fcc2931600fe6",
-//                 "name": "Republican"
-//             },
-//             {
-//                 "_id": "6910af229c1fcc2931600fea",
-//                 "name": "Any"
-//             },
-//             {
-//                 "_id": "6910af259c1fcc2931601014",
-//                 "name": "Travel"
-//             },
-//             {
-//                 "_id": "6910af269c1fcc293160101e",
-//                 "name": "That"
-//             },
-//             {
-//                 "_id": "6910af279c1fcc2931601022",
-//                 "name": "Crime"
-//             },
-//             {
-//                 "_id": "6910af299c1fcc293160103a",
-//                 "name": "New"
-//             },
-//             {
-//                 "_id": "6910af299c1fcc2931601046",
-//                 "name": "Along"
-//             },
-//             {
-//                 "_id": "6910af2a9c1fcc2931601052",
-//                 "name": "Have"
-//             },
-//             {
-//                 "_id": "6910af2b9c1fcc2931601056",
-//                 "name": "Decide"
-//             },
-//             {
-//                 "_id": "6910af2c9c1fcc2931601066",
-//                 "name": "Safe"
-//             },
-//             {
-//                 "_id": "6910af2d9c1fcc293160106e",
-//                 "name": "Many"
-//             },
-//             {
-//                 "_id": "6910af2e9c1fcc2931601072",
-//                 "name": "Listen"
-//             },
-//             {
-//                 "_id": "6910af319c1fcc293160107e",
-//                 "name": "Mission"
-//             },
-//             {
-//                 "_id": "6910af339c1fcc293160108a",
-//                 "name": "Travel"
-//             }
-//         ]

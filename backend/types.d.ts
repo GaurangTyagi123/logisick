@@ -93,6 +93,7 @@ declare interface EmpType {
 declare interface ItemType extends Document {
     _id: ObjectId;
     name: string;
+    barcode: string;
     organization: ObjectId;
     costPrice: number;
     sellingPrice: number;
