@@ -147,9 +147,6 @@ export const createOrg = catchAsync(
 	}
 );
 
-
-
-
 /**
  * @brief function to update data of organization like (name,description,type)
  * @param req(UserRequest)

@@ -8,11 +8,16 @@ import {
 } from "@/components/ui/card";
 import Button from "@/components/ui/button";
 import { Close } from "@/assets/icons/Close";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@/components/ui/input-otp";
+import {
+	InputOTP,
+	InputOTPGroup,
+	InputOTPSlot,
+} from "@/components/ui/input-otp";
 import { REGEXP_ONLY_DIGITS } from "input-otp";
 import { toast } from "react-toastify";
 import useAuthStore from "@/stores/useAuthStore";
 import { useQueryClient } from "@tanstack/react-query";
+import { Small } from "@/components/ui/Typography";
 
 interface OTPProps {
 	otp: string;
@@ -22,7 +27,7 @@ interface OTPProps {
 }
 
 /**
- * @component a modal for profilepage which prompts user to enter otp when user want to verify email 
+ * @component a modal for profilepage which prompts user to enter otp when user want to verify email
  * @param open a boolean value stating is modal is open
  * @param setOpen a function to change state of open of modal
  * @param otp a string state for user input of otp
@@ -55,12 +60,18 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 		<Modal openModal={open}>
 			<Card className="min-w-md">
 				<CardHeader className="flex justify-between items-center">
-					<CardTitle>Verify Email</CardTitle>
-					<Button onClick={() => setOpen(false)} variant={"secondary"}>
+					<CardTitle>Enter OTP</CardTitle>
+					<Button
+						onClick={() => setOpen(false)}
+						variant={"secondary"}
+					>
 						<Close />
 					</Button>
 				</CardHeader>
 				<CardContent className="grid place-items-center">
+					<Small>
+						Enter the OTP recieved on your registered email
+					</Small>
 					<InputOTP
 						maxLength={4}
 						value={otp}
