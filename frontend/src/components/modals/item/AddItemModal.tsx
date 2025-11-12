@@ -375,7 +375,6 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									form.importedOn.toISOString().split("T")[0]
 								}
 								onChange={(e) => {
-									console.log(e.target.valueAsDate);
 									setForm({
 										...form,
 										importedOn: new Date(
@@ -405,7 +404,6 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									new Date().toISOString().split("T")[0]
 								}
 								onChange={(e) => {
-									console.log(e.target.valueAsDate);
 									setForm({
 										...form,
 										expiresOn: e.target.valueAsDate

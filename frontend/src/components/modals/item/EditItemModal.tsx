@@ -131,7 +131,6 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		updateItemFn({ itemId: item._id, newItem: submitForm });
 		setOpen(false);
 	};
-	console.log("item", item);
 
 	return (
 		<Modal openModal={open}>
@@ -347,7 +346,6 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 										: new Date().toISOString().split("T")[0]
 								}
 								onChange={(e) => {
-									console.log(e.target.valueAsDate);
 									setForm({
 										...form,
 										importedOn: new Date(
@@ -380,7 +378,6 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 										.split("T")[0]
 								}
 								onChange={(e) => {
-									console.log(e.target.valueAsDate);
 									setForm({
 										...form,
 										expiresOn: e.target.valueAsDate

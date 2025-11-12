@@ -106,7 +106,7 @@ function ItemCard({
 					)}
 				>
 					<img
-						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${process.env.FRONTEND_URL}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
+						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${import.meta.env.FRONTEND_URL  || "http://localhost:5173"}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
 						alt={item?.name.substring(0, 10)}
 						className="w-full rounded-2xl"
 					/>
@@ -226,6 +226,12 @@ function ItemCard({
 								small={small}
 								field={item.reorderLevel}
 								fieldName="Reorder Level"
+							/>
+							{!small && <Separator />}
+							<ListItem
+								small={small}
+								field={item.batchNumber}
+								fieldName="Batch Number"
 							/>
 						</>
 					)}
