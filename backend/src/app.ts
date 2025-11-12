@@ -20,6 +20,7 @@ import passport from 'passport';
 import oauthRouter from './routes/oauth.routes';
 import userRouter from './routes/user.routes';
 import itemRouter from './routes/item.routes';
+import { shipmentRouter } from './routes/shipment.routes';
 
 // Initialize the application
 const app = express();
@@ -147,6 +148,8 @@ app.use('/api/v1/users', userRouter);
 app.use('/api/v1/emp', empRouter);
 // Item Router
 app.use('/api/v1/item', itemRouter);
+
+app.use('/api/v1/order', shipmentRouter);
 
 // Open Authentication Routes
 app.use('/auth', oauthRouter);

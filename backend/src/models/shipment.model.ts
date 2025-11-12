@@ -13,16 +13,30 @@ export interface ShipmentModel extends Model<shipmentDocument> {
 }
 
 const shipmentSchema = new Schema<any, ShipmentModel>({
-    items: [
-        {
-            type: Schema.ObjectId,
-            ref: 'Item',
-            required: true,
-        },
-    ],
-    transferQuantites: {
+    item: {
+        type: Schema.ObjectId,
+        ref: 'Item',
+        required: [true, 'Order must have an item'],
+    },
+    orderName: {
+        type: String,
+    },
+    organizationId: {
+        type: Schema.ObjectId,
+        ref: 'Organization',
+        required: [true, 'Order must belong to an organization'],
+    },
+    quantity: {
         type: Number,
-        required: [true, 'Specify quantity to be exported'],
+        required: [true, 'Specify quantity to be exported/imported'],
+    },
+    orderedOn: {
+        type: Date,
+        default : Date.now()
+    },
+    shipped: {
+        type: Boolean,
+        default: false,
     },
 });
 
@@ -30,6 +44,16 @@ shipmentSchema.plugin(MongooseDelete as any, {
     deletedAt: true,
     deletedBy: false,
     overrideMethods: 'all',
+});
+
+shipmentSchema.index({
+    orderName: 1,
+});
+
+shipmentSchema.pre('save', function (next: any) {
+    const orderName = `ORD-${new Date().toLocaleDateString()}`;
+    this.orderName = orderName;
+    next();
 });
 
 const shipmentModel = model('Shipment', shipmentSchema);

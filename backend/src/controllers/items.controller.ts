@@ -5,7 +5,6 @@ import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import checkRequestBody from '../utils/checkRequestBody';
 import { redisClient } from '../app';
-// import { redisClient } from '../app';
 
 /**
  * @brief sends item document as json response
@@ -199,7 +198,7 @@ export const updateItem = catchAsync(
 );
 
 /**
- * @brief Function to get an Item with a given ID
+ * @brief Function to delete an Item with a given ID
  * @param req (Express Request Object)
  * @param res (Express Response Object)
  * @param next (Express Next function)
@@ -259,10 +258,10 @@ export const itemsReport = catchAsync(
                         $avg: '$quantity',
                     },
                     totalCostPrice: {
-                        $sum: '$costPrice',
+                        $sum: { $multiply: ['$costPrice', '$quantity'] },
                     },
                     totalSellingPrice: {
-                        $sum: '$sellingPrice',
+                        $sum: { $multiply: ['$sellingPrice', '$quantity'] },
                     },
                     averageCostPrice: {
                         $avg: '$costPrice',
@@ -287,6 +286,7 @@ export const itemsReport = catchAsync(
  * @param res (Express Response Object)
  * @param next (Express Next function)
  * @param orgId (string) Organization id
+ * @param query (string)
  * @return json reponse
  */
 export const searchItem = catchAsync(
@@ -342,7 +342,7 @@ export const searchItem = catchAsync(
                 organizationId: orgid,
                 $or: [
                     { name: { $regex: regex } },
-                    { inventoryCategory: { $regex: regex} },
+                    { inventoryCategory: { $regex: regex } },
                     { origin: { $regex: regex } },
                     { SKU: { $regex: regex } },
                 ],

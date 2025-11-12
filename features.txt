@@ -1,5 +1,0 @@
-1. Employee CRUD
-2. Assign manager / Change Role
-
-3. inventory model
-4. Inventory Controllers
