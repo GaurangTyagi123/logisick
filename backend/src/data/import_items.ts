@@ -1607,14 +1607,14 @@ const items = [
 ];
 mongoose.connect('mongodb://0.0.0.0:27017/LogiSick');
 export const import_item = async () => {
-    console.log('IMPORTING USERS...');
+    console.log('IMPORTING ITEMS...');
     for (const item of items) {
         await Item.create(item);
     }
     process.exit();
 };
 export const delete_item = async () => {
-    console.log('DELETING USERS...');
+    console.log('DELETING ITEMS...');
     await Item.deleteMany({});
     process.exit();
 };

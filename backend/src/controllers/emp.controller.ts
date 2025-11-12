@@ -222,12 +222,12 @@ export const getEmps = catchAsync(
                 },
             },
         ]);
-
+        const totalCount: number = await Emp.countDocuments({ orgid });
         const emps = await new ApiFilter(query, req.parsedQuery!)
             .filter()
             .sort()
             .project()
-            .paginate().query;
+            .paginate(totalCount).query;
 
         if (emps)
             return res.status(200).json({
@@ -296,8 +296,7 @@ export const getMyOrgs = catchAsync(
         const orgs = await new ApiFilter(query, req.parsedQuery!)
             .filter()
             .sort()
-            .project()
-            .paginate().query;
+            .project().query;
 
         return res.status(200).json({
             status: 'success',

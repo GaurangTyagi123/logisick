@@ -13,51 +13,60 @@ export interface ItemModel extends Model<ItemDocument> {
     deleteById(id: string): Promise<any>;
 }
 
-const itemSchema = new Schema<any, ItemModel>({
-    name: {
-        type: String,
-        required: [true, 'Item must have a name'],
+const itemSchema = new Schema<any, ItemModel>(
+    {
+        createdAt: {
+            type: Date,
+            default: Date.now(),
+        },
+        name: {
+            type: String,
+            required: [true, 'Item must have a name'],
+        },
+        organizationId: {
+            type: Schema.ObjectId,
+            ref: 'Organization',
+            required: true,
+        },
+        costPrice: {
+            type: Number,
+            required: [true, 'Item must have a cost price'],
+        },
+        sellingPrice: {
+            type: Number,
+            required: [true, 'Item must have a selling price'],
+        },
+        quantity: {
+            type: Number,
+            default: 1,
+        },
+        inventoryCategory: {
+            type: String,
+            required: [true, 'Item must have a category'],
+        },
+        importance: {
+            type: String,
+            enum: ['A', 'B', 'C'],
+        },
+        importedOn: {
+            type: Date,
+            default: Date.now(),
+        },
+        expiresOn: Date,
+        weight: Number,
+        colour: String,
+        reorderLevel: Number,
+        batchNumber: Number,
+        origin: {
+            type: String,
+            default: 'India',
+        },
+        SKU: String,
     },
-    organizationId: {
-        type: Schema.ObjectId,
-        ref: 'Organization',
-        required: true,
-    },
-    costPrice: {
-        type: Number,
-        required: [true, 'Item must have a cost price'],
-    },
-    sellingPrice: {
-        type: Number,
-        required: [true, 'Item must have a selling price'],
-    },
-    quantity: {
-        type: Number,
-        default: 1,
-    },
-    inventoryCategory: {
-        type: String,
-        required: [true, 'Item must have a category'],
-    },
-    importance: {
-        type: String,
-        enum: ['A', 'B', 'C'],
-    },
-    importedOn: {
-        type: Date,
-        default: Date.now(),
-    },
-    expiresOn: Date,
-    weight: Number,
-    colour: String,
-    reorderLevel: Number,
-    batchNumber: Number,
-    origin: {
-        type: String,
-        default: 'India',
-    },
-    SKU: String,
-});
+    {
+        timestamps: true,
+    }
+);
 itemSchema.index({
     SKU: 1,
 });
