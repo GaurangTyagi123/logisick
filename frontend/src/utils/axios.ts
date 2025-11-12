@@ -36,8 +36,8 @@ axinstance.interceptors.response.use((response: any) => response, async (error) 
 			return axinstance(originalRequest);
 		}
 		catch (refreshError) {
-			handleError(refreshError);
 			window.location.href = '/authenticate';
+			handleError(refreshError);
 		}
 	}
 })

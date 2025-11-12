@@ -54,14 +54,12 @@ const sendNewToken = async (
     await User.findByIdAndUpdate(user._id, { refreshToken });
     const cookieOptions: cookieOptionsType = {
         httpOnly: true,
-        expire: new Date(
-            Date.now() +
-                parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
-                    24 *
-                    60 *
-                    60 *
-                    1000
-        ),
+        maxAge:
+            parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
+            24 *
+            60 *
+            60 *
+            1000,
         secure: process.env.NODE_ENV === 'production',
     };
 
