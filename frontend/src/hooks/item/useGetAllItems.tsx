@@ -1,12 +1,19 @@
 import { getAllItems } from "@/services/apiItem";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
+const PAGE_SIZE = 5;
 function useGetAllItems(orgId: string, page: number) {
-	const { data: items, isPending } = useQuery({
+	const queryClient = useQueryClient();
+	const { data: itemsResponse, isPending } = useQuery({
 		queryKey: ["items", page],
 		queryFn: () => getAllItems(orgId, page),
 	});
-	return { items, isPending };
+	if (itemsResponse && ((PAGE_SIZE * page + 1) < itemsResponse.count))
+		queryClient.prefetchQuery({
+			queryKey: [`items`, page + 1],
+			queryFn: () => getAllItems(orgId, page + 1),
+		});
+	return { itemsResponse, isPending };
 }
 
 export default useGetAllItems;

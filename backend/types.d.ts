@@ -19,8 +19,8 @@ namespace ExpressTypes {
 // type declaration for http-only cookie
 declare type cookieOptionsType = {
     httpOnly: boolean;
-    expire: Date;
     secure?: boolean;
+    maxAge: date;
 };
 
 // Types declaration for mongoose
@@ -107,7 +107,6 @@ declare interface ItemType extends Document {
     importance?: string;
     origin?: string;
     SKU?: string;
-
 }
 
 declare interface deliveryType {
@@ -124,5 +123,5 @@ declare interface deliveryType {
 declare interface shipmentType {
     _id: string;
     items: Array<string>;
-    transferQuantities: number; 
+    transferQuantities: number;
 }

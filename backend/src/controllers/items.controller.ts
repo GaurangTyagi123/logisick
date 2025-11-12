@@ -1,10 +1,10 @@
-import { Types } from "mongoose";
-import Item from "../models/item.model";
-import ApiFilter from "../utils/apiFilter";
-import AppError from "../utils/appError";
-import catchAsync from "../utils/catchAsync";
-import checkRequestBody from "../utils/checkRequestBody";
-import { redisClient } from "../app";
+import { Types } from 'mongoose';
+import Item from '../models/item.model';
+import ApiFilter from '../utils/apiFilter';
+import AppError from '../utils/appError';
+import catchAsync from '../utils/catchAsync';
+import checkRequestBody from '../utils/checkRequestBody';
+import { redisClient } from '../app';
 // import { redisClient } from '../app';
 
 /**
@@ -15,16 +15,18 @@ import { redisClient } from "../app";
  * @returns response object
  */
 const sendItem = (
-	res: ExpressTypes.Response,
-	item: ItemType | ItemType[],
-	status: number
+    res: ExpressTypes.Response,
+    item: ItemType | ItemType[],
+    status: number,
+    count?: number
 ) => {
-	return res.status(status).json({
-		status: "success",
-		data: {
-			item,
-		},
-	});
+    return res.status(status).json({
+        status: 'success',
+        count: count ?? 0,
+        data: {
+            item,
+        },
+    });
 };
 
 /**
@@ -39,35 +41,35 @@ const sendItem = (
  * @sideeffect calls sendItem function
  */
 export const addItem = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const newItem = checkRequestBody(
-			req.body,
-			[
-				"name",
-				"organizationId",
-				"costPrice",
-				"sellingPrice",
-				"quantity",
-				"inventoryCategory",
-				"importedOn",
-				"expiresOn",
-				"importance",
-				"weight",
-				"colour",
-				"batchNumber",
-				"origin",
-			],
-			true
-		);
-		if (!newItem)
-			return next(new AppError("Please provide complete details", 400));
-		const item = await Item.create(newItem);
-		sendItem(res, item, 201);
-	}
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const newItem = checkRequestBody(
+            req.body,
+            [
+                'name',
+                'organizationId',
+                'costPrice',
+                'sellingPrice',
+                'quantity',
+                'inventoryCategory',
+                'importedOn',
+                'expiresOn',
+                'importance',
+                'weight',
+                'colour',
+                'batchNumber',
+                'origin',
+            ],
+            true
+        );
+        if (!newItem)
+            return next(new AppError('Please provide complete details', 400));
+        const item = await Item.create(newItem);
+        sendItem(res, item, 201);
+    }
 );
 
 /**
@@ -79,26 +81,31 @@ export const addItem = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const getAllItems = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { orgid } = req.params;
-		if (!orgid)
-			return next(
-				new AppError("Please provide a valid organization id", 400)
-			);
-		const query = Item.find({ organizationId: orgid });
-		const items = await new ApiFilter(query, req.parsedQuery!)
-			.filter()
-			.project()
-			.sort()
-			.paginate().query;
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { orgid } = req.params;
+        if (!orgid)
+            return next(
+                new AppError('Please provide a valid organization id', 400)
+            );
+        const query = Item.find({ organizationId: orgid });
+        const totalCount = await Item.countDocuments({ organizationId: orgid });
+        const items = await new ApiFilter(query, req.parsedQuery!)
+            .filter()
+            .project()
+            .sort()
+			.paginate(totalCount)
+			.query;
 
-		if (!items) sendItem(res, [], 200);
-		else sendItem(res, items, 200);
-	}
+        if (!items) sendItem(res, [], 200);
+        else {
+            items.count = totalCount;
+            sendItem(res, items, 200, totalCount);
+        }
+    }
 );
 
 /**
@@ -110,18 +117,18 @@ export const getAllItems = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const getItem = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { itemId } = req.params;
-		if (!itemId)
-			return next(new AppError("Please provide a valid item id", 400));
-		const item = (await Item.findById(itemId)) as ItemType;
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { itemId } = req.params;
+        if (!itemId)
+            return next(new AppError('Please provide a valid item id', 400));
+        const item = (await Item.findById(itemId)) as ItemType;
 
-		sendItem(res, item, 200);
-	}
+        sendItem(res, item, 200);
+    }
 );
 /**
  * @brief Function to get an Item with a specified SKU (Stock Keeping Unit)
@@ -132,19 +139,19 @@ export const getItem = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const getItemBySKU = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { SKU } = req.params;
-		if (!SKU)
-			return next(new AppError("Please provide a valid item SKU", 400));
-		const item = (await Item.findOne({ SKU })) as any | null;
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { SKU } = req.params;
+        if (!SKU)
+            return next(new AppError('Please provide a valid item SKU', 400));
+        const item = (await Item.findOne({ SKU })) as any | null;
 
-		if (!item) return next(new AppError("Item not found", 404));
-		sendItem(res, item as ItemType, 200);
-	}
+        if (!item) return next(new AppError('Item not found', 404));
+        sendItem(res, item as ItemType, 200);
+    }
 );
 /**
  * @brief Function to get update an items with a given ID
@@ -155,41 +162,41 @@ export const getItemBySKU = catchAsync(
  * @sideEffect calls sendItem function
  */
 export const updateItem = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const updatedItem = checkRequestBody(
-			req.body,
-			[
-				"name",
-				"costPrice",
-				"sellingPrice",
-				"quantity",
-				"inventoryCategory",
-				"importance",
-				"importedOn",
-				"expiresOn",
-				"weight",
-				"colour",
-				"reorderLevel",
-				"origin",
-			],
-			true
-		);
-		const { itemId } = req.params;
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const updatedItem = checkRequestBody(
+            req.body,
+            [
+                'name',
+                'costPrice',
+                'sellingPrice',
+                'quantity',
+                'inventoryCategory',
+                'importance',
+                'importedOn',
+                'expiresOn',
+                'weight',
+                'colour',
+                'reorderLevel',
+                'origin',
+            ],
+            true
+        );
+        const { itemId } = req.params;
 
-		if (!itemId)
-			return next(new AppError("please provide a valid item id", 400));
-		if (!updatedItem)
-			return next(new AppError("please provide valid data", 400));
-		const newItem = (await Item.findByIdAndUpdate(itemId, updatedItem, {
-			new: true,
-			runValidators: true,
-		})) as ItemType;
-		sendItem(res, newItem, 200);
-	}
+        if (!itemId)
+            return next(new AppError('please provide a valid item id', 400));
+        if (!updatedItem)
+            return next(new AppError('please provide valid data', 400));
+        const newItem = (await Item.findByIdAndUpdate(itemId, updatedItem, {
+            new: true,
+            runValidators: true,
+        })) as ItemType;
+        sendItem(res, newItem, 200);
+    }
 );
 
 /**
@@ -201,18 +208,18 @@ export const updateItem = catchAsync(
  * @sideEffect soft deletes the item
  */
 export const deleteItem = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { itemId } = req.params;
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { itemId } = req.params;
 
-		if (!itemId)
-			return next(new AppError("please provide a valid item id", 400));
-		await Item.deleteById(itemId);
-		return res.status(204).end();
-	}
+        if (!itemId)
+            return next(new AppError('please provide a valid item id', 400));
+        await Item.deleteById(itemId);
+        return res.status(204).end();
+    }
 );
 
 /**
@@ -224,56 +231,56 @@ export const deleteItem = catchAsync(
  * @returns json response
  */
 export const itemsReport = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { orgid } = req.params;
-		if (!orgid)
-			return next(
-				new AppError("please provide a valid organization id", 400)
-			);
-		const report = await Item.aggregate([
-			{
-				$match: {
-					organizationId: new Types.ObjectId(orgid),
-				},
-			},
-			{
-				$group: {
-					_id: "$organizationId",
-					numOfItems: {
-						$sum: 1,
-					},
-					totalQuantity: {
-						$sum: "$quantity",
-					},
-					averageQuantity: {
-						$avg: "$quantity",
-					},
-					totalCostPrice: {
-						$sum: "$costPrice",
-					},
-					totalSellingPrice: {
-						$sum: "$sellingPrice",
-					},
-					averageCostPrice: {
-						$avg: "$costPrice",
-					},
-					averageSellingPrice: {
-						$avg: "$sellingPrice",
-					},
-				},
-			},
-		]);
-		return res.status(200).json({
-			status: "success",
-			data: {
-				report: report.at(0),
-			},
-		});
-	}
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { orgid } = req.params;
+        if (!orgid)
+            return next(
+                new AppError('please provide a valid organization id', 400)
+            );
+        const report = await Item.aggregate([
+            {
+                $match: {
+                    organizationId: new Types.ObjectId(orgid),
+                },
+            },
+            {
+                $group: {
+                    _id: '$organizationId',
+                    numOfItems: {
+                        $sum: 1,
+                    },
+                    totalQuantity: {
+                        $sum: '$quantity',
+                    },
+                    averageQuantity: {
+                        $avg: '$quantity',
+                    },
+                    totalCostPrice: {
+                        $sum: '$costPrice',
+                    },
+                    totalSellingPrice: {
+                        $sum: '$sellingPrice',
+                    },
+                    averageCostPrice: {
+                        $avg: '$costPrice',
+                    },
+                    averageSellingPrice: {
+                        $avg: '$sellingPrice',
+                    },
+                },
+            },
+        ]);
+        return res.status(200).json({
+            status: 'success',
+            data: {
+                report: report.at(0),
+            },
+        });
+    }
 );
 /**
  * @brief Function to find a particular item in the inventory
@@ -284,71 +291,161 @@ export const itemsReport = catchAsync(
  * @return json reponse
  */
 export const searchItem = catchAsync(
-	async (
-		req: ExpressTypes.UserRequest,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { orgid } = req.params;
-		let queryStr = String(req.query.query || "");
-		queryStr = queryStr.replaceAll("'", "");
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { orgid } = req.params;
+        let queryStr = String(req.query.query || '');
+        queryStr = queryStr.replaceAll("'", '');
 
-		const regex = new RegExp(`.*${queryStr}.*`, "i");
-		if (!orgid) return next(new AppError("Invalid organization", 400));
+        const regex = new RegExp(`.*${queryStr}.*`, 'i');
+        if (!orgid) return next(new AppError('Invalid organization', 400));
 
-		let items;
-		if (redisClient.isReady) {
-			items = await redisClient.hGet(`organization-${orgid}`, "items");
-			if (items && queryStr.length) {
-				items = JSON.parse(items);
-				items = items.values().filter((items: any) => {
-					const itemsStr = JSON.stringify(items);
-					return regex.test(itemsStr);
-				});
-			}
-			if (!items || !items.length || !queryStr.length) {
-				const query = Item.find({
-					organizationId: orgid,
-					$or: [
-						{ name: { $regex: regex } },
-						{ inventoryCategory: { $regex: regex } },
-						{ origin: { $regex: regex } },
-						{ SKU: { $regex: regex } },
-					],
-				});
-				items = await new ApiFilter(query, req.parsedQuery!)
-					.sort()
-					.project()
-					.paginate().query;
-				const itemsStr = JSON.stringify(items);
-				await redisClient.hSet(
-					`organization-${orgid}`,
-					"items",
-					itemsStr
-				);
-			}
-		} else {
-			const query = Item.find({
-				organizationId: orgid,
-				$or: [
-					{ name: { $regex: regex, $options: "i" } },
-					{ inventoryCategory: { $regex: regex, $options: "i" } },
-					{ origin: { $regex: regex, $options: "i" } },
-					{ SKU: { $regex: regex, $options: "i" } },
-					{ batchNumber: { $regex: regex, $options: "i" } },
-				],
-			});
-			items = await new ApiFilter(query, req.parsedQuery!)
-				.sort()
-				.project()
-				.paginate().query;
-		}
-		return res.status(200).json({
-			status: "success",
-			results: items.length,
-			data: {
-				items,
-			},
-		});
-	}
+        let items;
+        if (redisClient.isReady) {
+            items = await redisClient.hGet(`organization-${orgid}`, 'items');
+            if (items && queryStr.length) {
+                items = JSON.parse(items);
+                items = items.values().filter((items: any) => {
+                    const itemsStr = JSON.stringify(items);
+                    return regex.test(itemsStr);
+                });
+            }
+            if (!items || !items.length || !queryStr.length) {
+                const query = Item.find({
+                    organizationId: orgid,
+                    $or: [
+                        { name: { $regex: regex } },
+                        { inventoryCategory: { $regex: regex } },
+                        { origin: { $regex: regex } },
+                        { SKU: { $regex: regex } },
+                    ],
+                });
+                const totalCount = await Item.countDocuments({
+                    organizationId: orgid,
+                });
+                items = await new ApiFilter(query, req.parsedQuery!)
+                    .sort()
+                    .project()
+                    .filter()
+					.paginate(totalCount)
+					.query;
+                const itemsStr = JSON.stringify(items);
+                await redisClient.hSet(
+                    `organization-${orgid}`,
+                    'items',
+                    itemsStr
+                );
+            }
+        } else {
+            const query = Item.find({
+                organizationId: orgid,
+                $or: [
+                    { name: { $regex: regex, $options: 'i' } },
+                    { inventoryCategory: { $regex: regex, $options: 'i' } },
+                    { origin: { $regex: regex, $options: 'i' } },
+                    { SKU: { $regex: regex, $options: 'i' } },
+                    { batchNumber: { $regex: regex, $options: 'i' } },
+                ],
+            });
+            const totalCount = await Item.countDocuments({
+                organizationId: orgid,
+            });
+            items = await new ApiFilter(query, req.parsedQuery!)
+                .sort()
+                .project()
+                .paginate(totalCount).query;
+        }
+        return res.status(200).json({
+            status: 'success',
+            results: items.length,
+            data: {
+                items,
+            },
+        });
+    }
 );
+// "item": [
+//             {
+//                 "_id": "6910af1f9c1fcc2931600fc8",
+//                 "name": "Weight"
+//             },
+//             {
+//                 "_id": "6910af1f9c1fcc2931600fca",
+//                 "name": "Put"
+//             },
+//             {
+//                 "_id": "6910af209c1fcc2931600fd0",
+//                 "name": "Simple"
+//             },
+//             {
+//                 "_id": "6910af209c1fcc2931600fd6",
+//                 "name": "International"
+//             },
+//             {
+//                 "_id": "6910af219c1fcc2931600fde",
+//                 "name": "Trip"
+//             },
+//             {
+//                 "_id": "6910af219c1fcc2931600fe0",
+//                 "name": "Positive"
+//             },
+//             {
+//                 "_id": "6910af229c1fcc2931600fe6",
+//                 "name": "Republican"
+//             },
+//             {
+//                 "_id": "6910af229c1fcc2931600fea",
+//                 "name": "Any"
+//             },
+//             {
+//                 "_id": "6910af259c1fcc2931601014",
+//                 "name": "Travel"
+//             },
+//             {
+//                 "_id": "6910af269c1fcc293160101e",
+//                 "name": "That"
+//             },
+//             {
+//                 "_id": "6910af279c1fcc2931601022",
+//                 "name": "Crime"
+//             },
+//             {
+//                 "_id": "6910af299c1fcc293160103a",
+//                 "name": "New"
+//             },
+//             {
+//                 "_id": "6910af299c1fcc2931601046",
+//                 "name": "Along"
+//             },
+//             {
+//                 "_id": "6910af2a9c1fcc2931601052",
+//                 "name": "Have"
+//             },
+//             {
+//                 "_id": "6910af2b9c1fcc2931601056",
+//                 "name": "Decide"
+//             },
+//             {
+//                 "_id": "6910af2c9c1fcc2931601066",
+//                 "name": "Safe"
+//             },
+//             {
+//                 "_id": "6910af2d9c1fcc293160106e",
+//                 "name": "Many"
+//             },
+//             {
+//                 "_id": "6910af2e9c1fcc2931601072",
+//                 "name": "Listen"
+//             },
+//             {
+//                 "_id": "6910af319c1fcc293160107e",
+//                 "name": "Mission"
+//             },
+//             {
+//                 "_id": "6910af339c1fcc293160108a",
+//                 "name": "Travel"
+//             }
+//         ]

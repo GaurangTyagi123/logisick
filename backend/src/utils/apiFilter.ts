@@ -32,7 +32,7 @@ export default class ApiFilter {
             sortBy = sortBy.split(',').join(' ');
             this.query.sort(sortBy);
         } else {
-            this.query.sort('-createdAt');
+            this.query.sort('-createdAt name');
         }
         return this;
     }
@@ -53,9 +53,12 @@ export default class ApiFilter {
         }
         return this;
     }
-    paginate() {
-        const page: number = Number(this.queryString.page) || 1;
+    paginate(totalPages: number) {
         const limit: number = Number(this.queryString.limit) || 5;
+        const page: number = Number(this.queryString.page) || 1;
+
+        if (page * limit > totalPages) return this;
+        
         const skip = (page - 1) * limit;
         this.query.skip(skip).limit(limit);
         return this;

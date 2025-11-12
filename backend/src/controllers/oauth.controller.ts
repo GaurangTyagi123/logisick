@@ -31,7 +31,7 @@ const googleSignup = catchAsync(
         const cookieOptions: cookieOptionsType = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            expire: new Date(
+            maxAge: new Date(
                 Date.now() +
                     parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
                         24 *

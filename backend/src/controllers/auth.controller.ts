@@ -64,19 +64,17 @@ const sendNewToken = async (
 	const refreshToken = signToken(user._id);
 	const accessToken = signToken(user._id, true);
 
-	await User.findByIdAndUpdate(user._id, { refreshToken });
-	const cookieOptions: cookieOptionsType = {
-		httpOnly: true,
-		expire: new Date(
-			Date.now() +
-				parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
-					24 *
-					60 *
-					60 *
-					1000
-		),
-		secure: process.env.NODE_ENV === "production",
-	};
+    await User.findByIdAndUpdate(user._id, { refreshToken });
+    const cookieOptions: cookieOptionsType = {
+        httpOnly: true,
+        maxAge:
+            parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
+            24 *
+            60 *
+            60 *
+            1000,
+        secure: process.env.NODE_ENV === 'production',
+    };
 
 	res.cookie("jwt", refreshToken, cookieOptions);
 

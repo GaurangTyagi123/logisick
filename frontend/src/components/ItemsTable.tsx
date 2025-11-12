@@ -28,7 +28,7 @@ function ItemsTable() {
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
-	const { items, isPending: isGettingItems } = useGetAllItems(
+	const { itemsResponse, isPending: isGettingItems } = useGetAllItems(
 		orgData._id,
 		page
 	);
@@ -63,15 +63,14 @@ function ItemsTable() {
 	};
 
 	useEffect(() => {
-		if (!isGettingItems && items) {
+		if (!isGettingItems && itemsResponse) {
 			setTotalPages(
-				items?.length > PAGESIZE
-					? Math.ceil(items?.length / PAGESIZE)
+				itemsResponse.count > PAGESIZE
+					? Math.ceil(itemsResponse.count / PAGESIZE)
 					: 1
 			);
-			console.log(totalPages, items.length);
 		}
-	}, [items, isGettingItems, totalPages]);
+	}, [itemsResponse, isGettingItems, totalPages]);
 
 	if (isGettingItems || isGettingOrg) return <CustomTableSkeleton />;
 	return (
@@ -142,7 +141,7 @@ function ItemsTable() {
 				},
 			]}
 			clientSide
-			data={searchResult ? searchResult : items || []}
+			data={searchResult ? searchResult : itemsResponse?.items || []}
 			currentPage={page}
 			totalPages={totalPages}
 			setPage={setPage}
