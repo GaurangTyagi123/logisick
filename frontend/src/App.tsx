@@ -113,7 +113,7 @@ function App() {
 						}
 					/>
 					{/* path for documentation */}
-					<Route path="/docs" element={<Docs />} />
+					<Route path="/documentation" element={<Docs />} />
 					<Route path="/item/:SKU" element={<ItemPage />} />
 					{/* default path for paths that are not found/defined/allowed */}
 					<Route path="*" element={<Notfound />} />

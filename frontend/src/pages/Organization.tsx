@@ -1,4 +1,5 @@
 import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
+import Loading from "@/components/Loading";
 import OrganizationModal from "@/components/modals/org/CreateOrgModal";
 import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
@@ -14,7 +15,6 @@ import { H2, H3, Large, Muted, Small } from "@/components/ui/Typography";
 import useGetOrganizations from "@/hooks/organization/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Loader } from "lucide-react";
 import { Suspense, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
@@ -95,7 +95,7 @@ function Organization() {
 	const { data: organizations, isPending } = useGetOrganizations();
 
 	if (!user) navigate("/");
-	if (isPending) return <Loader />;
+	if (isPending) return <Loading />;
 
 	return (
 		<>

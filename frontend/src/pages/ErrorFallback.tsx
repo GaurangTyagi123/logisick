@@ -1,6 +1,5 @@
 import { Link } from "react-router-dom";
 
-import notfound from "@/assets/error.svg";
 
 import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
@@ -36,7 +35,7 @@ function ErrorFallback() {
 				<div className="col-span-1"></div>
 			</div>
 			<img
-				src={notfound}
+				src="/assets/error.svg"
 				alt="Path Not Found"
 				className="h-9/12 max-w-screenmb-auto"
 			/>

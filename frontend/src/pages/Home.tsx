@@ -14,12 +14,11 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
-import illus from "@/assets/hero.gif";
 
 const tabLinks: { path: string; name: string }[] = [
 	{ path: "#", name: "Products" },
 	{ path: "#", name: "Community" },
-	{ path: "/docs", name: "Docs" },
+	{ path: "/documentation", name: "Documentation" },
 	{ path: "#", name: "Pricing" },
 	{ path: "#", name: "Contacts" },
 	{ path: "#", name: "Links" },
@@ -48,7 +47,7 @@ function Home() {
 						<DropdownMenuContent>
 							{tabLinks.map((link, i) => (
 								<DropdownMenuItem key={i}>
-									<Link to={link.path}>{link.name}</Link>
+									<Link to={link.path} >{link.name}</Link>
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuContent>
@@ -96,7 +95,7 @@ function Home() {
 									Get Started
 								</Button>
 							</Link>
-							<Link to={"/docs"}>
+							<Link to={"/documentation"}>
 								<Button className="shadow-xl">
 									<BookOpen />
 									Learn More
@@ -145,9 +144,8 @@ function Home() {
 						</div>
 					</div>
 					<img
-						src={illus}
-						srcSet=""
-						alt=""
+						src="/assets/hero.gif"
+						alt="hero illustration"
 						className="sm:w-5/12 w-full"
 					/>
 				</div>

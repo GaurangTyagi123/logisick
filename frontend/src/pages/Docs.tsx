@@ -11,7 +11,6 @@ import {
 	SidebarProvider,
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
-import logo from "@/assets/appicon.png";
 import { H2, H3, H4, Large, Muted, P } from "@/components/ui/Typography";
 import Navbar from "@/components/Navbar";
 import DocSec from "@/components/DocSec";
@@ -59,7 +58,7 @@ function CustomSidebar() {
 			<SidebarHeader>
 				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
 					<img
-						src={logo}
+						src="/assets/appicon.png"
 						alt="logo"
 						className="h-12 drop-shadow-sm drop-shadow-black"
 					/>

@@ -12,16 +12,8 @@
 	"scripts": {
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"build:react": "tsc -b && vite build",
-		"build:electron": "tsc --project src/electron/tsconfig.json",
-		"build": "npm run build:react && npm run build:electron",
-		"dev:react": "vite",
-		"dev:electron": "npm run build:electron && cross-env NODE_ENV=development electron .",
-		"dev": "npm-run-all --parallel dev:react dev:electron",
-		"dist:help": "npm run build:electron && npm run build:react",
-		"dist:win": "npm run dist:help && electron-builder --win --x64 --config electron-builder.json",
-		"dist:mac": "npm run dist:help && electron-builder --mac --arm64 --config electron-builder.json",
-		"dist:linux": "npm run dist:help && electron-builder --linux --x64 --config electron-builder.json"
+		"build": "tsc -b && vite build",
+		"dev": "vite"
 	},
 	"dependencies": {
 		"@radix-ui/react-dialog": "^1.1.15",
@@ -42,7 +34,6 @@
 		"idb": "^8.0.3",
 		"input-otp": "^1.4.2",
 		"install": "^0.13.0",
-		"lucide-react": "^0.541.0",
 		"npm": "^11.6.2",
 		"react": "^19.1.1",
 		"react-chartjs-2": "^5.3.0",
@@ -68,7 +59,6 @@
 		"@types/react-dom": "^19.1.7",
 		"@vitejs/plugin-react-swc": "^4.0.0",
 		"cross-env": "^10.0.0",
-		"electron": "^37.3.1",
 		"electron-builder": "^26.0.12",
 		"eslint": "^9.33.0",
 		"eslint-plugin-react-hooks": "^5.2.0",
