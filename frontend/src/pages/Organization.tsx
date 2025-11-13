@@ -61,7 +61,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 				</Badge>
 				{view === "list" && (
 					<Button asChild variant={"link"}>
-						<Link to={`/dashboard/${org?.slug}`}>View</Link>
+						<Link to={`/dashboard/${org?.slug}`}>View Organization</Link>
 					</Button>
 				)}
 			</CardHeader>
@@ -71,7 +71,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 			{view === "grid" && (
 				<CardFooter className="flex justify-end">
 					<Button asChild>
-						<Link to={`/dashboard/${org?.slug}`}>View</Link>
+						<Link to={`/dashboard/${org?.slug}`}>View Organization</Link>
 					</Button>
 				</CardFooter>
 			)}

@@ -248,7 +248,7 @@ function ItemCard({
 							to={viewMorePath || "/authenticate"}
 							className="w-full"
 						>
-							<Button className="w-full">View More</Button>
+							<Button className="w-full">More About Item</Button>
 						</Link>
 					</div>
 				</CardFooter>
