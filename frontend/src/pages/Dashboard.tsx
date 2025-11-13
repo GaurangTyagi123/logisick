@@ -1,5 +1,4 @@
 import Navbar from "@/components/Navbar";
-import logo from "@/assets/appicon.png";
 import {
 	Sidebar,
 	SidebarContent,
@@ -59,7 +58,7 @@ function CustomSidebar() {
 		<Sidebar>
 			<SidebarHeader>
 				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-800">
-					<img src={logo} alt="logo" className="h-12" />
+					<img src="/assets/appicon.png" alt="logo" className="h-12" />
 					<div className="grid gap-1 pt-2">
 						<Large className="leading-4 king-julian">
 							Logisick

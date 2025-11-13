@@ -1,7 +1,6 @@
 import { Link } from 'react-router-dom';
 import { useQueryClient } from '@tanstack/react-query';
 
-import logo from '@/assets/appicon.png';
 import Button from '@/components/ui/button';
 import { Large } from '@/components/ui/Typography';
 import UserButton from '@/components/UserButton';
@@ -48,7 +47,7 @@ function Navbar({
                 >
                     <Link to={{ pathname: '/' }}>
                         <img
-                            src={logo}
+                            src="/assets/appicon.png"
                             alt="applogo"
                             className="h-full bg-ls-bg-900 p-0.5 rounded-md"
                         />

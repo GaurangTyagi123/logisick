@@ -7,7 +7,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { Eye, EyeClosed, Google } from "@/assets/icons/Authenticatepage";
-// import useAuthStore from "@/stores/useAuthStore";
 
 import useLogin from "@/hooks/user/useLogin";
 import useResetPassword from "@/hooks/user/useSendForgotPassword";

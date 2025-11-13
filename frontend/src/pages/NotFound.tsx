@@ -1,7 +1,4 @@
 import { Link } from "react-router-dom";
-
-import notfound from "@/assets/notfound.svg";
-
 import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
 import { H1, Large } from "@/components/ui/Typography";
@@ -32,7 +29,7 @@ function Notfound() {
 				<div className="col-span-1"></div>
 			</div>
 			<img
-				src={notfound}
+				src="/assets/notfound.svg"
 				alt="Path Not Found"
 				className="h-9/12 max-w-screenmb-auto"
 			/>
