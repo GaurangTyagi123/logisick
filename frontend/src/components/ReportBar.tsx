@@ -1,12 +1,13 @@
 import type { ReportType } from "@/services/apiItem";
 import clsx from "clsx";
 import { Badge } from "./ui/badge";
+import { formatCurrency } from "@/utils/utilfn";
 
 function ReportBar({
 	name,
 	value,
 	suffix,
-	prefix,
+	currency = false,
 	variant,
 	className,
 }: {
@@ -14,15 +15,15 @@ function ReportBar({
 	value: ReportType[keyof ReportType];
 	suffix?: string;
 	className?: string;
-	prefix?: string;
+	currency?: boolean;
 	variant?:
-		| "default"
-		| "secondary"
-		| "teritiary"
-		| "destructive"
-		| "outline"
-		| null
-		| undefined;
+	| "default"
+	| "secondary"
+	| "teritiary"
+	| "destructive"
+	| "outline"
+	| null
+	| undefined;
 }) {
 	return (
 		<div
@@ -34,9 +35,7 @@ function ReportBar({
 			<span className="text-sm">{name}</span>
 			<div>
 				<Badge variant={variant} className="font-bold text-md">
-					{suffix}
-					{value}
-					{prefix}
+					{currency ? formatCurrency(value, suffix as string) : value.toFixed(2)}
 				</Badge>
 			</div>
 		</div>

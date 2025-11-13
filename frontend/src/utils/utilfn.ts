@@ -1,7 +1,7 @@
-export const formatCurrency = (amount: number) => {
+export const formatCurrency = (amount: number,currency:string) => {
     return new Intl.NumberFormat("en", {
         style: "currency",
-        currency: "USD",
-        notation : "compact"
+        currency: currency || "USD",
+        notation : "standard"
     }).format(amount);
 }
