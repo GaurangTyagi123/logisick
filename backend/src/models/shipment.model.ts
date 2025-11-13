@@ -32,7 +32,7 @@ const shipmentSchema = new Schema<any, ShipmentModel>({
     },
     orderedOn: {
         type: Date,
-        default : Date.now()
+        default: () => new Date().toISOString().split('T')[0],
     },
     shipped: {
         type: Boolean,

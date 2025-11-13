@@ -1,6 +1,7 @@
 import AppError from '../utils/appError';
 import catchAsync from '../utils/catchAsync';
 import Shipment from '../models/shipment.model';
+import Item from '../models/item.model';
 import ApiFilter from '../utils/apiFilter';
 import { redisClient } from '../app';
 import { Types } from 'mongoose';
@@ -44,6 +45,16 @@ export const createOrder = catchAsync(
         if (!item || !quantity || !organizationId)
             return next(new AppError('Please provide complete details', 400));
 
+        const itemDetails = await Item.findById(item).where({
+            quantity: { $gt: quantity },
+        });
+        if (!itemDetails)
+            return next(
+                new AppError(
+                    'Inventory does not have enough units of this item',
+                    400
+                )
+            );
         const order = await Shipment.create({
             item,
             organizationId,
@@ -80,7 +91,10 @@ export const getAllOrders = catchAsync(
             return next(
                 new AppError('Please provide a valid organization id', 400)
             );
-        const query = Shipment.find({ organizationId: orgid }).populate({
+        const query = Shipment.find({
+            organizationId: orgid,
+            deleted: false,
+        }).populate({
             path: 'item',
             select: 'name', //. NOTE:  add fields that you want in the response
         });
@@ -187,7 +201,7 @@ export const updateOrder = catchAsync(
     }
 );
 
-//! NOT TESTED 
+//! NOT TESTED
 /**
  * @brief Function to generate a report for the orders  of an organization
  * @param req (Express Request Object)
@@ -207,23 +221,50 @@ export const orderReport = catchAsync(
             return next(
                 new AppError('please provide a valid organization id', 400)
             );
-        const reportDate = await Shipment.aggregate([
+        const report = await Shipment.aggregate([
             {
                 $match: {
                     organizationId: new Types.ObjectId(orgid),
                 },
             },
             {
+                $lookup: {
+                    from: 'items',
+                    as: 'items',
+                    foreignField: '_id',
+                    localField: 'item',
+                },
+            },
+            {
+                $project: {
+                    items: {
+                        name: 1,
+                        sellingPrice: 1,
+                        costPrice: 1,
+                    },
+                    orderedOn: 1,
+                    quantity: 1,
+                },
+            },
+            {
                 $group: {
                     _id: {
-                        organizationId: '$organizationId',
                         orderedOn: '$orderedOn',
+                    },
+                    items: {
+                        $addToSet: '$items',
                     },
                     numOfItems: {
                         $sum: 1,
                     },
-                    totalQuantity: {
+                    totalUnits: {
                         $sum: '$quantity',
+                    },
+                    totalSellingPrice: {
+                        $sum: { $sum: '$items.sellingPrice' },
+                    },
+                    totalCostPrice: {
+                        $sum: { $sum: '$items.costPrice' },
                     },
                 },
             },
@@ -231,7 +272,7 @@ export const orderReport = catchAsync(
         return res.status(200).json({
             status: 'success',
             data: {
-                reportDate: reportDate.at(0),
+                report,
             },
         });
     }
