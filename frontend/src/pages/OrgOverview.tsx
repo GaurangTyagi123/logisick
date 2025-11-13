@@ -44,13 +44,13 @@ function OrgOverview() {
 							<Small className="grid place-items-center gap-2 h-full p-2">
 								Imports
 								<Badge className="p-2">
-									{formatCurrency(500000)}
+									{formatCurrency(500000,'INR')}
 								</Badge>
 							</Small>
 							<Small className="grid place-items-center gap-2 h-full p-2">
 								Exports
 								<Badge className="p-2">
-									{formatCurrency(500000)}
+									{formatCurrency(500000,'INR')}
 								</Badge>
 							</Small>
 						</div>

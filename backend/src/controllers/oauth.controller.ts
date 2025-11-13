@@ -1,5 +1,6 @@
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
+import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import '../utils/oauth.setup';
 
@@ -14,7 +15,7 @@ import type { StringValue } from 'ms';
  */
 const googleSignup = catchAsync(
     async (
-        req: ExpressTypes.Request,
+        req: ExpressTypes.UserRequest,
         res: ExpressTypes.Response,
         next: ExpressTypes.NextFn
     ) => {
@@ -27,21 +28,19 @@ const googleSignup = catchAsync(
                 expiresIn: process.env.JWT_REFRESH_EXPIRE_TIME as StringValue,
             }
         );
-
+        await User.findByIdAndUpdate(req.user._id, { refreshToken: token });
         const cookieOptions: cookieOptionsType = {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: new Date(
-                Date.now() +
-                    parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
-                        24 *
-                        60 *
-                        60 *
-                        1000
-            ),
+            maxAge:
+                parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
+                24 *
+                60 *
+                60 *
+                1000,
         };
         res.cookie('jwt', token, cookieOptions);
-
+        console.log(token);
         res.redirect(process.env.FRONTEND_URL as string);
     }
 );
