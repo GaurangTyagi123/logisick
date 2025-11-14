@@ -92,13 +92,13 @@ function Home() {
 							<Link to={"/dashboard"}>
 								<Button className="shadow-xl text-black bg-ls-sec-500 hover:bg-ls-sec-600  dark:bg-ls-sec-500">
 									<Star />
-									Get Started
+									Join Organizations
 								</Button>
 							</Link>
 							<Link to={"/documentation"}>
 								<Button className="shadow-xl">
 									<BookOpen />
-									Learn More
+									More About Website
 								</Button>
 							</Link>
 						</div>

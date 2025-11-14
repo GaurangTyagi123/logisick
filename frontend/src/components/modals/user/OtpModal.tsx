@@ -68,7 +68,8 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid place-items-center">
+				<CardContent className="grid 
+				place-items-center gap-2">
 					<Small>
 						Enter the OTP recieved on your registered email
 					</Small>

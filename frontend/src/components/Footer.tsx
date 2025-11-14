@@ -47,27 +47,27 @@ function Footer() {
 						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
 							<li>
-								<a href="#" className={listContentClass}>
+								<a href="/dashboard" className={listContentClass}>
 									Inventory Management
 								</a>
 							</li>
 							<li>
-								<a href="#" className={listContentClass}>
+								<a href="/dashboard" className={listContentClass}>
 									Import/Export Management
 								</a>
 							</li>
 							<li>
-								<a href="#" className={listContentClass}>
+								<a href="/dashboard" className={listContentClass}>
 									Delivery Tracking
 								</a>
 							</li>
 							<li>
-								<a href="#" className={listContentClass}>
+								<a href="/dashboard" className={listContentClass}>
 									Bills Management
 								</a>
 							</li>
 							<li>
-								<a href="#" className={listContentClass}>
+								<a href="/dashboard" className={listContentClass}>
 									Analytics & Reports
 								</a>
 							</li>
