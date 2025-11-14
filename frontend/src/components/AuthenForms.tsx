@@ -87,6 +87,7 @@ export function Login({ setFormType }: FormProps) {
 				<Input
 					placeholder="Enter Your Email"
 					type="email"
+					autoComplete="work email"
 					value={form.email}
 					name="email"
 					required
@@ -119,6 +120,7 @@ export function Login({ setFormType }: FormProps) {
 						value={form.password}
 						name="password"
 						required
+						autoComplete="current-password"
 						className="text-sm md:text-md"
 						onChange={(e) => {
 							setForm({
@@ -286,6 +288,7 @@ export function Register({ setFormType }: FormProps) {
 				<Input
 					placeholder="Enter Your Email"
 					type="email"
+					autoComplete="work email"
 					value={form.email}
 					name="email"
 					required
@@ -317,6 +320,7 @@ export function Register({ setFormType }: FormProps) {
 						type={visi ? "text" : "password"}
 						value={form.password}
 						name="password"
+						autoComplete="new-password"
 						required
 						className="text-sm md:text-md"
 						onChange={(e) => {
@@ -355,6 +359,7 @@ export function Register({ setFormType }: FormProps) {
 					<Input
 						placeholder="Re-enter Your Password"
 						type={visi ? "text" : "password"}
+						autoComplete="new-password"
 						value={form.confirmPassword}
 						name="confirmPassword"
 						required

@@ -152,7 +152,7 @@ export const resetPassword: resetPassword = async (resetToken, form) => {
 			status: string;
 			data: { user: User };
 		}>(`/v1/auth/resetPassword/${resetToken}`, form);
-		if (res && res.data.status === "success") {
+		if (res.data.status === "success") {
 			return res.data.data.user;
 		} else {
 			throw new Error("Error in resetting password");

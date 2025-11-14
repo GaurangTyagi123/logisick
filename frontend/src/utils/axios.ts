@@ -1,5 +1,4 @@
 import axios from "axios";
-import { handleError } from "./handleError";
 
 
 let accessToken:string;
@@ -25,6 +24,8 @@ axinstance.interceptors.request.use((config) => {
 axinstance.interceptors.response.use((response: any) => response, async (error) => {
 	const originalRequest = error.config;
 
+	if (originalRequest.url.endsWith("login"))
+		return Promise.reject(error)
 	if (error.response.status === 401 && !originalRequest._retry) {
 		originalRequest._retry = true;
 		try {
@@ -37,8 +38,10 @@ axinstance.interceptors.response.use((response: any) => response, async (error) 
 		}
 		catch (refreshError) {
 			window.location.href = '/authenticate';
-			handleError(refreshError);
+			Promise.reject(refreshError)
 		}
 	}
+	else
+		return Promise.reject(error);
 })
 export default axinstance;
