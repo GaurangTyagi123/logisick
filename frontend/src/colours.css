@@ -1,0 +1,79 @@
+@import "tailwindcss";
+
+/* colours of logisick */
+/* 
+	1. ls-pri : #68a872 : dark-fade-green
+	2. ls-sec : #e2b553 : dark-fade-yellow
+	3. ls-ter : #bde0b4 : light-fade-green/lime
+	3. ls-brand : #80abe5 : pale blue
+	4. ls-bg-dark : #17304e : light-gray
+	5. ls-bg : #71717b : zinc
+*/
+
+@theme {
+	/* Primary */
+	--color-ls-pri-100: #e5f3eb;
+	--color-ls-pri-200: #c5e3d0;
+	--color-ls-pri-300: #a5d2b6;
+	--color-ls-pri-400: #86c19b;
+	--color-ls-pri-500: #68a872;
+	--color-ls-pri-600: #518d5e;
+	--color-ls-pri-700: #3c724a;
+	--color-ls-pri-800: #295739;
+	--color-ls-pri-900: #173b27;
+
+	/* Secondary */
+	--color-ls-sec-100: #fff7e3;
+	--color-ls-sec-200: #fce8b8;
+	--color-ls-sec-300: #f9d78b;
+	--color-ls-sec-400: #f3c45f;
+	--color-ls-sec-500: #e2b553;
+	--color-ls-sec-600: #c39a45;
+	--color-ls-sec-700: #a58036;
+	--color-ls-sec-800: #876629;
+	--color-ls-sec-900: #694c1b;
+
+	/* Tertiary */
+	--color-ls-ter-100: #f0f9ed;
+	--color-ls-ter-200: #d9efd3;
+	--color-ls-ter-300: #c2e4b9;
+	--color-ls-ter-400: #aad99f;
+	--color-ls-ter-500: #bde0b4;
+	--color-ls-ter-600: #8eb58a;
+	--color-ls-ter-700: #6b9267;
+	--color-ls-ter-800: #4b6f47;
+	--color-ls-ter-900: #2d4c2b;
+
+	/* Brand */
+	--color-ls-brand-100: #e7f0fb;
+	--color-ls-brand-200: #cddff7;
+	--color-ls-brand-300: #b3cef2;
+	--color-ls-brand-400: #99bdeb;
+	--color-ls-brand-500: #80abe5;
+	--color-ls-brand-600: #5f8fd4;
+	--color-ls-brand-700: #4574b9;
+	--color-ls-brand-800: #2e5a97;
+	--color-ls-brand-900: #1c3f72;
+
+	/* Background */
+	--color-ls-bg-dark-100: #e3e8ef;
+	--color-ls-bg-dark-200: #bac8d8;
+	--color-ls-bg-dark-300: #8ea6bf;
+	--color-ls-bg-dark-400: #5b7ea1;
+	--color-ls-bg-dark-500: #17304e;
+	--color-ls-bg-dark-600: #122840;
+	--color-ls-bg-dark-700: #0e2033;
+	--color-ls-bg-dark-800: #0a1826;
+	--color-ls-bg-dark-900: #050f18;
+
+	/* Background Light */
+	--color-ls-bg-100: #f4f4f5;
+	--color-ls-bg-200: #e4e4e7;
+	--color-ls-bg-300: #d4d4d8;
+	--color-ls-bg-400: #a1a1aa;
+	--color-ls-bg-500: #71717b;
+	--color-ls-bg-600: #52525b;
+	--color-ls-bg-700: #3f3f46;
+	--color-ls-bg-800: #27272a;
+	--color-ls-bg-900: #18181b;
+}

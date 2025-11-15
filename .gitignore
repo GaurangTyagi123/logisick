@@ -1,3 +1,6 @@
+# redis dump files
+*.rdb
+
 # Logs
 logs
 *.log
@@ -82,6 +85,8 @@ out
 # Nuxt.js build / generate output
 .nuxt
 dist
+dist-react
+dist-electron
 
 # Gatsby files
 .cache/
@@ -138,3 +143,9 @@ dist
 # Vite logs files
 vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
+
+#prettier
+.prettierrc.json
+
+#environment files
+config.env

@@ -1,4 +1,4 @@
-# ![alt text](frontend/src/assets/icon@4x.png) LogiSick – Smart inventory and logistics management, all in one place.
+# <div style="display:flex;aligh-items:baseline;gap:1rem;">![alt text](frontend/public//logo64.png) LogiSick – Smart inventory and logistics management, all in one place.</div>
 
 > LogiSick is a web-based inventory and logistics management platform designed to streamline supply chain operations. It enables businesses to efficiently track & manage warehouse inventories, process orders, and monitor deliveries in real time. The system provides an intuitive dashboard, smart notifications for low stock, and detailed reporting to improve decision-making and reduce operational delays. By integrating inventory control with logistics workflows, LogiSick ensures higher accuracy, cost efficiency, and smoother end-to-end management.
 
@@ -74,6 +74,9 @@
 - **Other Tools:**  REST APIs, Git/GitHub
 
 ---
+## Documentation
+
+For full API reference and usage examples, see the [API Documentation](https://documenter.getpostman.com/view/47791845/2sB3BLjnwi).
 
 # Getting Started
 
@@ -112,48 +115,45 @@ Make sure you have installed:
    > Create a .env file in the backend folder with:
    >
 
-   ```
-       NODE_ENV = development
-       PORT = 8000
-       DB_URL = <mongodb database-url>
-       JWT_SIGN = <jwt secret>
-       JWT_EXPIRE_TIME = 30d
-       COOKIE_EXPIRE_TIME = 2
+```js
+NODE_ENV = production
+FRONTEND_URL = http://localhost:8000
+PORT = 8000
+DB_URL = <mongodb--prod-url>
+DB_URL_DEV = <mongodb-dev-url>
+REDIS_HOST = <redis-prod-url>
+REDIS_PORT = <redis-prod-port>
+REDIS_PASS = <redis-prod-pass>
 
-       DEV_MAIL_HOST = <mail-host>
-       DEV_MAIL_PORT = <mail-port>
-       DEV_MAIL_USER = <mail-user-id>
-       DEV_MAIL_PASSWORD = <mail-pass>
+JWT_SIGN = <jwt-sign>
+JWT_REFRESH_EXPIRE_TIME = 1d // s->seconds | m-> minutes | d -> days | y->year
+JWT_ACCESS_EXPIRE_TIME = 7d // s->seconds | m-> minutes | d -> days | y->year
 
-       OAUTH_CLIENT_ID = <oauth-client-id>
-       OAUTH_CLIENT_SECRET = <oauth-client-secret>
-       OAUTH_CALLBACK_URL = <oauth-callback-url>
-   ```
+COOKIE_EXPIRE_TIME = 7 // days
+INVITE_EXPIRE_TIME = 1 // days
 
-   ---
+OTP_EXPIRE_TIME = 2 // days
+
+DEV_MAIL_HOST = <mail-dev-host>
+DEV_MAIL_PORT = <mail-dev-port>
+DEV_MAIL_USER = <mail-dev-user>
+DEV_MAIL_PASSWORD = <mail-dev-password>
+
+OAUTH_CLIENT_ID = <google-oauth-client-id>
+OAUTH_CLIENT_SECRET = <google-oauth-client-secret>
+OAUTH_CALLBACK_URL = <google-oauth-callback>
+```
 
 # Run the project (IN DEVELOPMENT):
 
-#### Start backend
-
+#### Start backend & frontend
 ```bash
-
-    cd backend
-    npm run dev
-```
-
-#### Start frontend
-
-```bash
-
-    cd ../frontend
-    npm run dev:react
-
+npm run dev
 ```
 
 #### Access the app
 
-> Visit [http://localhost:5173](http://localhost:5173) in your browser.
+> Visit [http://localhost:8000](http://localhost:8000) in your browser.
 
 ----
 
