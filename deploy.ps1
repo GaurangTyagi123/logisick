@@ -19,24 +19,16 @@ npm run build
 Write-Host ">>> Switching to release..."
 git checkout $targetBranch
 
-# # --- STEP 4: MOVE dist/* → backend/ ---
-# Write-Host ">>> Moving built files into backend/"
-# Move-Item "backend/dist/*" "backend/" -Force
-# Remove-Item "backend/dist" -Recurse -Force
-
-# # --- STEP 5: COMMIT & PUSH ---
-# git add backend
-
-# try {
-#     git commit -m $commitMessage
-# } catch {
-#     Write-Host ">>> No changes to commit."
-# }
+try {
+    git commit -m $commitMessage
+} catch {
+    Write-Host ">>> No changes to commit."
+}
 
 # Write-Host ">>> Pushing to origin/$targetBranch..."
-# git push origin $targetBranch
+git push origin $targetBranch
 
 # # --- STEP 6: SWITCH BACK ---
-# git checkout develop
+git checkout develop
 
-# Write-Host "`n✔ Deployment complete."
+Write-Host "`Deployment complete."
