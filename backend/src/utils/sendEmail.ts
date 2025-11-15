@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import sendgridTransport from 'nodemailer-sendgrid';
 import { convert } from "html-to-text";
 import { readFileSync } from "fs";
 import path from "path";
@@ -7,8 +8,7 @@ import dotenv from "dotenv";
 
 // configure the path of config file
 dotenv.config({ path: "config.env" });
-
-import { type TransportOptions } from "nodemailer";
+	
 
 // Email handler for the application
 class Email {
@@ -20,29 +20,12 @@ class Email {
 		this.user = user;
 		this.url = url;
 	}
-	private newTransport() {
-		// create a new transport
-		// transport is used to configure the way this application will send email
-		const transport = nodemailer.createTransport({
-			host:
-				process.env.NODE_ENV === "production"
-					? process.env.MAIL_HOST
-					: process.env.DEV_MAIL_HOST,
-			port:
-				process.env.NODE_ENV === "production"
-					? process.env.MAIL_PORT
-					: process.env.DEV_MAIL_PORT,
-			auth: {
-				user:
-					process.env.NODE_ENV === "production"
-						? process.env.MAIL_USER
-						: process.env.DEV_MAIL_USER,
-				pass:
-					process.env.NODE_ENV === "production"
-						? process.env.MAIL_PASSWORD
-						: process.env.DEV_MAIL_PASSWORD,
-			},
-		} as TransportOptions);
+		private newTransport() {
+		const transport = nodemailer.createTransport(
+			sendgridTransport({
+				apiKey: process.env.SENDGRID_KEY || ''
+			})
+		);
 		return transport;
 	}
 	/**
@@ -53,7 +36,7 @@ class Email {
 		try {
 			const sendOptions = {
 				to: this.user.email,
-				from: `admin@LogiSick.com`,
+				from: `gaurangt.mca25@cs.du.ac.in`,
 				subject,
 				html: template,
 				text: convert(template),
