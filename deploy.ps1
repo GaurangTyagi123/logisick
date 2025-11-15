@@ -11,7 +11,7 @@ if ($currentBranch -ne "develop") {
     Write-Error "Run this only on 'develop'. Current: $currentBranch"
 }
 
-if ((git status --porcelain) -ne "") {
+if ((git status --porcelain).Trim() -ne "") {
     Write-Error "Working tree is not clean. Commit or stash first."
 }
 
