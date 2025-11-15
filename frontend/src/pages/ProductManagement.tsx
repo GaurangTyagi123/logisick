@@ -74,15 +74,15 @@ function ProductManagement() {
 								<ReportBar
 									name="Total Cost Price"
 									value={report.totalCostPrice}
-									suffix="Rs "
-									prefix="/-"
+									suffix="INR"
+									currency
 									variant={"secondary"}
 								/>
 								<ReportBar
-									name="Total Cost Selling"
+									name="Total Selling Price"
 									value={report.totalSellingPrice}
-									suffix="Rs "
-									prefix="/-"
+									suffix="INR"
+									currency
 									variant={"secondary"}
 								/>
 							</div>
@@ -90,15 +90,15 @@ function ProductManagement() {
 								<ReportBar
 									name="Avg. Cost Price"
 									value={report.averageCostPrice}
-									suffix="Rs "
-									prefix="/-"
+									suffix="INR"
+									currency
 									variant={"secondary"}
 								/>
 								<ReportBar
 									name="Avg. Selling Price"
 									value={report.averageSellingPrice}
-									suffix="Rs "
-									prefix="/-"
+									suffix="INR"
+									currency
 									variant={"secondary"}
 								/>
 							</div>

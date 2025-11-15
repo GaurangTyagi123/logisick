@@ -25,6 +25,8 @@ const userSchema = new Schema<any, UserModel>(
         googleId: String,
         name: {
             type: String,
+            min: 5,
+            validate : [validator.isAlpha],
             required: [true, 'User must have a name'],
         },
         email: {

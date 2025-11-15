@@ -123,6 +123,8 @@ declare interface deliveryType {
 
 declare interface shipmentType {
     _id: string;
-    items: Array<string>;
-    transferQuantities: number;
+    items: string;
+    quantity: number;
+    orderedOn: date;
+    shipped: boolean;
 }

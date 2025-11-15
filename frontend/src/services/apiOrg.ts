@@ -24,7 +24,7 @@ export const createOrg: createOrg = async (data) => {
 			data: { org: Org; message?: string };
 			status: string;
 		}>("/v1/org/create", data);
-		if(res && res.status === 201)
+		if(res.status === 201)
 			return res.data.data.org;
 		else {
 			throw new Error('There was an error while creating the organization')

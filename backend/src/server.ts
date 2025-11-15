@@ -15,7 +15,9 @@ const DB_URL =
 
 // con is the connection object to the database
 mongoose
-    .connect(DB_URL!)
+    .connect(DB_URL!, {
+        serverSelectionTimeoutMS: 5000,
+    })
     .then((con) => {
         if (con) console.log('SERVER : MongDB connection successfull');
         else console.log('SERVER : MongoDB connection failed');
@@ -35,8 +37,8 @@ redisClient.on('reconnecting', () => {
     console.log('Reconnecting to redis');
 });
 
-redisClient.connect().catch(err => {
-	console.log(err.message)
+redisClient.connect().catch((err) => {
+    console.log(err.message);
 });
 
 // start the server
@@ -50,7 +52,9 @@ process.on('uncaughtException', (err) => {
     console.log(
         'SERVER (ERROR) : uncaught exception encountered!!! 💥...application crashed!'
     );
-    server.close();
+    server.close(() => {
+        process.exit();
+    });
     mongoose.disconnect();
 });
 // For unhandled errors in async code
@@ -59,19 +63,23 @@ process.on('unhandledRejection', (err) => {
     console.log(
         'SERVER (ERROR) : unhandled rejection encountered!!! 💥...application crashed!'
     );
-    server.close();
+    server.close(() => {
+        process.exit();
+    });
     mongoose.disconnect();
 });
 // When hosting service closes our application it triggers SIGTERM event
 process.on('SIGTERM', () => {
     console.log('SERVER : SIGTERM recieved.... Closing server gracefully 😇');
-    server.close();
+    server.close(() => {
+        process.exit();
+    });
     mongoose.disconnect();
 });
 
 // when redis server shuts down it emits SIGINT event
 process.on('SIGINT', async () => {
-	console.log('SERVER: redis shutting down');
-	await redisClient.quit();
-	process.exit(0);
+    console.log('SERVER: redis shutting down');
+    await redisClient.quit();
+    process.exit(0);
 });
