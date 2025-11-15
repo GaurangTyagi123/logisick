@@ -40,7 +40,6 @@ const googleSignup = catchAsync(
                 1000,
         };
         res.cookie('jwt', token, cookieOptions);
-        console.log(token);
         res.redirect(process.env.FRONTEND_URL as string);
     }
 );
