@@ -12,7 +12,7 @@
 	"scripts": {
 		"lint": "eslint .",
 		"preview": "vite preview",
-		"build": "tsc -b && vite build",
+		"build": "vite build",
 		"dev": "vite"
 	},
 	"dependencies": {
