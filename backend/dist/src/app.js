@@ -7,7 +7,6 @@ exports.redisClient = void 0;
 const express_1 = __importDefault(require("express"));
 const redis_1 = require("redis");
 const helmet_1 = __importDefault(require("helmet")); // For security headers
-const morgan_1 = __importDefault(require("morgan")); // Only for development.
 const cors_1 = __importDefault(require("cors"));
 const cookie_parser_1 = __importDefault(require("cookie-parser"));
 const qs_1 = __importDefault(require("qs"));
@@ -70,7 +69,6 @@ app.use((req, _res, next) => {
 // Middleware to initialize Open Authentication
 app.use(passport_1.default.initialize());
 // Middleware which gives additional information about the requests comming to the server
-app.use((0, morgan_1.default)('dev'));
 app.use((0, helmet_1.default)({
     hidePoweredBy: true,
     noSniff: true,
