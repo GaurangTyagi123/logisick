@@ -15,9 +15,9 @@ if ($currentBranch -ne "develop") {
 Write-Host ">>> Building..."
 npm run build
 
-# # --- STEP 3: CHECKOUT RELEASE ---
-# Write-Host ">>> Switching to release..."
-# git checkout $targetBranch
+# --- STEP 3: CHECKOUT RELEASE ---
+Write-Host ">>> Switching to release..."
+git checkout $targetBranch
 
 # # --- STEP 4: MOVE dist/* → backend/ ---
 # Write-Host ">>> Moving built files into backend/"

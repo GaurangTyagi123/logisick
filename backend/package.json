@@ -5,7 +5,7 @@
 	"main": "src/server.js",
 	"scripts": {
 		"lint": "eslint .",
-		"build": "tsc && powershell -Command \"Copy-Item -Path ./src/utils/emailTemplates -Destination ./dist/src/utils -Recurse\"",
+		"build": "tsc && powershell -Command \"Copy-Item -Path ./src/utils/emailTemplates -Destination ./dist/src/utils -Recurse -Force\"",
 		"start": "cross-env NODE_ENV=production node dist/src/server.js",
 		"dev": "cross-env NODE_ENV=development tsnd --respawn --transpile-only ./src/server.ts",
 		"test": "tsx ./testing/run-test.ts",
