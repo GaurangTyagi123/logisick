@@ -4,6 +4,7 @@ backend/testing
 allfeature.md
 org.drawio.svg
 deploy.ps1
+backend/dist/testing
 backend/.mochaarc.json
 backend/eslint.config.mts
 backend/tsconfig.json
