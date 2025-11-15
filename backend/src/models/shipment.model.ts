@@ -12,33 +12,36 @@ export interface ShipmentModel extends Model<shipmentDocument> {
     deleteById(id: string): Promise<any>;
 }
 
-const shipmentSchema = new Schema<any, ShipmentModel>({
-    item: {
-        type: Schema.ObjectId,
-        ref: 'Item',
-        required: [true, 'Order must have an item'],
+const shipmentSchema = new Schema<any, ShipmentModel>(
+    {
+        item: {
+            type: Schema.ObjectId,
+            ref: 'Item',
+            required: [true, 'Order must have an item'],
+        },
+        orderName: {
+            type: String,
+        },
+        organizationId: {
+            type: Schema.ObjectId,
+            ref: 'Organization',
+            required: [true, 'Order must belong to an organization'],
+        },
+        quantity: {
+            type: Number,
+            required: [true, 'Specify quantity to be exported/imported'],
+        },
+        orderedOn: {
+            type: Date,
+            default: () => new Date().toISOString().split('T')[0],
+        },
+        shipped: {
+            type: Boolean,
+            default: false,
+        },
     },
-    orderName: {
-        type: String,
-    },
-    organizationId: {
-        type: Schema.ObjectId,
-        ref: 'Organization',
-        required: [true, 'Order must belong to an organization'],
-    },
-    quantity: {
-        type: Number,
-        required: [true, 'Specify quantity to be exported/imported'],
-    },
-    orderedOn: {
-        type: Date,
-        default: () => new Date().toISOString().split('T')[0],
-    },
-    shipped: {
-        type: Boolean,
-        default: false,
-    },
-});
+    { timestamps: true }
+);
 
 shipmentSchema.plugin(MongooseDelete as any, {
     deletedAt: true,

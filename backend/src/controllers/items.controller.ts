@@ -322,14 +322,11 @@ export const searchItem = catchAsync(
                         { SKU: { $regex: regex } },
                     ],
                 });
-                const totalCount = await Item.countDocuments({
-                    organizationId: orgid,
-                });
                 items = await new ApiFilter(query, req.parsedQuery!)
                     .sort()
                     .project()
                     .filter()
-                    .paginate(totalCount).query;
+                    .query;
                 const itemsStr = JSON.stringify(items);
                 await redisClient.hSet(
                     `organization-${orgid}`,
@@ -347,13 +344,10 @@ export const searchItem = catchAsync(
                     { SKU: { $regex: regex } },
                 ],
             });
-            const totalCount = await Item.countDocuments({
-                organizationId: orgid,
-            });
             items = await new ApiFilter(query, req.parsedQuery!)
                 .sort()
                 .project()
-                .paginate(totalCount).query;
+                .query;
         }
         return res.status(200).json({
             status: 'success',

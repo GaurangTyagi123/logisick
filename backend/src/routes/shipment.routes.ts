@@ -7,6 +7,7 @@ import {
     getOrderById,
     getOrderByOrderName,
     orderReport,
+    searchOrder,
     updateOrder,
 } from '../controllers/shipment.controller';
 
@@ -16,6 +17,8 @@ shipmentRouter.route('/').post(protect, createOrder);
 
 shipmentRouter.route('/allOrders/:orgid').get(protect, getAllOrders);
 shipmentRouter.route('/allOrders/report/:orgid').get(protect, orderReport);
+
+shipmentRouter.route('/allOrders/search/:orgid').get(protect, searchOrder);
 
 shipmentRouter.route('/getOrder/:orderName').get(protect, getOrderByOrderName);
 shipmentRouter

@@ -560,9 +560,10 @@ export const deleteEmp = catchAsync(
 
         const oldEmp = await Emp.findOne({
             userid,
-            orgid: org._id,
+            orgid,
             deleted: false,
         });
+        console.log(oldEmp)
         if (!oldEmp)
             return next(new AppError('User id not an employee of org', 400));
         if (oldEmp.role === 'Owner' || oldEmp.role === 'Manager')

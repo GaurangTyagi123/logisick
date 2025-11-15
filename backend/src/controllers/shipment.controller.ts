@@ -331,23 +331,13 @@ export const searchOrder = catchAsync(
                 });
             }
             if (!orders || !orders.length || !queryStr.length) {
-                const query = orders.find({
-                    organizationId: orgid,
-                    $or: [
-                        { name: { $regex: regex } },
-                        { inventoryCategory: { $regex: regex } },
-                        { origin: { $regex: regex } },
-                        { SKU: { $regex: regex } },
-                    ],
-                });
-                const totalCount = await Shipment.countDocuments({
-                    organizationId: orgid,
-                });
-                orders = await new ApiFilter(query, req.parsedQuery!)
+                orders = await new ApiFilter(
+                    Shipment.find({ organizationId: orgid }),
+                    req.parsedQuery!
+                )
                     .sort()
                     .project()
-                    .filter()
-                    .paginate(totalCount).query;
+                    .filter().query;
                 const itemsStr = JSON.stringify(orders);
                 await redisClient.hSet(
                     `organization-${orgid}`,
@@ -356,22 +346,13 @@ export const searchOrder = catchAsync(
                 );
             }
         } else {
-            const query = Shipment.find({
-                organizationId: orgid,
-                $or: [
-                    { name: { $regex: regex } },
-                    { inventoryCategory: { $regex: regex } },
-                    { origin: { $regex: regex } },
-                    { SKU: { $regex: regex } },
-                ],
-            });
-            const totalCount = await Shipment.countDocuments({
-                organizationId: orgid,
-            });
-            orders = await new ApiFilter(query, req.parsedQuery!)
+            orders = await new ApiFilter(
+                Shipment.find({ organizationId: orgid }),
+                req.parsedQuery!
+            )
                 .sort()
-                .project()
-                .paginate(totalCount).query;
+                .filter()
+                .project().query;
         }
         return res.status(200).json({
             status: 'success',
