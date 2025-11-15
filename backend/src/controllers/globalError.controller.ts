@@ -3,6 +3,7 @@ import AppError from '../utils/appError';
 /**
  * @brief Function to generate app error if user's token is invalid
  * @param _e error object
+ * @author `Gaurang Tyagi`
  */
 const handleTokenError = (_e: Error, statusCode: number) => {
     return new AppError('Invalid token... please login again', statusCode);
@@ -11,6 +12,7 @@ const handleTokenError = (_e: Error, statusCode: number) => {
 /**
  * @brief Function to generate app error if there are duplicate keys in a mongo document
  * @param _e error object
+ * @author `Gaurang Tyagi`
  */
 const handleDuplicateKeyError = (_e: Error) => {
     const message = `Cannot have duplicate entries`;
@@ -20,6 +22,7 @@ const handleDuplicateKeyError = (_e: Error) => {
 /**
  * @brief Function to generate app error if user input exceeds the input limit
  * @param _e error object
+ * @author `Gaurang Tyagi`
  */
 const handleLimitError = (_e: Error) => {
     const message = _e.message;
@@ -29,6 +32,7 @@ const handleLimitError = (_e: Error) => {
 /**
  * @brief Function to generate app error if user provides invalid objectId
  * @param _e error object
+ * @author `Gaurang Tyagi`
  */
 const handleObjectIDError = (_e: Error) => {
     return new AppError('Invalid id', 400);
@@ -40,6 +44,7 @@ const handleObjectIDError = (_e: Error) => {
  * @param _req Express request
  * @param res Express response
  * @param _next Express next Function
+ * @author `Gaurang Tyagi`
  */
 export default (
     err: any,

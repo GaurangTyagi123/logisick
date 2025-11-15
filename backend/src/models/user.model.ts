@@ -16,6 +16,10 @@ export interface UserModel extends Model<UserDocument> {
     deleteById(id: ObjectId): Promise<any>;
 }
 
+/**
+ * @brief User mongoose schema
+ * @author `Gaurang Tyagi`
+ */
 const userSchema = new Schema<any, UserModel>(
     {
         googleId: String,

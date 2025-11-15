@@ -1,35 +1,44 @@
-import catchAsync from '../utils/catchAsync';
-import AppError from '../utils/appError';
-import Email from '../utils/sendEmail';
-import { genProfileString } from '../utils/avatarGen';
+import catchAsync from "../utils/catchAsync";
+import AppError from "../utils/appError";
+import Email from "../utils/sendEmail";
+import { genProfileString } from "../utils/avatarGen";
 
-import { promisify } from 'util';
-import crypto from 'crypto';
-import bcrypt from 'bcryptjs';
+import { promisify } from "util";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
 
 //I MODELS
-import Employee from '../models/employee.model';
-import User from '../models/user.model';
+import Employee from "../models/employee.model";
+import User from "../models/user.model";
 
 //I TYPES
-import jwt, { type JwtPayload } from 'jsonwebtoken';
-import type { StringValue } from 'ms';
-import { redisClient } from '../app';
-import { RequestHandler } from 'express';
+import jwt, { type JwtPayload } from "jsonwebtoken";
+import type { StringValue } from "ms";
+import { redisClient } from "../app";
+import { RequestHandler } from "express";
 
-/**  @returns json-webtoken with user-id as payload */
+/**
+ * @brief function to create jwt token of given user id
+ * @param {ObjectId} id - id of user
+ * @param {boolean } access? - to specify weather to use access token expire time or not
+ * @returns {string} jwt token
+ * @author `Gaurang Tyagi`
+ */
 const signToken = (id: ObjectId, access: boolean = false) => {
-    const JWTSign = process.env.JWT_SIGN as string;
-    const JWTExpire = access
-        ? (process.env.JWT_ACCESS_EXPIRE_TIME as StringValue)
-        : (process.env.JWT_REFRESH_EXPIRE_TIME as StringValue);
-    return jwt.sign({ id }, JWTSign, { expiresIn: JWTExpire });
+	const JWTSign = process.env.JWT_SIGN as string;
+	const JWTExpire = access
+		? (process.env.JWT_ACCESS_EXPIRE_TIME as StringValue)
+		: (process.env.JWT_REFRESH_EXPIRE_TIME as StringValue);
+	return jwt.sign({ id }, JWTSign, { expiresIn: JWTExpire });
 };
 
 /**
- * @objective To send the generated json-webtoken with the response header
- * @param: user(UserType) res(Express Response object) statusCode
- * @returns JSON response ->
+ * @brief To send the generated json-webtoken with the response header
+ * @param {UserType} user - user mongoose object
+ * @param {ExpressResponseobject} res - express response to add response
+ * @param {number} statusCode - status code of response
+ * @returns {JSON} response -
+ * ```
  *      {
  *          status: "success",
  *          data: {
@@ -41,15 +50,19 @@ const signToken = (id: ObjectId, access: boolean = false) => {
  *                  avatar: stinrg,
  *                  createdAt: date,
  *                  updatedAt: datet,
+ * 				}
+ * 			}
  *      }
+ * ```
+ * @author `Gaurang Tyagi`
  */
 const sendNewToken = async (
-    user: UserType,
-    res: ExpressTypes.Response,
-    statusCode: number
+	user: UserType,
+	res: ExpressTypes.Response,
+	statusCode: number
 ) => {
-    const refreshToken = signToken(user._id);
-    const accessToken = signToken(user._id, true);
+	const refreshToken = signToken(user._id);
+	const accessToken = signToken(user._id, true);
 
     await User.findByIdAndUpdate(user._id, { refreshToken });
     const cookieOptions: cookieOptionsType = {
@@ -63,524 +76,664 @@ const sendNewToken = async (
         secure: process.env.NODE_ENV === 'production',
     };
 
-    res.cookie('jwt', refreshToken, cookieOptions);
+	res.cookie("jwt", refreshToken, cookieOptions);
 
-    return res.status(statusCode).json({
-        status: 'success',
-        refreshToken,
-        accessToken,
-        data: {
-            user: {
-                _id: user._id,
-                name: user.name,
-                email: user.email,
-                isVerified: user.isVerified,
-                avatar: user.avatar,
-                createdAt: user.createdAt,
-                updatedAt: user.updatedAt,
-                myOrg: user.myOrg,
-            },
-        },
-    });
+	return res.status(statusCode).json({
+		status: "success",
+		refreshToken,
+		accessToken,
+		data: {
+			user: {
+				_id: user._id,
+				name: user.name,
+				email: user.email,
+				isVerified: user.isVerified,
+				avatar: user.avatar,
+				createdAt: user.createdAt,
+				updatedAt: user.updatedAt,
+				myOrg: user.myOrg,
+			},
+		},
+	});
 };
 
+/**
+ * @brief function to regenerate refresh token for loggedin users
+ * @param {ExpressTypes.UserRequest} req - `{cookies:{token:string}}` - request with cookies containing jwt token
+ * @param {ExpressTypes.Response} res
+ * @param {ExpressTypes.NextFn} next
+ * @return {json} ```
+ *  {
+ *		status: 'success',
+ *		data: {
+ *			accessToken,
+ *		},
+ *	}
+ *	```
+ * @author `Gaurang Tyagi`
+ */
 export const refresh = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        let token: string | undefined;
-        if (req.cookies) {
-            token = req.cookies?.jwt;
-        }
-        if (!token)
-            return next(new AppError('Invalid Token please login again', 403));
+	async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		let token: string | undefined;
+		if (req.cookies) {
+			token = req.cookies?.jwt;
+		}
+		if (!token)
+			return next(new AppError("Invalid Token please login again", 403));
 
-        const verifyAsync = promisify(jwt.verify) as (
-            token: string,
-            secret: string
-        ) => Promise<JwtPayload>;
-        let jt;
-        try {
-            jt = await verifyAsync(token, process.env.JWT_SIGN as string);
-        } catch {
-            res.clearCookie('jwt');
-            return next(new AppError('Session expired', 403));
-        }
-        const id = jt?.id;
-        const issuedAt = jt?.iat;
+		const verifyAsync = promisify(jwt.verify) as (
+			token: string,
+			secret: string
+		) => Promise<JwtPayload>;
+		let jt;
+		try {
+			jt = await verifyAsync(token, process.env.JWT_SIGN as string);
+		} catch {
+			res.clearCookie("jwt");
+			return next(new AppError("Session expired", 403));
+		}
+		const id = jt?.id;
+		const issuedAt = jt?.iat;
 
-        const user = await User.findOne({ _id: id, refreshToken: token });
-        if (!user) {
-            res.clearCookie('jwt');
-            return next(
-                new AppError('Session expired... Please login again', 403)
-            );
-        }
+		const user = await User.findOne({ _id: id, refreshToken: token });
+		if (!user) {
+			res.clearCookie("jwt");
+			return next(
+				new AppError("Session expired... Please login again", 403)
+			);
+		}
 
-        if (user.passwordUpdatedAfter(issuedAt as number))
-            return next(new AppError('Password updated recently', 403));
+		if (user.passwordUpdatedAfter(issuedAt as number))
+			return next(new AppError("Password updated recently", 403));
 
-        const accessToken = signToken(user._id, true);
-        return res.status(200).json({
-            status: 'success',
-            data: {
-                accessToken,
-            },
-        });
-    }
+		const accessToken = signToken(user._id, true);
+		return res.status(200).json({
+			status: "success",
+			data: {
+				accessToken,
+			},
+		});
+	}
 );
 
 /**
- * @obective To restrict according to the roles
- * @param roles Admin | Manager | Staff | Owner
- * @returns NA
+ * @brief To restrict according to the roles
+ * @param {string} orgid - organization's id of which the restriction is applied for
+ * @param {string} userid - user's id to which the restriction is applied
+ * @param {Admin | Manager | Staff | Owner} roles Admin | Manager | Staff | Owner to allow for (comma seperated)
+ * @return none
+ * @author `Gaurang Tyagi`
  */
 export const restrictTo: (...roles: string[]) => RequestHandler = (
-    ...roles: string[]
+	...roles: string[]
 ) => {
-    return (async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { role } = (await Employee.findOne({
-            userid: req.user?._id,
-            orgid: req.params?.orgid,
-        })) as EmpType;
-        if (roles.includes(role as string)) return next();
-        return next(new AppError('You are not authorized', 401));
-    }) as RequestHandler;
+	return (async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { role } = (await Employee.findOne({
+			userid: req.user?._id,
+			orgid: req.params?.orgid,
+		})) as EmpType;
+		if (roles.includes(role as string)) return next();
+		return next(new AppError("You are not authorized", 401));
+	}) as RequestHandler;
 };
 
 /**
- * @brief Function to protect the routes from non-loggedin users
- * @param req(UserRequest)
- * @param res(ExpressRexponse)
- * @param next(Express Next Function)
- * @headers jwt(http only cookie)
- * @approach check if the json-webtoken in the header is correct.
- *           IF the token is correct then call the next middleware
- *           ELSE return 401 (unauthorized access)
+ * @brief Middleware Function to protect the routes from non-loggedin users
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		headers:{
+ * 			authorization:'Bearer "jwt http only cookie"'
+ * 		}
+ * }
+ * ```
+ * request with authorization token
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
  * @sideEffect attaches user data to the request object of the subsequent middlewares
+ * @author `Gaurang Tyagi`
  */
 export const protect = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        _res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        let token: string | undefined;
-        if (
-            req.headers.authorization &&
-            req.headers.authorization.startsWith('Bearer')
-        ) {
-            token = req.headers.authorization.split(' ').at(1);
-        }
-        if (!token) return next(new AppError('Invalid Token', 401));
-        const verifyAsync = promisify(jwt.verify) as (
-            token: string,
-            secret: string
-        ) => Promise<JwtPayload>;
-        const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
-        const id = jt?.id;
-        const issuedAt = jt?.iat;
-        const user = await User.findById(id);
-        if (!user) return next(new AppError('Unauthenticated', 401));
+	async (
+		req: ExpressTypes.UserRequest,
+		_res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		let token: string | undefined;
+		if (
+			req.headers.authorization &&
+			req.headers.authorization.startsWith("Bearer")
+		) {
+			token = req.headers.authorization.split(" ").at(1);
+		}
+		if (!token) return next(new AppError("Invalid Token", 401));
+		const verifyAsync = promisify(jwt.verify) as (
+			token: string,
+			secret: string
+		) => Promise<JwtPayload>;
+		const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
+		const id = jt?.id;
+		const issuedAt = jt?.iat;
+		const user = await User.findById(id);
+		if (!user) return next(new AppError("Unauthenticated", 401));
 
-        if (user.passwordUpdatedAfter(issuedAt as number))
-            return next(new AppError('Password updated recently', 401));
+		if (user.passwordUpdatedAfter(issuedAt as number))
+			return next(new AppError("Password updated recently", 401));
 
-        req.user = user;
-        return next();
-    }
+		req.user = user;
+		return next();
+	}
 );
 
 /**
  * @brief Function to login existing users
- * @param req(Express Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @body email (user email) password (user password)
- * @return IF (details are correct) send new json-webtoken
- *         ELSE return status 400
+ * @param {UserRequest} req 
+ * ```
+ * {
+ * 		body: {
+ * 			email:string, 
+ * 			pasword:string
+ * 		}
+ * }
+ * ```
+ * request with email and password
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @author `Gaurang Tyagi`
  */
 export const login = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { email, password } = req.body;
-        if (!email || !password)
-            return next(
-                new AppError('Please provide a valid email and password', 400)
-            );
-        const user = await User.findOne({ email }).select('+password');
-        // comparePasswords compares the password entered by the user and the password stored in the database
-        if (
-            !user ||
-            !(await user.comparePasswords(password, user.password as string))
-        )
-            return next(new AppError('No such user exists', 401));
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { email, password } = req.body;
+		if (!email || !password)
+			return next(
+				new AppError("Please provide a valid email and password", 400)
+			);
+		const user = await User.findOne({ email }).select("+password");
+		// comparePasswords compares the password entered by the user and the password stored in the database
+		if (
+			!user ||
+			!(await user.comparePasswords(password, user.password as string))
+		)
+			return next(new AppError("No such user exists", 401));
 
-        await sendNewToken(user, res, 200);
-    }
+		await sendNewToken(user, res, 200);
+	}
 );
 
 /**
  * @brief Function to logout signed in users
- * @param req(Express Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @approach remove json-webtoken cookie from request header
- * @return IF (details are correct) send new json-webtoken
- *         ELSE return status 400
+ * @param {UserRequest} req - request
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @author `Gaurang Tyagi`
  */
 export const logout = catchAsync(
-    async (
-        _req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        _next: ExpressTypes.NextFn
-    ) => {
-        res.clearCookie('jwt');
-        return res.status(200).json({
-            status: 'success',
-        });
-    }
+	async (
+		_req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		_next: ExpressTypes.NextFn
+	) => {
+		res.clearCookie("jwt");
+		return res.status(200).json({
+			status: "success",
+		});
+	}
 );
 
 /**
  * @brief Function to check authentication of a user
- * @param req(Express Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @requestHeader json-webtoken
- * @return IF (json-webtoken is valid) return user data
- *         ELSE return status:fail with reason for the same
+ * @param {UserRequest} req - `{cookies: {jwt: "jwt token"}}` - request
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return {json}
+ * ```
+ * {
+ *			status: "success",
+ *			isLoggedIn: true,
+ *			data: {
+ *				user: {
+ *					_id: user _id,
+ *					name: user name,
+ *					email: user email,
+ *					isVerified: user isVerified,
+ *					avatar: user avatar,
+ *					createdAt: user createdAt,
+ *					updatedAt: user updatedAt,
+ *					myOrg: user myOrg,
+ *				},
+ *			},
+ *		}
+ * ```
+ * @author `Gaurang Tyagi`
  */
 export const isLoggedIn = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        _next: ExpressTypes.NextFn
-    ) => {
-        let token: string | undefined;
-        if (req.cookies) token = req.cookies?.jwt;
-        if (!token)
-            return res.status(200).json({
-                status: 'fail',
-                isLoggedIn: false,
-                data: {
-                    message: 'Invalid token',
-                },
-            });
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		_next: ExpressTypes.NextFn
+	) => {
+		let token: string | undefined;
+		if (req.cookies) token = req.cookies?.jwt;
+		if (!token)
+			return res.status(200).json({
+				status: "fail",
+				isLoggedIn: false,
+				data: {
+					message: "Invalid token",
+				},
+			});
 
-        const verifyAsync = promisify(jwt.verify) as (
-            token: string,
-            secret: string
-        ) => Promise<JwtPayload>;
-        const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
-        const id = jt?.id;
-        const issuedAt = jt?.iat;
-        const user = await User.findOne({ _id: id });
-        if (!user) {
-            return res.status(401).json({
-                status: 'fail',
-                isLoggedIn: false,
-                data: {
-                    message: 'Unauthenticated',
-                },
-            });
-        }
-        if (user.passwordUpdatedAfter(issuedAt as number)) {
-            return res.status(200).json({
-                status: 'fail',
-                isLoggedIn: false,
-                data: {
-                    message: 'password was updated recently',
-                },
-            });
-        }
-        return res.status(200).json({
-            status: 'success',
-            isLoggedIn: true,
-            data: {
-                user: {
-                    _id: user._id,
-                    name: user.name,
-                    email: user.email,
-                    isVerified: user.isVerified,
-                    avatar: user.avatar,
-                    createdAt: user.createdAt,
-                    updatedAt: user.updatedAt,
-                    myOrg: user.myOrg,
-                },
-            },
-        });
-    }
+		const verifyAsync = promisify(jwt.verify) as (
+			token: string,
+			secret: string
+		) => Promise<JwtPayload>;
+		const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
+		const id = jt?.id;
+		const issuedAt = jt?.iat;
+		const user = await User.findOne({ _id: id });
+		if (!user) {
+			return res.status(401).json({
+				status: "fail",
+				isLoggedIn: false,
+				data: {
+					message: "Unauthenticated",
+				},
+			});
+		}
+		if (user.passwordUpdatedAfter(issuedAt as number)) {
+			return res.status(200).json({
+				status: "fail",
+				isLoggedIn: false,
+				data: {
+					message: "password was updated recently",
+				},
+			});
+		}
+		return res.status(200).json({
+			status: "success",
+			isLoggedIn: true,
+			data: {
+				user: {
+					_id: user._id,
+					name: user.name,
+					email: user.email,
+					isVerified: user.isVerified,
+					avatar: user.avatar,
+					createdAt: user.createdAt,
+					updatedAt: user.updatedAt,
+					myOrg: user.myOrg,
+				},
+			},
+		});
+	}
 );
 
 /**
- * @brief Function to signup new user
- * @param req(Express Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @body name(user name) email (user email) password (user password) confirmPassword (password confirmation)
- * @return IF (details are correct) store user's data in the database and send the new token with the request header
- *         ELSE IF(details are incomplete) return status:400 (invalid request)
- *         ELSE return status:500 (internal server error)
+ * @brief Function to handle a new user signup/registration.
+ * @param {ExpressTypes.Request} req 
+ * ```
+ * {
+ * 		body: {
+ * 			name: "user name", 
+ * 			email: "user@example.com", 
+ * 			password: "password123", 
+ * 			confirmPassword: "password123"
+ * 		}
+ * }
+ * ``` 
+ * request containing user details.
+ * @param {ExpressTypes.Response} res - response object to set and return response to.
+ * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ * 		status: "success",
+ * 		token: "jwt token",
+ * 		data: {
+ * 			user: {
+ * 				_id: user _id,
+ * 				name: user name,
+ * 				email: user email,
+ * 				isVerified: user isVerified,
+ * 				avatar: user avatar,
+ * 				createdAt: user createdAt,
+ * 				updatedAt: user updatedAt,
+ * 			},
+ * 		},
+ * }
+ * ```
+ * @author `Gaurang Tyagi`
  */
 export const signup = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { name, email, password, confirmPassword } = req.body;
-        if (
-            !name ||
-            !email ||
-            !password ||
-            !confirmPassword ||
-            password !== confirmPassword
-        )
-            return next(new AppError('Please provide valid details', 400));
-        const newUser = await User.create({
-            name,
-            email,
-            password,
-            confirmPassword,
-            avatar: genProfileString(12),
-        });
-        if (!newUser) return next(new AppError('Failed to signup', 500));
-        await sendNewToken(newUser, res, 201);
-    }
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { name, email, password, confirmPassword } = req.body;
+		if (
+			!name ||
+			!email ||
+			!password ||
+			!confirmPassword ||
+			password !== confirmPassword
+		)
+			return next(new AppError("Please provide valid details", 400));
+		const newUser = await User.create({
+			name,
+			email,
+			password,
+			confirmPassword,
+			avatar: genProfileString(12),
+		});
+		if (!newUser) return next(new AppError("Failed to signup", 500));
+		await sendNewToken(newUser, res, 201);
+	}
 );
 
 /**
- * @brief Function to verify email id of user
- * @param req(User Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @preCondition user is logged in
- * @body OTP or empty
- * @approach if the body is empty then generate and store the otp in the database and send it to user's email
- *           else check if the user's otp is same as the otp stored in the database and if it is then update user's isVerified field to true
- * @return IF (user is verified) send status:200 message: Your email is already verified
- *         ELSE IF (user's otp is correct) status:200 message email verified successfully
- *         ELSE return status:400 message:invalid otp
- * @sideEffect User email is verified
+ * @brief Function to verify a user's email address using a One-Time Password (OTP) or to send a new OTP if needed.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ * 		user: UserObject, 
+ * 		body: {
+ * 			otp: "1234"
+ * 		}
+ * }
+ * ``` 
+ * request containing the authenticated user object and potentially the user-submitted OTP.
+ * @param {ExpressTypes.Response} res - response object to set and return response to.
+ * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ *  {
+ * 		status: "success",
+ * 		data: {
+ * 			message: "Your email is already verified" | "email verified successfully" | "otp sent successfully",
+ * 		},
+ * 	}
+ * ```
+ * @author `Garang Tyagi` 
  */
 export const verifyEmail = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const userOtp = req?.body?.otp;
-        const isVerified = req.user?.isVerified;
-        // const isOtpGen = req.user!.otp;
-        const isOtpGen = await redisClient.hGet(req.user?.id, 'otp');
-        if (isVerified)
-            return res.status(200).json({
-                status: 'success',
-                data: {
-                    message: 'Your email is already verified',
-                },
-            });
-        else if (isOtpGen && userOtp) {
-            // Find a user which has the same otp and the otp's expire time is greater than the current time
-            const user = await User.findById(req.user?.id);
-            const storedOtp = await redisClient.hGet(user?.id, 'otp');
-            if (
-                !user ||
-                !(await bcrypt.compare(userOtp, storedOtp as string))
-            ) {
-                return next(new AppError('Invalid OTP', 400));
-            }
+	async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const userOtp = req?.body?.otp;
+		const isVerified = req.user?.isVerified;
+		// const isOtpGen = req.user!.otp;
+		const isOtpGen = await redisClient.hGet(req.user?.id, "otp");
+		if (isVerified)
+			return res.status(200).json({
+				status: "success",
+				data: {
+					message: "Your email is already verified",
+				},
+			});
+		else if (isOtpGen && userOtp) {
+			// Find a user which has the same otp and the otp's expire time is greater than the current time
+			const user = await User.findById(req.user?.id);
+			const storedOtp = await redisClient.hGet(user?.id, "otp");
+			if (
+				!user ||
+				!(await bcrypt.compare(userOtp, storedOtp as string))
+			) {
+				return next(new AppError("Invalid OTP", 400));
+			}
 
-            user!.isVerified = true;
-            await user!.save({ validateBeforeSave: false });
+			user!.isVerified = true;
+			await user!.save({ validateBeforeSave: false });
 
-            res.status(200).json({
-                status: 'success',
-                data: {
-                    message: 'email verified successfully',
-                },
-            });
-        } else {
-            const otp = Math.floor(Math.random() * 10000)
-                .toString()
-                .padEnd(4, '0');
-            const hashedOTP = await bcrypt.hash(otp, 12);
-            await redisClient.hSet(req.user?.id, {
-                otp: hashedOTP,
-            });
-            const expireResult = await redisClient.expire(
-                req.user?.id,
-                parseInt(process.env.OTP_EXPIRE_TIME as string) * 60 * 1000
-            );
-            if (expireResult !== 1) {
-                console.log(`Failed to set TTL for hash '${req.user?.id}'.`);
-            }
-            await new Email(
-                {
-                    userName: req.user?.name as string,
-                    email: req.user?.email as string,
-                    otp,
-                },
-                ''
-            ).sendVerification();
-            res.status(200).json({
-                status: 'success',
-                data: {
-                    message: 'otp sent successfully',
-                },
-            });
-        }
-    }
+			res.status(200).json({
+				status: "success",
+				data: {
+					message: "email verified successfully",
+				},
+			});
+		} else {
+			const otp = Math.floor(Math.random() * 10000)
+				.toString()
+				.padEnd(4, "0");
+			const hashedOTP = await bcrypt.hash(otp, 12);
+			await redisClient.hSet(req.user?.id, {
+				otp: hashedOTP,
+			});
+			const expireResult = await redisClient.expire(
+				req.user?.id,
+				parseInt(process.env.OTP_EXPIRE_TIME as string) * 60 * 1000
+			);
+			if (expireResult !== 1) {
+				console.log(`Failed to set TTL for hash '${req.user?.id}'.`);
+			}
+			await new Email(
+				{
+					userName: req.user?.name as string,
+					email: req.user?.email as string,
+					otp,
+				},
+				""
+			).sendVerification();
+			res.status(200).json({
+				status: "success",
+				data: {
+					message: "otp sent successfully",
+				},
+			});
+		}
+	}
 );
 
 /**
- * @brief Function to handle case if user forgot th password
- * @param req(Express Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @preCondition user is logged in
- * @body email (user email)
- * @return IF (email is correct) send reset password url with reset-token to the user's email
- *         ELSE return status:400 (invalid request)
+ * @brief Function to handle the forgotten password process by sending a password reset link to the user's email.
+ * @param {ExpressTypes.Request} req 
+ * ```
+ * {
+ * 		body: {
+ * 			email: "user@example.com"
+ * 		}
+ * }
+ * ```
+ * request containing the email address of the user.
+ * @param {ExpressTypes.Response} res - response object to set and return response to.
+ * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ * 		status: "success",
+ * 		data: {
+ * 			message: "Mail sent successfully",
+ *		},
+ * }
+ * ```
+ * @author `Gaurang Tyagi` 
  */
 export const forgotPassword = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const email = req.body.email;
-        if (!email)
-            return next(new AppError('Please provide a valid email id', 400));
-        const user = await User.findOne({ email }).select('+password');
-        if (!user)
-            return next(
-                new AppError('No such user with that email exists', 400)
-            );
-        const resetToken = user.createPasswordResetToken();
-        await user.save({ validateBeforeSave: false });
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const email = req.body.email;
+		if (!email)
+			return next(new AppError("Please provide a valid email id", 400));
+		const user = await User.findOne({ email }).select("+password");
+		if (!user)
+			return next(
+				new AppError("No such user with that email exists", 400)
+			);
+		const resetToken = user.createPasswordResetToken();
+		await user.save({ validateBeforeSave: false });
 
-        const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
-        try {
-            await new Email(
-                {
-                    userName: user.name,
-                    email: user.email,
-                },
-                url
-            ).sendResetLink();
-            return res.status(200).json({
-                status: 'success',
-                data: {
-                    message: 'Mail sent successfully',
-                },
-            });
-        } catch (err) {
-            console.log(err);
-            user.resetPasswordToken = undefined;
-            user.resetTokenExpireTime = undefined;
-            await user.save({ validateBeforeSave: false });
+		const url = `${process.env.FRONTEND_URL}/resetpassword/${resetToken}`;
+		try {
+			await new Email(
+				{
+					userName: user.name,
+					email: user.email,
+				},
+				url
+			).sendResetLink();
+			return res.status(200).json({
+				status: "success",
+				data: {
+					message: "Mail sent successfully",
+				},
+			});
+		} catch (err) {
+			console.log(err);
+			user.resetPasswordToken = undefined;
+			user.resetTokenExpireTime = undefined;
+			await user.save({ validateBeforeSave: false });
 
-            return res.status(500).json({
-                status: 'fail',
-                data: {
-                    message: 'Error updating the password',
-                },
-            });
-        }
-    }
+			return res.status(500).json({
+				status: "fail",
+				data: {
+					message: "Error updating the password",
+				},
+			});
+		}
+	}
 );
 
 /**
- * @brief Function to reset user password if he forgets
- * @param req(Express Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @body  password (new password) confirmPassword (to confirm the new password)
- * @requestParams resetToken
- * @return IF (details are correct) reset the password and generate new token
- *         ELSE return status:400 message: invalid token or previous password
+ * @brief Function to reset a user's password using a valid reset token.
+ * @param {ExpressTypes.Request} req  
+ * ```
+ * {
+ * 		body: {
+ * 			password: "newPassword123", 
+ * 			confirmPassword: "newPassword123"
+ * 		}, 
+ * 		params: {
+ * 			resetToken: "token"
+ * 		}
+ * }
+ * ``` 
+ * request containing new password details and the token from the URL.
+ * @param {ExpressTypes.Response} res - response object to set and return response to.
+ * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ * 		status: "success",
+ * 		token: "new jwt token",
+ * 		data: {
+ * 			user: {
+ * 				...userdata
+ * 			},
+ * 		},
+ * }
+ * ```
+ * @author `Gaurang Tyagi` 
  */
 export const resetPassword = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const password = req.body.password;
-        const confirmPassword = req.body.confirmPassword;
-        const resetToken = req.params.resetToken;
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const password = req.body.password;
+		const confirmPassword = req.body.confirmPassword;
+		const resetToken = req.params.resetToken;
 
-        if (!password || !confirmPassword)
-            return next(new AppError('Password is required', 400));
+		if (!password || !confirmPassword)
+			return next(new AppError("Password is required", 400));
 
-        const hashedToken = crypto
-            .createHash('sha256')
-            .update(resetToken)
-            .digest('hex');
-        const user = await User.findOne({
-            resetPasswordToken: hashedToken,
-            resetTokenExpireTime: { $gte: Date.now() },
-        }).select('+password');
-        if (!user) return next(new AppError('Invalid token or password', 400));
+		const hashedToken = crypto
+			.createHash("sha256")
+			.update(resetToken)
+			.digest("hex");
+		const user = await User.findOne({
+			resetPasswordToken: hashedToken,
+			resetTokenExpireTime: { $gte: Date.now() },
+		}).select("+password");
+		if (!user) return next(new AppError("Invalid token or password", 400));
 
-        user.password = password;
-        user.confirmPassword = confirmPassword;
-        user.resetTokenExpireTime = undefined;
-        user.resetPasswordToken = undefined;
+		user.password = password;
+		user.confirmPassword = confirmPassword;
+		user.resetTokenExpireTime = undefined;
+		user.resetPasswordToken = undefined;
 
-        await user.save();
-        await sendNewToken(user, res, 200);
-    }
+		await user.save();
+		await sendNewToken(user, res, 200);
+	}
 );
 
 /**
- * @brief Function to update the password ofuseron request
- * @param req(User Request)
- * @param res(Express Response)
- * @param next(Express Next Function)
- * @preCondition user is logged in
- * @body prevPassword (previous password) password (new password) confirmPassword (password confirmation)
- * @return IF (details are correct) update the password and send the updated user data as response
- *         ELSE return status:400 message:incomplete details
+ * @brief Function for an authenticated user to change their password.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ * 		user: UserObject, 
+ * 		body: {
+ * 			prevPassword: "oldPassword", 
+ * 			password: "newPassword123", 
+ * 			confirmPassword: "newPassword123"
+ * 		}
+ * }
+ * ```
+ * request containing the authenticated user object and new/previous password details.
+ * @param {ExpressTypes.Response} res - response object to set and return response to.
+ * @param {ExpressTypes.NextFn} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ * 		status: "success",
+ * 		token: "new jwt token",
+ * 		data: {
+ * 			user: {
+ * 				...userdata
+ * 			},
+ * 		},
+ * }
+ * ```
+ * @author `Gaurang Tyagi` 
  */
 export const updatePassword = catchAsync(
-    async (
-        req: ExpressTypes.UserRequest,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const prevPassword = req.body.prevPassword;
-        const password = req.body.password;
-        const confirmPassword = req.body.confirmPassword;
-        if (!password || !confirmPassword || !prevPassword)
-            return next(new AppError('Please provide a valid password', 400));
+	async (
+		req: ExpressTypes.UserRequest,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const prevPassword = req.body.prevPassword;
+		const password = req.body.password;
+		const confirmPassword = req.body.confirmPassword;
+		if (!password || !confirmPassword || !prevPassword)
+			return next(new AppError("Please provide a valid password", 400));
 
-        const user = await User.findById(req.user?._id).select('+password');
-        if (
-            !user ||
-            !(await user.comparePasswords(
-                prevPassword,
-                user.password as string
-            ))
-        ) {
-            return next(new AppError('Incorrect previous password', 400));
-        }
-        user!.password = password;
-        user!.confirmPassword = confirmPassword;
-        await user!.save();
+		const user = await User.findById(req.user?._id).select("+password");
+		if (
+			!user ||
+			!(await user.comparePasswords(
+				prevPassword,
+				user.password as string
+			))
+		) {
+			return next(new AppError("Incorrect previous password", 400));
+		}
+		user!.password = password;
+		user!.confirmPassword = confirmPassword;
+		await user!.save();
 
-        user!.password = undefined;
-        await sendNewToken(user, res, 200);
-    }
+		user!.password = undefined;
+		await sendNewToken(user, res, 200);
+	}
 );

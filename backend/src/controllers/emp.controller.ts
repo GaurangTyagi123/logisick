@@ -10,6 +10,13 @@ import Email from '../utils/sendEmail';
 import { Types } from 'mongoose';
 import ApiFilter from '../utils/apiFilter';
 
+/**
+ * @brief function to return emp data after role change
+ * @param {EmpType} emp - employee's data 
+ * @param {Response} res - express response object 
+ * @returns data in response 
+ * @author `Ravish Ranjan`
+ */
 function returnChangedRoleEmp(emp: EmpType, res: Response) {
     return res.status(200).json({
         status: 'success',
@@ -26,7 +33,32 @@ function returnChangedRoleEmp(emp: EmpType, res: Response) {
     });
 }
 
-// Function send emp invite to join org (by email id) (by owner/admin)
+/**
+ * @brief Function for an organization owner or admin to send an invitation email to a new employee.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ *      user: UserObject, 
+ *      body: {
+ *          empEmail: "employee@example.com", 
+ *          role: "Manager"
+ *      }
+ * }
+ * ```
+ * request containing the authenticated user (inviter) and the employee's email and intended role.
+ * @param {Response} res - response object to set and return response.
+ * @param {NextFunction} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ *      status: 'success',
+ *      data: {
+ *          message: 'invite sent successfully',
+ *      },
+ * }
+ * ```
+ * @author `Ravish Ranjan`
+ */
 export const sendInvite = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -106,7 +138,38 @@ export const sendInvite = catchAsync(
     }
 );
 
-// Function to join new employee (only by verified user)
+/**
+ * @brief Function for a user to accept an organization invitation and join as an employee.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ *      user: UserObject, 
+ *      body: {
+ *          token: "inviteToken"
+ *      }
+ * }
+ * ``` 
+ * request containing the authenticated user object and the invite token.
+ * @param {Response} res - response object to set and return response.
+ * @param {NextFunction} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ *      status: 'success',
+ *      data: {
+ *          emps: {
+ *              userid: newEmp.userid,
+ *              orgid: newEmp.orgid,
+ *              role: newEmp.role,
+ *              manager: newEmp.manager,
+ *              createdAt: newEmp.createdAt,
+ *              updatedAt: newEmp.updatedAt,
+ *          },
+ *      },
+ * }
+ * ```
+ * @author `Ravish Ranjan`
+ */
 export const joinOrg = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -163,7 +226,44 @@ export const joinOrg = catchAsync(
     }
 );
 
-// Function to get emps by orgid
+/**
+ * @brief Function to retrieve a list of employees for a specific organization, with support for filtering, sorting, projection, and pagination via aggregation pipeline.
+ * @param {ExpressTypes.UserRequest} req 
+ * ```
+ * {
+ *      params: {
+ *          orgid: "organizationId"
+ *      }, 
+ *      parsedQuery: ApiQueryObject
+ * }
+ * ```
+ * request containing the organization ID and query parameters for filtering/pagination.
+ * @param {Response} res - response object to set and return employee data.
+ * @param {NextFunction} next - next function to pass control to error handler.
+ * @return {json}
+ * ```
+ * {
+ *      status: 'success',
+ *      results: 10, // Number of results returned in this page
+ *      data: {
+ *          emps: [
+ *              {
+ *                  role: 'Manager',
+ *                  employees: { 
+ *                      _id: '...', 
+ *                      name: '...', 
+ *                      email: '...', 
+ *                  avatar: '...' },
+ *                  count: 42 // Total count (only present on first element if result is not empty)
+ *              },
+ *              // ... other employees
+ *          ],
+ *          count: 42 // Total count
+ *      },
+ * }
+ * ```
+ * @author `Ravish Ranjan`
+ */
 export const getEmps = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -249,7 +349,23 @@ export const getEmps = catchAsync(
     }
 );
 
-// Function to get organization of which i am member of
+/**
+ * @brief Controller Function to retrieve all organizations the logged-in user is a part of.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ *      user: {
+ *          _id: 'user_mongo_id' // Attached by preceding protection middleware
+ *      }
+ * }
+ * ```
+ * request containing the user ID after successful authentication
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect sends a 200 JSON response containing the list of organizations the user belongs to, including their role in each.
+ * @author `Ravish Ranjan`
+ */
 export const getMyOrgs = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -323,7 +439,29 @@ export const getMyOrgs = catchAsync(
     }
 );
 
-// Function to change roles of user (by owner/admin)
+/**
+ * @brief Controller Function to change the role of an employee within a specific organization.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ *      params: {
+ *          orgid: 'organization_mongo_id'
+ *      },
+ *      body: {
+ *          newRole: 'Staff' | 'Manager' | 'Admin',
+ *          userid: 'target_employee_mongo_id'
+ *      }
+ * }
+ * ```
+ * request containing the organization ID in params and the new role/user ID in the body.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect Updates the 'role' and 'manager' fields of the target Employee document and potentially:
+ * - Updates the 'admin' field on the Organization document.
+ * - Updates the 'manager' field on multiple subordinate Employee documents if a Manager is demoted.
+ * @author `Ravish Ranjan`
+ */
 export const changeRole = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -481,7 +619,27 @@ export const changeRole = catchAsync(
     }
 );
 
-// Function to change/assign manager of a staff (by owner/admin)
+/**
+ * @brief Controller Function to change the direct manager for a specific employee within an organization.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ *      params: {
+ *          orgid: 'organization_mongo_id'
+ *      },
+ *      body: {
+ *          userid: 'target_employee_mongo_id',
+ *          managerEmail: 'new_manager_email'
+ *      }
+ * }
+ * ```
+ * request containing the organization ID in params and the employee/manager details in the body.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect Updates the 'manager' field on the target Employee document.
+ * @author `Ravish Ranjan`
+ */
 export const changeManager = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -540,7 +698,26 @@ export const changeManager = catchAsync(
     }
 );
 
-// Function to delete employee
+/**
+ * @brief Controller Function to remove a Staff employee from an organization.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ *      params: {
+ *          orgid: 'organization_mongo_id'
+ *      },
+ *      body: {
+ *          userid: 'target_employee_mongo_id'
+ *      }
+ * }
+ * ```
+ * request containing the organization ID in params and the target employee ID in the body.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect Permanently deletes the Employee document from the database.
+ * @author `Ravish Ranjan`
+ */
 export const deleteEmp = catchAsync(
     async (
         req: ExpressTypes.UserRequest,
@@ -580,6 +757,26 @@ export const deleteEmp = catchAsync(
     }
 );
 
+/**
+ * @brief Controller Function to search for employees within a specific organization by name, email, or role, utilizing Redis caching for performance.
+ * @param {UserRequest} req 
+ * ```
+ * {
+ *      params: {
+ *          orgid: 'organization_mongo_id'
+ *      },
+ *      query: {
+ *          query: 'search_term' // The term to search for (e.g., 'John', 'manager', 'jdoe@')
+ *      }
+ * }
+ * ```
+ * request containing the organization ID in params and an optional search query in query parameters.
+ * @param {ExpressRexponse} res - response to set and return response to
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect Reads/writes employee data to the Redis cache for the given organization ID.
+ * @author `Gaurang Tyagi`
+ */
 export const searchEmployee = catchAsync(
     async (
         req: ExpressTypes.UserRequest,

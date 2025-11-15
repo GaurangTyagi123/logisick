@@ -18,6 +18,10 @@ export interface EmpModel extends Model<EmpDocument> {
     calcNumberOfEmployees: (orgid: string) => Promise<any>;
 }
 
+/**
+ * @brief Employees mongoose schema
+ * @author `Gaurang Tyagi`
+ */
 const employeeSchema = new Schema<any, EmpModel>(
     {
         userid: {
@@ -53,12 +57,11 @@ employeeSchema.plugin(MongooseDelete, {
 // static method of employee schema which actually calculate the total number of employees
 /**
  * @param orgid
- * @author Gaurang Tyagi
  * @brief calculate the total number of employees belonging to organization with ID:orgid
  * @description It uses aggregate pipeline which includes:
  *          $match stage to find all the employees belonging to organization with ID:orgid
  *          $group stage  to group the result of match stage and calculate the number of employees
- *
+ * @author `Gaurang Tyagi``
  */
 employeeSchema.statics.calcNumberOfEmployees = async function (orgid: string) {
     const stats = await this.aggregate([

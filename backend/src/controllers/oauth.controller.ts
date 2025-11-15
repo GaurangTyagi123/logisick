@@ -1,17 +1,34 @@
 import catchAsync from '../utils/catchAsync';
 import AppError from '../utils/appError';
-import User from '../models/user.model';
 import jwt from 'jsonwebtoken';
 import '../utils/oauth.setup';
+import User from '../models/user.model';
 
 import type { StringValue } from 'ms';
 
 /**
- * @brief Functiont to handle user signup by oAuth via google
- * @params req(Express Request) res(Express Response) next(Express Next Function)
- * @request user(UserType)
- * @approach if the request contains user data then generate json-webtoken from the user-id and redirect the request to frontend of the application
- * @sideEffect user is signed up or signed in
+ * @brief Controller Function to handle post-Google OAuth successful authentication, generate a JWT, set it as an HTTP-only cookie, and redirect the user to the frontend URL.
+ * @param {UserRequest} req
+ * ```
+ * {
+ *      headers:{
+ *          authorization:'Bearer "jwt http only cookie"'
+ *      },
+ *      user: { // Attached by Passport/OAuth middleware after successful authentication
+ *          _id: 'user_mongo_id',
+ *          ... other user details
+ *      }
+ * }
+ * ```
+ * request containing the authenticated user object.
+ * @param {ExpressRexponse} res - response to set cookie and handle redirect
+ * @param {ExpressNextFunction} next - next function to chain request
+ * @return NA
+ * @sideEffect
+ * - Generates a JSON Web Token (JWT) containing the user ID.
+ * - Sets the JWT as an HTTP-only cookie named 'jwt' on the response object.
+ * - Redirects the client to the `FRONTEND_URL` defined in environment variables.
+ * @author `Gaurang Tyagi`
  */
 const googleSignup = catchAsync(
     async (
@@ -43,4 +60,5 @@ const googleSignup = catchAsync(
         res.redirect(process.env.FRONTEND_URL as string);
     }
 );
+
 export default googleSignup;

@@ -12,6 +12,10 @@ export interface ShipmentModel extends Model<shipmentDocument> {
     deleteById(id: string): Promise<any>;
 }
 
+/**
+ * @brief Shipment mongoose schema
+ * @author `Gaurang Tyagi`
+ */
 const shipmentSchema = new Schema<any, ShipmentModel>(
     {
         item: {
