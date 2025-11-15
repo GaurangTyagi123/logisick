@@ -1,5 +1,20 @@
-*/src
+backend/src
 testing
+backend/testing
+allfeature.md
+org.drawio.svg
+backend/.mochaarc.json
+backend/eslint.config.mts
+backend/tsconfig.json
+backend/types.d.ts
+frontend/components.json
+frontend/index.html
+frontend/tailwind.config.js
+frontend/tsconfig.json
+frontend/tsconfig.*.json
+frontend/types.d.ts
+frontend/vite.config.ts
+
 
 
 # redis dump files

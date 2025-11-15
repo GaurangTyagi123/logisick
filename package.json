@@ -1,0 +1,25 @@
+{
+	"name": "logisick",
+	"version": "1.0.0",
+	"description": "LogiSick is a web-based inventory and logistics management platform designed to streamline supply chain operations. It enables businesses to efficiently track & manage warehouse inventories, process orders, and monitor deliveries in real time. The system provides an intuitive dashboard, smart notifications for low stock, and detailed reporting to improve decision-making and reduce operational delays. By integrating inventory control with logistics workflows, LogiSick ensures higher accuracy, cost efficiency, and smoother end-to-end management.",
+	"main": "backend/src/server.js",
+	"scripts": {
+		"preinstall": "npm install --prefix backend && npm install --prefix frontend",
+		"start": "npm run start --prefix backend"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/GaurangTyagi123/logisick.git"
+	},
+	"keywords": [],
+	"author": "",
+	"license": "ISC",
+	"type": "commonjs",
+	"bugs": {
+		"url": "https://github.com/GaurangTyagi123/logisick/issues"
+	},
+	"homepage": "https://github.com/GaurangTyagi123/logisick#readme",
+	"devDependencies": {
+		"npm-run-all": "^4.1.5"
+	}
+}
