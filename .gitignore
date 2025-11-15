@@ -86,7 +86,6 @@ out
 .nuxt
 dist-electron
 public/
-src/
 
 # Gatsby files
 .cache/
