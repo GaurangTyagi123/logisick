@@ -19,13 +19,6 @@ if ((git status --porcelain) -ne "") {
 Write-Host ">>> Building..."
 npm run build
 
-# --- STEP 2: COPY EMAIL TEMPLATES ---
-Write-Host ">>> Copying email templates..."
-if (!(Test-Path $templatesDest)) {
-    New-Item -ItemType Directory -Path $templatesDest | Out-Null
-}
-Copy-Item "$templatesSrc/*" $templatesDest -Recurse -Force
-
 # # --- STEP 3: CHECKOUT RELEASE ---
 # Write-Host ">>> Switching to release..."
 # git checkout $targetBranch
