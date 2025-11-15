@@ -72,9 +72,9 @@ app_1.redisClient.connect().catch((err) => {
     console.log(err.message);
 });
 // start the server
-const server = app_1.default.listen(PORT, () => {
-    console.log(`SERVER : Running at http://localhost:${PORT}`);
-});
+// const server = app_1.default.listen(PORT, () => {
+//     console.log(`SERVER : Running at http://localhost:${PORT}`);
+// });
 // For unhandled errors in synchronous code
 process.on('uncaughtException', (err) => {
     console.log(err);
