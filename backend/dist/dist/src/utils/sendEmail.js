@@ -10,7 +10,7 @@ const path_1 = __importDefault(require("path"));
 const handlebars_1 = __importDefault(require("handlebars"));
 const dotenv_1 = __importDefault(require("dotenv"));
 // configure the path of config file
-dotenv_1.default.config({ path: 'config.env' });
+dotenv_1.default.config({ path: "config.env" });
 // Email handler for the application
 class Email {
     user; //contains user's name and email
@@ -24,17 +24,17 @@ class Email {
         // create a new transport
         // transport is used to configure the way this application will send email
         const transport = nodemailer_1.default.createTransport({
-            host: process.env.NODE_ENV === 'production'
+            host: process.env.NODE_ENV === "production"
                 ? process.env.MAIL_HOST
                 : process.env.DEV_MAIL_HOST,
-            port: process.env.NODE_ENV === 'production'
+            port: process.env.NODE_ENV === "production"
                 ? process.env.MAIL_PORT
                 : process.env.DEV_MAIL_PORT,
             auth: {
-                user: process.env.NODE_ENV === 'production'
+                user: process.env.NODE_ENV === "production"
                     ? process.env.MAIL_USER
                     : process.env.DEV_MAIL_USER,
-                pass: process.env.NODE_ENV === 'production'
+                pass: process.env.NODE_ENV === "production"
                     ? process.env.MAIL_PASSWORD
                     : process.env.DEV_MAIL_PASSWORD,
             },
@@ -64,16 +64,14 @@ class Email {
      * send email verification mail to the user
      */
     async sendVerification() {
-        const verificationHtml = (0, fs_1.readFileSync)(path_1.default.join(__dirname, process.env.NODE_ENV === 'production'
-            ? '../../../src/utils/emailTemplates'
-            : 'emailTemplates', 'verification.html'), { encoding: 'utf-8' });
+        const verificationHtml = (0, fs_1.readFileSync)(path_1.default.join(__dirname, "emailTemplates", "verification.html"), { encoding: "utf-8" });
         const options = {
-            brand_name: 'LogiSick',
+            brand_name: "LogiSick",
             user_name: this.user.userName,
             otp_code: this.user.otp,
             reset_ttl_minutes: 10,
             verify_url: `${process.env.FRONTEND_URL}/otp`,
-            support_email: 'ravishranjan2003@gmail.com',
+            support_email: "ravishranjan2003@gmail.com",
             year: new Date().getFullYear(),
         };
         const template = handlebars_1.default.compile(verificationHtml)(options);
@@ -82,14 +80,12 @@ class Email {
     }
     // send reset link to the user
     async sendResetLink() {
-        const verificationHtml = (0, fs_1.readFileSync)(path_1.default.join(__dirname, process.env.NODE_ENV === "production"
-            ? "../../../src/utils/emailTemplates"
-            : "emailTemplates", "resetPassword.html"), { encoding: 'utf-8' });
+        const verificationHtml = (0, fs_1.readFileSync)(path_1.default.join(__dirname, "emailTemplates", "resetPassword.html"), { encoding: "utf-8" });
         const options = {
-            brand_name: 'LogiSick',
+            brand_name: "LogiSick",
             user_name: this.user.userName,
             reset_url: this.url,
-            support_email: 'ravishranjan2003@gmail.com',
+            support_email: "ravishranjan2003@gmail.com",
             year: new Date().getFullYear(),
             otp_ttl_minutes: 10,
         };
@@ -99,15 +95,13 @@ class Email {
     }
     // send org invite link to user
     async sendOrgInviteLink() {
-        const verificationHtml = (0, fs_1.readFileSync)(path_1.default.join(__dirname, process.env.NODE_ENV === 'production'
-            ? '../../../src/utils/emailTemplates'
-            : 'emailTemplates', 'orgInvite.html'), { encoding: 'utf-8' });
+        const verificationHtml = (0, fs_1.readFileSync)(path_1.default.join(__dirname, "emailTemplates", "orgInvite.html"), { encoding: "utf-8" });
         const options = {
             org_name: this.user.orgName,
-            brand_name: 'LogiSick',
+            brand_name: "LogiSick",
             invite_url: this.url,
             role: this.user.role,
-            support_email: 'ravishranjan2003@gmail.com',
+            support_email: "ravishranjan2003@gmail.com",
             year: new Date().getFullYear(),
             invite_ttl_days: 10,
         };
