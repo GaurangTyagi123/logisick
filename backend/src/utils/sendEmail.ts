@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import sendgridTransport from 'nodemailer-sendgrid';
+import sendgridTransport from "nodemailer-sendgrid";
 import { convert } from "html-to-text";
 import { readFileSync } from "fs";
 import path from "path";
