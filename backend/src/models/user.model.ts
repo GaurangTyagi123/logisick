@@ -26,7 +26,11 @@ const userSchema = new Schema<any, UserModel>(
         name: {
             type: String,
             min: 5,
-            validate : [validator.isAlpha],
+            validate: {
+                validator: (name:string) => {
+                    return /^[a-zA-Z]+[a-zA-Z0-9_-\s]+/.test(name)
+                }
+            },
             required: [true, 'User must have a name'],
         },
         email: {
