@@ -9,7 +9,7 @@
 		"start": "cross-env NODE_ENV=production node dist/src/server.js",
 		"dev": "cross-env NODE_ENV=development tsnd --respawn --transpile-only ./src/server.ts",
 		"test": "tsx ./testing/run-test.ts",
-		"deploy":"git checkout develop && npm run build && "
+		"deploy": "git checkout develop && npm run build && "
 	},
 	"repository": {
 		"type": "git",
