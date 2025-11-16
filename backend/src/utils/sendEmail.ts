@@ -1,5 +1,5 @@
-import nodemailer from "nodemailer";
 import { convert } from "html-to-text";
+import sgMail from "@sendgrid/mail";
 import { readFileSync } from "fs";
 import path from "path";
 import Handlebars from "handlebars";
@@ -7,7 +7,6 @@ import dotenv from "dotenv";
 
 // configure the path of config file
 dotenv.config({ path: "config.env" });
-	
 
 // Email handler for the application
 class Email {
@@ -18,17 +17,7 @@ class Email {
 		// initialize the variables;
 		this.user = user;
 		this.url = url;
-	}
-		private newTransport() {
-			const transport = nodemailer.createTransport({
-				 host: 'smtp.sendgrid.net',
-            port: 587,
-            auth: {
-                user: "apikey",
-                pass: process.env.SENDGRID_KEY || ''
-            }
-		})
-		return transport;
+		sgMail.setApiKey(process.env.SENDGRID_KEY || "");
 	}
 	/**
 	 * @param template, template is the html that the mail will contain
@@ -38,12 +27,12 @@ class Email {
 		try {
 			const sendOptions = {
 				to: this.user.email,
-				from: `gaurangt.mca25@cs.du.ac.in`,
-				subject,
+				from: "ravishranjan2003@gmail.com",
+				subject: subject,
 				html: template,
 				text: convert(template),
 			};
-			await this.newTransport().sendMail(sendOptions);
+			await sgMail.send(sendOptions);
 		} catch (_err) {
 			console.log(_err);
 		}
