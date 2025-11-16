@@ -1,5 +1,4 @@
 import nodemailer from "nodemailer";
-import sendgridTransport from 'nodemailer-sendgrid';
 import { convert } from "html-to-text";
 import { readFileSync } from "fs";
 import path from "path";
@@ -21,11 +20,14 @@ class Email {
 		this.url = url;
 	}
 		private newTransport() {
-		const transport = nodemailer.createTransport(
-			sendgridTransport({
-				apiKey: process.env.SENDGRID_KEY || ''
-			})
-		);
+			const transport = nodemailer.createTransport({
+				 host: 'smtp.sendgrid.net',
+            port: 587,
+            auth: {
+                user: "apikey",
+                pass: process.env.SENDGRID_KEY || ''
+            }
+		})
 		return transport;
 	}
 	/**
