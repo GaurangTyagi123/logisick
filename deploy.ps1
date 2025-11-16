@@ -20,6 +20,7 @@ Write-Host ">>> Switching to release..."
 git checkout $targetBranch
 
 try {
+    git add .
     git commit -m $commitMessage
 } catch {
     Write-Host ">>> No changes to commit."
