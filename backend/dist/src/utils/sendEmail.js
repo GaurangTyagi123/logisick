@@ -3,8 +3,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const nodemailer_1 = __importDefault(require("nodemailer"));
 const html_to_text_1 = require("html-to-text");
+const mail_1 = __importDefault(require("@sendgrid/mail"));
 const fs_1 = require("fs");
 const path_1 = __importDefault(require("path"));
 const handlebars_1 = __importDefault(require("handlebars"));
@@ -19,17 +19,7 @@ class Email {
         // initialize the variables;
         this.user = user;
         this.url = url;
-    }
-    newTransport() {
-        const transport = nodemailer_1.default.createTransport({
-            host: 'smtp.sendgrid.net',
-            port: 587,
-            auth: {
-                user: "apikey",
-                pass: process.env.SENDGRID_KEY || ''
-            }
-        });
-        return transport;
+        mail_1.default.setApiKey(process.env.SENDGRID_KEY || "");
     }
     /**
      * @param template, template is the html that the mail will contain
@@ -39,12 +29,12 @@ class Email {
         try {
             const sendOptions = {
                 to: this.user.email,
-                from: `gaurangt.mca25@cs.du.ac.in`,
-                subject,
+                from: "ravishranjan2003@gmail.com",
+                subject: subject,
                 html: template,
                 text: (0, html_to_text_1.convert)(template),
             };
-            await this.newTransport().sendMail(sendOptions);
+            await mail_1.default.send(sendOptions);
         }
         catch (_err) {
             console.log(_err);
