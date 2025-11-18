@@ -28,6 +28,7 @@ import {
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
 } from "./ui/dropdown-menu";
+import ProfileTableSkeleton from "./skeletons/ProfileTableSkeleton";
 
 type OrgType = {
 	id: number;
@@ -99,7 +100,9 @@ function ProfileOrgTable({
 				</CardHeader>
 				<CardContent>
 					<Table>
-						{!organizations || isPending ? (
+						{isPending ? (
+							<ProfileTableSkeleton/>
+						) : !organizations?(
 							<div className="h-full w-full grid place-items-center gap-3">
 								<H3>You are not in any organizations.</H3>
 								<Button asChild>
@@ -108,7 +111,7 @@ function ProfileOrgTable({
 									</Link>
 								</Button>
 							</div>
-						) : (
+						): (
 							<>
 								<TableHeader>
 									<TableRow>
@@ -119,7 +122,7 @@ function ProfileOrgTable({
 										<TableHead>Type</TableHead>
 									</TableRow>
 								</TableHeader>
-								<TableBody>
+								<TableBody className="max-h-96 overflow-y-scroll">
 									{organizations.map((org: Org) => (
 										<TableRow
 											key={org._id}
