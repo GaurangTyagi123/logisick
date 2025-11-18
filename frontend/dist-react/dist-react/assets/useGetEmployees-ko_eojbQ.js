@@ -1,0 +1,1 @@
+import{b as u}from"./apiOrg-BfKVskqD.js";import{u as y,a as m}from"./index-DLpN21qu.js";const c=5;function a(t,e=1){const s=y(),{data:r,isPending:n,error:o}=m({queryKey:["emps",e],queryFn:()=>u(t,e)});return r&&c*(e+1)<r.count&&s.prefetchQuery({queryKey:["emps",e+1],queryFn:()=>u(t,e+1)}),{data:r?.emps,count:r?.count,isPending:n,error:o}}export{a as u};
