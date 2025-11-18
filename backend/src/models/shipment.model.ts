@@ -1,5 +1,6 @@
 import { Model, Schema, model } from 'mongoose';
 import MongooseDelete from 'mongoose-delete';
+import { redisClient } from '../app';
 
 export interface shipmentDocument extends shipmentType, Document {
     delete(): Promise<shipmentDocument>; // soft delete
@@ -61,6 +62,25 @@ shipmentSchema.pre('save', function (next: any) {
     const orderName = `ORD-${new Date().toLocaleDateString()}`;
     this.orderName = orderName;
     next();
+});
+shipmentSchema.post(['save', 'findOneAndDelete', 'deleteOne'], async function () {
+    if (redisClient.isReady) {
+        const prefix = 'organization*';
+        let cursor = '0';
+        do {
+            const result = await redisClient.scan(cursor.toString(), {
+                MATCH: prefix,
+                COUNT: 10,
+            })
+            cursor = result.cursor;
+            const keys = result.keys;
+
+            if (keys.length > 0) {
+                await redisClient.del(keys);
+            }
+
+        } while (cursor !== '0');
+    }
 });
 
 const shipmentModel = model('Shipment', shipmentSchema);
