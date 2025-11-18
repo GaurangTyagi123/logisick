@@ -61,7 +61,7 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
-function CustomTable<RowType extends Record<string, string | number | Date | boolean>>({
+function CustomTable<RowType extends Record<string, string | number | Date>>({
 	title,
 	titleIcon,
 	data,
