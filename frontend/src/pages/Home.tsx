@@ -39,7 +39,7 @@ function Home() {
 					<BigHeading />
 					{/* option menu in small screens */}
 					<DropdownMenu>
-						<DropdownMenuTrigger className="md:hidden ml-auto ">
+						<DropdownMenuTrigger className="lg:hidden ml-auto ">
 							<Button asChild className="w-full">
 								<Menu />
 							</Button>
@@ -54,7 +54,7 @@ function Home() {
 					</DropdownMenu>
 				</div>
 				{/* tab-bar in large screens */}
-				<div className="hidden gap-2 justify-end mr-5 md:flex">
+				<div className="hidden gap-2 justify-end mr-5 lg:flex ">
 					{tabLinks.map((link, i) => (
 						<Link to={link.path} key={i}>
 							<Button
@@ -72,7 +72,7 @@ function Home() {
 			<main className="md:mx-10 p-2 text-black">
 				{/* hero */}
 				<div
-					className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center bg-white dark:bg-zinc-200"
+					className="w-full min-h-120 flex p-4 flex-col flex-wrap items-center lg:flex-row justify-center bg-white dark:bg-zinc-200"
 					style={{
 						boxShadow:
 							"0 0 50px -12px var(--tw-shadow-color, rgb(0 0 0 / 0.25)",
@@ -88,7 +88,7 @@ function Home() {
 						>
 							Track, manage and analyze your inventory with ease.
 						</p>
-						<div className="flex gap-2 justify-center lg:justify-start">
+						<div className="flex flex-wrap gap-2  justify-center lg:justify-start">
 							<Link to={"/dashboard"}>
 								<Button className="shadow-xl text-black bg-ls-sec-500 hover:bg-ls-sec-600  dark:bg-ls-sec-500">
 									<Star />
