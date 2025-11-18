@@ -383,6 +383,48 @@ export const isLoggedIn = catchAsync(
 	}
 );
 
+export const isEmployee = catchAsync(
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		_next: ExpressTypes.NextFn
+	) => {
+		let token: string | undefined;
+		if (req.cookies) token = req.cookies?.jwt;
+		if (!token)
+			return res.status(200).json({
+				status: "success",
+				isEmployee: false,
+			});
+
+		const verifyAsync = promisify(jwt.verify) as (
+			token: string,
+			secret: string
+		) => Promise<JwtPayload>;
+		const jt = await verifyAsync(token, process.env.JWT_SIGN as string);
+		const id = jt?.id;
+
+		const {orgSlug} = req.params || "";
+		const employee = await Employee.find({ userid: id }).populate({
+			path: "orgid",
+			match: { slug: orgSlug }
+		});
+		if (!employee) {
+			return res.status(200).json({
+				status: "success",
+				isEmployee: false,
+				data: {
+					message: "Unauthenticated",
+				},
+			});
+		}
+		return res.status(200).json({
+			status: "success",
+			isEmployee: true,
+		});
+	}
+);	
+
 /**
  * @brief Function to handle a new user signup/registration.
  * @param {ExpressTypes.Request} req 
