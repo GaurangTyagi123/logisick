@@ -45,6 +45,7 @@ export const sendInvite: sendInvite = async (empEmail, role) => {
 			});
 		}
 	} catch (error) {
+		console.log(error)
 		handleError(error, "Error sending envite to new employee");
 	}
 };
