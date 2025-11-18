@@ -23,7 +23,7 @@ const apiFilter_1 = __importDefault(require("../utils/apiFilter"));
  */
 function returnChangedRoleEmp(emp, res) {
     return res.status(200).json({
-        status: 'success',
+        status: "success",
         data: {
             emp: {
                 userid: emp.userid,
@@ -65,14 +65,14 @@ function returnChangedRoleEmp(emp, res) {
 exports.sendInvite = (0, catchAsync_1.default)(async (req, res, next) => {
     let { empEmail, role } = req.body;
     if (!empEmail || !role)
-        return next(new appError_1.default('All fields are required', 404));
+        return next(new appError_1.default("All fields are required", 404));
     empEmail = empEmail.trim();
     role = role.trim();
     const org = await organization_model_1.default.findOne({
         $or: [{ owner: req.user?._id }, { admin: req.user?._id }],
     });
     if (!org)
-        return next(new appError_1.default('No organization to add employee to', 404));
+        return next(new appError_1.default("No organization to add employee to", 404));
     const isOldUser = await user_model_1.default.findOne({ email: empEmail });
     if (isOldUser) {
         const isOldEmp = await employee_model_1.default.findOne({
@@ -80,14 +80,27 @@ exports.sendInvite = (0, catchAsync_1.default)(async (req, res, next) => {
             userid: isOldUser._id,
         });
         if (isOldEmp)
-            return next(new appError_1.default('Invited user is already an employee', 404));
+            return next(new appError_1.default("Invited user is already an employee", 404));
     }
-    const alreadyInvited = await app_1.redisClient.hGet(empEmail, 'token');
-    if (alreadyInvited)
-        return next(new appError_1.default('Already invited', 200));
-    const inviteToken = crypto_1.default.randomBytes(32).toString('hex');
-    if (!['Manager', 'Staff', 'Admin'].includes(role))
-        return next(new appError_1.default('Not a valid role', 400));
+    const alreadyInvited = await app_1.redisClient.hGet(empEmail, "token");
+    if (alreadyInvited) {
+        const url = `${process.env.FRONTEND_URL}/acceptInvite/${alreadyInvited}`;
+        await new sendEmail_1.default({
+            userName: req.user?.name,
+            email: req.user?.email,
+            orgName: org.name,
+            role,
+        }, url).sendOrgInviteLink();
+        return res.status(200).json({
+            status: "success",
+            data: {
+                message: "User Already Invited, Invite email resend",
+            },
+        });
+    }
+    const inviteToken = crypto_1.default.randomBytes(32).toString("hex");
+    if (!["Manager", "Staff", "Admin"].includes(role))
+        return next(new appError_1.default("Not a valid role", 400));
     await app_1.redisClient.hSet(empEmail, {
         token: inviteToken,
         orgid: org._id.toString(),
@@ -95,14 +108,14 @@ exports.sendInvite = (0, catchAsync_1.default)(async (req, res, next) => {
     });
     const exists = await app_1.redisClient.exists(empEmail);
     if (!exists)
-        return next(new appError_1.default('Unable to save invite ', 500));
+        return next(new appError_1.default("Unable to save invite ", 500));
     const expireTime = await app_1.redisClient.expire(empEmail, parseInt(process.env.OTP_EXPIRE_TIME) *
         24 *
         60 *
         60 *
         1000);
     if (expireTime !== 1) {
-        return next(new appError_1.default('Failed to generate and save invite token', 500));
+        return next(new appError_1.default("Failed to generate and save invite token", 500));
     }
     const url = `${process.env.FRONTEND_URL}/acceptInvite/${inviteToken}`;
     await new sendEmail_1.default({
@@ -112,9 +125,9 @@ exports.sendInvite = (0, catchAsync_1.default)(async (req, res, next) => {
         role,
     }, url).sendOrgInviteLink();
     res.status(200).json({
-        status: 'success',
+        status: "success",
         data: {
-            message: 'invite sent successfully',
+            message: "invite sent successfully",
         },
     });
 });
@@ -153,14 +166,14 @@ exports.sendInvite = (0, catchAsync_1.default)(async (req, res, next) => {
 exports.joinOrg = (0, catchAsync_1.default)(async (req, res, next) => {
     const { token } = req.body;
     if (!token)
-        return next(new appError_1.default('Token not found', 404));
+        return next(new appError_1.default("Token not found", 404));
     if (!req.user)
-        return next(new appError_1.default('Unauthenticated', 400));
+        return next(new appError_1.default("Unauthenticated", 400));
     if (!req.user.isVerified)
-        return next(new appError_1.default('User have to be verified to join organiation', 403));
+        return next(new appError_1.default("User have to be verified to join organiation", 403));
     const { token: inviteToken, orgid, role, } = await app_1.redisClient.hGetAll(req.user.email);
     if (!role || !orgid || !inviteToken || token.trim() !== inviteToken)
-        return next(new appError_1.default('User not invited in organization', 400));
+        return next(new appError_1.default("User not invited in organization", 400));
     const newEmpData = {
         userid: req.user._id,
         orgid,
@@ -168,10 +181,10 @@ exports.joinOrg = (0, catchAsync_1.default)(async (req, res, next) => {
     };
     const newEmp = await employee_model_1.default.create(newEmpData);
     if (!newEmp)
-        return next(new appError_1.default('Error adding new Employee', 500));
+        return next(new appError_1.default("Error adding new Employee", 500));
     await app_1.redisClient.del(req.user?.email);
     return res.status(201).json({
-        status: 'success',
+        status: "success",
         data: {
             emps: {
                 userid: newEmp.userid,
@@ -225,7 +238,7 @@ exports.joinOrg = (0, catchAsync_1.default)(async (req, res, next) => {
 exports.getEmps = (0, catchAsync_1.default)(async (req, res, next) => {
     const { orgid } = req.params;
     if (!orgid)
-        return next(new appError_1.default('orgid field is requied', 404));
+        return next(new appError_1.default("orgid field is requied", 404));
     const query = employee_model_1.default.aggregate([
         {
             $match: {
@@ -234,10 +247,10 @@ exports.getEmps = (0, catchAsync_1.default)(async (req, res, next) => {
         },
         {
             $lookup: {
-                from: 'users',
-                localField: 'userid',
-                foreignField: '_id',
-                as: 'employees',
+                from: "users",
+                localField: "userid",
+                foreignField: "_id",
+                as: "employees",
             },
         },
         {
@@ -253,25 +266,25 @@ exports.getEmps = (0, catchAsync_1.default)(async (req, res, next) => {
         },
         {
             $unwind: {
-                path: '$employees',
+                path: "$employees",
                 preserveNullAndEmptyArrays: false,
             },
         },
         {
             $facet: {
                 data: [],
-                totalCount: [{ $count: 'count' }],
+                totalCount: [{ $count: "count" }],
             },
         },
         {
             $project: {
                 data: 1,
-                count: { $arrayElemAt: ['$totalCount.count', 0] },
+                count: { $arrayElemAt: ["$totalCount.count", 0] },
             },
         },
         {
             $unwind: {
-                path: '$data',
+                path: "$data",
             },
         },
     ]);
@@ -283,7 +296,7 @@ exports.getEmps = (0, catchAsync_1.default)(async (req, res, next) => {
         .paginate(totalCount).query;
     if (emps)
         return res.status(200).json({
-            status: 'success',
+            status: "success",
             results: emps.length,
             data: {
                 emps,
@@ -292,7 +305,7 @@ exports.getEmps = (0, catchAsync_1.default)(async (req, res, next) => {
         });
     else {
         return res.status(200).json({
-            status: 'success',
+            status: "success",
             data: {
                 emps: [],
             },
@@ -326,29 +339,29 @@ exports.getMyOrgs = (0, catchAsync_1.default)(async (req, res, _next) => {
         },
         {
             $lookup: {
-                from: 'organizations',
-                localField: 'orgid',
-                foreignField: '_id',
-                as: 'organizationDetails',
+                from: "organizations",
+                localField: "orgid",
+                foreignField: "_id",
+                as: "organizationDetails",
             },
         },
         {
             $unwind: {
-                path: '$organizationDetails',
+                path: "$organizationDetails",
                 preserveNullAndEmptyArrays: false,
             },
         },
         {
             $match: {
-                'organizationDetails.deleted': false,
+                "organizationDetails.deleted": false,
             },
         },
         {
             $replaceRoot: {
                 newRoot: {
                     $mergeObjects: [
-                        '$organizationDetails',
-                        { role: '$role' },
+                        "$organizationDetails",
+                        { role: "$role" },
                     ],
                 },
             },
@@ -359,7 +372,7 @@ exports.getMyOrgs = (0, catchAsync_1.default)(async (req, res, _next) => {
         .sort()
         .project().query;
     return res.status(200).json({
-        status: 'success',
+        status: "success",
         results: orgs.length,
         data: {
             orgs: orgs.map((org) => {
@@ -408,10 +421,10 @@ exports.changeRole = (0, catchAsync_1.default)(async (req, res, next) => {
     const { newRole, userid } = req.body;
     const { orgid } = req.params;
     if (!newRole || !userid || !orgid)
-        return next(new appError_1.default('Necessary fields not found', 404));
+        return next(new appError_1.default("Necessary fields not found", 404));
     const org = await organization_model_1.default.findOne({ _id: orgid, deleted: false });
     if (!org)
-        return next(new appError_1.default('No organization found', 404));
+        return next(new appError_1.default("No organization found", 404));
     const userData = await user_model_1.default.findOne({
         _id: userid,
         deleted: false,
@@ -424,25 +437,25 @@ exports.changeRole = (0, catchAsync_1.default)(async (req, res, next) => {
         deleted: false,
     });
     if (!oldEmp)
-        return next(new appError_1.default('Not an existing employee', 404));
+        return next(new appError_1.default("Not an existing employee", 404));
     // * till now user exists and emp is of the given org
     const newEmpRole = newRole.trim();
-    if (newEmpRole === 'Manager') {
+    if (newEmpRole === "Manager") {
         switch (oldEmp.role) {
-            case 'Staff': {
+            case "Staff": {
                 // ? from staff to manager
-                oldEmp.role = 'Manager';
+                oldEmp.role = "Manager";
                 oldEmp.manager = org.owner;
                 await oldEmp.save();
                 return returnChangedRoleEmp(oldEmp, res);
             }
-            case 'Manager': {
+            case "Manager": {
                 // ? from Manager to Manager
-                return next(new appError_1.default('Employee is already a manager', 400));
+                return next(new appError_1.default("Employee is already a manager", 400));
             }
-            case 'Admin': {
+            case "Admin": {
                 // ? from Admin to Manager
-                oldEmp.role = 'Manager';
+                oldEmp.role = "Manager";
                 await oldEmp.save();
                 org.admin = null;
                 await org.save();
@@ -454,21 +467,21 @@ exports.changeRole = (0, catchAsync_1.default)(async (req, res, next) => {
             }
         }
     }
-    else if (newEmpRole === 'Staff') {
+    else if (newEmpRole === "Staff") {
         switch (oldEmp.role) {
-            case 'Staff': {
+            case "Staff": {
                 // ? from Staff to Staff
-                return next(new appError_1.default('Employee is already a staff', 400));
+                return next(new appError_1.default("Employee is already a staff", 400));
             }
-            case 'Admin': {
+            case "Admin": {
                 // ? from Admin to Staff
-                oldEmp.role = 'Staff';
+                oldEmp.role = "Staff";
                 await oldEmp.save();
                 org.admin = null;
                 await org.save();
                 return returnChangedRoleEmp(oldEmp, res);
             }
-            case 'Manager': {
+            case "Manager": {
                 // ? from Manager to Staff
                 // ? changed manager of all emp under user to null
                 await employee_model_1.default.updateMany({
@@ -476,7 +489,7 @@ exports.changeRole = (0, catchAsync_1.default)(async (req, res, next) => {
                     orgid: org._id,
                     deleted: false,
                 }, { manager: null });
-                oldEmp.role = 'Staff';
+                oldEmp.role = "Staff";
                 oldEmp.manager = undefined;
                 await oldEmp.save();
                 return returnChangedRoleEmp(oldEmp, res);
@@ -485,34 +498,34 @@ exports.changeRole = (0, catchAsync_1.default)(async (req, res, next) => {
                 return next(new appError_1.default("Employee's role can't be changed", 400));
         }
     }
-    else if (newEmpRole === 'Admin') {
+    else if (newEmpRole === "Admin") {
         switch (oldEmp.role) {
-            case 'Staff': {
+            case "Staff": {
                 // ? from Staff to Admin
                 if (org.admin)
-                    return next(new appError_1.default('Organization already have a admin', 400));
-                oldEmp.role = 'Admin';
+                    return next(new appError_1.default("Organization already have a admin", 400));
+                oldEmp.role = "Admin";
                 oldEmp.manager = org.owner;
                 await oldEmp.save();
                 org.admin = userData._id;
                 await org.save();
                 return returnChangedRoleEmp(oldEmp, res);
             }
-            case 'Admin': {
+            case "Admin": {
                 // ? from Admin to Admin
-                return next(new appError_1.default('Employee is already a admin', 400));
+                return next(new appError_1.default("Employee is already a admin", 400));
             }
-            case 'Manager': {
+            case "Manager": {
                 // ? from Manager to Admin
                 if (org.admin)
-                    return next(new appError_1.default('Organiation already have a admin', 400));
+                    return next(new appError_1.default("Organiation already have a admin", 400));
                 // ? changed manager of all emp under user to null
                 await employee_model_1.default.updateMany({
                     manager: userData._id,
                     orgid: org._id,
                     deleted: false,
                 }, { manager: null });
-                oldEmp.role = 'Admin';
+                oldEmp.role = "Admin";
                 oldEmp.manager = org.owner;
                 await oldEmp.save();
                 org.admin = userData._id;
@@ -523,7 +536,7 @@ exports.changeRole = (0, catchAsync_1.default)(async (req, res, next) => {
                 return next(new appError_1.default("Employee's role can't be changed", 400));
         }
     }
-    return next(new appError_1.default('Not a valid role change', 400));
+    return next(new appError_1.default("Not a valid role change", 400));
 });
 /**
  * @brief Controller Function to change the direct manager for a specific employee within an organization.
@@ -550,32 +563,32 @@ exports.changeManager = (0, catchAsync_1.default)(async (req, res, next) => {
     const { userid, managerEmail } = req.body;
     const { orgid } = req.params;
     if (!userid || !managerEmail || !orgid)
-        return next(new appError_1.default('All fields are required', 404));
+        return next(new appError_1.default("All fields are required", 404));
     // ? check if the given emp is as emp or not
     const oldEmp = await employee_model_1.default.findOne({ userid, orgid, deleted: false });
     if (!oldEmp)
-        return next(new appError_1.default('Employee not found', 404));
+        return next(new appError_1.default("Employee not found", 404));
     // ? check if given manageremail has a user or not
     const managerUserData = await user_model_1.default.findOne({
         email: managerEmail,
         deleted: false,
     });
     if (!managerUserData)
-        return next(new appError_1.default('No such user found', 404));
+        return next(new appError_1.default("No such user found", 404));
     // ? check if given manager can manager other or not
     const oldManager = await employee_model_1.default.findOne({
         userid: managerUserData._id,
         orgid,
-        $or: [{ role: 'Manager' }, { role: 'Owner' }],
+        $or: [{ role: "Manager" }, { role: "Owner" }],
         deleted: false,
     });
     if (!oldManager)
-        return next(new appError_1.default('Given Manager is neither a manager nor owner (change thier role first)', 404));
+        return next(new appError_1.default("Given Manager is neither a manager nor owner (change thier role first)", 404));
     // * now user is their & manager is their and manager can have emp under them
     oldEmp.manager = oldManager.userid;
     await oldEmp.save();
     return res.status(200).json({
-        status: 'success',
+        status: "success",
         data: {
             emp: {
                 userid: oldEmp.userid,
@@ -612,10 +625,10 @@ exports.deleteEmp = (0, catchAsync_1.default)(async (req, res, next) => {
     const { userid } = req.body;
     const { orgid } = req.params;
     if (!userid || !orgid)
-        return next(new appError_1.default('User and Org info is required', 404));
+        return next(new appError_1.default("User and Org info is required", 404));
     const org = await organization_model_1.default.findOne({ _id: orgid, deleted: false });
     if (!org)
-        return next(new appError_1.default('Only owner/admin can change manager', 403));
+        return next(new appError_1.default("Only owner/admin can change manager", 403));
     const oldEmp = await employee_model_1.default.findOne({
         userid,
         orgid,
@@ -623,8 +636,8 @@ exports.deleteEmp = (0, catchAsync_1.default)(async (req, res, next) => {
     });
     console.log(oldEmp);
     if (!oldEmp)
-        return next(new appError_1.default('User id not an employee of org', 400));
-    if (oldEmp.role === 'Owner' || oldEmp.role === 'Manager')
+        return next(new appError_1.default("User id not an employee of org", 400));
+    if (oldEmp.role === "Owner" || oldEmp.role === "Manager")
         return next(new appError_1.default("Can't remove employee with others working under them", 400));
     await oldEmp.delete();
     return res.status(204).end();
@@ -651,14 +664,14 @@ exports.deleteEmp = (0, catchAsync_1.default)(async (req, res, next) => {
  */
 exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
     const { orgid } = req.params;
-    let query = String(req.query.query || '');
-    query = query.replaceAll("'", '');
+    let query = String(req.query.query || "");
+    query = query.replaceAll("'", "");
     if (!orgid)
-        return next(new appError_1.default('Invalid organization', 400));
+        return next(new appError_1.default("Invalid organization", 400));
     let employees;
-    const regex = new RegExp(`.*${query}.*`, 'i');
+    const regex = new RegExp(`.*${query}.*`, "i");
     if (app_1.redisClient.isReady) {
-        employees = await app_1.redisClient.hGet(`organization-${orgid}`, 'employees');
+        employees = await app_1.redisClient.hGet(`organization-${orgid}`, "employees");
         if (employees && query.length) {
             employees = JSON.parse(employees);
             employees = employees.filter((employee) => {
@@ -676,10 +689,10 @@ exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
                 },
                 {
                     $lookup: {
-                        from: 'users',
-                        localField: 'userid',
-                        foreignField: '_id',
-                        as: 'employees',
+                        from: "users",
+                        localField: "userid",
+                        foreignField: "_id",
+                        as: "employees",
                     },
                 },
                 {
@@ -694,27 +707,27 @@ exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
                     },
                 },
                 {
-                    $unwind: '$employees',
+                    $unwind: "$employees",
                 },
                 {
                     $match: {
                         $or: [
                             {
-                                'employees.email': {
+                                "employees.email": {
                                     $regex: `.*${query}.*`,
-                                    $options: 'i',
+                                    $options: "i",
                                 },
                             },
                             {
-                                'employees.name': {
+                                "employees.name": {
                                     $regex: `.*${query}.*`,
-                                    $options: 'i',
+                                    $options: "i",
                                 },
                             },
                             {
                                 role: {
                                     $regex: `.*${query}.*`,
-                                    $options: 'i',
+                                    $options: "i",
                                 },
                             },
                         ],
@@ -722,7 +735,7 @@ exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
                 },
             ]);
             const employeesStr = JSON.stringify(employees);
-            await app_1.redisClient.hSet(`organization-${orgid}`, 'employees', employeesStr);
+            await app_1.redisClient.hSet(`organization-${orgid}`, "employees", employeesStr);
         }
     }
     else {
@@ -735,10 +748,10 @@ exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
             },
             {
                 $lookup: {
-                    from: 'users',
-                    localField: 'userid',
-                    foreignField: '_id',
-                    as: 'employees',
+                    from: "users",
+                    localField: "userid",
+                    foreignField: "_id",
+                    as: "employees",
                 },
             },
             {
@@ -753,27 +766,27 @@ exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
                 },
             },
             {
-                $unwind: '$employees',
+                $unwind: "$employees",
             },
             {
                 $match: {
                     $or: [
                         {
-                            'employees.email': {
+                            "employees.email": {
                                 $regex: `.*${query}.*`,
-                                $options: 'i',
+                                $options: "i",
                             },
                         },
                         {
-                            'employees.name': {
+                            "employees.name": {
                                 $regex: `.*${query}.*`,
-                                $options: 'i',
+                                $options: "i",
                             },
                         },
                         {
                             role: {
                                 $regex: `.*${query}.*`,
-                                $options: 'i',
+                                $options: "i",
                             },
                         },
                     ],
@@ -782,7 +795,7 @@ exports.searchEmployee = (0, catchAsync_1.default)(async (req, res, next) => {
         ]);
     }
     return res.status(200).json({
-        status: 'Success',
+        status: "Success",
         data: {
             employees,
         },
