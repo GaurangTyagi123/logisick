@@ -132,7 +132,7 @@ function ItemsTable() {
 					key: "Manage",
 					header: "Manage",
 					render: (_, row) => (
-						<Link to={`/item/${row.SKU}`}>
+						<Link to={`/item/${orgData.slug}/${row.SKU}`}>
 							<Button variant={"link"}>
 								<Edit />
 							</Button>

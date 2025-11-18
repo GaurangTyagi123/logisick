@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import {
     forgotPassword,
+    isEmployee,
     isLoggedIn,
     login,
     logout,
@@ -15,6 +16,7 @@ const authRouter = Router();
 
 // End-point to check whether the user is logged or not
 authRouter.get('/isLoggedIn', isLoggedIn);
+authRouter.get('/isEmployee/:orgSlug', isEmployee);
 
 // End-point to sign up a new user
 authRouter.post('/signup', signup);

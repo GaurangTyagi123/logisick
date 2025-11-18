@@ -10,21 +10,23 @@ import { useState } from "react";
 import { PanelLeftIcon } from "@/assets/icons/Docspage";
 import UpdateItemModal from "@/components/modals/item/EditItemModal";
 import { toast } from "react-toastify";
+import useIsEmployee from "@/hooks/item/useIsEmployee";
 
 function ItemPage() {
-	const { SKU } = useParams();
-	if (!SKU) {
+	const { SKU, orgSlug } = useParams();
+	if (!SKU || !orgSlug) {
 		toast.error("Item not found", { className: "toast" });
 	}
 	const { item, isPending } = useGetItem(SKU || "");
 	const { user: userData, isPending: isGettingUser } = useCheckAuth();
+	const { isEmployee, isPending: isCheckingStatus } = useIsEmployee(orgSlug || "");
 	const user = userData?.user;
 	const navigate = useNavigate();
 
 	const [openDeleteItemModal, setOpenDeleteItemModal] = useState(false);
 	const [openEditItemModal, setOpenEditItemModal] = useState(false);
 
-	if (isPending || isGettingUser) return <Loading />;
+	if (isPending || isGettingUser || isCheckingStatus) return <Loading />;
 	return (
 		<div className="flex flex-col gap-3 items-center bg-ls-bg-300 dark:bg-ls-bg-dark-800 min-h-screen relative">
 			<Navbar hide={{ userButton: true }} />
@@ -36,8 +38,8 @@ function ItemPage() {
 					<div className="grid gap-2 p-2 outline-1 rounded-2xl items-center">
 						<ItemCard
 							item={item}
-							barebone={!user}
 							viewMorePath={user ? "/dashboard" : "/authenticate"}
+							barebone={!isEmployee}
 						/>
 						{user && (
 							<div className="flex w-full gap-2">

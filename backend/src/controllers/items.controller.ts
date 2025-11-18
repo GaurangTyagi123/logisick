@@ -198,7 +198,8 @@ export const getItemBySKU = catchAsync(
 		const item = (await Item.findOne({ SKU })) as any | null;
 
 		if (!item) return next(new AppError("Item not found", 404));
-		sendItem(res, item as ItemType, 200);
+		
+		sendItem(res, item, 200, 1);
 	}
 );
 

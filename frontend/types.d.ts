@@ -51,6 +51,7 @@ type Item =  {
     importance?: string;
     origin?: string;
 	SKU?: string;
+	barebone?: boolean;
 }
 
 type DummyOrg = {

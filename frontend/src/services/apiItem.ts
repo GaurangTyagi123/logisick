@@ -95,7 +95,22 @@ export const getReport: getReportProps = async (orgId) => {
 		return null;
 	}
 };
-
+export const checkEmployeeStatus = async (orgSlug:string) => {
+	try {
+		const res = await axinstance.get(
+			`/v1/auth/isEmployee/${orgSlug}`
+		);
+		if (res.status === 200) {
+			return res.data.isEmployee;
+		} else {
+			handleError(
+				new Error("There was an error while checking your employment status")
+			);
+		}
+	} catch (err) {
+		handleError(err);
+	}
+};
 export const searchItems = async ({
 	orgid,
 	query,
