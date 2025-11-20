@@ -98,7 +98,7 @@ itemSchema.pre('save', function (this: ItemDocument, next) {
     this.SKU = SKU;
     next();
 });
-itemSchema.post(['save', 'findOneAndDelete', 'deleteOne'], async function (doc: ItemDocument) {
+itemSchema.post(['save', 'findOneAndDelete','findOneAndUpdate', 'deleteOne'], async function (doc: ItemDocument) {
     if (redisClient.isReady) {
         await redisClient.del(`organization-${doc.organizationId}`)
     }

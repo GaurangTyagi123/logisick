@@ -1,5 +1,4 @@
 import { Router } from 'express';
-import { protect } from '../controllers/auth.controller';
 import {
     createOrder,
     deleteOrder,
@@ -10,10 +9,11 @@ import {
     searchOrder,
     updateOrder,
 } from '../controllers/shipment.controller';
+import { csrfProtection, protect } from '../middlewares/auth.middleware';
 
 export const shipmentRouter = Router();
 
-shipmentRouter.route('/').post(protect, createOrder);
+shipmentRouter.route('/').post(csrfProtection,protect, createOrder);
 
 shipmentRouter.route('/allOrders/:orgid').get(protect, getAllOrders);
 shipmentRouter.route('/allOrders/report/:orgid').get(protect, orderReport);
@@ -24,5 +24,5 @@ shipmentRouter.route('/getOrder/:orderName').get(protect, getOrderByOrderName);
 shipmentRouter
     .route('/:orderId')
     .get(protect, getOrderById)
-    .patch(protect, updateOrder)
-    .delete(protect, deleteOrder);
+    .patch(csrfProtection,protect, updateOrder)
+    .delete(csrfProtection,protect, deleteOrder);

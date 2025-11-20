@@ -16,7 +16,18 @@ const axinstance = axios.create({
 			: "/api",
 	withCredentials: true,
 });
-
+const getCSRFToken = async () => {
+	try {
+		const res = await axinstance.get('/v1/csrf-token');
+		if (res.status === 200) {
+			axinstance.defaults.headers['X-CSRF-Token'] = res.data.csrfToken;
+		}
+	}
+	catch(err) {
+		Promise.reject(err)
+	}
+}
+await getCSRFToken();
 axinstance.interceptors.request.use((config) => {
 	if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
 	return config;

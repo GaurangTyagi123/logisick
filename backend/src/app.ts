@@ -21,6 +21,7 @@ import oauthRouter from './routes/oauth.routes';
 import userRouter from './routes/user.routes';
 import itemRouter from './routes/item.routes';
 import { shipmentRouter } from './routes/shipment.routes';
+import { csrfProtection } from './middlewares/auth.middleware';
 
 // Initialize the application
 const app = express();
@@ -133,11 +134,15 @@ if (process.env.NODE_ENV === 'production') {
 } else {
     app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
     app.options(
-        '/api/v1/',
+        '{*splat}',
         cors({ origin: 'http://localhost:5173', credentials: true })
     );
 }
 
+app.get('/api/v1/csrf-token', csrfProtection, (req: ExpressTypes.Request, res: ExpressTypes.Response, _next: ExpressTypes.NextFn) => {
+    const csrfToken = req.csrfToken()
+    return res.status(200).json({csrfToken : csrfToken})
+})
 // Authentication router
 app.use('/api/v1/auth', authRouter);
 // Organzations router

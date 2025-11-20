@@ -6,10 +6,10 @@ import {
 	updateUser,
 } from "../controllers/user.controller";
 import {
-	protect,
 	// restrictTo,
 	updatePassword,
 } from "../controllers/auth.controller";
+import { csrfProtection, protect } from "../middlewares/auth.middleware";
 
 const userRouter = Router();
 
@@ -19,9 +19,9 @@ userRouter.route("/").get(protect, /*restrictTo('admin'),*/ getUsers);
 // End point to update user's profile data
 userRouter
 	.route("/updateMe")
-	.post(protect, updateUser)
-	.delete(protect, deleteUser);
-userRouter.post("/updatePassword", protect, updatePassword);
-userRouter.route("/:id").get(protect, /* restrictTo('admin'),*/ getUser);
+	.post(csrfProtection,protect, updateUser)
+	.delete(csrfProtection,protect, deleteUser);
+userRouter.post("/updatePassword",csrfProtection, protect, updatePassword);
+userRouter.route("/:id").get(protect, getUser);
 
 export default userRouter;

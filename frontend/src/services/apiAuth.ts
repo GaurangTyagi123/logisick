@@ -2,12 +2,6 @@ import axinstance, { setAccessToken } from "@/utils/axios";
 import { handleError } from "@/utils/handleError";
 import { toast } from "react-toastify";
 
-// interface AuthProps {
-//     user: User | null;
-//     isCheckingAuth: boolean;
-//     isLoggingIn: boolean;
-//     checkAuth: () => Promise<void>;
-// }
 
 type PasswordResetForm = {
 	password: string;

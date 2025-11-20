@@ -9,7 +9,7 @@ import {
     searchItem,
     updateItem,
 } from '../controllers/items.controller';
-import { protect, restrictTo } from '../controllers/auth.controller';
+import { csrfProtection, protect, restrictTo } from '../middlewares/auth.middleware';
 
 const itemRouter = Router();
 // end-point to get item by SKU (Stock Keeping Unit)
@@ -27,13 +27,13 @@ itemRouter
     .get(protect, restrictTo('Staff', 'Manager', 'Owner'), itemsReport);
 
 // end-point to add an item to inventory
-itemRouter.route('/').post(protect, addItem);
+itemRouter.route('/').post(csrfProtection,protect, addItem);
 
 // end-point to (create,update and delete) item
 itemRouter
     .route('/:itemId')
     .get(protect, getItem)
-    .patch(protect, updateItem)
-    .delete(protect, deleteItem);
+    .patch(csrfProtection,protect, updateItem)
+    .delete(csrfProtection,protect, deleteItem);
 
 export default itemRouter;

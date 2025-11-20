@@ -63,7 +63,7 @@ shipmentSchema.pre('save', function (next: any) {
     this.orderName = orderName;
     next();
 });
-shipmentSchema.post(['save', 'findOneAndDelete', 'deleteOne'], async function () {
+shipmentSchema.post(['save', 'findOneAndDelete', 'findOneAndUpdate','deleteOne'], async function () {
     if (redisClient.isReady) {
         const prefix = 'organization*';
         let cursor = '0';
