@@ -84,7 +84,7 @@ app.use(
 app.use(passport.initialize());
 
 // Middleware which gives additional information about the requests comming to the server
-app.use(morgan('dev'));
+app.use("/api",morgan('tiny'));
 app.use(
     helmet({
         hidePoweredBy: true,
