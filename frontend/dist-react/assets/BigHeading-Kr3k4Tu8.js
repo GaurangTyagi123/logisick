@@ -1,0 +1,1 @@
+import{j as x,c as l}from"./index-DnKuSOU4.js";function n({small:t,center:e}){return x.jsx("h1",{className:l("select-none text-6xl ml-0 king-julian text-black dark:text-white",t?"ms:text-6xl":"md:text-9xl ",e?"":"md:ml-15"),children:"LOG/SICK"})}export{n as B};
