@@ -32,46 +32,45 @@ function OrgOverview() {
 				<CustomTableSkeleton />
 			</div>
 		);
-	if (orgData) {
-		return (
-			<div className="flex flex-col gap-2 items-baseline h-full w-auto jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
-				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
-					<div className="flex flex-col md:flex-row justify-between items-center w-full">
-						<H3 className="overflow-hidden text-ellipsis whitespace-nowrap w-full">
-							{orgData.name}
-						</H3>
-						<div className="flex">
-							<Small className="grid place-items-center gap-2 h-full p-2">
-								Imports
-								<Badge className="p-2">
-									{formatCurrency(500000,'INR')}
-								</Badge>
-							</Small>
-							<Small className="grid place-items-center gap-2 h-full p-2">
-								Exports
-								<Badge className="p-2">
-									{formatCurrency(500000,'INR')}
-								</Badge>
-							</Small>
-						</div>
+	if (!orgData) return <p>Create your own organiztion</p>;
+	return (
+		<div className="flex flex-col gap-2 items-baseline jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800 w-full">
+			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
+				<div className="flex flex-col lg:flex-row justify-between items-center w-full">
+					<H3 className="overflow-hidden text-ellipsis whitespace-nowrap w-full text-center md:text-start">
+						{orgData.name}
+					</H3>
+					<div className="flex gap-4">
+						<Small className="grid place-items-center gap-2 h-full p-2">
+							Imports
+							<Badge className="p-2">
+								{formatCurrency(500000, "INR")}
+							</Badge>
+						</Small>
+						<Small className="grid place-items-center gap-2 h-full p-2">
+							Exports
+							<Badge className="p-2">
+								{formatCurrency(500000, "INR")}
+							</Badge>
+						</Small>
 					</div>
-					<Muted className="overflow-hidden text-ellipsis whitespace-nowrap line-clamp-2">
-						{orgData.description}
-					</Muted>
 				</div>
-				{orgData ? (
-					<EmployeeTable orgid={orgData?._id} />
-				) : (
-					<div className="h-96 w-full flex flex-col justify-center items-center gap-3 outline-1">
-						<H3>Your Organization doesn't have any employees</H3>
-						<Button asChild>
-							<Link to={"user-role"}>Add Employees</Link>
-						</Button>
-					</div>
-				)}
+				<Muted className="line-clamp-2 md:text-start text-center">
+					{orgData.description}
+				</Muted>
 			</div>
-		);
-	} else return <p>Create your own organiztion</p>;
+			{orgData ? (
+				<EmployeeTable orgid={orgData?._id} />
+			) : (
+				<div className="h-96 w-full flex flex-col justify-center items-center gap-3 outline-1">
+					<H3>Your Organization doesn't have any employees</H3>
+					<Button asChild>
+						<Link to={"user-role"}>Add Employees</Link>
+					</Button>
+				</div>
+			)}
+		</div>
+	);
 }
 
 export default OrgOverview;

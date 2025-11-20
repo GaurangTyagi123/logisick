@@ -163,6 +163,24 @@ function EmployeeTable({
 		cancel: () => void;
 	};
 
+	// Wrapper function to handle immediate clear
+	const handleSearchWrapper = useCallback(
+		(query: string) => {
+			// Immediately clear if empty (don't debounce)
+			if (query.trim() === "") {
+				debouncedSearch.cancel(); // Cancel any pending searches
+				setSearchResults(null);
+				if (controllerRef.current) {
+					controllerRef.current.abort();
+				}
+				return;
+			}
+			// Otherwise use debounced search
+			debouncedSearch(query);
+		},
+		[debouncedSearch]
+	);
+
 	// calculates and sets the totalPage number based on the employee data recieved from the server
 	useEffect(() => {
 		if (!isGettingEmployees) {
@@ -185,7 +203,7 @@ function EmployeeTable({
 	}
 	const deconstructedEmployees = deconstructEmployee(employees);
 	return (
-		<div className=" w-full">
+		<>
 			<CustomTable<Record<string, string>>
 				title="Employees"
 				columns={
@@ -198,10 +216,10 @@ function EmployeeTable({
 										return (
 											<div className="flex gap-2 items-center">
 												<UserAvatar
-													className="w-10 h-10"
+													className="w-10 h-10 hidden sm:grid"
 													customSeed={row.avatar}
 												/>
-												<span className="hidden sm:flex">
+												<span className="flex">
 													{row?.name} - ( {row?.role}{" "}
 													)
 												</span>
@@ -243,10 +261,11 @@ function EmployeeTable({
 																);
 															}}
 															variant={"outline"}
+															size={"sm"}
 														>
-															Change Role
+															Role
 														</Button>
-														{/* change manager */}
+														{/* manager */}
 														<Button
 															disabled={
 																pendingChangeManager
@@ -263,8 +282,9 @@ function EmployeeTable({
 															}}
 															variant={"outline"}
 															title={`Remove ${row.name} from organization`}
+															size={"sm"}
 														>
-															Change Manager
+															Manager
 														</Button>
 														{/* delete employee */}
 														<Button
@@ -285,6 +305,7 @@ function EmployeeTable({
 																"destructive"
 															}
 															title={`Remove ${row.name} from organization`}
+															size={"sm"}
 														>
 															<Delete />
 														</Button>
@@ -325,7 +346,7 @@ function EmployeeTable({
 				currentPage={page}
 				totalPages={totalPages}
 				setPage={setPage}
-				onSearch={debouncedSearch}
+				onSearch={handleSearchWrapper}
 			/>
 			<DeleteEmpModal
 				open={deleteEmpModalOpen}
@@ -352,7 +373,7 @@ function EmployeeTable({
 				orgid={orgid}
 				setOpen={setChangeManagerModalOpen}
 			/>
-		</div>
+		</>
 	);
 }
 

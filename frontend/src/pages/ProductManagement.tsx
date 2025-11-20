@@ -40,9 +40,9 @@ function ProductManagement() {
 			</div>
 		);
 	return (
-		<div className="grid gap-2 min-h-96 w-full ">
+		<div className="grid gap-2 w-full">
 			{/* top tab */}
-			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full h-20 p-3 rounded-2xl flex justify-between items-center">
+			<div className="grid w-full md:flex md:items-center md:justify-between gap-2 p-3 rounded-2xl bg-white dark:bg-ls-bg-dark-800 outline-1">
 				<H3>Product Management</H3>
 				<Button onClick={() => setOpenAddItemModal(true)}>
 					Add New Item
@@ -50,11 +50,12 @@ function ProductManagement() {
 			</div>
 			{/* main menu */}
 			<main className="w-full grid gap-2 rounded-2xl h-full">
-				<div className="outline-1 p-4 rounded-2xl grid gap-2 w-full">
+				{/* Reports */}
+				<div className="outline-1 p-3 rounded-2xl flex flex-col gap-2 w-full">
 					<Large>Items Summary</Large>
 					{report ? (
-						<div className="flex flex-wrap gap-2">
-							<div className="flex w-full gap-2">
+						<div className="grid gap-2">
+							<div className="grid grid-cols-1 md:grid-cols-3 w-full gap-2">
 								<ReportBar
 									name="No. of Items"
 									value={report.numOfItems}
@@ -64,13 +65,14 @@ function ProductManagement() {
 									name="Total Quantity"
 									value={report.totalQuantity}
 									variant={"outline"}
-								/>
+									/>
 								<ReportBar
 									name="Avg. Quantity per Item"
 									value={report.averageQuantity}
+									variant={"outline"}
 								/>
 							</div>
-							<div className="flex w-full gap-2">
+							<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
 								<ReportBar
 									name="Total Cost Price"
 									value={report.totalCostPrice}
@@ -86,7 +88,7 @@ function ProductManagement() {
 									variant={"secondary"}
 								/>
 							</div>
-							<div className="flex w-full gap-2">
+							<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
 								<ReportBar
 									name="Avg. Cost Price"
 									value={report.averageCostPrice}
@@ -111,6 +113,7 @@ function ProductManagement() {
 						<Large className="w-full">No Report Found</Large>
 					)}
 				</div>
+				{/* item table */}
 				<ItemsTable />
 			</main>
 			<AddItemModal

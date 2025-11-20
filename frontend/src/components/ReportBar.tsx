@@ -17,25 +17,32 @@ function ReportBar({
 	className?: string;
 	currency?: boolean;
 	variant?:
-	| "default"
-	| "secondary"
-	| "teritiary"
-	| "destructive"
-	| "outline"
-	| null
-	| undefined;
+		| "default"
+		| "secondary"
+		| "teritiary"
+		| "destructive"
+		| "outline"
+		| null
+		| undefined;
 }) {
 	return (
 		<div
 			className={clsx(
-				"flex gap-2 justify-between items-center outline-1 p-2 rounded-xl w-full jet-brains",
+				"flex gap-2 justify-between items-center outline-0 sm:outline-1 p-1 sm:p-2 rounded-xl w-full jet-brains",
 				className
 			)}
 		>
-			<span className="text-sm">{name}</span>
+			<span className="text-sm overflow-hidden text-ellipsis whitespace-nowrap">
+				{name}
+			</span>
 			<div>
-				<Badge variant={variant} className="font-bold text-md">
-					{currency ? formatCurrency(value, suffix as string) : value.toFixed(2)}
+				<Badge
+					variant={variant}
+					className="font-bold text-sm md:text-md overflow-hidden text-ellipsis whitespace-nowrap"
+				>
+					{currency
+						? formatCurrency(value, suffix as string)
+						: value.toFixed(2)}
 				</Badge>
 			</div>
 		</div>

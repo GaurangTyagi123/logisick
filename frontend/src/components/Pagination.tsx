@@ -29,6 +29,7 @@ function Pagination({
 					variant={currentPage === pageNum ? "default" : "outline"}
 					onClick={() => handlePageClick(pageNum)}
 					className="mx-1"
+					size={"sm"}
 				>
 					{pageNum}
 				</Button>
@@ -88,6 +89,7 @@ function Pagination({
 				onClick={() => handlePageClick(1)}
 				disabled={currentPage === 1}
 				variant="outline"
+				size={"sm"}
 			>
 				<ChevronFirst />
 			</Button>
@@ -95,6 +97,7 @@ function Pagination({
 				onClick={() => handlePageClick(currentPage - 1)}
 				disabled={currentPage == 1}
 				variant="outline"
+				size={"sm"}
 			>
 				<ChevronLeft />
 			</Button>
@@ -103,6 +106,7 @@ function Pagination({
 				onClick={() => handlePageClick(currentPage + 1)}
 				disabled={currentPage === totalPages}
 				variant="outline"
+				size={"sm"}
 			>
 				<ChevronRight />
 			</Button>
@@ -110,6 +114,7 @@ function Pagination({
 				onClick={() => handlePageClick(totalPages ?? 1)}
 				disabled={currentPage === totalPages}
 				variant="outline"
+				size={"sm"}
 			>
 				<ChevronLast />
 			</Button>

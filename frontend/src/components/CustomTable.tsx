@@ -206,20 +206,20 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 	);
 
 	return (
-		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800 w-full">
-			<CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
+		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800 w-full overflow-y-auto p-1 md:p-2">
+			<CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0 px-1 md:px-2">
 				<div className="flex items-center gap-2">
 					{titleIcon}
 					<Large>{title}</Large>
 				</div>
-				<div className="flex gap-2 flex-wrap">
+				<div className="flex flex-wrap gap-2 ">
 					{/* Search input */}
 					<Input
 						value={searchStr || ""}
 						onChange={(e) => setSearchStr(e.target.value)}
 						type="text"
 						placeholder="Search..."
-						className="w-full md:w-64"
+						className="sm:w-40 w-full"
 					/>
 
 					{/* Sort by column */}
@@ -325,33 +325,37 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 					)}
 				</div>
 			</CardHeader>
-
 			<Separator />
-
-			<CardContent className="w-full">
+			<CardContent className="overflow-x-auto scrollbar px-1 md:px-2">
 				{(clientSide ? processedData : data).length === 0 ? (
-					<div className="h-64 w-full grid place-items-center gap-3">
+					<div className="h-96 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
 					</div>
 				) : (
-					<Table className="overflow-x-scroll w-full">
-						<TableHeader>
-							<TableRow>
+					<Table className="min-h-64">
+						<TableHeader className="w-full">
+							<TableRow className="w-full flex gap-2">
 								{columns.map((col) => (
-									<TableHead key={String(col.key)}>
+									<TableHead
+										key={String(col.key)}
+										className="overflow-hidden text-ellipsis whitespace-nowrap flex-1 flex min-w-[50px]"
+									>
 										{col.header}
 									</TableHead>
 								))}
 							</TableRow>
 						</TableHeader>
-						<TableBody className="w-full overflow-x-auto">
+						<TableBody className="w-full">
 							{(clientSide ? processedData : data).map(
 								(row, index) => (
-									<TableRow key={index}>
+									<TableRow
+										key={index}
+										className="flex gap-2"
+									>
 										{columns.map((col) => (
 											<TableCell
 												key={String(col.key) + index}
-												className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10"
+												className="overflow-hidden text-ellipsis whitespace-nowrap flex-1 flex min-w-[50px]"
 											>
 												{col.render
 													? col.render(
@@ -373,7 +377,7 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 				)}
 			</CardContent>
 
-			<CardFooter className="w-full flex justify-center items-center">
+			<CardFooter className="w-full flex justify-center items-center px-1 md:px-2">
 				<Pagination
 					currentPage={currentPage}
 					handlePageClick={(pageno) => setPage(pageno)}

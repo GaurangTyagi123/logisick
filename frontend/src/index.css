@@ -25,10 +25,23 @@ body,
 
 	scroll-behavior: smooth;
 }
-#root::-webkit-scrollbar {
+.scrollbar::-webkit-scrollbar {
 	width: 5px;
-	background-color: red;
-	color: red;
+	height: 5px;
+	background-color: #8888;
+}
+.scrollbar::-webkit-scrollbar:hover{
+	cursor:grab;
+}
+.scrollbar::-webkit-scrollbar:active{
+	cursor:grabbing;
+}
+.scrollbar::-webkit-scrollbar-thumb{
+	width: 5px;
+	height: 5px;
+	background-color: white;
+	border-radius: 2rem;
+	cursor:grab;
 }
 
 .highlight,

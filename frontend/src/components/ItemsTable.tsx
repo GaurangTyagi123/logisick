@@ -62,6 +62,24 @@ function ItemsTable() {
 		cancel: () => void;
 	};
 
+	// Wrapper function to handle immediate clear
+	const handleSearchWrapper = useCallback(
+		(query: string) => {
+			// Immediately clear if empty (don't debounce)
+			if (query.trim() === "") {
+				debouncedSearch.cancel(); // Cancel any pending searches
+				setSearchResults(null);
+				if (controllerRef.current) {
+					controllerRef.current.abort();
+				}
+				return;
+			}
+			// Otherwise use debounced search
+			debouncedSearch(query);
+		},
+		[debouncedSearch]
+	);
+
 	useEffect(() => {
 		if (!isGettingItems && itemsResponse) {
 			setTotalPages(
@@ -145,7 +163,7 @@ function ItemsTable() {
 			currentPage={page}
 			totalPages={totalPages}
 			setPage={setPage}
-			onSearch={debouncedSearch}
+			onSearch={handleSearchWrapper}
 		/>
 	);
 }

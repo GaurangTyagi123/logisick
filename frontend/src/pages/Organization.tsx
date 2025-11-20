@@ -95,7 +95,7 @@ function Organization() {
 	const { data: organizations, isPending } = useGetOrganizations();
 
 	if (!user) navigate("/");
-	if (isPending) return <Loading />;
+	if (isPending) return <Loading fullscreen/>;
 
 	return (
 		<>
