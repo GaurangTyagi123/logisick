@@ -1,1 +1,0 @@
-import{j as s,c as a,r as l,g as r}from"./index-DnKuSOU4.js";function n({openModal:e,children:t}){return s.jsx("div",{style:{backgroundColor:"#00000088"},className:a("h-full max-h-screen w-full absolute top-0 left-0 justify-center items-center z-50",e?"flex":"hidden"),children:s.jsx(l.Suspense,{fallback:s.jsx(r,{}),children:t})})}export{n as M};
