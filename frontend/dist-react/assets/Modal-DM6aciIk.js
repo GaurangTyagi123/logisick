@@ -1,0 +1,1 @@
+import{j as s,c as a,r as l,g as r}from"./index-OmV3yq9G.js";function n({openModal:t,children:e}){return s.jsx("div",{style:{backgroundColor:"#00000088"},className:a("h-full w-full absolute top-0 left-0 justify-center items-start pt-10 sm:pt-20 z-50",t?"flex":"hidden"),children:s.jsx(l.Suspense,{fallback:s.jsx(r,{}),children:e})})}export{n as M};
