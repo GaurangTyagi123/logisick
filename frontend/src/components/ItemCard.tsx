@@ -44,7 +44,7 @@ function ListItem({
 		<div
 			className={clsx(
 				"flex justify-between items-center",
-				small ? "text-sm" : "text-md"
+				small ? "text-xs" : "text-sm"
 			)}
 		>
 			<span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10">
@@ -84,14 +84,14 @@ function ItemCard({
 	return (
 		<div
 			className={clsx(
-				"size-96 min-w-sm md:min-w-md outline-none duration-1000 [perspective:10rem] transform-3d",
+				"aspect-square w-2xs sm:w-xs md:w-sm max-w-11/12 outline-none duration-1000 [perspective:10rem] transform-3d",
 				showQr && "[transform:rotateY(180deg)]",
-				small ? "max-w-sm" : "max-w-md",
+				small ? "max-w-xs" : "max-w-md",
 				className
 			)}
 		>
 			{/* Information Card */}
-			<Card className="inset-0 w-full h-fit p-2 md:p-4 gap-2 absolute [backface-visibility:hidden]">
+			<Card className="inset-0 p-2 md:p-4 gap-2 absolute [backface-visibility:hidden]">
 				<CardHeader className="w-full h-min ">
 					<H3 className="text-center jet-brains">
 						{item?.SKU?.substring(25)}
@@ -179,8 +179,7 @@ function ItemCard({
 							<ListItem
 								small={small}
 								field={
-									item.weight &&
-									prefereableUnits(item.weight)
+									item.weight && prefereableUnits(item.weight)
 								}
 								fieldName="Weight"
 							/>
@@ -209,6 +208,7 @@ function ItemCard({
 					<Button
 						onClick={() => setShowQr(true)}
 						className="col-span-1 w-full"
+						size={"sm"}
 					>
 						Show Qrcode
 					</Button>
@@ -216,12 +216,14 @@ function ItemCard({
 						to={viewMorePath || "/authenticate"}
 						className="col-span-1"
 					>
-						<Button className="w-full">More About Item</Button>
+						<Button className="w-full" size={"sm"}>
+							More <span className="hidden sm:flex">About Item</span>
+						</Button>
 					</Link>
 				</CardFooter>
 			</Card>
 			{/* Qrcode card */}
-			<Card className="inset-0 size-full h-fit p-2 md:p-4 gap-2 absolute [backface-visibility:hidden] [transform:rotateY(180deg)]">
+			<Card className="inset-0 size-full p-2 md:p-4 gap-2 absolute [backface-visibility:hidden] [transform:rotateY(180deg)]">
 				<CardHeader className="w-full text-center">
 					<H3 className="jet-brains">Scan Me</H3>
 				</CardHeader>
@@ -229,10 +231,11 @@ function ItemCard({
 					<img
 						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${
 							import.meta.env.FRONTEND_URL ||
+							window.location.origin ||
 							"http://localhost:5173"
 						}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
 						alt={item?.name.substring(0, 10)}
-						className="rounded-2xl"
+						className="rounded-2xl md:max-w-10/12 max-w-2/3"
 					/>
 				</CardContent>
 				<CardFooter className="w-full p-0 md:p-0">

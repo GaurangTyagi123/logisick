@@ -134,7 +134,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="w-11/12 sm:max-w-sm">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Update item</CardTitle>
 					<Button

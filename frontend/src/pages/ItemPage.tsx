@@ -32,18 +32,18 @@ function ItemPage() {
 	return (
 		<div className="flex flex-col justify-start gap-3 items-center bg-ls-bg-300 dark:bg-ls-bg-dark-800 min-h-dvh relative">
 			<Navbar hide={{ userButton: true }}>
-				<Button variant={"outline"} className="hidden md:flex" onClick={() => navigate(-1)}>
-					<PanelLeftIcon /> Go Back
+				<Button variant={"outline"} onClick={() => navigate(-1)}>
+					<PanelLeftIcon /> <span className="hidden sm:flex">Go Back</span>
 				</Button>
 			</Navbar>
 			{item ? (
-				<main className="grid gap-2 p-2 rounded-2xl items-center w-full place-items-center">
+				<main className="grid gap-2 p-2 rounded-2xl items-center place-items-center">
 					<ItemCard
 						item={item}
 						viewMorePath={user ? "/dashboard" : "/authenticate"}
 						barebone={!isEmployee}
 					/>
-					{/* {!!isEmployee && (
+					{!!isEmployee && (
 						<div className="flex w-full gap-1">
 							<Button
 								variant={"secondary"}
@@ -70,7 +70,7 @@ function ItemPage() {
 								item={item}
 							/>
 						</div>
-					)} */}
+					)}
 				</main>
 			) : (
 				<div className="w-full flex flex-wrap justify-between px-6">
