@@ -2,7 +2,7 @@ import axinstance from "@/utils/axios";
 import { handleError } from "@/utils/handleError";
 import axios from "axios";
 
-export type ReportType = {
+export type ItemReportType = {
 	numOfItems: number;
 	totalQuantity: number;
 	averageQuantity: number;
@@ -25,7 +25,7 @@ type updateItemProps = ({
 	itemId: string;
 }) => Promise<any>;
 type deleteItemProps = (orgId: string) => Promise<any>;
-type getItemsReportProps = (orgId: string) => Promise<ReportType | null>;
+type getItemsReportProps = (orgId: string) => Promise<ItemReportType | null>;
 
 export const getItem: getItemProps = async (SKU) => {
 	try {

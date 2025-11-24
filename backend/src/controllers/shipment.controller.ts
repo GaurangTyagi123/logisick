@@ -56,7 +56,7 @@ export const createOrder = catchAsync(
 				)
 			);
 		const order = await Shipment.create({
-			item:itemId,
+			item: itemId,
 			organizationId,
 			quantity,
 			orderedOn,
@@ -201,7 +201,7 @@ export const updateOrder = catchAsync(
 
 //! NOT TESTED
 /**
- * @brief Function to generate a report for the orders  of an organization
+ * @brief Function to generate a report for the orders of an organization
  * @param req (Express Request Object)
  * @param res (Express Response Object)
  * @param next (Express Next function)
@@ -209,60 +209,66 @@ export const updateOrder = catchAsync(
  * @returns json response
  */
 export const orderReport = catchAsync(
-    async (
-        req: ExpressTypes.Request,
-        res: ExpressTypes.Response,
-        next: ExpressTypes.NextFn
-    ) => {
-        const { orgid } = req.params;
-        if (!orgid)
-            return next(
-                new AppError('please provide a valid organization id', 400)
-            );
-        const report = await Shipment.aggregate([
-            {
-                $match: {
-                    organizationId: new Types.ObjectId(orgid),
-                },
-            },
-            {
-                $lookup: {
-                    from: 'items',
-                    as: 'item',
-                    foreignField: '_id',
-                    localField: 'item',
-                },
-            },
-            {
-                $unwind : "$item"
-            },
-            {
-                $project: {
-                    item: {
-                        name: 1,
-                        sellingPrice: 1,
-                        costPrice: 1,
-                    },
-                    orderedOn: 1,
-                    quantity: 1,
-                },
-            },
-            {
-                $group: {
-                    _id: '$item',
-                    numOfOrders: { $sum: 1 },
-                    totalQuantity: { $sum: "$quantity" },
-                    totalValueOfAllOrders : {$sum :{ $multiply : ['$quantity','$item.sellingPrice']}}
-                },
-            },
-        ]);
-        return res.status(200).json({
-            status: 'success',
-            data: {
-                report,
-            },
-        });
-    }
+	async (
+		req: ExpressTypes.Request,
+		res: ExpressTypes.Response,
+		next: ExpressTypes.NextFn
+	) => {
+		const { orgid } = req.params;
+		if (!orgid)
+			return next(
+				new AppError("please provide a valid organization id", 400)
+			);
+		const report = await Shipment.aggregate([
+			{
+				$match: {
+					organizationId: new Types.ObjectId(orgid),
+				},
+			},
+			{
+				$lookup: {
+					from: "items",
+					as: "item",
+					foreignField: "_id",
+					localField: "item",
+				},
+			},
+			{
+				$unwind: "$item",
+			},
+			{
+				$group: {
+					_id: null,
+					totalRevenue: {
+						$sum: {
+							$multiply: ["$quantity", "$item.sellingPrice"],
+						},
+					},
+					totalOrders: { $sum: 1 },
+					totalQuantity: { $sum: "$quantity" },
+				},
+			},
+			{
+				$project: {
+					_id: 0,
+					totalRevenue: 1,
+					totalOrders: 1,
+					totalQuantity: 1,
+				},
+			},
+		]);
+		console.log(report)
+		return res.status(200).json({
+			status: "success",
+			data: {
+				report: report[0] || {
+					totalRevenue: 0,
+					totalOrders: 0,
+					totalQuantity: 0,
+				},
+			},
+		});
+	}
 );
 /**
  * @brief Function to delete an order with a given ID

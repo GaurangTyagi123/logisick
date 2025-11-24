@@ -1,9 +1,8 @@
-import type { ReportType } from "@/services/apiItem";
 import clsx from "clsx";
 import { Badge } from "./ui/badge";
 import { formatCurrency } from "@/utils/utilfn";
 
-function ReportBar({
+function ReportBar<ReportType>({
 	name,
 	value,
 	suffix,
@@ -41,8 +40,12 @@ function ReportBar({
 					className="font-bold text-xs md:text-sm md:text-md overflow-hidden text-ellipsis whitespace-nowrap"
 				>
 					{currency
-						? formatCurrency(value, suffix as string)
-						: value.toFixed(2)}
+						? typeof value === "number"
+							? formatCurrency(value, suffix as string)
+							: typeof value === "number"
+							? value.toFixed(2)
+							: String(value)
+						: String(value)}
 				</Badge>
 			</div>
 		</div>

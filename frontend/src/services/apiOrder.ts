@@ -1,6 +1,12 @@
 import axinstance from "@/utils/axios";
 import { handleError } from "@/utils/handleError";
 
+export type OrderReportType = {
+	totalRevenue: number;
+	totalOrders: number;
+	totalQuantity: number;
+};
+
 type getAllOrdersProps = (
 	orgid: string,
 	page?: number
@@ -15,9 +21,7 @@ type getAllOrdersProps = (
 	count: number;
 } | void>;
 
-type getOrdersReportProps = (
-	orgid: string
-) => Promise<Record<string, any> | void>;
+type getOrdersReportProps = (orgid: string) => Promise<OrderReportType | void>;
 
 type getOrderByNameProps = (orderName: string) => Promise<{
 	orders: shipmentType[];

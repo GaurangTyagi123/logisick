@@ -6,6 +6,7 @@ import Button from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Large } from "@/components/ui/Typography";
 import useGetItemsReport from "@/hooks/item/useGetItemsReport";
+import type { ItemReportType } from "@/services/apiItem";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -56,32 +57,32 @@ function ProductManagement() {
 					{report ? (
 						<div className="grid gap-2">
 							<div className="grid grid-cols-1 md:grid-cols-3 w-full gap-2">
-								<ReportBar
+								<ReportBar<ItemReportType>
 									name="No. of Items"
 									value={report.numOfItems}
 									variant={"outline"}
 								/>
-								<ReportBar
+								<ReportBar<ItemReportType>
 									name="Total Quantity"
 									value={report.totalQuantity}
 									variant={"outline"}
 								/>
-								<ReportBar
+								<ReportBar<ItemReportType>
 									name="Avg. Quantity per Item"
 									value={report.averageQuantity}
 									variant={"outline"}
 								/>
 							</div>
-							<div className="grid gap-2 w-full grid-cols-1 xl:grid-cols-2">
+							<div className="grid gap-2 w-full grid-cols-1 2xl:grid-cols-2">
 								<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-									<ReportBar
+									<ReportBar<ItemReportType>
 										name="Total Cost Price"
 										value={report.totalCostPrice}
 										suffix="INR"
 										currency
 										variant={"secondary"}
 									/>
-									<ReportBar
+									<ReportBar<ItemReportType>
 										name="Total Selling Price"
 										value={report.totalSellingPrice}
 										suffix="INR"
@@ -90,14 +91,14 @@ function ProductManagement() {
 									/>
 								</div>
 								<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-									<ReportBar
+									<ReportBar<ItemReportType>
 										name="Avg. Cost Price"
 										value={report.averageCostPrice}
 										suffix="INR"
 										currency
 										variant={"secondary"}
 									/>
-									<ReportBar
+									<ReportBar<ItemReportType>
 										name="Avg. Selling Price"
 										value={report.averageSellingPrice}
 										suffix="INR"
