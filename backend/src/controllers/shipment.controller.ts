@@ -96,7 +96,7 @@ export const getAllOrders = catchAsync(
             deleted: false,
         }).populate({
             path: 'item',
-            select: 'name', //. NOTE:  add fields that you want in the response
+            select: 'name costPrice', //. NOTE:  add fields that you want in the response
         });
         const totalCount = await Shipment.countDocuments({
             organizationId: orgid,
@@ -230,14 +230,17 @@ export const orderReport = catchAsync(
             {
                 $lookup: {
                     from: 'items',
-                    as: 'items',
+                    as: 'item',
                     foreignField: '_id',
                     localField: 'item',
                 },
             },
             {
+                $unwind : "$item"
+            },
+            {
                 $project: {
-                    items: {
+                    item: {
                         name: 1,
                         sellingPrice: 1,
                         costPrice: 1,
@@ -248,24 +251,10 @@ export const orderReport = catchAsync(
             },
             {
                 $group: {
-                    _id: {
-                        orderedOn: '$orderedOn',
-                    },
-                    items: {
-                        $addToSet: '$items',
-                    },
-                    numOfItems: {
-                        $sum: 1,
-                    },
-                    totalUnits: {
-                        $sum: '$quantity',
-                    },
-                    totalSellingPrice: {
-                        $sum: { $sum: '$items.sellingPrice' },
-                    },
-                    totalCostPrice: {
-                        $sum: { $sum: '$items.costPrice' },
-                    },
+                    _id: '$item',
+                    numOfOrders: { $sum: 1 },
+                    totalQuantity: { $sum: "$quantity" },
+                    totalValueOfAllOrders : {$sum :{ $multiply : ['$quantity','$item.sellingPrice']}}
                 },
             },
         ]);
