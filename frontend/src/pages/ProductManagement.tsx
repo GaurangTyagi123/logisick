@@ -48,7 +48,7 @@ function ProductManagement() {
 					Add New Item
 				</Button>
 			</div>
-			{/* main menu */}
+			{/* main section */}
 			<main className="w-full grid gap-2 rounded-lg md:rounded-2xl h-full">
 				{/* Reports */}
 				<div className="outline-1 p-3 rounded-lg md:rounded-2xl flex flex-col gap-2 w-full bg-white dark:bg-ls-bg-dark-800">
@@ -118,6 +118,7 @@ function ProductManagement() {
 				{/* item table */}
 				<ItemsTable />
 			</main>
+			{/* add item modal */}
 			<AddItemModal
 				open={openAddItemModal}
 				setOpen={setOpenAddItemModal}

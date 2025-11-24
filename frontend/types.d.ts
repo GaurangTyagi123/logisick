@@ -26,32 +26,32 @@ type Org = {
 	deletedAt?: string;
 };
 type Emp = {
-	_id: ObjectId;
+	_id: string;
 	role: string;
 	user: {
 		name: string;
 		email: string;
 		avatar: string;
-	}
-}
-type Item =  {
-    _id: ObjectId;
-    name: string;
-    organization: ObjectId;
-    costPrice: number;
-    sellingPrice: number;
-    quantity: number;
-    inventoryCategory: string;
-    importedOn: Date;
-    expiresOn: Date;
-    colour?: string;
-    weight?: number;
-    reorderLevel?: number;
-    batchNumber?: number;
-    importance?: string;
-    origin?: string;
+	};
+};
+type Item = {
+	_id: string;
+	name: string;
+	organization: string;
+	costPrice: number;
+	sellingPrice: number;
+	quantity: number;
+	inventoryCategory: string;
+	importedOn: Date;
+	expiresOn: Date;
+	colour?: string;
+	weight?: number;
+	reorderLevel?: number;
+	batchNumber?: number;
+	importance?: string;
+	origin?: string;
 	SKU?: string;
-}
+};
 
 type DummyOrg = {
 	_id: string;
@@ -62,9 +62,11 @@ type DummyOrg = {
 };
 
 type shipmentType = {
-    _id: string;
-    items: string;
-    quantity: number;
-    orderedOn: date;
-    shipped: boolean;
-}
+	_id: string;
+	orderName?: string;
+	item: string;
+	organizationId: string;
+	quantity: number;
+	orderedOn: Date;
+	shipped: boolean;
+};
