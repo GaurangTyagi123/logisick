@@ -20,7 +20,7 @@ function ProductManagement() {
 	});
 	const { report, isGettingItemReport } = useGetItemsReport(orgData?._id);
 
-	if (isGettingOrg)
+	if (isGettingOrg || isGettingItemReport)
 		return (
 			<div className="flex flex-col gap-2  items-baseline h-full w-autorounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
 				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">

@@ -96,7 +96,7 @@ export const getAllOrders = catchAsync(
 			deleted: false,
 		}).populate({
 			path: "item",
-			select: "name", //. NOTE:  add fields that you want in the response
+			select: "_id orderName quantity orderedOn shipped", //. NOTE:  add fields that you want in the response
 		});
 		const totalCount = await Shipment.countDocuments({
 			organizationId: orgid,

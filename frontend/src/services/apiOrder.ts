@@ -5,7 +5,13 @@ type getAllOrdersProps = (
 	orgid: string,
 	page?: number
 ) => Promise<{
-	orders: shipmentType[];
+	orders: {
+		_id: string;
+		orderName?: string;
+		quantity: number;
+		orderedOn: Date;
+		shipped: boolean;
+	}[];
 	count: number;
 } | void>;
 
@@ -43,7 +49,7 @@ type deleteOrderByIdProps = (orderId: string) => Promise<void>;
 type sendOrdersReponse = {
 	status: string;
 	count?: number;
-	order: Array<shipmentType>;
+	order: Array<shipmentType | any>;
 };
 type sendOrderReponse = {
 	status: string;
@@ -53,9 +59,17 @@ type sendOrderReponse = {
 
 export const getAllOrders: getAllOrdersProps = async (orgid, page = 1) => {
 	try {
-		const res = await axinstance.get<sendOrdersReponse>(
-			`/v1/order/allOrders/${orgid}?page=${page}`
-		);
+		const res = await axinstance.get<{
+			status: string;
+			count?: number;
+			order: {
+				_id: string;
+				orderName?: string;
+				quantity: number;
+				orderedOn: Date;
+				shipped: boolean;
+			}[];
+		}>(`/v1/order/allOrders/${orgid}?page=${page}`);
 		if (res.status === 200)
 			return {
 				orders: res.data.order,
@@ -137,7 +151,7 @@ export const createOrder: createOrderProps = async (newOrderDetails) => {
 			newOrderDetails
 		);
 		if (res.status === 201) return res.data.order;
-        handleError("There was an error while creating order");
+		handleError("There was an error while creating order");
 	} catch (error) {
 		handleError(error);
 	}
