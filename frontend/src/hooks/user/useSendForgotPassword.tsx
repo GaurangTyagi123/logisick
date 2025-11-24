@@ -6,8 +6,8 @@ import { toast } from 'react-toastify';
  * @brief hook to handle forgot password functionality of user
  * @returns forgot password state of app from react-query
  */
-function useResetPassword() {
-    const { mutate: sendForgotPassword, isPending } = useMutation({
+function useSendForgotPassword() {
+    const { mutate: sendForgotPassword, isPending:isSendingForgotPassword } = useMutation({
         mutationFn: sendForgotToken,
         onSuccess: (data) => {
             toast.success(data?.message, { className: 'toast' });
@@ -16,7 +16,7 @@ function useResetPassword() {
             toast.error(err.message, { className: 'toast' });
         },
     });
-    return { sendForgotPassword, isPending };
+    return { sendForgotPassword, isSendingForgotPassword };
 }
 
-export default useResetPassword;
+export default useSendForgotPassword;

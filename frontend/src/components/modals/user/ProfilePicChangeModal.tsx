@@ -41,8 +41,7 @@ function ProfilePicChangeModal({
 		| { user?: User }
 		| undefined;
 	const user = userData?.user;
-	const { updateUserFn: updateUser, isPending: isUpdatingUser } =
-		useUpdateUser();
+	const { updateUserFn: updateUser, isUpdatingUser } = useUpdateUser();
 	// const { user, updateUser, isUpdatingUser } = useAuthStore();
 
 	/**

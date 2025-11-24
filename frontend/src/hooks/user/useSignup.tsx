@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 function useSignup() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { mutate: signupFn, isPending } = useMutation({
+    const { mutate: signupFn, isPending:isSigningUp } = useMutation({
         mutationFn: signup,
         onSuccess: () => {
             toast.success('Sign up successfull', { className: 'toast' });
@@ -23,7 +23,7 @@ function useSignup() {
             toast.error(err.message, { className: 'toast' });
         },
     });
-    return { signupFn, isPending };
+    return { signupFn, isSigningUp };
 }
 
 export default useSignup;

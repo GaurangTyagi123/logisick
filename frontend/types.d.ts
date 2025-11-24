@@ -60,3 +60,11 @@ type DummyOrg = {
 	type: "Basic" | "Small-Cap" | "Mid-Cap" | "Large-Cap" | "Other";
 	description: string;
 };
+
+type shipmentType = {
+    _id: string;
+    items: string;
+    quantity: number;
+    orderedOn: date;
+    shipped: boolean;
+}

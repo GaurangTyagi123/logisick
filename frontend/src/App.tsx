@@ -29,7 +29,7 @@ const OrgOverview = lazy(() => import("@/pages/OrgOverview"));
  */
 function App() {
 	const { getTheme, setMode } = useModeStore();
-	const { user, isPending: isCheckingAuth } = useCheckAuth();
+	const { user, isCheckingAuth } = useCheckAuth();
 
 	useEffect(() => {
 		setMode(getTheme());

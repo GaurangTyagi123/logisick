@@ -5,7 +5,7 @@ import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 import Button from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Large } from "@/components/ui/Typography";
-import useGetReport from "@/hooks/item/useGetReport";
+import useGetItemsReport from "@/hooks/item/useGetItemsReport";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
@@ -18,7 +18,7 @@ function ProductManagement() {
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
-	const { report, isPending: isGettingReport } = useGetReport(orgData?._id);
+	const { report, isGettingItemReport } = useGetItemsReport(orgData?._id);
 
 	if (isGettingOrg)
 		return (
@@ -107,7 +107,7 @@ function ProductManagement() {
 								</div>
 							</div>
 						</div>
-					) : isGettingReport ? (
+					) : isGettingItemReport ? (
 						<div className="w-full">
 							<Skeleton className="w-full h-30" />
 						</div>

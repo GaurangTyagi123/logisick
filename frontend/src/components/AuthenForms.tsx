@@ -9,8 +9,8 @@ import { Separator } from "@/components/ui/separator";
 import { Eye, EyeClosed, Google } from "@/assets/icons/Authenticatepage";
 
 import useLogin from "@/hooks/user/useLogin";
-import useResetPassword from "@/hooks/user/useSendForgotPassword";
 import useSignup from "@/hooks/user/useSignup";
+import useSendForgotPassword from "@/hooks/user/useSendForgotPassword";
 
 interface FormProps {
 	setFormType: React.Dispatch<React.SetStateAction<"login" | "register">>;
@@ -25,9 +25,9 @@ export function Login({ setFormType }: FormProps) {
 	const [form, setForm] = useState({ email: "", password: "" });
 	const [valid, setValid] = useState({ email: true, password: true });
 	const [visi, setVisi] = useState(false);
-	const { sendForgotPassword, isPending: isSendingForgotPassword } =
-		useResetPassword();
-	const { loginFn: login, isPending: isLoggingIn } = useLogin();
+	const { sendForgotPassword, isSendingForgotPassword } =
+		useSendForgotPassword();
+	const { loginFn: login, isLoggingIn } = useLogin();
 
 	/**
 	 * @brief function to validate password field
@@ -48,7 +48,7 @@ export function Login({ setFormType }: FormProps) {
 	}
 
 	/**
-	 * @brief function to handle user request to login 
+	 * @brief function to handle user request to login
 	 * @param e form event on when submit
 	 */
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
@@ -57,7 +57,7 @@ export function Login({ setFormType }: FormProps) {
 	};
 
 	/**
-	 * @brief function to send forgot password request to send reset link to user registered email 
+	 * @brief function to send forgot password request to send reset link to user registered email
 	 */
 	const sendForgotMail = (): void => {
 		if (form.email.trim().length == 0 && valid.email) {
@@ -157,7 +157,11 @@ export function Login({ setFormType }: FormProps) {
 			>
 				Forgot Password?
 			</Button>
-			<Button className="mt-4 font-semibold" type="submit" disabled={isLoggingIn}>
+			<Button
+				className="mt-4 font-semibold"
+				type="submit"
+				disabled={isLoggingIn}
+			>
 				Login
 			</Button>
 			<Button
@@ -204,7 +208,7 @@ export function Register({ setFormType }: FormProps) {
 		confirmPassword: true,
 	});
 	const [visi, setVisi] = useState(false);
-	const { signupFn: register, isPending: isRegistering } = useSignup();
+	const { signupFn: register, isSigningUp } = useSignup();
 	// const { isRegistering, register } = useAuthStore();
 
 	/**
@@ -391,7 +395,11 @@ export function Register({ setFormType }: FormProps) {
 				)}
 			</Label>
 
-			<Button className="mt-4 font-semibold" disabled={isRegistering} type="submit">
+			<Button
+				className="mt-4 font-semibold"
+				disabled={isSigningUp}
+				type="submit"
+			>
 				Register
 			</Button>
 			<Button

@@ -25,7 +25,7 @@ function UserButton() {
 		"user",
 	])?.user;
 	// const {logout } = useAuthStore();
-	const { logoutFn: logout, isPending: isLoggingOut } = useLogout();
+	const { logoutFn: logout, isLoggingOut } = useLogout();
 	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 
 	/**

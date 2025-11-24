@@ -106,10 +106,10 @@ function Organization() {
 		| { user?: User }
 		| undefined;
 	const user = userData?.user;
-	const { data: organizations, isPending } = useGetOrganizations();
+	const { data: organizations, isGettingOrganizations } = useGetOrganizations();
 
 	if (!user) navigate("/");
-	if (isPending) return <Loading fullscreen />;
+	if (isGettingOrganizations) return <Loading fullscreen />;
 
 	return (
 		<>

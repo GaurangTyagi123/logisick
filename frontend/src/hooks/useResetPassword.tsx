@@ -16,7 +16,7 @@ type PasswordResetForm = {
 function useResetPassword() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { mutate: resetPasswordFn, isPending } = useMutation({
+    const { mutate: resetPasswordFn, isPending:isResettingPassword } = useMutation({
         mutationFn: (variables: {
             resetToken: string;
             form: PasswordResetForm;
@@ -38,7 +38,7 @@ function useResetPassword() {
             toast.error(err.message, { className: 'toast' });
         },
     });
-    return { resetPasswordFn, isPending };
+    return { resetPasswordFn, isResettingPassword };
 }
 
 export default useResetPassword;

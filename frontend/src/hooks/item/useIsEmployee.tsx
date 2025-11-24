@@ -3,11 +3,11 @@ import { useQuery } from "@tanstack/react-query"
 
 
 function useIsEmployee(orgSlug:string) {
-    const { data: isEmployee, isPending } = useQuery({
+    const { data: isEmployee, isPending:isCheckingEmployment } = useQuery({
         queryKey: ['employee-status'],
         queryFn: ()=>checkEmployeeStatus(orgSlug)
     })
-    return { isEmployee, isPending }
+    return { isEmployee, isCheckingEmployment }
 }
 
 export default useIsEmployee

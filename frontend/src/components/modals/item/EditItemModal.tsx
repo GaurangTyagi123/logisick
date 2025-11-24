@@ -40,7 +40,7 @@ function weightInGrams(unit: "MG" | "G" | "KG", weight?: number) {
 }
 
 function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
-	const { isPending: isUpdatingItem, updateItemFn } = useUpdateItem();
+	const { isUpdatingItem, updateItemFn } = useUpdateItem();
 	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG">("G");
 
 	const [form, setForm] = useState<{

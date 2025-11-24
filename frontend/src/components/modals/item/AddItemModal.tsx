@@ -46,7 +46,7 @@ function weightInGrams(unit: "MG" | "G" | "KG", weight?: number) {
 }
 
 function AddItemModal({ open, setOpen }: AddItemModalProps) {
-	const { isPending: isAddingItem, addItemFn } = useAddItem();
+	const { isAddingItem, addItemFn } = useAddItem();
 	const { orgSlug } = useParams();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],

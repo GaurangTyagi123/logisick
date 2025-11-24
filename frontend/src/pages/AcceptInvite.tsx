@@ -10,8 +10,8 @@ import Loading from "@/components/Loading";
 
 function AcceptInvite() {
 	const { token } = useParams();
-	const { acceptInvitation, isPending } = useAcceptInvite();
-	const { user, isPending: isCheckingAuth } = useCheckAuth();
+	const { acceptInvitation, isAcceptingInvite } = useAcceptInvite();
+	const { user, isCheckingAuth } = useCheckAuth();
 
 	const handleAcceptInvite = () => {
 		if (!token)
@@ -35,7 +35,7 @@ function AcceptInvite() {
 			<div className="max-w-lg p-2 grid">
 				{user ? (
 					<Button
-						disabled={isPending || !user}
+						disabled={isAcceptingInvite || !user}
 						onClick={handleAcceptInvite}
 					>
 						Accept Invitation

@@ -8,7 +8,7 @@ import { toast } from 'react-toastify';
  */
 function useUpdateUser() {
     const queryClient = useQueryClient();
-    const { mutate: updateUserFn, isPending } = useMutation({
+    const { mutate: updateUserFn, isPending:isUpdatingUser } = useMutation({
         mutationFn: updateUser,
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -20,7 +20,7 @@ function useUpdateUser() {
             toast.error(err.message,{className:"toast"});
         },
     });
-    return { updateUserFn, isPending };
+    return { updateUserFn, isUpdatingUser };
 }
 
 export default useUpdateUser;

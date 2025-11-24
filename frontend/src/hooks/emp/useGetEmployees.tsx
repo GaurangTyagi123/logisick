@@ -4,7 +4,7 @@ import { useQuery, useQueryClient } from "@tanstack/react-query";
 const PAGE_SIZE = 5;
 function useGetEmployees(orgid: string, page: number = 1) {
 	const queryClient = useQueryClient();
-	const { data, isPending, error } = useQuery({
+	const { data, isPending:isGettingEmployees, error } = useQuery({
 		queryKey: [`emps`, page],
 		queryFn: () => getAllEmployees(orgid, page),
 	});
@@ -14,7 +14,7 @@ function useGetEmployees(orgid: string, page: number = 1) {
 			queryFn: () => getAllEmployees(orgid, page + 1),
 		});
 
-	return { data: data?.emps, count: data?.count, isPending, error };
+	return { data: data?.emps, count: data?.count, isGettingEmployees, error };
 }
 
 export default useGetEmployees;	

@@ -114,14 +114,13 @@ function EmployeeTable({
 	const {
 		data: employees,
 		count,
-		isPending: isGettingEmployees,
+		isGettingEmployees,
 		error,
 	} = useGetEmployees(orgid as string, page);
 
-	const { deleteEmp, isPending: pendingDeleteEmp } = useDeleteEmployee();
-	const { changeEmpRole, isPending: pendingChangeRole } = useChangeRole();
-	const { changeEmpManager, isPending: pendingChangeManager } =
-		useChangeManager();
+	const { deleteEmp, isDeletingEmployee } = useDeleteEmployee();
+	const { changeEmpRole, isChangingRole } = useChangeRole();
+	const { changeEmpManager, isChangingManager } = useChangeManager();
 
 	// stores the search results
 	const [searchResults, setSearchResults] = useState<Employee[] | null>(null);
@@ -242,7 +241,7 @@ function EmployeeTable({
 														{/* change role */}
 														<Button
 															disabled={
-																pendingChangeRole
+																isChangingRole
 															}
 															onClick={() => {
 																setEmpData({
@@ -269,7 +268,7 @@ function EmployeeTable({
 														{/* manager */}
 														<Button
 															disabled={
-																pendingChangeManager
+																isChangingManager
 															}
 															onClick={() => {
 																setEmpData({
@@ -291,7 +290,7 @@ function EmployeeTable({
 														{/* delete employee */}
 														<Button
 															disabled={
-																pendingDeleteEmp
+																isDeletingEmployee
 															}
 															onClick={() => {
 																setEmpData({
@@ -356,21 +355,21 @@ function EmployeeTable({
 				orgid={orgid}
 				empData={empData}
 				deleteEmp={deleteEmp}
-				isPending={pendingDeleteEmp}
+				isPending={isDeletingEmployee}
 			/>
 			<ChangeEmpRoleModal
 				open={changeRoleModalOpen}
 				setOpen={setChangeRoleModalOpen}
 				changeRole={changeEmpRole}
 				empData={empData}
-				isPending={pendingChangeRole}
+				isPending={isChangingRole}
 				oldRole={oldRole || "Staff"}
 				orgid={orgid}
 			/>
 			<ChangeEmpManagerModal
 				changeManager={changeEmpManager}
 				empData={empData}
-				isPending={pendingChangeManager}
+				isPending={isChangingManager}
 				open={changeManagerModalOpen}
 				orgid={orgid}
 				setOpen={setChangeManagerModalOpen}

@@ -6,11 +6,11 @@ import { useQuery } from '@tanstack/react-query';
  * @returns user state of app from react-query
  */
 function useCheckAuth() {
-    const { data: user, isPending } = useQuery({
+    const { data: user, isPending:isCheckingAuth } = useQuery({
         queryKey: ['user'],
         queryFn: checkAuth, 
     });
-    return { user, isPending };
+    return { user, isCheckingAuth };
 }
 
 export default useCheckAuth;

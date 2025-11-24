@@ -2,11 +2,11 @@ import { getAllOrgs } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
 
 function useGetOrganizations() {
-	const { data, isPending } = useQuery({
+	const { data, isPending:isGettingOrganizations } = useQuery({
 		queryKey: ["orgs"],
 		queryFn: getAllOrgs,
 	});
-	return { data, isPending };
+	return { data, isGettingOrganizations };
 }
 
 export default useGetOrganizations;

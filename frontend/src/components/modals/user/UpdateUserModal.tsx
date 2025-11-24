@@ -26,8 +26,7 @@ interface ChangePasswordProps {
  * @returns gives a components as a change password modal to put somewhere
  */
 function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
-	const { updateUserFn: updateUser, isPending: isUpdatingUser } =
-		useUpdateUser();
+	const { updateUserFn: updateUser, isUpdatingUser } = useUpdateUser();
 
 	const [form, setForm] = useState<{
 		name: string;

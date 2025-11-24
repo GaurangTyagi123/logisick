@@ -22,10 +22,7 @@ function ItemsTable() {
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
-	const { itemsResponse, isPending: isGettingItems } = useGetAllItems(
-		orgData._id,
-		page
-	);
+	const { itemsResponse, isGettingItems } = useGetAllItems(orgData._id, page);
 
 	const [searchResult, setSearchResults] = useState<Item[] | null>(null);
 

@@ -25,7 +25,7 @@ type updateItemProps = ({
 	itemId: string;
 }) => Promise<any>;
 type deleteItemProps = (orgId: string) => Promise<any>;
-type getReportProps = (orgId: string) => Promise<ReportType | null>;
+type getItemsReportProps = (orgId: string) => Promise<ReportType | null>;
 
 export const getItem: getItemProps = async (SKU) => {
 	try {
@@ -82,19 +82,20 @@ export const deleteItem: deleteItemProps = async (itemId) => {
 	}
 };
 
-export const getReport: getReportProps = async (orgId) => {
+export const getItemsReport: getItemsReportProps = async (orgId) => {
 	try {
 		const res = await axinstance.get(`/v1/item/report/${orgId}`);
-		if (res.status !== 200) {
-			handleError("There was an error while getting report");
-			return null;
+		if (res.status == 200) {
+			return res.data.data.report;
 		}
-		return res.data.data.report;
+		handleError("There was an error while getting report");
+		return null;
 	} catch (err) {
 		handleError(err);
 		return null;
 	}
 };
+
 export const checkEmployeeStatus = async (orgSlug:string) => {
 	try {
 		const res = await axinstance.get(
@@ -111,6 +112,7 @@ export const checkEmployeeStatus = async (orgSlug:string) => {
 		handleError(err);
 	}
 };
+
 export const searchItems = async ({
 	orgid,
 	query,

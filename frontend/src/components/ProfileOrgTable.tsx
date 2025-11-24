@@ -85,7 +85,7 @@ function ProfileOrgTable({
 	setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setOpenTransfer: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-	const { data: organizations, isPending } = useGetOrganizations();
+	const { data: organizations, isGettingOrganizations } = useGetOrganizations();
 
 	return (
 		<Card className="bg-white dark:bg-ls-bg-dark-800 h-96 w-full">
@@ -97,7 +97,7 @@ function ProfileOrgTable({
 			</CardHeader>
 			<CardContent className="overflow-x-auto h-full">
 				<Table>
-					{isPending ? (
+					{isGettingOrganizations ? (
 						<ProfileTableSkeleton />
 					) : !organizations ? (
 						<div className="h-full w-full grid place-items-center gap-3">

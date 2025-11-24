@@ -6,7 +6,7 @@ import { toast } from "react-toastify";
 function useAcceptInvite() {
 	const queryClient = useQueryClient();
 	const navigate = useNavigate();
-	const { mutate: acceptInvitation, isPending } = useMutation({
+	const { mutate: acceptInvitation, isPending:isAcceptingInvite } = useMutation({
 		mutationFn: ({ token }: { token: string }) => acceptInvite(token),
 		onSuccess: (_data) => {
 			queryClient.invalidateQueries({
@@ -21,7 +21,7 @@ function useAcceptInvite() {
 			});
 		},
 	});
-	return { acceptInvitation, isPending };
+	return { acceptInvitation, isAcceptingInvite };
 }
 
 export default useAcceptInvite;

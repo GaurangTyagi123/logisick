@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 function useAddItem() {
 	const queryClient = useQueryClient();
-	const { mutate: addItemFn, isPending } = useMutation({
+	const { mutate: addItemFn, isPending:isAddingItem } = useMutation({
 		mutationFn: addItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -19,7 +19,7 @@ function useAddItem() {
 			});
 		},
 	});
-	return { addItemFn, isPending };
+	return { addItemFn, isAddingItem };
 }
 
 export default useAddItem;

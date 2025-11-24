@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 function useDeleteItem() {
 	const queryClient = useQueryClient();
-	const { mutate: deleteItemFn, isPending } = useMutation({
+	const { mutate: deleteItemFn, isPending:isDeletingItem } = useMutation({
 		mutationFn: deleteItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -16,7 +16,7 @@ function useDeleteItem() {
 			toast.error(err.message, { className: "toast" });
 		},
 	});
-	return { deleteItemFn, isPending };
+	return { deleteItemFn, isDeletingItem };
 }
 
 export default useDeleteItem;

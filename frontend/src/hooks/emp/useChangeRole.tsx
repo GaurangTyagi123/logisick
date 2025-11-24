@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 function useChangeRole() {
 	const queryClient = useQueryClient();
-	const { mutate: changeEmpRole, isPending } = useMutation({
+	const { mutate: changeEmpRole, isPending:isChangingRole } = useMutation({
 		mutationFn: ({
 			orgid,
 			newRole,
@@ -26,6 +26,6 @@ function useChangeRole() {
 				className: "toast",
 			}),
 	});
-	return { changeEmpRole, isPending };
+	return { changeEmpRole, isChangingRole };
 }
 export default useChangeRole;

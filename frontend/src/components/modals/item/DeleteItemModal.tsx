@@ -24,7 +24,7 @@ interface DeleteItemModalProps {
 function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 	const [text, setText] = useState<string>("");
 	const navigate = useNavigate();
-	const { deleteItemFn, isPending: isDeletingItem } = useDeleteItem();
+	const { deleteItemFn, isDeletingItem } = useDeleteItem();
 
 	return (
 		<Modal openModal={open}>

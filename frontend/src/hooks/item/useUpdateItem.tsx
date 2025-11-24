@@ -4,7 +4,7 @@ import { toast } from "react-toastify";
 
 function useUpdateItem() {
 	const queryClient = useQueryClient();
-	const { mutate: updateItemFn, isPending } = useMutation({
+	const { mutate: updateItemFn, isPending:isUpdatingItem } = useMutation({
 		mutationFn: updateItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
@@ -17,7 +17,7 @@ function useUpdateItem() {
 			toast.error(err.message, { className: "toast" });
 		},
 	});
-	return { updateItemFn, isPending };
+	return { updateItemFn, isUpdatingItem };
 }
 
 export default useUpdateItem;

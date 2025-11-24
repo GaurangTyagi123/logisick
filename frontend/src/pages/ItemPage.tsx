@@ -17,9 +17,9 @@ function ItemPage() {
 	if (!SKU || !orgSlug) {
 		toast.error("Item not found", { className: "toast" });
 	}
-	const { item, isPending } = useGetItem(SKU || "");
-	const { user: userData, isPending: isGettingUser } = useCheckAuth();
-	const { isEmployee, isPending: isCheckingStatus } = useIsEmployee(
+	const { item, isGettingItem } = useGetItem(SKU || "");
+	const { user: userData, isCheckingAuth } = useCheckAuth();
+	const { isEmployee, isCheckingEmployment } = useIsEmployee(
 		orgSlug || ""
 	);
 	const user = userData?.user;
@@ -28,7 +28,7 @@ function ItemPage() {
 	const [openDeleteItemModal, setOpenDeleteItemModal] = useState(false);
 	const [openEditItemModal, setOpenEditItemModal] = useState(false);
 
-	if (isPending || isGettingUser || isCheckingStatus) return <Loading />;
+	if (isGettingItem || isCheckingAuth || isCheckingEmployment) return <Loading />;
 	return (
 		<div className="flex flex-col justify-start gap-3 items-center bg-ls-bg-300 dark:bg-ls-bg-dark-800 min-h-dvh relative">
 			<Navbar hide={{ userButton: true }}>

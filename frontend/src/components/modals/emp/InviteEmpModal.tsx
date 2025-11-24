@@ -27,7 +27,7 @@ function InviteEmpModal({
 		role: "Admin" | "Manager" | "Staff";
 	}>({ empEmail: "", role: "Staff" });
 
-	const { sendInvitation, isPending } = useSendInvite();
+	const { sendInvitation, isSendingInvite } = useSendInvite();
 
 	/**
 	 * @brief async function to handle the user request to send invite
@@ -122,7 +122,7 @@ function InviteEmpModal({
 						onClick={handleSendInvite}
 						className="w-full"
 						disabled={
-							isPending ||
+							isSendingInvite ||
 							form.empEmail.trim() == "" ||
 							!["Admin", "Manager", "Staff"].includes(
 								form.role.trim()

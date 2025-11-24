@@ -11,7 +11,7 @@ import { toast } from 'react-toastify';
 function useLogout(message: string = 'Logged-Out Successfully') {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { mutate: logoutFn, isPending } = useMutation({
+    const { mutate: logoutFn, isPending:isLoggingOut } = useMutation({
         mutationFn: logout,
         onSuccess: () => {
             toast.success(message, {
@@ -23,7 +23,7 @@ function useLogout(message: string = 'Logged-Out Successfully') {
             navigate('/');
         },
     });
-    return { logoutFn, isPending };
+    return { logoutFn, isLoggingOut };
 }
 
 export default useLogout;

@@ -80,7 +80,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	const {
 		data: employees,
 		count,
-		isPending: isGettingEmployees,
+		isGettingEmployees,
 		error,
 	} = useGetEmployees(orgid as string, page);
 

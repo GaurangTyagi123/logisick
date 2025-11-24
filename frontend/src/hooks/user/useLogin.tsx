@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 function useLogin() {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { mutate: loginFn, isPending } = useMutation({
+    const { mutate: loginFn, isPending:isLoggingIn } = useMutation({
         mutationFn: login,
         onSuccess: () => {
             toast.success('LoggedIn Successfully', { className: 'toast' });
@@ -23,7 +23,7 @@ function useLogin() {
             toast.error(err.message, { className: 'toast' });
         },
     });
-    return { loginFn, isPending };
+    return { loginFn, isLoggingIn };
 }
 
 export default useLogin;
