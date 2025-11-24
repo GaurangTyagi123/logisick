@@ -68,7 +68,7 @@ function OrganizationModal({
 	};
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-11/12 sm:max-w-sm">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Create Organization</CardTitle>
 					<Button
@@ -91,6 +91,7 @@ function OrganizationModal({
 									placeholder="Enter Your Organization's Name"
 									type="text"
 									id="name"
+									className="text-sm md:text-md"
 									{...register("name", {
 										required: "Please provide a name",
 										minLength: {
@@ -121,6 +122,7 @@ function OrganizationModal({
 									placeholder="Enter a brief description "
 									type="text"
 									id="Description"
+									className="text-sm md:text-md"
 									{...register("description", {
 										required:
 											"Please provide a description of your organization",

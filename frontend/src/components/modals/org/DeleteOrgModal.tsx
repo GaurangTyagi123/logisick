@@ -59,7 +59,7 @@ function DeleteOrgModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="w-11/12 sm:max-w-sm">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Delete My Organization</CardTitle>
 					<Button
@@ -93,7 +93,7 @@ function DeleteOrgModal({
 						/>
 					</Label>
 				</CardContent>
-				<CardFooter className="flex gap-2 w-full">
+				<CardFooter className="flex flex-wrap gap-2 w-full">
 					<Button
 						onClick={() => setOpen(false)}
 						variant={"secondary"}

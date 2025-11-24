@@ -11,7 +11,9 @@ import UserAvatar from "@/components/UserAvatar";
 import { H2, Large, Muted } from "@/components/ui/Typography";
 
 const OtpModal = lazy(() => import("@/components/modals/user/OtpModal"));
-const DeleteMeModal = lazy(() => import("@/components/modals/user/DeleteMeModal"));
+const DeleteMeModal = lazy(
+	() => import("@/components/modals/user/DeleteMeModal")
+);
 const ChangePasswordModal = lazy(
 	() => import("@/components/modals/user/ChangePasswordModal")
 );
@@ -21,7 +23,9 @@ const ProfilePicChangeModal = lazy(
 
 import useAuthStore from "@/stores/useAuthStore";
 import ProfileOrgTable from "@/components/ProfileOrgTable";
-const DeleteOrgModal = lazy(() => import("@/components/modals/org/DeleteOrgModal"));
+const DeleteOrgModal = lazy(
+	() => import("@/components/modals/org/DeleteOrgModal")
+);
 const EditOrgModal = lazy(() => import("@/components/modals/org/EditOrgModal"));
 const TransferOwnershipModal = lazy(
 	() => import("@/components/modals/org/TransferOwnershipModal")
@@ -85,7 +89,7 @@ function Profile() {
 	}, [isVerifingEmail, user?.isVerified, verifyEmail, openOtp]);
 
 	return (
-		<div className="w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative bg-ls-bg-200 dark:bg-ls-bg-dark-900">
+		<div className="w-full px-4 h-auto min-h-screen flex flex-col gap-2 items-center relative bg-ls-bg-200 dark:bg-ls-bg-dark-900 pb-10">
 			<Navbar />
 			{/* User Bar */}
 			<div className="max-w-6xl p-4 w-full grid place-items-center md:flex gap-4 rounded-2xl shadow-2xl bg-white dark:bg-ls-bg-dark-800">
@@ -137,28 +141,22 @@ function Profile() {
 					</div>
 					<Muted className="text-sm text-center md:text-start">
 						Member since :{" "}
-						{new Date(user?.createdAt ?? "").toDateString()}
+						{new Date(user?.createdAt ?? "").toLocaleDateString()}
 					</Muted>
 				</div>
 			</div>
 			{/* main */}
-			<main className="max-w-6xl p-4 w-full flex flex-col-reverse md:grid md:grid-cols-5 gap-2 ">
+			<main className="max-w-6xl w-full flex flex-col-reverse md:flex-row gap-2 ">
 				<ProfileOrgTable
 					setDeleteOpen={setOrgDelete}
 					setEditOpen={setOpenEdit}
 					setOpenTransfer={setOpenTransfer}
 				/>
-				<div className="md:min-h-96 gap-2 flex flex-wrap md:flex-nowrap md:flex-col">
-					<Button
-						onClick={() => setOpenUpdateUser(true)}
-						className=""
-					>
+				<div className="md:min-h-96 gap-2 grid  md:flex md:flex-col">
+					<Button onClick={() => setOpenUpdateUser(true)} variant={"secondary"}>
 						Update User
 					</Button>
-					<Button
-						onClick={() => setOpenChangePassword(true)}
-						className=""
-					>
+					<Button onClick={() => setOpenChangePassword(true)} variant={"secondary"}>
 						Change Password
 					</Button>
 					<Button

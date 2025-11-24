@@ -10,13 +10,7 @@ import Button from "./ui/button";
 import { Edit } from "@/assets/icons/Profilepage";
 import { debounce } from "lodash";
 import { searchItems } from "@/services/apiItem";
-
-function prefereableWeightUnits(weight: number): string {
-	if (weight >= 1000) return `${Math.round(weight / 10) / 100} Kg(s)`;
-	else if (weight < 1 && weight > 0)
-		return `${Math.round(weight * 100000) / 100} mg(s)`;
-	return `${weight} g(s)`;
-}
+import { prefereableUnits } from "@/utils/utilfn";
 
 function ItemsTable() {
 	const { orgSlug } = useParams();
@@ -106,13 +100,13 @@ function ItemsTable() {
 				{
 					key: "importedOn",
 					header: "Imported On",
-					render: (value) => new Date(value).toDateString(),
+					render: (value) => new Date(value).toLocaleDateString(),
 				},
 				{
 					key: "expiresOn",
 					header: "Expires On",
 					render: (value) => {
-						if (value) return new Date(value).toDateString();
+						if (value) return new Date(value).toLocaleDateString();
 						return <Muted>NA</Muted>;
 					},
 				},
@@ -125,7 +119,7 @@ function ItemsTable() {
 				{
 					key: "weight",
 					header: "Unit Weight",
-					render: (weight) => prefereableWeightUnits(weight),
+					render: (weight) => prefereableUnits(weight),
 				},
 				{ key: "quantity", header: "Quantity" },
 				{
@@ -151,7 +145,7 @@ function ItemsTable() {
 					header: "Manage",
 					render: (_, row) => (
 						<Link to={`/item/${orgData.slug}/${row.SKU}`}>
-							<Button variant={"link"}>
+							<Button variant={"outline"} size={"sm"}>
 								<Edit />
 							</Button>
 						</Link>

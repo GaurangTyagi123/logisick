@@ -28,7 +28,7 @@ function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="w-11/12 sm:max-w-sm">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Remove Item</CardTitle>
 					<Button
@@ -75,8 +75,8 @@ function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 						type="button"
 						onClick={() => {
 							deleteItemFn(itemData._id);
-							setText("");
 							setOpen(false);
+							setText("");
 							navigate(-1);
 						}}
 						disabled={

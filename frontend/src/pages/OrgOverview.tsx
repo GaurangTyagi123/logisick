@@ -16,7 +16,7 @@ function OrgOverview() {
 		queryFn: () => getOrganization(orgSlug as string),
 	});
 
-	if (isGettingOrg)
+	if (isGettingOrg) {
 		return (
 			<div className="flex flex-col gap-2  items-baseline h-full w-autorounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
 				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
@@ -32,10 +32,12 @@ function OrgOverview() {
 				<CustomTableSkeleton />
 			</div>
 		);
+	}
 	if (!orgData) return <p>Create your own organiztion</p>;
 	return (
-		<div className="flex flex-col gap-2 items-baseline jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800 w-full">
-			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
+		<div className="grid gap-2 jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
+			{/* org overview report */}
+			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-lg md:rounded-2xl">
 				<div className="flex flex-col lg:flex-row justify-between items-center w-full">
 					<H3 className="overflow-hidden text-ellipsis whitespace-nowrap w-full text-center md:text-start">
 						{orgData.name}

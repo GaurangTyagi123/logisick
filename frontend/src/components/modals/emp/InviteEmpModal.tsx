@@ -47,7 +47,7 @@ function InviteEmpModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="max-w-screen">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Send Invite</CardTitle>
 					<Button

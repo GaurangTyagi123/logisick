@@ -55,7 +55,7 @@ function CustomSidebar() {
 		);
 
 	return (
-		<Sidebar>
+		<Sidebar className="h-full">
 			<SidebarHeader>
 				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-800">
 					<img
@@ -142,7 +142,7 @@ function Dashboard() {
 					{/* dashbard navbar */}
 					<div className="flex gap-2 items-center">
 						<SidebarTrigger
-							className="p-2 h-10 w-10 rounded-xl"
+							className="p-2 h-10 w-10 rounded-lg md:rounded-xl"
 							variant={"outline"}
 						/>
 						<Navbar hide={{ logo: true }} />

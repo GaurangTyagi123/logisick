@@ -64,7 +64,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		inventoryCategory: item.inventoryCategory,
 		importance: (item.importance || "C") as "A" | "B" | "C",
 		importedOn: new Date(item.importedOn).toISOString(),
-		expiresOn: new Date(item.expiresOn).toISOString(),
+		expiresOn: item.expiresOn? new Date(item.expiresOn).toISOString() : new Date().toISOString(),
 		weight: item.weight,
 		colour: item.colour,
 		reorderLevel: item.reorderLevel,
@@ -134,7 +134,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-lg max-w-screen">
+			<Card className="w-11/12 sm:max-w-sm">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Update item</CardTitle>
 					<Button
@@ -184,6 +184,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="costprice"
 								name="costPrice"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								value={form.costPrice}
 								min={0}
 								onChange={(e) =>
@@ -202,6 +203,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="sellingprice"
 								name="sellingPrice"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								value={form.sellingPrice}
 								onChange={(e) =>
 									setForm({
@@ -221,6 +223,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="quantity"
 								name="quantity"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								value={form.quantify}
 								onChange={(e) =>
 									setForm({
@@ -240,6 +243,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 									id="weight"
 									name="weight"
 									type="number"
+									onFocus={(e) => e.target.select()}
 									min={1}
 									value={form.weight}
 									onChange={(e) =>
@@ -427,6 +431,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="reorderlevel"
 								name="reorderLevel"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								min={0}
 								value={form.reorderLevel}
 								onChange={(e) =>

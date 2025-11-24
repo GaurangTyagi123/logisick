@@ -32,13 +32,13 @@ function ReportBar({
 				className
 			)}
 		>
-			<span className="text-sm overflow-hidden text-ellipsis whitespace-nowrap">
+			<span className="text-xs md:text-sm overflow-hidden text-ellipsis whitespace-nowrap">
 				{name}
 			</span>
 			<div>
 				<Badge
 					variant={variant}
-					className="font-bold text-sm md:text-md overflow-hidden text-ellipsis whitespace-nowrap"
+					className="font-bold text-xs md:text-sm md:text-md overflow-hidden text-ellipsis whitespace-nowrap"
 				>
 					{currency
 						? formatCurrency(value, suffix as string)

@@ -42,16 +42,16 @@ function ProductManagement() {
 	return (
 		<div className="grid gap-2 w-full">
 			{/* top tab */}
-			<div className="grid w-full md:flex md:items-center md:justify-between gap-2 p-3 rounded-2xl bg-white dark:bg-ls-bg-dark-800 outline-1">
+			<div className="grid w-full md:flex md:items-center md:justify-between gap-2 p-1 md:p-3 rounded-lg md:rounded-2xl bg-white dark:bg-ls-bg-dark-800 outline-1">
 				<H3>Product Management</H3>
 				<Button onClick={() => setOpenAddItemModal(true)}>
 					Add New Item
 				</Button>
 			</div>
 			{/* main menu */}
-			<main className="w-full grid gap-2 rounded-2xl h-full">
+			<main className="w-full grid gap-2 rounded-lg md:rounded-2xl h-full">
 				{/* Reports */}
-				<div className="outline-1 p-3 rounded-2xl flex flex-col gap-2 w-full">
+				<div className="outline-1 p-3 rounded-lg md:rounded-2xl flex flex-col gap-2 w-full bg-white dark:bg-ls-bg-dark-800">
 					<Large>Items Summary</Large>
 					{report ? (
 						<div className="grid gap-2">
@@ -65,44 +65,46 @@ function ProductManagement() {
 									name="Total Quantity"
 									value={report.totalQuantity}
 									variant={"outline"}
-									/>
+								/>
 								<ReportBar
 									name="Avg. Quantity per Item"
 									value={report.averageQuantity}
 									variant={"outline"}
 								/>
 							</div>
-							<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-								<ReportBar
-									name="Total Cost Price"
-									value={report.totalCostPrice}
-									suffix="INR"
-									currency
-									variant={"secondary"}
-								/>
-								<ReportBar
-									name="Total Selling Price"
-									value={report.totalSellingPrice}
-									suffix="INR"
-									currency
-									variant={"secondary"}
-								/>
-							</div>
-							<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
-								<ReportBar
-									name="Avg. Cost Price"
-									value={report.averageCostPrice}
-									suffix="INR"
-									currency
-									variant={"secondary"}
-								/>
-								<ReportBar
-									name="Avg. Selling Price"
-									value={report.averageSellingPrice}
-									suffix="INR"
-									currency
-									variant={"secondary"}
-								/>
+							<div className="grid gap-2 w-full grid-cols-1 xl:grid-cols-2">
+								<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
+									<ReportBar
+										name="Total Cost Price"
+										value={report.totalCostPrice}
+										suffix="INR"
+										currency
+										variant={"secondary"}
+									/>
+									<ReportBar
+										name="Total Selling Price"
+										value={report.totalSellingPrice}
+										suffix="INR"
+										currency
+										variant={"secondary"}
+									/>
+								</div>
+								<div className="grid grid-cols-1 md:grid-cols-2 w-full gap-2">
+									<ReportBar
+										name="Avg. Cost Price"
+										value={report.averageCostPrice}
+										suffix="INR"
+										currency
+										variant={"secondary"}
+									/>
+									<ReportBar
+										name="Avg. Selling Price"
+										value={report.averageSellingPrice}
+										suffix="INR"
+										currency
+										variant={"secondary"}
+									/>
+								</div>
 							</div>
 						</div>
 					) : isGettingReport ? (

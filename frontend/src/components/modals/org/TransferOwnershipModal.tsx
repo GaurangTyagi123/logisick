@@ -49,7 +49,7 @@ function TransferOwnershipModal({
 	};
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-11/12 sm:max-w-sm">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Transfer Ownership To</CardTitle>
 					<Button

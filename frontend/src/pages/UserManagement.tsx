@@ -33,17 +33,15 @@ function UserManagement() {
 
 	return (
 		<div className="gap-2 grid">
-			<div className="flex flex-col gap-2 items-baseline h-full w-auto jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
-				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl grid md:flex md:justify-between items-center">
-					<H3>User & Role</H3>
-					<div className={clsx(isAuthorized() ? "grid" : "hidden")}>
-						<Button
-							onClick={() => setOpenInviteModal(true)}
-							disabled={!isAuthorized()}
-						>
-							Invite Employee
-						</Button>
-					</div>
+			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-1 md:p-3 rounded-lg md:rounded-2xl grid md:flex md:justify-between items-center">
+				<H3>User & Role</H3>
+				<div className={clsx(isAuthorized() ? "grid" : "hidden")}>
+					<Button
+						onClick={() => setOpenInviteModal(true)}
+						disabled={!isAuthorized()}
+					>
+						Invite Employee
+					</Button>
 				</div>
 			</div>
 

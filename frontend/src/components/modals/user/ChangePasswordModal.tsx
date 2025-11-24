@@ -98,7 +98,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 
     return (
         <Modal openModal={open}>
-            <Card className="min-w-md">
+            <Card className="max-w-screen">
                 <CardHeader className="flex justify-between items-center">
                     <CardTitle>Change Password</CardTitle>
                     <Button onClick={() => setOpen(false)} variant={"secondary"}>
@@ -120,6 +120,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                                 value={form.prevPassword}
                                 name="prevpassword"
                                 required
+                                className="text-sm md:text-md"
                                 onChange={(e) => {
                                     setForm({
                                         ...form,
@@ -165,6 +166,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                                 value={form.password}
                                 name="newpassword"
                                 required
+                                className="text-sm md:text-md"
                                 onChange={(e) => {
                                     setForm({
                                         ...form,
@@ -205,6 +207,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                                 value={form.confirmPassword}
                                 name="confirmPassword"
                                 required
+                                className="text-sm md:text-md"
                                 onChange={(e) => {
                                     setForm({
                                         ...form,

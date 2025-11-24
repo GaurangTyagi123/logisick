@@ -30,7 +30,7 @@ const tabLinks: { path: string; name: string }[] = [
  */
 function Home() {
 	return (
-		<div className="w-full px-4 grid gap-3 h-auto bg-ls-bg-200 dark:bg-ls-bg-dark-900">
+		<div className="w-full px-2 md:px-4 grid gap-3 h-auto bg-ls-bg-200 dark:bg-ls-bg-dark-900">
 			{/* topbar */}
 			<Navbar hide={{ logo: true }} />
 			{/* tabs bar */}
@@ -69,7 +69,7 @@ function Home() {
 			</div>
 			<Separator className="mt-0 md:mt-6" />
 			{/* hero */}
-			<main className="md:mx-10 p-2 text-black">
+			<main className="md:mx-10 p-1 md:p-2 text-black">
 				{/* hero */}
 				<div
 					className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center bg-white dark:bg-zinc-200"

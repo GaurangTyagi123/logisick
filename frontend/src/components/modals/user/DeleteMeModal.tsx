@@ -44,7 +44,7 @@ function DeleteMeModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Delete My Account</CardTitle>
 					<Button onClick={() => setOpen(false)} variant={"secondary"}>
@@ -55,7 +55,7 @@ function DeleteMeModal({
 					<Label
 						title="delete my account"
 						htmlFor="deleteme"
-						className="grid"
+						className="grid text-balance"
 					>
 						<span>
 							Enter "

@@ -66,7 +66,7 @@ function ChangeEmpRoleModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-sm md:min-w-md">
+			<Card className="max-w-screen">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Change Role of {empData.name}</CardTitle>
 					<Button

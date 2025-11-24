@@ -1,7 +1,6 @@
 import { useEffect, useState, useMemo, type ReactNode } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Large, Muted } from "./ui/Typography";
-import { Separator } from "./ui/separator";
+import { H3, H4, Muted } from "./ui/Typography";
 import { Input } from "./ui/input";
 import {
 	DropdownMenu,
@@ -207,73 +206,79 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 
 	return (
 		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800 w-full overflow-y-auto p-1 md:p-2">
-			<CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0 px-1 md:px-2">
+			{/* Top bar items */}
+			<CardHeader className="flex flex-row flex-wrap items-center justify-center md:justify-between space-y-0 px-2">
 				<div className="flex items-center gap-2">
 					{titleIcon}
-					<Large>{title}</Large>
+					<H4>{title}</H4>
 				</div>
-				<div className="flex flex-wrap gap-2 ">
+				<div className="grid grid-cols-1 w-full sm:w-fit sm:grid-cols-2 gap-2">
 					{/* Search input */}
 					<Input
 						value={searchStr || ""}
 						onChange={(e) => setSearchStr(e.target.value)}
 						type="text"
 						placeholder="Search..."
-						className="sm:w-40 w-full"
+						className="text-xs md:text-sm bg-white dark:bg-ls-bg-dark-800"
 					/>
 
 					{/* Sort by column */}
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="outline">
-								Sort by:{" "}
-								{sortColumn ? String(sortColumn) : "None"}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className="max-h-48 overflow-y-auto">
-							<DropdownMenuItem
-								className="cursor-pointer"
-								onClick={() => {
-									setSortColumn(null);
-									setSortOrder(null);
-								}}
-							>
-								None
-							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							{columns
-								.filter((col) => col.sortable !== false)
-								.map((col) => (
-									<DropdownMenuItem
-										key={String(col.key)}
-										className="cursor-pointer"
-										onClick={() => handleSort(col.key)}
-									>
-										{col.header}
-										{sortColumn === col.key && (
-											<span className="ml-2">
-												{sortOrder === "asc"
-													? "↑"
-													: "↓"}
-											</span>
-										)}
-									</DropdownMenuItem>
-								))}
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<div className="flex gap-1 w-full">
+						{/* sort by dropdown */}
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant="outline"
+									className="text-xs md:text-sm flex-1"
+								>
+									Sort by:{" "}
+									{sortColumn ? String(sortColumn) : "None"}
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="max-h-48 overflow-y-auto">
+								<DropdownMenuItem
+									className="cursor-pointer"
+									onClick={() => {
+										setSortColumn(null);
+										setSortOrder(null);
+									}}
+								>
+									None
+								</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								{columns
+									.filter((col) => col.sortable !== false)
+									.map((col) => (
+										<DropdownMenuItem
+											key={String(col.key)}
+											className="cursor-pointer"
+											onClick={() => handleSort(col.key)}
+										>
+											{col.header}
+											{sortColumn === col.key && (
+												<span className="ml-2">
+													{sortOrder === "asc"
+														? "↑"
+														: "↓"}
+												</span>
+											)}
+										</DropdownMenuItem>
+									))}
+							</DropdownMenuContent>
+						</DropdownMenu>
 
-					{/* Sort order toggle */}
-					<Button
-						onClick={handleChangeSortOrder}
-						title={sortOrder || "no order"}
-						variant="outline"
-						disabled={!sortColumn}
-					>
-						{sortOrder === "asc" && <Incr />}
-						{sortOrder === "desc" && <Desc />}
-						{sortOrder === null && <Sort />}
-					</Button>
-
+						{/* Sort order toggle */}
+						<Button
+							onClick={handleChangeSortOrder}
+							title={sortOrder || "no order"}
+							variant="outline"
+							disabled={!sortColumn}
+						>
+							{sortOrder === "asc" && <Incr />}
+							{sortOrder === "desc" && <Desc />}
+							{sortOrder === null && <Sort />}
+						</Button>
+					</div>
 					{/* Filter */}
 					{filterOptions.length > 0 && (
 						<DropdownMenu>
@@ -325,20 +330,19 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 					)}
 				</div>
 			</CardHeader>
-			<Separator />
 			<CardContent className="overflow-x-auto scrollbar px-1 md:px-2">
 				{(clientSide ? processedData : data).length === 0 ? (
 					<div className="h-96 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
 					</div>
 				) : (
-					<Table className="min-h-64">
+					<Table className="min-h-64 w-full">
 						<TableHeader className="w-full">
-							<TableRow className="w-full flex gap-2">
+							<TableRow>
 								{columns.map((col) => (
 									<TableHead
 										key={String(col.key)}
-										className="overflow-hidden text-ellipsis whitespace-nowrap flex-1 flex min-w-[50px]"
+										// className="overflow-hidden text-ellipsis whitespace-nowrap"
 									>
 										{col.header}
 									</TableHead>
@@ -348,14 +352,11 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 						<TableBody className="w-full">
 							{(clientSide ? processedData : data).map(
 								(row, index) => (
-									<TableRow
-										key={index}
-										className="flex gap-2"
-									>
+									<TableRow key={index}>
 										{columns.map((col) => (
 											<TableCell
 												key={String(col.key) + index}
-												className="overflow-hidden text-ellipsis whitespace-nowrap flex-1 flex min-w-[50px]"
+												className="overflow-hidden max-w-60 text-ellipsis whitespace-nowrap items-center text-xs md:text-sm"
 											>
 												{col.render
 													? col.render(
@@ -376,7 +377,6 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 					</Table>
 				)}
 			</CardContent>
-
 			<CardFooter className="w-full flex justify-center items-center px-1 md:px-2">
 				<Pagination
 					currentPage={currentPage}
@@ -389,39 +389,3 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 }
 
 export default CustomTable;
-
-/* 
-? client side
-<CustomTable
-	title="somthing"
-	titleIcon={<Shield />}
-	clientSide
-	columns={[
-		{ key: "id", header: "Sno." },
-		{ key: "name", header: "Name" },
-		{ key: "age", header: "Age" },
-		{key:"surname",header:"Surname"}
-	]}
-	data={[
-		{ id: "1", name: "Ravish Ranjan a", age: 1 ,surname:"Ranjan"},
-		{ id: "2", name: "Ravish Ranjan b", age: 2 ,surname:"Ranjan"},
-		{ id: "3", name: "Ravish Ranjan c", age: 3 ,surname:"Ranjan"},
-		{ id: "4", name: "Ravish Ranjan d", age: 4 ,surname:"Ranjan"},
-		{ id: "5", name: "Ravish Ranjan e", age: 5 ,surname:"Ranjan"},
-	]}
-	currentPage={page}
-	totalPages={1}
-	setPage={setpage}
-/>
-? server side
-<CustomTable
-  data={data}
-  columns={columns}
-  onSearch={(term) => fetchData({ search: term })}
-  onSort={(col, order) => fetchData({ sortBy: col, sortOrder: order })}
-  onFilter={(filters) => fetchData({ filters })}
-  currentPage={page}
-  totalPages={total}
-  setPage={setPage}
-/>
-*/

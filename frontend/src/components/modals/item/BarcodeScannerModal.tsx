@@ -41,7 +41,7 @@ function BarcodeScannerModal({
 }: BarcodeScannerModalProps) {
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md max-w-screen">
+			<Card className="w-11/12 sm:max-w-sm">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Scan Item Barcode</CardTitle>
 					<Button

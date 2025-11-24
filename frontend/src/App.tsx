@@ -120,7 +120,7 @@ function App() {
 				</Routes>
 			</Suspense>
 			<ToastContainer
-				position="top-right"
+				position="top-left"
 				theme={getTheme()}
 				limit={3}
 				newestOnTop
