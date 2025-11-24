@@ -209,71 +209,60 @@ export const updateOrder = catchAsync(
  * @returns json response
  */
 export const orderReport = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		const { orgid } = req.params;
-		if (!orgid)
-			return next(
-				new AppError("please provide a valid organization id", 400)
-			);
-		const report = await Shipment.aggregate([
-			{
-				$match: {
-					organizationId: new Types.ObjectId(orgid),
-				},
-			},
-			{
-				$lookup: {
-					from: "items",
-					as: "items",
-					foreignField: "_id",
-					localField: "item",
-				},
-			},
-			{
-				$project: {
-					items: {
-						name: 1,
-						sellingPrice: 1,
-						costPrice: 1,
-					},
-					orderedOn: 1,
-					quantity: 1,
-				},
-			},
-			{
-				$group: {
-					_id: {
-						orderedOn: "$orderedOn",
-					},
-					items: {
-						$addToSet: "$items",
-					},
-					numOfItems: {
-						$sum: 1,
-					},
-					totalUnits: {
-						$sum: "$quantity",
-					},
-					totalSellingPrice: {
-						$sum: { $sum: "$items.sellingPrice" },
-					},
-					totalCostPrice: {
-						$sum: { $sum: "$items.costPrice" },
-					},
-				},
-			},
-		]);
-		return res.status(200).json({
-			status: "success",
-			data: {
-				report,
-			},
-		});
-	}
+    async (
+        req: ExpressTypes.Request,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        const { orgid } = req.params;
+        if (!orgid)
+            return next(
+                new AppError('please provide a valid organization id', 400)
+            );
+        const report = await Shipment.aggregate([
+            {
+                $match: {
+                    organizationId: new Types.ObjectId(orgid),
+                },
+            },
+            {
+                $lookup: {
+                    from: 'items',
+                    as: 'item',
+                    foreignField: '_id',
+                    localField: 'item',
+                },
+            },
+            {
+                $unwind : "$item"
+            },
+            {
+                $project: {
+                    item: {
+                        name: 1,
+                        sellingPrice: 1,
+                        costPrice: 1,
+                    },
+                    orderedOn: 1,
+                    quantity: 1,
+                },
+            },
+            {
+                $group: {
+                    _id: '$item',
+                    numOfOrders: { $sum: 1 },
+                    totalQuantity: { $sum: "$quantity" },
+                    totalValueOfAllOrders : {$sum :{ $multiply : ['$quantity','$item.sellingPrice']}}
+                },
+            },
+        ]);
+        return res.status(200).json({
+            status: 'success',
+            data: {
+                report,
+            },
+        });
+    }
 );
 /**
  * @brief Function to delete an order with a given ID
