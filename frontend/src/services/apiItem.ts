@@ -13,6 +13,7 @@ export type ItemReportType = {
 };
 
 type getItemProps = (SKU: string) => Promise<Item | void>;
+type getItemByIdProps = (itemId: string) => Promise<Item | void>;
 type getAllItemsProps = (orgId: string, page: number) => Promise<{items:Item[],count:number} | void>;
 type addItemProps = (
 	itemDetails: Record<string, string | number>
@@ -36,6 +37,16 @@ export const getItem: getItemProps = async (SKU) => {
 		handleError(err);
 	}
 };
+
+export const getItemById: getItemByIdProps = async (itemId) => {
+	try {
+		const res = await axinstance.get(`/v1/item/id/${itemId}`);
+		if (res.status === 200) return res.data.data.item;
+		else handleError("There was an error while getting the item");
+	} catch (err) {
+		handleError(err);
+	}
+}; 
 
 export const getAllItems: getAllItemsProps = async (orgId, page = 1) => {
 	try {

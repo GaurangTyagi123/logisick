@@ -1,18 +1,15 @@
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 import OrdersTable from "@/components/OrdersTable";
-import Button from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { H3, Large } from "@/components/ui/Typography";
 import useGetOrdersReport from "@/hooks/order/useGetOrderReport";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
 import { useParams } from "react-router-dom";
 import ReportBar from "@/components/ReportBar";
 import type { OrderReportType } from "@/services/apiOrder";
 
 function OrderSales() {
-	const [_openAddOrderModal, setOpenAddOrderModal] = useState<boolean>(false);
 	const { orgSlug } = useParams();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
@@ -44,9 +41,6 @@ function OrderSales() {
 			{/* top tab */}
 			<div className="grid w-full md:flex md:items-center md:justify-between gap-2 p-1 md:p-3 rounded-lg md:rounded-2xl bg-white dark:bg-ls-bg-dark-800 outline-1">
 				<H3>Orders / Sales Management</H3>
-				<Button onClick={() => setOpenAddOrderModal(true)}>
-					Add New Item
-				</Button>
 			</div>
 			{/* main section */}
 			<main className="w-full grid gap-2 rounded-lg md:rounded-2xl h-full">
@@ -84,7 +78,6 @@ function OrderSales() {
 				{/* order table */}
 				<OrdersTable />
 			</main>
-			{/* create order modal */}
 		</div>
 	);
 }

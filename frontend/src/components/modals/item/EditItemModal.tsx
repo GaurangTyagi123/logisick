@@ -47,7 +47,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		name: string;
 		costPrice: number;
 		sellingPrice: number;
-		quantify: number;
+		quantity: number;
 		inventoryCategory: string;
 		importance: "A" | "B" | "C";
 		importedOn: string;
@@ -60,7 +60,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		name: item.name,
 		costPrice: item.costPrice,
 		sellingPrice: item.sellingPrice,
-		quantify: item.quantity,
+		quantity: item.quantity,
 		inventoryCategory: item.inventoryCategory,
 		importance: (item.importance || "C") as "A" | "B" | "C",
 		importedOn: new Date(item.importedOn).toISOString(),
@@ -87,7 +87,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 				className: "toast",
 			});
 
-		if (form.quantify <= 0)
+		if (form.quantity <= 0)
 			return toast.warning("Quantity can't be 0", { className: "toast" });
 
 		if (form.inventoryCategory.trim() === "")
@@ -113,7 +113,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 			name: string;
 			costPrice: number;
 			sellingPrice: number;
-			quantify: number;
+			quantity: number;
 			inventoryCategory: string;
 			importance: "A" | "B" | "C";
 			importedOn: string;
@@ -224,11 +224,11 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								name="quantity"
 								type="number"
 								onFocus={(e) => e.target.select()}
-								value={form.quantify}
+								value={form.quantity}
 								onChange={(e) =>
 									setForm({
 										...form,
-										quantify: Number(e.target.value),
+										quantity: Number(e.target.value),
 									})
 								}
 								placeholder="Enter item quantity"

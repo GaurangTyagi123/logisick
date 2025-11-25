@@ -46,7 +46,7 @@ export const createOrder = catchAsync(
 			return next(new AppError("Please provide complete details", 400));
 
 		const itemDetails = await Item.findById(itemId).where({
-			quantity: { $gt: quantity },
+			quantity: { $gte: Number(quantity) },
 		});
 		if (!itemDetails)
 			return next(
@@ -316,8 +316,9 @@ export const searchOrder = catchAsync(
 		let orders;
 		if (redisClient.isReady) {
 			orders = await redisClient.hGet(`organization-${orgid}`, "orders");
-			if (orders && queryStr.length) {
-				orders = JSON.parse(orders);
+
+			orders = JSON.parse(orders ? orders : "[]");
+			if (orders.length && queryStr.length) {
 				orders = orders.values().filter((items: any) => {
 					const itemsStr = JSON.stringify(items);
 					return regex.test(itemsStr);
@@ -325,12 +326,9 @@ export const searchOrder = catchAsync(
 			}
 			if (!orders || !orders.length || !queryStr.length) {
 				orders = await new ApiFilter(
-					Shipment.find({ organizationId: orgid }),
+					Shipment.find({ organizationId: orgid,orderName : {$regex:regex} }),
 					req.parsedQuery!
-				)
-					.sort()
-					.project()
-					.filter().query;
+				).query;
 				const itemsStr = JSON.stringify(orders);
 				await redisClient.hSet(
 					`organization-${orgid}`,
@@ -340,7 +338,7 @@ export const searchOrder = catchAsync(
 			}
 		} else {
 			orders = await new ApiFilter(
-				Shipment.find({ organizationId: orgid }),
+				Shipment.find({ organizationId: orgid ,orderName : {$regex:regex}}),
 				req.parsedQuery!
 			)
 				.sort()

@@ -61,7 +61,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		organizationId: string;
 		costPrice: number;
 		sellingPrice: number;
-		quantify: number;
+		quantity: number;
 		inventoryCategory: string;
 		importance: "A" | "B" | "C";
 		importedOn: Date;
@@ -76,7 +76,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		organizationId: "",
 		costPrice: 0,
 		sellingPrice: 0,
-		quantify: 1,
+		quantity: 1,
 		inventoryCategory: "",
 		importance: "C",
 		importedOn: new Date(),
@@ -99,7 +99,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 				className: "toast",
 			});
 
-		if (form.quantify <= 0)
+		if (form.quantity <= 0)
 			return toast.warning("Quantity can't be 0", { className: "toast" });
 
 		if (form.inventoryCategory.trim() === "")
@@ -131,7 +131,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 			organizationId: string;
 			costPrice: number;
 			sellingPrice: number;
-			quantify: number;
+			quantity: number;
 			inventoryCategory: string;
 			importance: "A" | "B" | "C";
 			importedOn: string;
@@ -263,12 +263,12 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								name="quantity"
 								type="number"
 								onFocus={(e) => e.target.select()}
-								value={form.quantify}
+								value={form.quantity}
 								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
-										quantify: Number(e.target.value),
+										quantity: Number(e.target.value),
 									})
 								}
 								placeholder="Enter item quantity"

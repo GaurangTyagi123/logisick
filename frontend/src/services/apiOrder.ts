@@ -42,9 +42,9 @@ type createOrderProps = (newOrderDetails: {
 type updateOrderByIdProps = (
 	orderId: string,
 	orderUpdates: {
-		quantity: number;
-		shipped: boolean;
-		orderedOn: Date;
+		quantity?: number;
+		shipped?: boolean;
+		orderedOn?: Date;
 	}
 ) => Promise<shipmentType | void>;
 

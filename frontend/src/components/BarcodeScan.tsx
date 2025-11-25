@@ -22,7 +22,7 @@ function BarcodeScan({
 			organizationId: string;
 			costPrice: number;
 			sellingPrice: number;
-			quantify: number;
+			quantity: number;
 			inventoryCategory: string;
 			importance: "A" | "B" | "C";
 			importedOn: Date;
@@ -52,7 +52,7 @@ function BarcodeScan({
 					organizationId: string;
 					costPrice: number;
 					sellingPrice: number;
-					quantify: number;
+					quantity: number;
 					inventoryCategory: string;
 					importance: "A" | "B" | "C";
 					importedOn: Date;

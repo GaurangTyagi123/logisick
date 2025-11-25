@@ -22,6 +22,7 @@ import {
 	TableRow,
 } from "./ui/table";
 import Pagination from "./Pagination";
+import { Separator } from "./ui/separator";
 
 export interface Column<RowType> {
 	key: string | keyof RowType;
@@ -60,7 +61,9 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
-function CustomTable<RowType extends Record<string, string | number | Date | boolean>>({
+function CustomTable<
+	RowType extends Record<string, string | number | Date | boolean>
+>({
 	title,
 	titleIcon,
 	data,
@@ -377,6 +380,7 @@ function CustomTable<RowType extends Record<string, string | number | Date | boo
 					</Table>
 				)}
 			</CardContent>
+			<Separator />
 			<CardFooter className="w-full flex justify-center items-center px-1 md:px-2">
 				<Pagination
 					currentPage={currentPage}

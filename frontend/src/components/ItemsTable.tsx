@@ -11,13 +11,22 @@ import { Edit } from "@/assets/icons/Profilepage";
 import { debounce } from "lodash";
 import { searchItems } from "@/services/apiItem";
 import { prefereableUnits } from "@/utils/utilfn";
+import CreateOrderModal from "./modals/order/CreateOrderModal";
+import useCreateOrder from "@/hooks/order/useCreateOrder";
 
 function ItemsTable() {
 	const { orgSlug } = useParams();
 	const PAGESIZE = 5;
 	const [page, setPage] = useState<number>(1);
 	const [totalPages, setTotalPages] = useState<number>(1);
+	const [orderCreateForm, setOrderCreateForm] = useState({
+		itemName: "",
+		itemId: "",
+		itemAmount: 0,
+	});
+	const [openCreateOrderModal, setOpenCreateOrderModal] = useState(false);
 
+	const { createOrderFn, isCreatingOrder } = useCreateOrder();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
@@ -83,79 +92,134 @@ function ItemsTable() {
 
 	if (isGettingItems || isGettingOrg) return <CustomTableSkeleton />;
 	return (
-		<CustomTable
-			title="Items"
-			columns={[
-				{
-					key: "name",
-					header: "Name",
-					render: (value) => (
-						<span className="font-bold">{value}</span>
-					),
-				},
-
-				{
-					key: "importedOn",
-					header: "Imported On",
-					render: (value) => new Date(value).toLocaleDateString(),
-				},
-				{
-					key: "expiresOn",
-					header: "Expires On",
-					render: (value) => {
-						if (value) return new Date(value).toLocaleDateString();
-						return <Muted>NA</Muted>;
+		<>
+			<CustomTable
+				title="Items"
+				columns={[
+					{
+						key: "name",
+						header: "Name",
+						render: (value) => (
+							<span className="font-bold">
+								{value instanceof Date
+									? new Date(value).toLocaleDateString()
+									: value}
+							</span>
+						),
 					},
-				},
-				{ key: "inventoryCategory", header: "Category" },
-				{
-					key: "batchNumber",
-					header: "Batch No.",
-					render: (value) => (value ? value : <Muted>NA</Muted>),
-				},
-				{
-					key: "weight",
-					header: "Unit Weight",
-					render: (weight) => prefereableUnits(weight),
-				},
-				{ key: "quantity", header: "Quantity" },
-				{
-					key: "costPrice",
-					header: "Cost Price",
-					render: (value) => (
-						<span className="w-full font-bold text-red-400">
-							{value} /-
-						</span>
-					),
-				},
-				{
-					key: "sellingPrice",
-					header: "Selling Price",
-					render: (value) => (
-						<span className="w-full font-bold text-green-400">
-							{value} /-
-						</span>
-					),
-				},
-				{
-					key: "Manage",
-					header: "Manage",
-					render: (_, row) => (
-						<Link to={`/item/${orgData.slug}/${row.SKU}`}>
-							<Button variant={"outline"} size={"sm"}>
-								<Edit />
+
+					{
+						key: "importedOn",
+						header: "Imported On",
+						render: (value) => {
+							if (value)
+								return new Date(value).toLocaleDateString();
+							return <Muted>NA</Muted>;
+						},
+					},
+					{
+						key: "expiresOn",
+						header: "Expires On",
+						render: (value) => {
+							if (value)
+								return new Date(value).toLocaleDateString();
+							return <Muted>NA</Muted>;
+						},
+					},
+					{ key: "inventoryCategory", header: "Category" },
+					{
+						key: "batchNumber",
+						header: "Batch No.",
+						render: (value) =>
+							value ? (
+								value instanceof Date ? (
+									new Date(value).toLocaleDateString()
+								) : (
+									value
+								)
+							) : (
+								<Muted>NA</Muted>
+							),
+					},
+					{
+						key: "weight",
+						header: "Unit Weight",
+						render: (weight) => prefereableUnits(Number(weight)),
+					},
+					{ key: "quantity", header: "Quantity" },
+					{
+						key: "costPrice",
+						header: "Cost Price",
+						render: (value) => (
+							<span className="w-full font-bold text-red-400">
+								{value instanceof Date
+									? new Date(value).toLocaleDateString()
+									: value}{" "}
+								/-
+							</span>
+						),
+					},
+					{
+						key: "sellingPrice",
+						header: "Selling Price",
+						render: (value) => (
+							<span className="w-full font-bold text-green-400">
+								{value instanceof Date
+									? new Date(value).toLocaleDateString()
+									: value}{" "}
+								/-
+							</span>
+						),
+					},
+					{
+						key: "createorder",
+						header: "Create Order",
+						render: (_, row) => (
+							<Button
+								disabled={isCreatingOrder}
+								onClick={() => {
+									setOrderCreateForm({
+										itemId: row._id,
+										itemName: row.name,
+										itemAmount: row.quantity,
+									});
+									setOpenCreateOrderModal(true);
+								}}
+								variant={"outline"}
+								size={"sm"}
+								className="text-xs ms:text-sm"
+							>
+								Create Order
 							</Button>
-						</Link>
-					),
-				},
-			]}
-			clientSide
-			data={searchResult ? searchResult : itemsResponse?.items || []}
-			currentPage={page}
-			totalPages={totalPages}
-			setPage={setPage}
-			onSearch={handleSearchWrapper}
-		/>
+						),
+					},
+					{
+						key: "Manage",
+						header: "Manage",
+						render: (_, row) => (
+							<Link to={`/item/${orgData.slug}/${row.SKU}`}>
+								<Button variant={"outline"} size={"sm"}>
+									<Edit />
+								</Button>
+							</Link>
+						),
+					},
+				]}
+				clientSide
+				data={searchResult ? searchResult : itemsResponse?.items || []}
+				currentPage={page}
+				totalPages={totalPages}
+				setPage={setPage}
+				onSearch={handleSearchWrapper}
+			/>
+			<CreateOrderModal
+				open={openCreateOrderModal}
+				setOpen={setOpenCreateOrderModal}
+				orderdata={orderCreateForm}
+				createOrderFn={createOrderFn}
+				isCreatingOrder={isCreatingOrder}
+			/>
+		</>
 	);
 }
 

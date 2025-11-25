@@ -4,12 +4,14 @@ import { toast } from "react-toastify";
 
 function useAddItem() {
 	const queryClient = useQueryClient();
-	const { mutate: addItemFn, isPending:isAddingItem } = useMutation({
+	const { mutate: addItemFn, isPending: isAddingItem } = useMutation({
 		mutationFn: addItem,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					query.queryKey[0]?.toString() === "items" ,
+					["items", "items-report"].includes(
+						query.queryKey[0]?.toString() || ""
+					),
 			});
 			toast.success("Item added successfully", { className: "toast" });
 		},

@@ -4,13 +4,16 @@ import { toast } from "react-toastify";
 
 function useDeleteOrder() {
 	const queryClient = useQueryClient();
-	const { mutate: deleteOrderFn, isPending:isDeletingOrder } = useMutation({
+	const { mutate: deleteOrderFn, isPending: isDeletingOrder } = useMutation({
 		mutationFn: deleteOrderById,
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					query.queryKey[0]?.toString() === "orders",
+					["items", "items-report"].includes(
+						query.queryKey[0]?.toString() || ""
+					),
 			});
+			queryClient.invalidateQueries();
 			toast.success("Order deleted successfully", { className: "toast" });
 		},
 		onError: (err) => {

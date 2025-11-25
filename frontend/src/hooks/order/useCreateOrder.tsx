@@ -9,7 +9,9 @@ function useCreateOrder() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					query.queryKey[0]?.toString() === "orders",
+					["orders", "orders-report"].includes(
+						query.queryKey[0]?.toString() || ""
+					),
 			});
 			toast.success("Order created successfully", { className: "toast" });
 		},
