@@ -90,14 +90,21 @@ function ItemsTable() {
 					key: "name",
 					header: "Name",
 					render: (value) => (
-						<span className="font-bold">{value}</span>
+						<span className="font-bold">
+							{value instanceof Date
+								? new Date(value).toLocaleDateString()
+								: value}
+						</span>
 					),
 				},
 
 				{
 					key: "importedOn",
 					header: "Imported On",
-					render: (value) => new Date(value).toLocaleDateString(),
+					render: (value) => {
+						if (value) return new Date(value).toLocaleDateString();
+						return <Muted>NA</Muted>;
+					},
 				},
 				{
 					key: "expiresOn",
@@ -111,12 +118,21 @@ function ItemsTable() {
 				{
 					key: "batchNumber",
 					header: "Batch No.",
-					render: (value) => (value ? value : <Muted>NA</Muted>),
+					render: (value) =>
+						value ? (
+							value instanceof Date ? (
+								new Date(value).toLocaleDateString()
+							) : (
+								value
+							)
+						) : (
+							<Muted>NA</Muted>
+						),
 				},
 				{
 					key: "weight",
 					header: "Unit Weight",
-					render: (weight) => prefereableUnits(weight),
+					render: (weight) => prefereableUnits(Number(weight)),
 				},
 				{ key: "quantity", header: "Quantity" },
 				{
@@ -124,7 +140,10 @@ function ItemsTable() {
 					header: "Cost Price",
 					render: (value) => (
 						<span className="w-full font-bold text-red-400">
-							{value} /-
+							{value instanceof Date
+								? new Date(value).toLocaleDateString()
+								: value}{" "}
+							/-
 						</span>
 					),
 				},
@@ -133,7 +152,10 @@ function ItemsTable() {
 					header: "Selling Price",
 					render: (value) => (
 						<span className="w-full font-bold text-green-400">
-							{value} /-
+							{value instanceof Date
+								? new Date(value).toLocaleDateString()
+								: value}{" "}
+							/-
 						</span>
 					),
 				},

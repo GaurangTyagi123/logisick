@@ -40,7 +40,7 @@ function OrdersTable() {
 		mutationFn: searchOrders,
 		onSettled: (data) => {
 			if (data) {
-				setSearchResults(data.items);
+				setSearchResults(data.orders);
 			} else return;
 		},
 	});
