@@ -381,6 +381,7 @@ function CustomTable<
 				)}
 			</CardContent>
 			<Separator />
+			<Separator />
 			<CardFooter className="w-full flex justify-center items-center px-1 md:px-2">
 				<Pagination
 					currentPage={currentPage}
