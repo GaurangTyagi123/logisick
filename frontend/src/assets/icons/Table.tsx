@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// custom table icons
+
+// decreasing icon
 export function Desc(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -19,6 +22,7 @@ export function Desc(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// increasing icon
 export function Incr(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -38,6 +42,7 @@ export function Incr(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// sorting icon
 export function Sort(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

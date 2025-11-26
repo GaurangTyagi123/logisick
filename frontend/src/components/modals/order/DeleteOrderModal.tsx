@@ -25,6 +25,15 @@ interface DeleteOrderModalProps {
 	isDeletingOrder: boolean;
 }
 
+/**
+ * @component modal to delete order
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {orderdata} orderdata order data
+ * @param {Function} deleteOrderFn function to delete order 
+ * @param {boolean} isDeletingOrder pending state of deleting order request
+ * @author `Ravish Ranjan`
+ */
 function DeleteOrderModal({
 	open,
 	setOpen,

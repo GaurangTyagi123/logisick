@@ -1,17 +1,17 @@
-import Modal from "../../Modal";
-import Button from "../../ui/button";
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../../ui/card";
+} from "@/components/ui/card";
 import { Close } from "@/assets/icons/Close";
 import { useState } from "react";
 import type { UseMutateFunction } from "@tanstack/react-query";
-import { Label } from "../../ui/label";
-import { Input } from "../../ui/input";
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 interface ChangeEmpRole {
 	open: boolean;
@@ -35,6 +35,16 @@ interface ChangeEmpRole {
 	isPending: boolean;
 }
 
+/**
+ * @component modal to change manager of employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Employee-Data} empDate employee data { _id:string, name:string, email:string }
+ * @param {string} orgid organization id
+ * @param {Function} changeManager change manager function
+ * @param {boolean} isPending pending state for change manager function
+ * @author `Ravish Ranjan`
+ */
 function ChangeEmpManagerModal({
 	open,
 	setOpen,
@@ -44,7 +54,11 @@ function ChangeEmpManagerModal({
 	isPending,
 }: ChangeEmpRole) {
 	const [managerEmail, setManagerEmail] = useState<string>("");
-	const handleChangeRole = () => {
+
+	/**
+	 * @brief function to handle change of manager on submit
+	 */
+	const handleChangeManager = () => {
 		changeManager({ orgid, managerEmail, userid: empData._id });
 	};
 
@@ -52,7 +66,7 @@ function ChangeEmpManagerModal({
 		<Modal openModal={open}>
 			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
-					<CardTitle>Change Role of {empData.name}</CardTitle>
+					<CardTitle>Change Manager of {empData.name}</CardTitle>
 					<Button
 						onClick={() => setOpen(false)}
 						variant={"secondary"}
@@ -88,7 +102,7 @@ function ChangeEmpManagerModal({
 					<Button
 						type="button"
 						onClick={() => {
-							handleChangeRole();
+							handleChangeManager();
 							setOpen(false);
 						}}
 						disabled={isPending}

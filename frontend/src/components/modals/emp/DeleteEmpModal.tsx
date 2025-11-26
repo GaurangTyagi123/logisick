@@ -35,6 +35,16 @@ interface DeleteEmpProps {
 	isPending: boolean;
 }
 
+/**
+ * @component modal to delete employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Employee-Data} empDate employee data { _id:string, name:string, email:string }
+ * @param {string} orgid organization id
+ * @param {Function} deleteEmp delete employee function
+ * @param {boolean} isPending pending state for delete employee function
+ * @author `Ravish Ranjan`
+ */
 function DeleteEmpModal({
 	open,
 	setOpen,

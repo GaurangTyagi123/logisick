@@ -41,6 +41,17 @@ interface ChangeEmpRole {
 	isPending: boolean;
 }
 
+/**
+ * @component modal to change role of employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Employee-Data} empDate employee data { _id:string, name:string, email:string }
+ * @param {string} orgid organization id
+ * @param {Function} changeRole change role function
+ * @param {boolean} isPending pending state for change role function
+ * @param {string} oldRole old role of employee to set default state
+ * @author `Ravish Ranjan`
+ */
 function ChangeEmpRoleModal({
 	open,
 	setOpen,
@@ -52,6 +63,9 @@ function ChangeEmpRoleModal({
 }: ChangeEmpRole) {
 	const [role, setRole] = useState<"Admin" | "Manager" | "Staff">(oldRole);
 
+	/**
+	 * @brief function to handle change of role on sumit
+	 */
 	const handleChangeRole = () => {
 		if (role) {
 			changeRole({

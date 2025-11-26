@@ -17,7 +17,12 @@ import { Input } from "@/components/ui/input";
 type OrganizationFormData = {
 	newOwnerEmail: string;
 };
-
+/**
+ * @component modal to transfer ownership ofthe organization
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Gaurang Tyagi`
+ */
 function TransferOwnershipModal({
 	open,
 	setOpen,
@@ -43,6 +48,10 @@ function TransferOwnershipModal({
 		},
 	});
 
+	/**
+	 * @brief function to handle submit for transfering ownership
+	 * @param data organization data
+	 */
 	const onSubmit = (data: OrganizationFormData) => {
 		transferOwnershipFn({ ...data });
 		setOpen(false);

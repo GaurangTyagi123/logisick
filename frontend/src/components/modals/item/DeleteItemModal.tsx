@@ -21,6 +21,13 @@ interface DeleteItemModalProps {
 	itemData: Item;
 }
 
+/**
+ * @component modal to delete item
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Item} itemData item data
+ * @author `Ravish Ranjan`
+ */
 function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 	const [text, setText] = useState<string>("");
 	const navigate = useNavigate();

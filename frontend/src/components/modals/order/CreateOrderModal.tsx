@@ -38,6 +38,15 @@ interface CreateOrderModalProps {
 	>;
 }
 
+/**
+ * @component modal to create new order
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {orderdata} orderdata order data
+ * @param {Function} createOrderFn function to create new order 
+ * @param {boolean} isCreatingOrder pending state of creating order request
+ * @author `Ravish Ranjan`
+ */
 function CreateOrderModal({
 	open,
 	setOpen,
@@ -58,6 +67,9 @@ function CreateOrderModal({
 		orderedOn: new Date(),
 	});
 
+	/**
+	 * @brief function to handle creating new order on submit
+	 */
 	const handleCreateOrder = () => {
 		if (form.quantity < 0 || form.quantity > orderdata.itemAmount) {
 			return toast.error(

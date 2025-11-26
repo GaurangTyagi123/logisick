@@ -29,9 +29,9 @@ type OrganizationFormData = {
 };
 /**
  * @component a modal for profilepage which prompts user to change organization details when clicks to do so
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a update organization modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Gaurang Tyagi`
  */
 function EditOrgModal({
 	open,
@@ -66,6 +66,10 @@ function EditOrgModal({
 		},
 	});
 
+	/**
+	 * @brief function to handle submit of edit organization 
+	 * @param data organization data
+	 */
 	const onSubmit = (data: OrganizationFormData) => {
 		if (organization) updateOrgFn({ id: organization?._id, data });
 		setOpen(false);

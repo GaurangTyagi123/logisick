@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useUpdateItem from "@/hooks/item/useUpdateItem";
+import { unitConversion } from "@/utils/utilfn";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -27,21 +28,16 @@ interface UpdateItemModalProps {
 	item: Item;
 }
 
-function weightInGrams(unit: "MG" | "G" | "KG", weight?: number) {
-	if (!weight) return weight;
-	switch (unit) {
-		case "KG":
-			return weight * 1000;
-		case "MG":
-			return weight / 1000;
-		default:
-			return weight;
-	}
-}
-
+/**
+ * @component modal to update item data
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Item} item item data
+ * @author `Ravish Ranjan`
+ */
 function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 	const { isUpdatingItem, updateItemFn } = useUpdateItem();
-	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG">("G");
+	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG" | "ML" | "L" | "KL">("G");
 
 	const [form, setForm] = useState<{
 		name: string;
@@ -64,13 +60,18 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		inventoryCategory: item.inventoryCategory,
 		importance: (item.importance || "C") as "A" | "B" | "C",
 		importedOn: new Date(item.importedOn).toISOString(),
-		expiresOn: item.expiresOn? new Date(item.expiresOn).toISOString() : new Date().toISOString(),
+		expiresOn: item.expiresOn
+			? new Date(item.expiresOn).toISOString()
+			: new Date().toISOString(),
 		weight: item.weight,
 		colour: item.colour,
 		reorderLevel: item.reorderLevel,
 		origin: item.origin,
 	});
 
+	/**
+	 * @brief function to handle update of item on submit
+	 */
 	const handleUpdateItem = () => {
 		if (form.name.trim() === "")
 			return toast.warning("Item should have a name", {
@@ -123,7 +124,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 			reorderLevel?: number;
 			origin?: string;
 		} = JSON.parse(JSON.stringify(form));
-		submitForm.weight = weightInGrams(weightUnit, form.weight);
+		submitForm.weight = unitConversion(weightUnit, form.weight);
 		submitForm.name = submitForm.name.trim();
 		submitForm.inventoryCategory = submitForm.inventoryCategory.trim();
 		submitForm.colour = submitForm.colour?.trim();
@@ -266,20 +267,22 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 										defaultValue={weightUnit}
 										onValueChange={(value) =>
 											setWeightUnit(
-												value as "KG" | "MG" | "G"
+												value as "KG" | "MG" | "G" | "ML" | "L" | "KL"
 											)
 										}
 									>
-										{["KG", "G", "MG"].map((unit, i) => {
-											return (
-												<DropdownMenuRadioItem
-													key={i}
-													value={unit}
-												>
-													{unit}
-												</DropdownMenuRadioItem>
-											);
-										})}
+										{["KG", "G", "MG", "ML", "L", "KL"].map(
+											(unit, i) => {
+												return (
+													<DropdownMenuRadioItem
+														key={i}
+														value={unit}
+													>
+														{unit}
+													</DropdownMenuRadioItem>
+												);
+											}
+										)}
 									</DropdownMenuRadioGroup>
 								</DropdownMenuContent>
 							</DropdownMenu>

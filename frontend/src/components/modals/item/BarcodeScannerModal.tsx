@@ -34,6 +34,13 @@ interface BarcodeScannerModalProps {
 	>;
 }
 
+/**
+ * @component modal to scan product barcode
+ * @param {Function} setForm state mutation function to insert item data
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @author `Ravish Ranjan`
+ */
 function BarcodeScannerModal({
 	setForm,
 	open,

@@ -25,11 +25,11 @@ interface ChangeProps {
 
 /**
  * @component a modal for profilepage which prompts user to change profile picture when user want to do so
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @param modalPic a string state for user input of avatar seed
- * @param setModalPic a setter function for user input of avatar seed
- * @returns gives a components as a profile pic changing modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @param {string} modalPic a string state for user input of avatar seed
+ * @param {Function} setModalPic a setter function for user input of avatar seed
+ * @author `Ravish Ranjan`
  */
 function ProfilePicChangeModal({
 	open,

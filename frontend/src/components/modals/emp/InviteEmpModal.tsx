@@ -15,6 +15,12 @@ import { Input } from "@/components/ui/input";
 import useSendInvite from "@/hooks/emp/useSendInvite";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+/**
+ * @component modal to send invitation to new employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @author `Ravish Ranjan`
+ */
 function InviteEmpModal({
 	open,
 	setOpen,

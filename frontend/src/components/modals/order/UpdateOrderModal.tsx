@@ -34,6 +34,15 @@ interface UpdateOrderModalProps {
 	>;
 }
 
+/**
+ * @component modal to update order
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {orderdata} orderdata order data
+ * @param {Function} updateOrderFn function to update order 
+ * @param {boolean} isUpdatingOrder pending state of updating order request
+ * @author `Ravish Ranjan`
+ */
 function UpdateOrderModal({
 	open,
 	setOpen,
@@ -46,6 +55,10 @@ function UpdateOrderModal({
 		shipped: orderData.shipped,
 		orderedOn: orderData.orderedOn,
 	});
+
+	/**
+	 * @brief function to handle update of order on submit
+	 */
 	const handleUpdateOrder = () => {
 		console.log("onsubmit order data : ", orderData);
 		console.log("onsubmit update data: ", orderUpdated);
@@ -68,6 +81,7 @@ function UpdateOrderModal({
 		});
 	};
 
+	// use effect to fill default value on component render
 	useEffect(() => {
 		if (open) {
 			setOrderUpdated({

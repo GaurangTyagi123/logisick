@@ -27,24 +27,19 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import BarcodeScannerModal from "./BarcodeScannerModal";
 import { Separator } from "@/components/ui/separator";
+import { unitConversion } from "@/utils/utilfn";
 
 interface AddItemModalProps {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function weightInGrams(unit: "MG" | "G" | "KG", weight?: number) {
-	if (!weight) return weight;
-	switch (unit) {
-		case "KG":
-			return weight * 1000;
-		case "MG":
-			return weight / 1000;
-		default:
-			return weight;
-	}
-}
-
+/**
+ * @component modal to add new item
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @author `Ravish Ranjan`
+ */
 function AddItemModal({ open, setOpen }: AddItemModalProps) {
 	const { isAddingItem, addItemFn } = useAddItem();
 	const { orgSlug } = useParams();
@@ -54,7 +49,9 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 	});
 	const [openScannerModal, setOpenScannerModal] = useState<boolean>(false);
 
-	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG">("KG");
+	const [weightUnit, setWeightUnit] = useState<
+		"MG" | "G" | "KG" | "ML" | "L" | "KL"
+	>("KG");
 
 	const [form, setForm] = useState<{
 		name: string;
@@ -83,6 +80,9 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		weight: 1,
 	});
 
+	/**
+	 * @brief function to handle add of item on submit
+	 */
 	const handleAddItem = () => {
 		if (form.name.trim() === "")
 			return toast.warning("Item should have a name", {
@@ -146,7 +146,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		submitForm.importedOn = form.importedOn.toISOString();
 		submitForm.expiresOn = form.expiresOn?.toISOString();
 		submitForm.organizationId = orgData._id;
-		submitForm.weight = weightInGrams(weightUnit, form.weight);
+		submitForm.weight = unitConversion(weightUnit, form.weight);
 		submitForm.name = submitForm.name.trim();
 		submitForm.inventoryCategory = submitForm.inventoryCategory.trim();
 		submitForm.colour = submitForm.colour?.trim();
@@ -221,7 +221,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								id="costprice"
 								name="costPrice"
 								type="number"
-								value={form.costPrice}	
+								value={form.costPrice}
 								min={0}
 								onFocus={(e) => e.target.select()}
 								className="text-sm md:text-md"
@@ -308,20 +308,22 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 										className="text-sm md:text-md"
 										onValueChange={(value) =>
 											setWeightUnit(
-												value as "KG" | "MG" | "G"
+												value as "KG" | "MG" | "G" | "ML" | "L" | "KL"
 											)
 										}
 									>
-										{["KG", "G", "MG"].map((unit, i) => {
-											return (
-												<DropdownMenuRadioItem
-													key={i}
-													value={unit}
-												>
-													{unit}
-												</DropdownMenuRadioItem>
-											);
-										})}
+										{["KG", "G", "MG", "ML", "L", "KL"].map(
+											(unit, i) => {
+												return (
+													<DropdownMenuRadioItem
+														key={i}
+														value={unit}
+													>
+														{unit}
+													</DropdownMenuRadioItem>
+												);
+											}
+										)}
 									</DropdownMenuRadioGroup>
 								</DropdownMenuContent>
 							</DropdownMenu>

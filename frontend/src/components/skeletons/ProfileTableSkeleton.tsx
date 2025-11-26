@@ -5,9 +5,12 @@ import {
 	TableHeader,
 	TableRow,
 } from "../ui/table";
-
 import { Skeleton } from "../ui/skeleton";
 
+/**
+ * @componenet react componenet to be used as fallback of profile table
+ * @author `Ravish Ranjan`
+ */
 function ProfileTableSkeleton() {
 	return (
 		<>

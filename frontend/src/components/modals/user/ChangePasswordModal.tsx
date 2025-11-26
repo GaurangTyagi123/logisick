@@ -22,9 +22,9 @@ interface ChangePasswordProps {
 
 /**
  * @component a modal for profilepage which prompts user for change of password when clicks to change password
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a change password modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Ravish Ranjan`
  */
 function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
     const { updatePasswordFn: changePassword, isUpdatingPassword } =
