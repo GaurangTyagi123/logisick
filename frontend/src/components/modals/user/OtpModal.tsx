@@ -58,7 +58,7 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="max-w-screen">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Enter OTP</CardTitle>
 					<Button

@@ -14,7 +14,10 @@ export type ItemReportType = {
 
 type getItemProps = (SKU: string) => Promise<Item | void>;
 type getItemByIdProps = (itemId: string) => Promise<Item | void>;
-type getAllItemsProps = (orgId: string, page: number) => Promise<{items:Item[],count:number} | void>;
+type getAllItemsProps = (
+	orgId: string,
+	page: number
+) => Promise<{ items: Item[]; count: number } | void>;
 type addItemProps = (
 	itemDetails: Record<string, string | number>
 ) => Promise<any>;
@@ -46,17 +49,18 @@ export const getItemById: getItemByIdProps = async (itemId) => {
 	} catch (err) {
 		handleError(err);
 	}
-}; 
+};
 
 export const getAllItems: getAllItemsProps = async (orgId, page = 1) => {
 	try {
 		const res = await axinstance.get(
 			`/v1/item/allItems/${orgId}?page=${page}`
 		);
-		if (res.status === 200) return {
-			items: res.data.data.item,
-			count : res.data.count
-		};
+		if (res.status === 200)
+			return {
+				items: res.data.data.item,
+				count: res.data.count,
+			};
 		else handleError("There was an error while getting the item");
 	} catch (err) {
 		handleError(err);
@@ -107,16 +111,16 @@ export const getItemsReport: getItemsReportProps = async (orgId) => {
 	}
 };
 
-export const checkEmployeeStatus = async (orgSlug:string) => {
+export const checkEmployeeStatus = async (orgSlug: string) => {
 	try {
-		const res = await axinstance.get(
-			`/v1/auth/isEmployee/${orgSlug}`
-		);
+		const res = await axinstance.get(`/v1/auth/isEmployee/${orgSlug}`);
 		if (res.status === 200) {
 			return res.data.isEmployee;
 		} else {
 			handleError(
-				new Error("There was an error while checking your employment status")
+				new Error(
+					"There was an error while checking your employment status"
+				)
 			);
 		}
 	} catch (err) {
@@ -146,28 +150,33 @@ export const searchItems = async ({
 	}
 };
 
-export const addItemByBarcode = async (barcode:string) => {
+export const addItemByBarcode = async (barcode: string) => {
 	try {
-		const res = await axios.get(`https://world.openfoodfacts.org/api/v0/product/${barcode}`);
+		const res = await axios.get(
+			`https://world.openfoodfacts.org/api/v0/product/${barcode}`
+		);
 		if (res.status === 200) {
 			const product = res.data;
 			const data = {
-            name:
-                product.product.product_name ||
-                product.product.product_name_en ||
-                'Unknown Product',
-            origin: product.product.countries?.replace('en:', '') || 'Unknown',
-            brand: product.product.brands || 'Unknown',
-            inventoryCategory: product.product.product_type || 'unknown',
-            weight: product.product.quantity || null,
-        };
+				name:
+					product.product.product_name ||
+					product.product.product_name_en ||
+					"Unknown Product",
+				origin:
+					product.product.countries?.replace("en:", "") || "Unknown",
+				brand: product.product.brands || "Unknown",
+				inventoryCategory: product.product.product_type || "unknown",
+				weight: product.product.quantity || null,
+			};
 			return data;
 		} else {
 			handleError(
-				new Error("There was an error while adding the item to inventory")
+				new Error(
+					"There was an error while adding the item to inventory"
+				)
 			);
 		}
 	} catch (err) {
 		handleError(err);
 	}
-}
+};

@@ -11,13 +11,7 @@ type getAllOrdersProps = (
 	orgid: string,
 	page?: number
 ) => Promise<{
-	orders: {
-		_id: string;
-		orderName?: string;
-		quantity: number;
-		orderedOn: Date;
-		shipped: boolean;
-	}[];
+	orders: shipmentType[];
 	count: number;
 } | void>;
 
@@ -66,13 +60,7 @@ export const getAllOrders: getAllOrdersProps = async (orgid, page = 1) => {
 		const res = await axinstance.get<{
 			status: string;
 			count?: number;
-			order: {
-				_id: string;
-				orderName?: string;
-				quantity: number;
-				orderedOn: Date;
-				shipped: boolean;
-			}[];
+			order: shipmentType[];
 		}>(`/v1/order/allOrders/${orgid}?page=${page}`);
 		if (res.status === 200)
 			return {

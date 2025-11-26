@@ -10,7 +10,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import useCreateOrder from "@/hooks/order/useCreateOrder";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery, type UseMutateFunction } from "@tanstack/react-query";
 import { useState } from "react";
@@ -39,14 +38,18 @@ interface CreateOrderModalProps {
 	>;
 }
 
-function CreateOrderModal({ open, setOpen, orderdata }: CreateOrderModalProps) {
-	const { createOrderFn, isCreatingOrder } = useCreateOrder();
+function CreateOrderModal({
+	open,
+	setOpen,
+	orderdata,
+	createOrderFn,
+	isCreatingOrder,
+}: CreateOrderModalProps) {
 	const { orgSlug } = useParams();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
-	console.log("Order Data", orderdata);
 	const [form, setForm] = useState<{
 		quantity: number;
 		orderedOn: Date;
@@ -56,7 +59,6 @@ function CreateOrderModal({ open, setOpen, orderdata }: CreateOrderModalProps) {
 	});
 
 	const handleCreateOrder = () => {
-		console.log("form on submit", form);
 		if (form.quantity < 0 || form.quantity > orderdata.itemAmount) {
 			return toast.error(
 				"Order quantity can't be out of item's amount range",
@@ -78,7 +80,6 @@ function CreateOrderModal({ open, setOpen, orderdata }: CreateOrderModalProps) {
 				className: "toast",
 			});
 		}
-		console.log("comming here");
 		createOrderFn({
 			...form,
 			organizationId: orgData?._id,
@@ -105,7 +106,7 @@ function CreateOrderModal({ open, setOpen, orderdata }: CreateOrderModalProps) {
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid gap-2 max-h-80 overflow-auto ms:px-1">
+				<CardContent className="grid gap-2 max-h-80 overflow-auto sm:px-1">
 					<Label htmlFor="quantity" className="grid">
 						<span>Quantity *</span>
 						<Input
@@ -127,11 +128,11 @@ function CreateOrderModal({ open, setOpen, orderdata }: CreateOrderModalProps) {
 							required
 						/>
 					</Label>
-					<Label htmlFor="importedon" className="grid">
-						<span>Imported On *</span>
+					<Label htmlFor="Ordered On" className="grid">
+						<span>Ordered On *</span>
 						<Input
-							id="importedon"
-							name="importedOn"
+							id="orderedon"
+							name="orderedOn"
 							type="date"
 							value={form.orderedOn.toISOString().split("T")[0]}
 							max={form.orderedOn.toISOString().split("T")[0]}
@@ -143,7 +144,7 @@ function CreateOrderModal({ open, setOpen, orderdata }: CreateOrderModalProps) {
 									),
 								});
 							}}
-							placeholder="Enter item's imported date"
+							placeholder="Enter item's order date"
 							className="w-full text-sm md:text-md"
 							required
 						/>

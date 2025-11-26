@@ -261,7 +261,7 @@ function EmployeeTable({
 															}}
 															variant={"outline"}
 															size={"sm"}
-															className="text-xs ms:text-sm"
+															className="text-xs sm:text-sm"
 														>
 															Role
 														</Button>
@@ -283,7 +283,7 @@ function EmployeeTable({
 															variant={"outline"}
 															title={`Remove ${row.name} from organization`}
 															size={"sm"}
-															className="text-xs ms:text-sm"
+															className="text-xs sm:text-sm"
 														>
 															Manager
 														</Button>

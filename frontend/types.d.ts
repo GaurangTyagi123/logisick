@@ -64,7 +64,10 @@ type DummyOrg = {
 type shipmentType = {
 	_id: string;
 	orderName?: string;
-	item: string;
+	item: {
+		_id: string;
+		quantity: number;
+	};
 	organizationId: string;
 	quantity: number;
 	orderedOn: Date;

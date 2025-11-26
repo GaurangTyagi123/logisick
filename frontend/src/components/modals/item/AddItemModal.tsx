@@ -168,7 +168,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid gap-2 max-h-80 overflow-auto ms:px-1">
+				<CardContent className="grid gap-2 max-h-80 overflow-auto sm:px-1">
 					<Button
 						onClick={() => setOpenScannerModal(true)}
 						variant={"outline"}

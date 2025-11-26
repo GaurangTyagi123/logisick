@@ -99,7 +99,7 @@ function Profile() {
 						className="w-40 h-40 ring-4 ring-offset-2 ring-ls-sec-500"
 					/>
 					<Button
-						size={"sm"}
+						// size={"sm"}
 						className="absolute right-2 bottom-2 rounded-full"
 						onClick={() => {
 							setOpenChangeProfilePic(true);
@@ -153,10 +153,25 @@ function Profile() {
 					setOpenTransfer={setOpenTransfer}
 				/>
 				<div className="md:min-h-96 gap-2 grid  md:flex md:flex-col">
-					<Button onClick={() => setOpenUpdateUser(true)} variant={"secondary"}>
+					<Button
+						onClick={() => {
+							if (user?.isVerified) {
+								setOpenUpdateUser(true);
+							} else {
+								toast.error(
+									"User must be verified to update information",
+									{ className: "toast" }
+								);
+							}
+						}}
+						variant={"secondary"}
+					>
 						Update User
 					</Button>
-					<Button onClick={() => setOpenChangePassword(true)} variant={"secondary"}>
+					<Button
+						onClick={() => setOpenChangePassword(true)}
+						variant={"secondary"}
+					>
 						Change Password
 					</Button>
 					<Button

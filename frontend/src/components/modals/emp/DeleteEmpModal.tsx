@@ -47,7 +47,7 @@ function DeleteEmpModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="max-w-screen">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Remove Employee {empData.name}</CardTitle>
 					<Button

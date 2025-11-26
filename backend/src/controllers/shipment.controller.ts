@@ -96,7 +96,7 @@ export const getAllOrders = catchAsync(
 			deleted: false,
 		}).populate({
 			path: "item",
-			select: "_id orderName quantity orderedOn shipped", //. NOTE:  add fields that you want in the response
+			select: "_id quantity",
 		});
 		const totalCount = await Shipment.countDocuments({
 			organizationId: orgid,
@@ -257,7 +257,7 @@ export const orderReport = catchAsync(
 				},
 			},
 		]);
-		console.log(report)
+		console.log(report);
 		return res.status(200).json({
 			status: "success",
 			data: {
@@ -326,7 +326,13 @@ export const searchOrder = catchAsync(
 			}
 			if (!orders || !orders.length || !queryStr.length) {
 				orders = await new ApiFilter(
-					Shipment.find({ organizationId: orgid,orderName : {$regex:regex} }),
+					Shipment.find({
+						organizationId: orgid,
+						orderName: { $regex: regex },
+					}).populate({
+						path: "item",
+						select: "_id quantity",
+					}),
 					req.parsedQuery!
 				).query;
 				const itemsStr = JSON.stringify(orders);
@@ -338,7 +344,10 @@ export const searchOrder = catchAsync(
 			}
 		} else {
 			orders = await new ApiFilter(
-				Shipment.find({ organizationId: orgid ,orderName : {$regex:regex}}),
+				Shipment.find({
+					organizationId: orgid,
+					orderName: { $regex: regex },
+				}),
 				req.parsedQuery!
 			)
 				.sort()

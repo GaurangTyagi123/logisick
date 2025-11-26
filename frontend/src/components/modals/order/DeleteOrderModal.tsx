@@ -11,7 +11,6 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Small } from "@/components/ui/Typography";
-import useDeleteOrder from "@/hooks/order/useDeleteOrder";
 import type { UseMutateFunction } from "@tanstack/react-query";
 import { useState } from "react";
 
@@ -22,17 +21,22 @@ interface DeleteOrderModalProps {
 		orderName?: string;
 		_id: string;
 	};
-	deleteOrderFn:UseMutateFunction<void, Error, string, unknown>
-	isDeletingOrder:boolean
+	deleteOrderFn: UseMutateFunction<void, Error, string, unknown>;
+	isDeletingOrder: boolean;
 }
 
-function DeleteOrderModal({ open, setOpen, orderData }: DeleteOrderModalProps) {
+function DeleteOrderModal({
+	open,
+	setOpen,
+	orderData,
+	deleteOrderFn,
+	isDeletingOrder,
+}: DeleteOrderModalProps) {
 	const [text, setText] = useState<string>("");
-	const { deleteOrderFn, isDeletingOrder } = useDeleteOrder();
 
 	return (
 		<Modal openModal={open}>
-			<Card className="w-11/12 sm:max-w-sm">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Remove Order</CardTitle>
 					<Button

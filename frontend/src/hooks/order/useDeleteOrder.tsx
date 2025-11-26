@@ -9,7 +9,7 @@ function useDeleteOrder() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					["items", "items-report"].includes(
+					["orders", "orders-report"].includes(
 						query.queryKey[0]?.toString() || ""
 					),
 			});

@@ -8,34 +8,51 @@ import {
 	CardHeader,
 	CardTitle,
 } from "@/components/ui/card";
-import useGetItemById from "@/hooks/item/useGetItemById";
-import useUpdateOrder from "@/hooks/order/useUpdateOrder";
-import { useState } from "react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import type { UseMutateFunction } from "@tanstack/react-query";
+import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 
 interface UpdateOrderModalProps {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
-	orderData: {
-		_id: string;
-		itemId: string;
-		orderName?: string;
-		quantity: number;
-		shipped: boolean;
-		orderedOn: Date;
-	};
+	orderData: shipmentType;
+	isUpdatingOrder: boolean;
+	updateOrderFn: UseMutateFunction<
+		void | shipmentType,
+		any,
+		{
+			orderId: string;
+			orderUpdated: {
+				quantity?: number;
+				shipped?: boolean;
+				orderedOn?: Date;
+			};
+		},
+		unknown
+	>;
 }
-function UpdateOrderModal({ open, setOpen, orderData }: UpdateOrderModalProps) {
-	const { isUpdatingOrder, updateOrderFn } = useUpdateOrder();
-	const [orderUpdated, _setOrderUpdated] = useState({
+
+function UpdateOrderModal({
+	open,
+	setOpen,
+	orderData,
+	updateOrderFn,
+	isUpdatingOrder,
+}: UpdateOrderModalProps) {
+	const [orderUpdated, setOrderUpdated] = useState({
 		quantity: orderData.quantity,
 		shipped: orderData.shipped,
 		orderedOn: orderData.orderedOn,
 	});
-	const { isGettingItem, item } = useGetItemById(orderData.itemId);
-
 	const handleUpdateOrder = () => {
-		if (item?.quantity && item?.quantity < orderUpdated.quantity) {
+		console.log("onsubmit order data : ", orderData);
+		console.log("onsubmit update data: ", orderUpdated);
+		if (
+			orderUpdated.quantity < 0 ||
+			orderUpdated.quantity > orderData.item.quantity
+		) {
 			return toast.error(
 				"Order quantity can't be out of item's amount range",
 				{ className: "toast" }
@@ -50,6 +67,16 @@ function UpdateOrderModal({ open, setOpen, orderData }: UpdateOrderModalProps) {
 			},
 		});
 	};
+
+	useEffect(() => {
+		if (open) {
+			setOrderUpdated({
+				quantity: orderData.quantity,
+				shipped: orderData.shipped,
+				orderedOn: orderData.orderedOn,
+			});
+		}
+	}, [open, orderData.quantity, orderData.shipped, orderData.orderedOn]);
 
 	return (
 		<Modal openModal={open}>
@@ -66,7 +93,91 @@ function UpdateOrderModal({ open, setOpen, orderData }: UpdateOrderModalProps) {
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid gap-2 max-h-80 overflow-auto ms:px-1">
+				<CardContent className="grid gap-2 max-h-80 overflow-auto sm:px-1">
+					<Label htmlFor="quantity" className="grid">
+						<span>Quantity</span>
+						<Input
+							id="quantity"
+							name="quantity"
+							type="number"
+							onFocus={(e) => e.target.select()}
+							value={orderUpdated.quantity}
+							className="text-sm md:text-md"
+							min={1}
+							max={orderData.item.quantity}
+							onChange={(e) =>
+								setOrderUpdated({
+									...orderUpdated,
+									quantity: Number(e.target.value),
+								})
+							}
+							placeholder="Update item quantity"
+							required
+						/>
+					</Label>
+					<Label htmlFor="Ordered On" className="grid">
+						<span>Ordered On</span>
+						<Input
+							id="orderedon"
+							name="orderedOn"
+							type="date"
+							value={
+								new Date(orderUpdated.orderedOn)
+									.toISOString()
+									.split("T")[0]
+							}
+							max={new Date().toISOString().split("T")[0]}
+							onChange={(e) => {
+								setOrderUpdated({
+									...orderUpdated,
+									orderedOn: new Date(
+										e.target.valueAsDate ||
+											orderUpdated.orderedOn
+									),
+								});
+							}}
+							placeholder="Enter item's order date"
+							className="w-full text-sm md:text-md"
+							required
+						/>
+					</Label>
+					<Label htmlFor="isshipped" className="grid">
+						<span>Is Shipped</span>
+						<div className="grid grid-cols-1 sm:grid-cols-2">
+							<Button
+								variant={
+									orderUpdated.shipped
+										? "outline"
+										: "secondary"
+								}
+								onClick={() =>
+									setOrderUpdated({
+										...orderUpdated,
+										shipped: false,
+									})
+								}
+								className="sm:rounded-r-none"
+							>
+								Under Process
+							</Button>
+							<Button
+								variant={
+									orderUpdated.shipped
+										? "secondary"
+										: "outline"
+								}
+								onClick={() =>
+									setOrderUpdated({
+										...orderUpdated,
+										shipped: true,
+									})
+								}
+								className="sm:rounded-l-none"
+							>
+								Shipped
+							</Button>
+						</div>
+					</Label>
 				</CardContent>
 				<CardFooter className="flex gap-2">
 					<Button
@@ -81,8 +192,7 @@ function UpdateOrderModal({ open, setOpen, orderData }: UpdateOrderModalProps) {
 							handleUpdateOrder();
 							setOpen(false);
 						}}
-						disabled={isUpdatingOrder || isGettingItem}
-						variant={"destructive"}
+						disabled={isUpdatingOrder}
 					>
 						Update Order
 					</Button>

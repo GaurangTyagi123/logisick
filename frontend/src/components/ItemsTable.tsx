@@ -187,7 +187,7 @@ function ItemsTable() {
 								}}
 								variant={"outline"}
 								size={"sm"}
-								className="text-xs ms:text-sm"
+								className="text-xs sm:text-sm"
 							>
 								Create Order
 							</Button>

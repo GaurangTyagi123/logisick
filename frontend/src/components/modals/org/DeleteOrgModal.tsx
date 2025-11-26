@@ -59,7 +59,7 @@ function DeleteOrgModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="w-11/12 sm:max-w-sm">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Delete My Organization</CardTitle>
 					<Button

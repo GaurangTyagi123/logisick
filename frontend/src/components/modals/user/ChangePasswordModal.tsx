@@ -27,7 +27,7 @@ interface ChangePasswordProps {
  * @returns gives a components as a change password modal to put somewhere
  */
 function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
-    const { updatePasswordFn: changePassword, isPending: isChangingPassword } =
+    const { updatePasswordFn: changePassword, isUpdatingPassword } =
         useUpdatePassword();
     // const { changePassword, isChangingPassword } = useAuthStore();
     const [form, setForm] = useState<{
@@ -98,7 +98,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 
     return (
         <Modal openModal={open}>
-            <Card className="max-w-screen">
+            <Card className="w-md max-w-11/12">
                 <CardHeader className="flex justify-between items-center">
                     <CardTitle>Change Password</CardTitle>
                     <Button onClick={() => setOpen(false)} variant={"secondary"}>
@@ -245,7 +245,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                         className="w-full"
                         type="submit"
                         onClick={handleSubmit}
-                        disabled={isChangingPassword}
+                        disabled={isUpdatingPassword}
                     >
                         Submit
                     </Button>

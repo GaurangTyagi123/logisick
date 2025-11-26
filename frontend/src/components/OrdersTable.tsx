@@ -13,6 +13,8 @@ import Button from "./ui/button";
 import useDeleteOrder from "@/hooks/order/useDeleteOrder";
 import { Delete } from "@/assets/icons/Profilepage";
 import DeleteOrderModal from "./modals/order/DeleteOrderModal";
+import useUpdateOrder from "@/hooks/order/useUpdateOrder";
+import UpdateOrderModal from "./modals/order/UpdateOrderModal";
 
 function OrdersTable() {
 	const { orgSlug } = useParams();
@@ -20,12 +22,25 @@ function OrdersTable() {
 	const [page, setPage] = useState<number>(1);
 	const [totalPages, setTotalPages] = useState<number>(1);
 	const [openDeleteOrderModal, setOpenDeleteOrderModal] = useState(false);
+	const [openUpdateOrderModal, setOpenUpdateOrderModal] = useState(false);
 	const [deleteOrderForm, setDeleteOrderForm] = useState<{
 		orderName?: string;
 		_id: string;
 	}>({
 		orderName: "",
 		_id: "",
+	});
+	const [updateOrderForm, setUpdateOrderForm] = useState<shipmentType>({
+		_id: "",
+		item: {
+			_id: "",
+			quantity: 1,
+		},
+		orderName: "",
+		quantity: 1,
+		shipped: false,
+		orderedOn: new Date(),
+		organizationId: "",
 	});
 
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
@@ -38,17 +53,11 @@ function OrdersTable() {
 		page
 	);
 	const { deleteOrderFn, isDeletingOrder } = useDeleteOrder();
+	const { isUpdatingOrder, updateOrderFn } = useUpdateOrder();
 
-	const [searchResult, setSearchResults] = useState<
-		| {
-				_id: string;
-				orderName?: string;
-				quantity: number;
-				orderedOn: Date;
-				shipped: boolean;
-		  }[]
-		| null
-	>(null);
+	const [searchResult, setSearchResults] = useState<shipmentType[] | null>(
+		null
+	);
 
 	const { mutate: search } = useMutation({
 		mutationFn: searchOrders,
@@ -118,7 +127,7 @@ function OrdersTable() {
 							<Small>
 								{value instanceof Date
 									? new Date(value).toLocaleDateString()
-									: value}
+									: JSON.stringify(value)}
 							</Small>
 						),
 					},
@@ -149,25 +158,24 @@ function OrdersTable() {
 						key: "manage",
 						header: "Manage",
 						render: (_, row) => (
-							<>
+							<div className="flex gap-2 items-center">
 								{/* edit */}
-								{/* <Button
-									disabled={isChangingManager}
+								<Button
+									disabled={isUpdatingOrder}
 									onClick={() => {
-										setEmpData({
-											_id: row._id,
-											name: row.name,
-											email: row.email,
-										});
-										setChangeManagerModalOpen(true);
+										console.log(
+											"row data before update",
+											row
+										);
+										setUpdateOrderForm(row);
+										setOpenUpdateOrderModal(true);
 									}}
 									variant={"outline"}
-									title={`Remove ${row.name} from organization`}
 									size={"sm"}
-									className="text-xs ms:text-sm"
+									className="text-xs sm:text-sm"
 								>
-									Manager
-								</Button> */}
+									Update
+								</Button>
 								{/* delete employee */}
 								<Button
 									disabled={isDeletingOrder}
@@ -184,7 +192,7 @@ function OrdersTable() {
 								>
 									<Delete />
 								</Button>
-							</>
+							</div>
 						),
 					},
 				]}
@@ -203,6 +211,13 @@ function OrdersTable() {
 				orderData={deleteOrderForm}
 				deleteOrderFn={deleteOrderFn}
 				isDeletingOrder={isDeletingOrder}
+			/>
+			<UpdateOrderModal
+				open={openUpdateOrderModal}
+				setOpen={setOpenUpdateOrderModal}
+				orderData={updateOrderForm}
+				isUpdatingOrder={isUpdatingOrder}
+				updateOrderFn={updateOrderFn}
 			/>
 		</>
 	);

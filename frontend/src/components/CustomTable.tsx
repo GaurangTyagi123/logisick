@@ -62,7 +62,7 @@ interface CustomTableProps<RowType> {
 	clientSide?: boolean;
 }
 function CustomTable<
-	RowType extends Record<string, string | number | Date | boolean>
+	RowType extends Record<string, string | number | Date | boolean | object>
 >({
 	title,
 	titleIcon,
