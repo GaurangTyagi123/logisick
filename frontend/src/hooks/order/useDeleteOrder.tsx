@@ -2,6 +2,12 @@ import { deleteOrderById } from "@/services/apiOrder";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to delete order
+ * @returns {Function} `deleteOrderFn` - function to delete order request
+ * @returns {boolean} `isDeletingOrderFn` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useDeleteOrder() {
 	const queryClient = useQueryClient();
 	const { mutate: deleteOrderFn, isPending: isDeletingOrder } = useMutation({

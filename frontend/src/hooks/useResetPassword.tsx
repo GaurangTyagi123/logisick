@@ -10,8 +10,10 @@ type PasswordResetForm = {
 };
 
 /**
- * @brief hook to handle resetting of password functionality
- * @returns reset password state of app from react-query
+ * @brief hook to reset user password
+ * @returns {Function} `resetPasswordFn` - function to update user password request
+ * @returns {boolean} `isResettingPassword` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useResetPassword() {
     const queryClient = useQueryClient();

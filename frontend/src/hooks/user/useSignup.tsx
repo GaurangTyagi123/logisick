@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 /**
- * @brief hook to handle registration functionality of user
- * @returns registration state of app from react-query
+ * @brief hook to sign up user
+ * @returns {Function} `signupFn` - function to sign up user request
+ * @returns {boolean} `isSigningUp` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useSignup() {
     const queryClient = useQueryClient();

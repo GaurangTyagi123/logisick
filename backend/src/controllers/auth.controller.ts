@@ -440,7 +440,7 @@ export const signup = catchAsync(
  * 		},
  * 	}
  * ```
- * @author `Garang Tyagi` 
+ * @author `Gaurang Tyagi` 
  */
 export const verifyEmail = catchAsync(
 	async (

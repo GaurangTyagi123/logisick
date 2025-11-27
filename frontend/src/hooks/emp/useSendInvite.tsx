@@ -5,7 +5,7 @@ import { toast } from "react-toastify";
 /**
  * @brief hook to send invitation from organization
  * @returns {Function} `sendInvition` - function to send invitation request
- * @returns {boolean} `issendingInvitation` - pending state of request
+ * @returns {boolean} `isSendingInvitation` - pending state of request
  * @author `Ravish Ranjan`
  */
 function useSendInvite() {

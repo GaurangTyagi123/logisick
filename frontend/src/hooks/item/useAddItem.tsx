@@ -2,6 +2,12 @@ import { addItem } from "@/services/apiItem";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to add item
+ * @returns {Function} `addItemFn` - function to add item request
+ * @returns {boolean} `isAddingItem` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useAddItem() {
 	const queryClient = useQueryClient();
 	const { mutate: addItemFn, isPending: isAddingItem } = useMutation({

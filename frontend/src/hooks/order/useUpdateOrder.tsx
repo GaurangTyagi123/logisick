@@ -2,6 +2,12 @@ import { updateOrderById } from "@/services/apiOrder";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to update order
+ * @returns {Function} `updateOrderFn` - function to update order request
+ * @returns {boolean} `isUpdatingOrder` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useUpdateOrder() {
 	const queryClient = useQueryClient();
 	const { mutate: updateOrderFn, isPending: isUpdatingOrder } = useMutation({

@@ -4,8 +4,10 @@ import { toast } from "react-toastify";
 import useLogout from "./useLogout";
 
 /**
- * @brief hook to handle updating of password of user
- * @returns update password state of app from react-query
+ * @brief hook to update password of user
+ * @returns {Function} `updatePasswordFn` - function update password of user request
+ * @returns {boolean} `isUpdatingPassword` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useUpdatePassword() {
 	const queryClient = useQueryClient();

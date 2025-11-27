@@ -31,7 +31,6 @@
 		"chart.js": "^4.5.0",
 		"class-variance-authority": "^0.7.1",
 		"clsx": "^2.1.1",
-		"idb": "^8.0.3",
 		"input-otp": "^1.4.2",
 		"install": "^0.13.0",
 		"lodash": "^4.17.21",

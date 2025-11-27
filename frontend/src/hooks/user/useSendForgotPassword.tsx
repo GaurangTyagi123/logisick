@@ -3,8 +3,10 @@ import { useMutation } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 /**
- * @brief hook to handle forgot password functionality of user
- * @returns forgot password state of app from react-query
+ * @brief hook to send forgot password request
+ * @returns {Function} `sendFrgotPassword` - function to send forgot password request
+ * @returns {boolean} `isSendingForgotPassword` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useSendForgotPassword() {
     const { mutate: sendForgotPassword, isPending:isSendingForgotPassword } = useMutation({

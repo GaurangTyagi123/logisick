@@ -4,8 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 /**
- * @brief hook to handle login function of user
- * @returns login state of app from react-query
+ * @brief hook to login user from organization
+ * @returns {Function} `loginFn` - function to login user request
+ * @returns {boolean} `isLoggingIn` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useLogin() {
     const queryClient = useQueryClient();

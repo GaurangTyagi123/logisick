@@ -6,8 +6,9 @@ const PAGE_SIZE = 5;
  * @brief hook to get all employees of organization
  * @param {string} orgid organization id of organization
  * @param {number} [page=1] page no. to limit and offset the data to request 
- * @returns {Function} `acceptInvitation` - function to accept request
- * @returns {boolean} `isAcceptingInvitation` - pending state of request
+ * @returns {EmpType} `data` - data of employees
+ * @returns {number} `count` - count of the data
+ * @returns {boolean} `isGettingEmployees` - pending state of request
  * @author `Gaurang Tyagi`
  */
 function useGetEmployees(orgid: string, page: number = 1) {

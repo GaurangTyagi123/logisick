@@ -1,6 +1,12 @@
 import { getOrdersReport } from "@/services/apiOrder";
 import { useQuery } from "@tanstack/react-query";
 
+/**
+ * @brief hook to get order report
+ * @returns {report} `report` - function to get order report request
+ * @returns {boolean} `isGettingOrderReport` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useGetOrdersReport(orgId: string) {
 	const {
 		data: report,
