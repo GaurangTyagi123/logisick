@@ -217,7 +217,7 @@ function ItemCard({
 				<CardContent className="grid place-items-center">
 					<img
 						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${
-							import.meta.env.FRONTEND_URL ||
+							import.meta.env.VITE_FRONTEND_URL ||
 							window.location.origin ||
 							"http://localhost:5173"
 						}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
