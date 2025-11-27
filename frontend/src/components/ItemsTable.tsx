@@ -14,6 +14,10 @@ import { prefereableUnits } from "@/utils/utilfn";
 import CreateOrderModal from "./modals/order/CreateOrderModal";
 import useCreateOrder from "@/hooks/order/useCreateOrder";
 
+/**
+ * @component table to display and manager item in inventory
+ * @author `Ravish Ranjan`
+ */
 function ItemsTable() {
 	const { orgSlug } = useParams();
 	const PAGESIZE = 5;

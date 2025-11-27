@@ -9,9 +9,10 @@ interface DocSecProps {
 
 /**
  * @component a component to have the preset styling of a ducment section of documentation page
- * @param children children component/node to put in the document section
- * @param id id of the component so that it can be reached by anchor tag
- * @returns
+ * @param {ReactNode} children children component/node to put in the document section
+ * @param {string} id id of the component so that it can be reached by anchor tag
+ * @param {string} title title to give to the section
+ * @author `Ravish Ranjan`
  */
 function DocSec({ children, id, title }: DocSecProps) {
 	return (

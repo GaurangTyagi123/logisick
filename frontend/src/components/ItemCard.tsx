@@ -6,28 +6,15 @@ import clsx from "clsx";
 import { Link } from "react-router-dom";
 import { Separator } from "./ui/separator";
 import { Hint } from "@/assets/icons/Profilepage";
-import { formatCurrency, prefereableUnits } from "@/utils/utilfn";
+import { dateDifference, formatCurrency, prefereableUnits } from "@/utils/utilfn";
 
 /**
- * @brief function to get difference between given date and current date
- * @param date date to get difference from
- * @returns {number} differnce of days between given date and current date
- */
-function dateDifference(date: Date): number {
-	const dateThen = new Date(date);
-	const now = new Date();
-	return Math.ceil(
-		(dateThen.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-	);
-}
-
-/**
- * @brief function to display list item on item card
+ * @componenet compoenent to be used as list item for the item card
  * @param {string | number} field data
- * @param string fieldName name of field
- * @param string suffix? suffix at end
- * @param boolean small? is card small
- * @returns List item
+ * @param {string} fieldName name of field
+ * @param {string} suffix suffix at end
+ * @param {boolean} small is card small
+ * @author `Ravish Ranjan`
  */
 function ListItem({
 	field,
@@ -59,12 +46,12 @@ function ListItem({
 }
 
 /**
- *
- * @param string className? : to modify className from parent
- * @param Item item : item data
- * @param boolean small? : to keep small size
- * @param boolean barebone? : to show only small set of data
- * @returns
+ * @component componenet to be used as item card
+ * @param {string} className to modify className from parent
+ * @param {Item} item item data
+ * @param {boolean} small to keep small size
+ * @param {boolean} barebone to show only small set of data
+ * @author `Ravish Ranjan`
  */
 function ItemCard({
 	className,

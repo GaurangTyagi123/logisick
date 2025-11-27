@@ -28,7 +28,11 @@ interface Employee {
 	avatar: string;
 }
 
-// unwinds employee data
+/**
+ * @brief function to deconstuct the searched employee data
+ * @param employees list of employee's data
+ * @author `Gaurang Tyagi`
+ */
 function deconstructEmployee(
 	employees: Array<{
 		data: {
@@ -69,8 +73,8 @@ function deconstructEmployee(
 }
 /**
  * @component Employee table displays all the employees belonging to an organization including the owner
- * @param orgid (string) id of the organization
- * @returns JSX
+ * @param {string} orgid id of the organization
+ * @author `Ravish Ranjan`
  */
 function EmployeeTable({
 	orgid,
@@ -91,14 +95,17 @@ function EmployeeTable({
 
 	// current page
 	const [page, setPage] = useState<number>(1);
-
+	// delete employee modal open state
 	const [deleteEmpModalOpen, setDeleteEmpModalOpen] =
 		useState<boolean>(false);
+	// change employee's role modal open state
 	const [changeRoleModalOpen, setChangeRoleModalOpen] =
 		useState<boolean>(false);
+	// change employee's manager modal open state
 	const [changeManagerModalOpen, setChangeManagerModalOpen] =
 		useState<boolean>(false);
 
+	// state to keep employee data to use in modal
 	const [empData, setEmpData] = useState<{
 		_id: string;
 		name: string;
@@ -108,6 +115,7 @@ function EmployeeTable({
 		name: "",
 		email: "",
 	});
+	// state to maintain old role
 	const [oldRole, setOldRole] = useState<"Admin" | "Manager" | "Staff">();
 
 	// employee data
@@ -118,6 +126,7 @@ function EmployeeTable({
 		error,
 	} = useGetEmployees(orgid as string, page);
 
+	// employee hooks
 	const { deleteEmp, isDeletingEmployee } = useDeleteEmployee();
 	const { changeEmpRole, isChangingRole } = useChangeRole();
 	const { changeEmpManager, isChangingManager } = useChangeManager();

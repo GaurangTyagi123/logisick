@@ -2,6 +2,12 @@ import { deleteEmployee } from "@/services/apiEmp";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to delete employee
+ * @returns {Function} `deleteEmp` - function to delete employee request
+ * @returns {boolean} `isDeletingEmployee` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useDeleteEmployee() {
 	const queryClient = useQueryClient();
 	const { mutate: deleteEmp, isPending:isDeletingEmployee } = useMutation({

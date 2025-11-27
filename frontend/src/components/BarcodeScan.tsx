@@ -12,6 +12,12 @@ import {
 } from "react";
 import { toast } from "react-toastify";
 
+/**
+ * @component componenet to scan barcode of items to insert new item
+ * @param {Function} setForm function to set form data to add new item
+ * @param {Function} setOpen function to change modal open state
+ * @author `Gaurang Tyagi`
+ */
 function BarcodeScan({
 	setForm,
 	setOpen,
@@ -36,12 +42,16 @@ function BarcodeScan({
 	>;
 	setOpen: Dispatch<React.SetStateAction<boolean>>;
 }) {
+	// ref hook to be used for html video
 	const videoRef = useRef<HTMLVideoElement>(null);
+	// state to manage barcode code
 	const [barcode, setBarcode] = useState("");
+	// state to manage camera access
 	const [cameraAccess, setCameraAccess] = useState<"granted" | "denied">(
 		"granted"
 	);
 
+	// mutation hook to add item by barcode
 	const { mutate: addItemByBarcodeFn } = useMutation({
 		mutationFn: addItemByBarcode,
 		onSuccess: (data) => {
@@ -74,12 +84,14 @@ function BarcodeScan({
 		},
 	});
 
+	// memo hook to debounce adding item by barcode
 	const debouncedBarcode = useMemo(() => {
 		return debounce(addItemByBarcodeFn, 5000);
 	}, [addItemByBarcodeFn]) as ((searchTerm: string) => void) & {
 		cancel: () => void;
 	};
 
+	// use effect hook to ask for camera access
 	useEffect(() => {
 		async function checkAccess() {
 			const res = await navigator.permissions.query({ name: "camera" });
@@ -91,6 +103,7 @@ function BarcodeScan({
 		checkAccess();
 	}, []);
 
+	// use effect hook to handle barcode scan
 	useEffect(() => {
 		if (!barcode.length) {
 			const codeReader = new BrowserMultiFormatReader();

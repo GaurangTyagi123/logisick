@@ -61,6 +61,23 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
+
+/**
+ * @objective customizable table to be used every place where a table is needed
+ * @param {string} title title to put on top of the title
+ * @param {ReactNode} titleIcon icon to display with title
+ * @param {RowType[]} data data to display in the table
+ * @param {Column<RowType>[]} columns list of column and its type to display data
+ * @param {FilterOption<RowType>[]} filterOptions options to filter the data with
+ * @param {number} currentPage current page 
+ * @param {number} totalPages total no. of pages on data
+ * @param {Function} setPage function to change current page on the data
+ * @param {Function} onSearch function to apply searching to the data
+ * @param {Function} onSort function to apply sorting to the data
+ * @param {Function} onFilter function to apply filters to the data
+ * @param {boolean} clientSide state whether the table should be manages server side or client side 
+ * @author `Ravish Ranjan`
+ */
 function CustomTable<
 	RowType extends Record<string, string | number | Date | boolean | object>
 >({
@@ -108,6 +125,10 @@ function CustomTable<
 		}
 	}, [filters, onFilter, clientSide, setPage]);
 
+	/**
+	 * @brief function to sort data with
+	 * @param column column to sort the data with
+	 */
 	const handleSort = (column: keyof RowType) => {
 		if (sortColumn === column) {
 			// Cycle through: asc -> desc -> null
@@ -123,6 +144,9 @@ function CustomTable<
 		}
 	};
 
+	/**
+	 * @brief function to change the sorting order (increasing | decreasing)
+	 */
 	const handleChangeSortOrder = () => {
 		switch (sortOrder) {
 			case "asc":
@@ -139,6 +163,11 @@ function CustomTable<
 		}
 	};
 
+	/**
+	 * @brief function to handle filtering of data in table
+	 * @param filterKey column key to filter data with
+	 * @param value the value by which t o filter
+	 */
 	const handleFilterChange = (filterKey: string, value: string | number) => {
 		setFilters((prev) => {
 			const currentValues = prev[filterKey] || [];
@@ -155,6 +184,9 @@ function CustomTable<
 		});
 	};
 
+	/**
+	 * @brief function to clear the filter on the data
+	 */
 	const clearFilters = () => {
 		setFilters({});
 	};
@@ -164,18 +196,6 @@ function CustomTable<
 		if (!clientSide) return data;
 
 		let result = [...data];
-
-		// Search
-		// if (searchStr) {
-		// 	const searchLower = searchStr.toLowerCase();
-		// 	result = result.filter((row) =>
-		// 		columns.some((col) => {
-		// 			if (col.searchable === false) return false;
-		// 			const value = row[col.key];
-		// 			return String(value).toLowerCase().includes(searchLower);
-		// 		})
-		// 	);
-		// }
 
 		// Filter
 		Object.entries(filters).forEach(([key, values]) => {
@@ -202,6 +222,7 @@ function CustomTable<
 		return result;
 	}, [data, filters, sortColumn, sortOrder, clientSide]);
 
+	// variable to count active filters
 	const activeFilterCount = Object.values(filters).reduce(
 		(sum, arr) => sum + arr.length,
 		0

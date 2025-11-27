@@ -74,7 +74,10 @@ function roleClasses(role: string): string {
 
 /**
  * @component a table component to display organizations a users is included in along wiht other info of organization
- * @returns react component
+ * @param {Function} setDeleteOpen function to change modal state of deletion of organization
+ * @param {Function} setEditOpen function to change modal state of editing organization
+ * @param {Function} setOpenTransfer function to change modal state of transfering organization
+ * @author `Ravish Ranjan`
  */
 function ProfileOrgTable({
 	setDeleteOpen,
@@ -85,6 +88,7 @@ function ProfileOrgTable({
 	setEditOpen: React.Dispatch<React.SetStateAction<boolean>>;
 	setOpenTransfer: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
+	// hook used to get organizations data
 	const { data: organizations, isGettingOrganizations } = useGetOrganizations();
 
 	return (

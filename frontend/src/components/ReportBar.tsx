@@ -2,6 +2,16 @@ import clsx from "clsx";
 import { Badge } from "./ui/badge";
 import { formatCurrency } from "@/utils/utilfn";
 
+/**
+ * @component component to be used as bar to display data of report 
+ * @param {string} name name of report
+ * @param {ReportType[keyof ReportType]} value value of report
+ * @param {string} suffix suffix to add after value
+ * @param {boolean} currency boolean value to tell if the data is curreny type or not
+ * @param {string} variant variant of report bar's value badge
+ * @param {string} className extra classname to be added in the report bar
+ * @author `Ravish Ranjan`
+ */
 function ReportBar<ReportType>({
 	name,
 	value,

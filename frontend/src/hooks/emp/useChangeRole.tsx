@@ -2,6 +2,12 @@ import { changeRole } from "@/services/apiEmp";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to change role of employee
+ * @returns {Function} `changeEmpRole` - function to change employee role request
+ * @returns {boolean} `ischangingRole` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useChangeRole() {
 	const queryClient = useQueryClient();
 	const { mutate: changeEmpRole, isPending:isChangingRole } = useMutation({

@@ -38,3 +38,17 @@ export function unitConversion(
 			return amount;
 	}
 }
+
+/**
+ * @brief function to get difference between given date and current date
+ * @param {Date} date date to get difference from
+ * @returns {number} differnce of days between given date and current date
+ * @author `Ravish Ranjan`
+ */
+export function dateDifference(date: Date): number {
+	const dateThen = new Date(date);
+	const now = new Date();
+	return Math.ceil(
+		(dateThen.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
+	);
+}

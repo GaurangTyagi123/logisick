@@ -17,7 +17,7 @@ import { Separator } from "@/components/ui/separator";
 
 /**
  * @component a component to server as user image button on navbar or other place
- * @returns react dropdown component
+ * @author `Ravish Ranjan`
  */
 function UserButton() {
 	const queryClient = useQueryClient();
@@ -30,7 +30,7 @@ function UserButton() {
 
 	/**
 	 * @brief function to handle logout request from user
-	 * @param e mouse click event
+	 * @param {React.MouseEvent<HTMLDivElement>} e mouse click event
 	 */
 	function handleLogout(e: React.MouseEvent<HTMLDivElement>) {
 		e.stopPropagation();

@@ -2,7 +2,7 @@ import clsx from "clsx";
 
 /**
  * @component a component for big heading of the project name
- * @returns a component for use
+ * @author `Ravish Ranjan`
  */
 function BigHeading({ small, center }: { small?: boolean; center?: boolean }) {
 	return (

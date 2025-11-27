@@ -19,9 +19,15 @@ interface NavbarProps {
 
 /**
  * @component a component to be used as navbar across multiple pages
- * @param hide an object to specify which part of navbar sould be hidden
- * @options-to-hide logo, User Button, Login/register Button
- * @returns react component
+ * @param {object} hide object to hide specify which part of navbar sould be hidden
+ * ```
+ * {
+ * 		logo: boolean,
+ * 		userButton: boolean,
+ * 		loginRegisterButton: boolean,
+ * }
+ * ```
+ * @author `Ravish Ranjan`
  */
 function Navbar({
 	hide = {

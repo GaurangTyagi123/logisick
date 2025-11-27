@@ -2,6 +2,12 @@ import { sendInvite } from "@/services/apiEmp";
 import { useMutation } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to send invitation from organization
+ * @returns {Function} `sendInvition` - function to send invitation request
+ * @returns {boolean} `issendingInvitation` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useSendInvite() {
 	const { mutate: sendInvitation, isPending:isSendingInvite } = useMutation({
 		mutationFn: ({

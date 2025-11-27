@@ -13,6 +13,13 @@ interface PaginationProps {
 	handlePageClick: (pageno: number) => void;
 }
 
+/**
+ * @component component to use as pagination in custom table 
+ * @param {Function} handlePageClick function to handle change of state on page change
+ * @param {number} currentPage current page to show
+ * @param {number} totalPages total no. of pages in data
+ * @author `Ravish Ranjan` 
+ */
 function Pagination({
 	handlePageClick,
 	currentPage,
@@ -21,7 +28,10 @@ function Pagination({
 	const renderPageButtons = () => {
 		const buttons: ReactNode[] = [];
 
-		// Helper function to add button
+		/**
+		 * @brief function to add button 
+		 * @param {number} pageNum page number to put on button
+		 */
 		const addButton = (pageNum: number) => {
 			buttons.push(
 				<Button
@@ -36,7 +46,10 @@ function Pagination({
 			);
 		};
 
-		// Helper function to add ellipsis
+		/**
+		 * @brief functionto add ellipsis to pagination
+		 * @param {string} key unique key to add in elipsis to pagination
+		 */
 		const addEllipsis = (key: string) => {
 			buttons.push(
 				<span key={key} className="mx-2">

@@ -9,8 +9,8 @@ import {
 import { H3, H4, P, Small } from "./ui/Typography";
 
 /**
- * @component a static footer component for the hoem and other pages
- * @returns a static react component
+ * @component a static footer component for the home and other pages
+ * @author `Ravish Ranjan`
  */
 function Footer() {
 	const listContentClass =
@@ -47,27 +47,42 @@ function Footer() {
 						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
 							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href="/dashboard"
+									className={listContentClass}
+								>
 									Inventory Management
 								</a>
 							</li>
 							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href="/dashboard"
+									className={listContentClass}
+								>
 									Import/Export Management
 								</a>
 							</li>
 							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href="/dashboard"
+									className={listContentClass}
+								>
 									Delivery Tracking
 								</a>
 							</li>
 							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href="/dashboard"
+									className={listContentClass}
+								>
 									Bills Management
 								</a>
 							</li>
 							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href="/dashboard"
+									className={listContentClass}
+								>
 									Analytics & Reports
 								</a>
 							</li>

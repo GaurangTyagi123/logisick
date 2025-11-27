@@ -9,8 +9,8 @@ interface ThemeToggleProps {
 
 /**
  * @compoenent a button to cycle through theme modes 
- * @param className string of tailwind classes added at parent 
- * @returns a button component
+ * @param {string} className string of tailwind classes added at parent 
+ * @author `Ravish Ranjan`
  */
 function ThemeToggle({ classname }: ThemeToggleProps) {
 	const { setMode, mode } = useModeStore();

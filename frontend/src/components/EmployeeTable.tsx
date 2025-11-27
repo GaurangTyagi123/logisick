@@ -20,7 +20,11 @@ interface Employee {
 	avatar: string;
 }
 
-// unwinds employee data
+/**
+ * @brief function to deconstruct searched data on employee
+ * @param employees list of employee's data
+ * @author `Gaurang Tyagi`
+ */
 function deconstructEmployee(
 	employees: Array<{
 		data: {
@@ -59,8 +63,8 @@ function deconstructEmployee(
 }
 /**
  * @component Employee table displays all the employees belonging to an organization including the owner
- * @param orgid (string) id of the organization
- * @returns JSX
+ * @param {string} orgid id of the organization
+ * @author `Gaurang Tyagi`
  */
 function EmployeeTable({ orgid }: { orgid: string }) {
 	/**

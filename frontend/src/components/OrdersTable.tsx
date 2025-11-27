@@ -16,13 +16,24 @@ import DeleteOrderModal from "./modals/order/DeleteOrderModal";
 import useUpdateOrder from "@/hooks/order/useUpdateOrder";
 import UpdateOrderModal from "./modals/order/UpdateOrderModal";
 
+/**
+ * @component table to show and manage orders in organization
+ * @author `Ravish Ranjan`
+ */
 function OrdersTable() {
+	// hook to get orgation's slug
 	const { orgSlug } = useParams();
+	// const variable to maintain page size
 	const PAGESIZE = 5;
+	// state to manage page number
 	const [page, setPage] = useState<number>(1);
+	// state to manage total pages
 	const [totalPages, setTotalPages] = useState<number>(1);
+	// state to maintain open state of delete order modal
 	const [openDeleteOrderModal, setOpenDeleteOrderModal] = useState(false);
+	// state to maintain open state of update order modal
 	const [openUpdateOrderModal, setOpenUpdateOrderModal] = useState(false);
+	// state to maintain form of data to delete order
 	const [deleteOrderForm, setDeleteOrderForm] = useState<{
 		orderName?: string;
 		_id: string;
@@ -30,6 +41,7 @@ function OrdersTable() {
 		orderName: "",
 		_id: "",
 	});
+	// state to maintain form of data to update order
 	const [updateOrderForm, setUpdateOrderForm] = useState<shipmentType>({
 		_id: "",
 		item: {
@@ -42,23 +54,25 @@ function OrdersTable() {
 		orderedOn: new Date(),
 		organizationId: "",
 	});
-
+	// hook to get organization data
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
-	// const { itemsResponse, isGettingItems } = useGetAllOrders(orgData._id, page);
+	// hook used to get all orders
 	const { ordersResponse, isGettingOrders } = useGetAllOrders(
 		orgData?._id,
 		page
 	);
+	// hook used to delete order
 	const { deleteOrderFn, isDeletingOrder } = useDeleteOrder();
+	// hook used to update order
 	const { isUpdatingOrder, updateOrderFn } = useUpdateOrder();
-
+	// state used to maintain search result 
 	const [searchResult, setSearchResults] = useState<shipmentType[] | null>(
 		null
 	);
-
+	// mutation hook to hanlde search on order table
 	const { mutate: search } = useMutation({
 		mutationFn: searchOrders,
 		onSettled: (data) => {

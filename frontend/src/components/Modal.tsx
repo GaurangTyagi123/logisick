@@ -8,8 +8,8 @@ interface ModalProps {
 
 /**
  * @component a component wrapper to convert them to modal
- * @param openModal boolean state to indicate weather modal is open or close
- * @returns react component
+ * @param {boolean} openModal state to indicate weather modal is open or close
+ * @author `Ravish Ranjan`
  */
 function Modal({ openModal, children }: ModalProps) {
 	return (

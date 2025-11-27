@@ -19,7 +19,7 @@ interface FormProps {
 /**
  * @component a login for for user authentication
  * @param setFormType a setter function to set type of the form which is getting selected ("login" | "register")
- * @returns a components to place conditionally wheather user want to login or register
+ * @author `Ravish Ranjan`
  */
 export function Login({ setFormType }: FormProps) {
 	const [form, setForm] = useState({ email: "", password: "" });
@@ -193,7 +193,7 @@ export function Login({ setFormType }: FormProps) {
 /**
  * @component a register for for user authentication
  * @param setFormType a setter function to set type of the form which is getting selected ("login" | "register")
- * @returns a components to place conditionally wheather user want to login or register
+ * @author `Ravish Ranjan`
  */
 export function Register({ setFormType }: FormProps) {
 	const [form, setForm] = useState({

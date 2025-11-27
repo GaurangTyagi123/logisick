@@ -2,6 +2,12 @@ import { changeManager } from "@/services/apiEmp";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
+/**
+ * @brief hook to change manager of employee
+ * @returns {Function} `changeManager` - function to change manager request
+ * @returns {boolean} `isChangingManager` - pending state of request
+ * @author `Ravish Ranjan`
+ */
 function useChangeManager() {
 	const queryClient = useQueryClient();
 	const { mutate: changeEmpManager, isPending:isChangingManager } = useMutation({
