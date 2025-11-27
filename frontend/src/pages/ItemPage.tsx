@@ -49,6 +49,7 @@ function ItemPage() {
 				<main className="grid gap-2 p-2 rounded-2xl items-center place-items-center">
 					<ItemCard
 						item={item}
+						orgSlug={orgSlug || ""}
 						viewMorePath={user ? "/dashboard" : "/authenticate"}
 						barebone={!isEmployee}
 					/>

@@ -56,11 +56,13 @@ function ListItem({
 function ItemCard({
 	className,
 	item,
+	orgSlug,
 	small,
 	barebone = false,
 	viewMorePath,
 }: {
 	item: Item;
+	orgSlug: string;
 	barebone?: boolean;
 	small?: boolean;
 	className?: string;
@@ -216,11 +218,10 @@ function ItemCard({
 				</CardHeader>
 				<CardContent className="grid place-items-center">
 					<img
-						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${
-							import.meta.env.VITE_FRONTEND_URL ||
+						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${import.meta.env.VITE_FRONTEND_URL ||
 							window.location.origin ||
 							"http://localhost:5173"
-						}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
+							}/item/${orgSlug}/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
 						alt={item?.name.substring(0, 10)}
 						className="rounded-2xl md:max-w-10/12 max-w-2/3"
 					/>
