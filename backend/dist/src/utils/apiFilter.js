@@ -4,6 +4,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = __importDefault(require("mongoose"));
+/**
+ * @brief class to handle pagination, limiting, sorting and other operation
+ * @param {any} query query on mongoose search
+ * @param {ParsedQs} queryString query string to operate on
+ */
 class ApiFilter {
     queryString;
     query;
@@ -13,10 +18,10 @@ class ApiFilter {
     }
     filter() {
         const queryObj = { ...this.queryString };
-        const excludedFields = ['page', 'limit', 'sort', 'fields'];
+        const excludedFields = ["page", "limit", "sort", "fields"];
         excludedFields.forEach((field) => delete queryObj[field]);
         let queryStr = JSON.stringify(queryObj).replace(/\bgt|gte|lt|lte|eq\b/, (match) => `$${match}`);
-        queryStr = queryStr.replace(/"(\d+)"/g, '$1'); // removes quotes around numbers
+        queryStr = queryStr.replace(/"(\d+)"/g, "$1"); // removes quotes around numbers
         if (this.query instanceof mongoose_1.default.Aggregate) {
             this.query.pipeline().push({ $match: JSON.parse(queryStr) });
         }
@@ -28,21 +33,21 @@ class ApiFilter {
     sort() {
         if (this.queryString.sort) {
             let sortBy = this.queryString.sort;
-            sortBy = sortBy.split(',').join(' ');
+            sortBy = sortBy.split(",").join(" ");
             this.query.sort(sortBy);
         }
         else {
-            this.query.sort('-createdAt name');
+            this.query.sort("-createdAt name");
         }
         return this;
     }
     project() {
         if (this.queryString.fields) {
             let fields = this.queryString.fields;
-            fields = fields.split(',').join(' ');
+            fields = fields.split(",").join(" ");
             if (this.query instanceof mongoose_1.default.Aggregate) {
                 const fieldObj = {};
-                fields.split(' ').forEach((field) => (fieldObj[field] = 1));
+                fields.split(" ").forEach((field) => (fieldObj[field] = 1));
                 this.query.pipeline().push({ $project: fieldObj });
             }
             else if (this.query instanceof mongoose_1.default.Query) {
@@ -51,7 +56,7 @@ class ApiFilter {
         }
         else {
             if (!(this.query instanceof mongoose_1.default.Aggregate))
-                this.query.select('-__v');
+                this.query.select("-__v");
         }
         return this;
     }

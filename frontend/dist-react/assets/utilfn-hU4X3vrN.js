@@ -1,1 +1,0 @@
-const n=(r,e)=>new Intl.NumberFormat("en",{style:"currency",currency:e||"INR",notation:"standard"}).format(r);function t(r,e="weight"){return r>=1e3?`${Math.round(r/10)/100} K${e==="volume"?"l":"g"}(s)`:r<1&&r>0?`${Math.round(r*1e5)/100} m${e==="volume"?"l":"g"}(s)`:`${r} ${e==="volume"?"l":"g"}(s)`}export{n as f,t as p};

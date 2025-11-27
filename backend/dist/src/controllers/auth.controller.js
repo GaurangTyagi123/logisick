@@ -364,7 +364,7 @@ exports.signup = (0, catchAsync_1.default)(async (req, res, next) => {
  * 		},
  * 	}
  * ```
- * @author `Garang Tyagi`
+ * @author `Gaurang Tyagi`
  */
 exports.verifyEmail = (0, catchAsync_1.default)(async (req, res, next) => {
     const userOtp = req?.body?.otp;

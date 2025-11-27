@@ -37,19 +37,23 @@ const shipmentSchema = new mongoose_1.Schema({
         default: false,
     },
 }, { timestamps: true });
+// soft-delete plugin
 shipmentSchema.plugin(mongoose_delete_1.default, {
     deletedAt: true,
     deletedBy: false,
     overrideMethods: 'all',
 });
+// shipment indexing for better search 
 shipmentSchema.index({
     orderName: 1,
 });
+// onsave middlwware to change order name
 shipmentSchema.pre('save', function (next) {
     const orderName = `ORD-${new Date().toLocaleDateString()}`;
     this.orderName = orderName;
     next();
 });
+// update of refis client on different operations
 shipmentSchema.post(['save', 'findOneAndDelete', 'findOneAndUpdate', 'deleteOne'], async function () {
     if (app_1.redisClient.isReady) {
         const prefix = 'organization*';
