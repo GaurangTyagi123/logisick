@@ -17,12 +17,17 @@ import { useMemo, useState } from "react";
 import useCheckAuth from "@/hooks/user/useCheckAuth";
 import { Separator } from "@/components/ui/separator";
 
+/**
+ * @component component for sidebar of dashboard page
+ * @author `Gaurang Tyagi`
+ */
 function CustomSidebar() {
 	const { orgSlug } = useParams();
 	const [pathName, setPathName] = useState("overview");
 	const { user: userData } = useCheckAuth();
 	const user = userData?.user;
 
+	// sidebar tabs information
 	let sidebarData = useMemo(() => {
 		return [
 			{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
@@ -133,6 +138,11 @@ function CustomSidebar() {
 		</Sidebar>
 	);
 }
+
+/**
+ * @component page to server as endpoint for dashboard page
+ * @author `Gaurang Tyagi`
+ */
 function Dashboard() {
 	return (
 		<div className="relative">

@@ -15,6 +15,7 @@ import {
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
 
+// information for links to put on the page
 const tabLinks: { path: string; name: string }[] = [
 	{ path: "#", name: "Products" },
 	{ path: "#", name: "Community" },
@@ -25,8 +26,8 @@ const tabLinks: { path: string; name: string }[] = [
 ];
 
 /**
- * @component a page to be used as home page of app
- * @returns page/react component
+ * @component page to server as endpoint for homepage
+ * @author `Ravish Ranjan`
  */
 function Home() {
 	return (

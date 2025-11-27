@@ -12,6 +12,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 
+/**
+ * @component page to server as endpoint for product management page
+ * @author `Ravish Ranjan`
+ */
 function ProductManagement() {
 	const [openAddItemModal, setOpenAddItemModal] = useState<boolean>(false);
 	const { orgSlug } = useParams();

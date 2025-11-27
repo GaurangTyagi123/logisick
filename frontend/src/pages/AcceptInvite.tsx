@@ -8,11 +8,18 @@ import { useParams } from "react-router-dom";
 import { toast, type Id } from "react-toastify";
 import Loading from "@/components/Loading";
 
+/**
+ * @component page to server as end-point for user to accept invite by an organization 
+ * @author `Ravish Ranjan`
+ */
 function AcceptInvite() {
 	const { token } = useParams();
 	const { acceptInvitation, isAcceptingInvite } = useAcceptInvite();
 	const { user, isCheckingAuth } = useCheckAuth();
 
+	/**
+	 * @brief function to handle accept invite request by user
+	 */
 	const handleAcceptInvite = () => {
 		if (!token)
 			toast.error("No invitation token found", { className: "toast" });

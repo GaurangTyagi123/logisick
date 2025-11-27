@@ -4,8 +4,8 @@ import Button from "@/components/ui/button";
 import { H1, Large } from "@/components/ui/Typography";
 
 /**
- * @component a page to be used as a fallback page where thier is no path defined
- * @returns page/react component
+ * @component page to server as endpoint for not found page
+ * @author `Ravish Ranjan`
  */
 function Notfound() {
 	return (

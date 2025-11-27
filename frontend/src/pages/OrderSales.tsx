@@ -9,6 +9,10 @@ import { useParams } from "react-router-dom";
 import ReportBar from "@/components/ReportBar";
 import type { OrderReportType } from "@/services/apiOrder";
 
+/**
+ * @component page to server as endpoint for order and sales
+ * @author `Ravish Ranjan`
+ */
 function OrderSales() {
 	const { orgSlug } = useParams();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({

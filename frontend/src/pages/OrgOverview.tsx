@@ -9,6 +9,10 @@ import { Skeleton } from "@/components/ui/skeleton";
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 import Button from "@/components/ui/button";
 
+/**
+ * @component page to server as endpoint for organization overview
+ * @author `Ravish Ranjan`
+ */
 function OrgOverview() {
 	const { orgSlug } = useParams();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({

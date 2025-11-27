@@ -12,20 +12,29 @@ import UpdateItemModal from "@/components/modals/item/EditItemModal";
 import { toast } from "react-toastify";
 import useIsEmployee from "@/hooks/item/useIsEmployee";
 
+/**
+ * @component page to server as endpoint for item page
+ * @author `Ravish Ranjan`
+ */
 function ItemPage() {
+	// hook to get organization slug
 	const { SKU, orgSlug } = useParams();
 	if (!SKU || !orgSlug) {
 		toast.error("Item not found", { className: "toast" });
 	}
+	// item getting hook
 	const { item, isGettingItem } = useGetItem(SKU || "");
+	// user data getting hook
 	const { user: userData, isCheckingAuth } = useCheckAuth();
+	// employee data getting hook
 	const { isEmployee, isCheckingEmployment } = useIsEmployee(
 		orgSlug || ""
 	);
 	const user = userData?.user;
 	const navigate = useNavigate();
-
+	// delete item modal open state
 	const [openDeleteItemModal, setOpenDeleteItemModal] = useState(false);
+	// edit item modal open state
 	const [openEditItemModal, setOpenEditItemModal] = useState(false);
 
 	if (isGettingItem || isCheckingAuth || isCheckingEmployment) return <Loading />;

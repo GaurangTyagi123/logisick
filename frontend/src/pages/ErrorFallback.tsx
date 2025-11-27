@@ -6,8 +6,8 @@ import { H1, Large } from "@/components/ui/Typography";
 import { PanelLeftIcon } from "@/assets/icons/Docspage";
 
 /**
- * @component a page to be used as a fallback page where thier is no path defined
- * @returns page/react component
+ * @component page to server as endpoint for error fallback for whole website
+ * @author `Gaurang Tyagi`
  */
 function ErrorFallback() {
 	const navigate = useNavigate();

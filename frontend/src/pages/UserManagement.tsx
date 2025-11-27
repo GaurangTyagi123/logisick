@@ -10,6 +10,10 @@ import clsx from "clsx";
 import { useParams } from "react-router-dom";
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 
+/**
+ * @component page to server as endpoint for user management
+ * @author `Ravish Ranjan`
+ */
 function UserManagement() {
 	const [openInviteModal, setOpenInviteModal] = useState<boolean>(false);
 
@@ -24,6 +28,10 @@ function UserManagement() {
 		queryFn: () => getOrganization(orgSlug as string),
 	});
 
+	/**
+	 * @brief function to check authorization of user to make changes
+	 * @returns boolean - to check if the user is authorized to make changes
+	 */
 	const isAuthorized = () => {
 		if (!userData?.user.myOrg) return false;
 		if (userData?.user) return true;

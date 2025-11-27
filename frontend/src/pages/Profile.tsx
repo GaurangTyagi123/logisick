@@ -33,9 +33,10 @@ const TransferOwnershipModal = lazy(
 const UpdateUserModal = lazy(
 	() => import("@/components/modals/user/UpdateUserModal")
 );
+
 /**
- * @component a page to be used a profile page for users where they can modify their information
- * @returns page/react component
+ * @component page to server as endpoint for profile page
+ * @author `Ravish Ranjan`
  */
 function Profile() {
 	const { verifyEmail, isVerifingEmail } = useAuthStore();
@@ -61,6 +62,8 @@ function Profile() {
 
 	if (!user) <Navigate to={"/"} />;
 
+
+	// hook to notify to verify user
 	useEffect(() => {
 		let ts: Id;
 		if (!user?.isVerified && !openOtp && !isVerifingEmail) {

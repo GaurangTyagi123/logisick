@@ -29,6 +29,11 @@ interface OrgCardProps {
 	view: "grid" | "list";
 }
 
+/**
+ * @brief function get different classed based on role of user
+ * @param {string} role role of the user 
+ * @author `Ravish Ranjan` 
+ */
 function roleClasses(role: string): string {
 	switch (role) {
 		case "Owner":
@@ -44,6 +49,10 @@ function roleClasses(role: string): string {
 	}
 }
 
+/**
+ * @component component to be used as organization cards
+ * @author `Ravish Ranjan | Gaurang Tyagi`
+ */
 function OrgCard({ org, view }: OrgCardProps) {
 	return (
 		<Card
@@ -93,8 +102,8 @@ function OrgCard({ org, view }: OrgCardProps) {
 	);
 }
 /**
- * @component component which displays all the organizations
- * @returns react component
+ * @component page to server as endpoint for organizations page
+ * @author `Ravish Ranjan`
  */
 function Organization() {
 	const [openOrgForm, setOpenOrgForm] = useState(false);

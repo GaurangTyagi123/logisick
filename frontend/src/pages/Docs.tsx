@@ -49,8 +49,8 @@ const tabs: Tabs = {
 };
 
 /**
- * @component a custom sidebar component for documentation page
- * @returns sidebar component
+ * @component sidebar for docs page
+ * @author `Ravish Ranjan`
  */
 function CustomSidebar() {
 	return (
@@ -104,8 +104,8 @@ function CustomSidebar() {
 }
 
 /**
- * @component a page to be used as documentation page of app
- * @returns page/react component
+ * @component page to server as endpoint for docs page
+ * @author `Ravish Ranjan`
  */
 function Docs() {
 	return (
