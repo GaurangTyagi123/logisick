@@ -16,6 +16,7 @@ import Navbar from "@/components/Navbar";
 import DocSec from "@/components/DocSec";
 import Button from "@/components/ui/button";
 import { Link } from "react-router";
+import useModeStore from "@/stores/useModeStore";
 
 interface TabItem {
 	label: string;
@@ -108,6 +109,7 @@ function CustomSidebar() {
  * @author `Ravish Ranjan`
  */
 function Docs() {
+	const { mode } = useModeStore();
 	return (
 		<SidebarProvider>
 			<CustomSidebar />
@@ -123,41 +125,36 @@ function Docs() {
 					<Navbar hide={{ logo: true }} />
 				</div>
 				<div className="p-1 h-11/12 overflow-y-auto grid gap-10">
-					<div className="grid gap-3">
+					<div className="grid gap-3 my-5 mx-2">
 						<H2>User Guide</H2>
+						<P className="jet-brains">
+							Welcome! This guide will walk you
+							step-by-step through creating your first
+							account, logging in, and locating your
+							user profile. By the end, you'll be
+							fully set up and ready to go.
+						</P>
 						<DocSec id="ug-getting-started" title="Getting Started">
 							<div id="ug-getting-started-authenticate">
 								<Large>
-									1. Creating Your Account and Finding Your
+									&rarr; Creating Your Account and Finding Your
 									Profile
 								</Large>
 								<article className="docs-content">
-									<H4>
+									{/* <H4>
 										Creating Your Account and Finding Your
 										Profile
-									</H4>
-
-									<P>
-										Welcome! This guide will walk you
-										step-by-step through creating your first
-										account, logging in, and locating your
-										user profile. By the end, you'll be
-										fully set up and ready to go.
-									</P>
-
-									<P>Let's get started.</P>
+									</H4> */}
+									{/* <P>Let's get started.</P> */}
 
 									<H4>
 										Part 1: Creating Your Account
 										(Registration)
 									</H4>
 
-									<P>
-										First, we need to create your account.
-									</P>
-
 									<ol className="list-decimal px-10">
 										<li>
+											<img src={mode === "dark" ? "/assets/gettingStarted/authen_button.webp" : "/assets/gettingStarted/light_authen_button.webp"} className="h-64 object-contain my-4 rounded-2xl" loading="lazy" />
 											Navigate to the{" "}
 											<strong>"Sign Up"</strong> or{" "}
 											<strong>"Register"</strong> page.
@@ -199,9 +196,11 @@ function Docs() {
 										</li>
 										<li>
 											You may need to check your email
+											<img src={mode === "dark" ? "/assets/gettingStarted/register_email.webp" : "/assets/gettingStarted/light_register_email.webp"} className="h-64 object-contain my-4 rounded-2xl" loading="lazy" />
 											inbox for a verification link to
 											confirm your account.
 										</li>
+
 									</ol>
 
 									<H4>
@@ -214,12 +213,13 @@ function Docs() {
 									<ol className="list-decimal px-10">
 										<li>
 											Look for the button that says{" "}
+											<img src={mode === "dark" ? "/assets/gettingStarted/register_google.webp" : "/assets/gettingStarted/light_register_google.webp"} className="h-64 w-128 my-4 object-contain rounded-2xl" loading="lazy" />
 											<strong>
 												"Sign up with Google"
 											</strong>
-											.
 										</li>
 										<li>
+											<img src="/assets/gettingStarted/google_sign.webp" className="h-64 my-4 object-contain rounded-2xl" loading="lazy" />
 											Click it. A new pop-up window will
 											appear, asking you to choose your
 											Google account.
@@ -256,6 +256,7 @@ function Docs() {
 										<li>
 											<strong>
 												If you registered with email:
+												<img src={mode === "dark" ? "/assets/gettingStarted/login.webp" : "/assets/gettingStarted/light_login.webp"} className="h-64 object-contain my-4 rounded-2xl" loading="lazy" />
 											</strong>{" "}
 											Enter the email and password you
 											created in Part 1 and click "Login."
@@ -295,49 +296,37 @@ function Docs() {
 											(usually at the top of the page).
 										</li>
 										<li>
+											<img src={mode === "dark" ? "/assets/gettingStarted/profile_button.webp" : "/assets/gettingStarted/light_profile_button.webp"} className="h-64 object-contain my-4 rounded-2xl" loading="lazy" />
 											Find the{" "}
 											<strong>User Button</strong>. This
 											might show your name, your initials,
 											or a profile icon.
 										</li>
+										<img src={mode === "dark" ? "/assets/gettingStarted/dropdown.webp" : "/assets/gettingStarted/light_dropdown.webp"} className="h-64 object-contain my-4 rounded-2xl" loading="lazy" />
 										<li>
 											Click on this button. A dropdown
 											menu will appear.
+
 										</li>
 										<li>
 											From the menu, click on the{" "}
 											<strong>"Profile"</strong> option.
 										</li>
 									</ol>
-									<blockquote>
-										<P>
-											<strong>Tip:</strong> We recommend
-											adding a screenshot here to show
-											your users exactly what to look for!
-										</P>
-									</blockquote>
 
-									<h4>Method 2: Using the Direct URL</h4>
+									<H4>Method 2: Using the Direct URL</H4>
 									<P>
 										You can also go directly to the profile
-										page at any time.
+										page at any time &rarr;
 									</P>
 									<ol>
-										<li>
+										<li className="mt-4">
 											Click on your browser's address bar.
 										</li>
 										<li>
-											Type <code>/profile</code> after the
-											website's main address.
-											<blockquote>
-												<P>
-													(e.g.,{" "}
-													<code>
-														https://www.yourwebsite.com/profile
-													</code>
-													)
-												</P>
-											</blockquote>
+											<b>Type</b> <code>
+												https://logisick.onrender.com/profile
+											</code>
 										</li>
 										<li>
 											Press <strong>Enter</strong>.
@@ -347,9 +336,12 @@ function Docs() {
 									<H4>Congratulations!</H4>
 
 									<P>
+										<img src={mode === "dark" ? "/assets/gettingStarted/profile.webp" : "/assets/gettingStarted/light_profile.webp"} className="h-64 object-contain my-4 rounded-2xl" loading="lazy" />
 										You've successfully created an account,
 										learned how to log in, and found your
 										profile page. You're all set!
+
+
 									</P>
 								</article>
 							</div>
