@@ -42,7 +42,7 @@ function UserButton() {
 			<DropdownMenuTrigger asChild>
 				<Button className="">
 					<UserAvatar
-						customSeed={user?.avatar || "12345678"}
+						customSeed={user?.avatar || user?.email || "12345678"}
 						className="w-8 h-8"
 					/>
 					<span className="hidden sm:flex">{user?.name}</span>

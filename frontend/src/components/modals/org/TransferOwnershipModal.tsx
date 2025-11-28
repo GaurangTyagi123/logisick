@@ -39,6 +39,9 @@ function TransferOwnershipModal({
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["orgs"],
+			});
 			toast.success("Ownership transferred successfully", {
 				className: "toast",
 			});

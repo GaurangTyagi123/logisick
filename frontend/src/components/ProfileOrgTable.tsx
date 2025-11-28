@@ -103,7 +103,7 @@ function ProfileOrgTable({
 				<Table>
 					{isGettingOrganizations ? (
 						<ProfileTableSkeleton />
-					) : !organizations ? (
+					) : organizations.length === 0 ? (
 						<div className="h-full w-full grid place-items-center gap-3">
 							<H3>You are not in any organizations.</H3>
 							<Button asChild>

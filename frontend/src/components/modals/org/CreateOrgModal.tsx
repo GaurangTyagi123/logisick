@@ -50,6 +50,9 @@ function OrganizationModal({
 			queryClient.invalidateQueries({
 				queryKey: ["orgs"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["user"],
+			});
 			toast.success("Organization created successfully", {
 				className: "toast",
 			});

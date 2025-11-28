@@ -8,6 +8,13 @@ import {
 } from "@/assets/icons/Homepage";
 import { H3, H4, P, Small } from "./ui/Typography";
 
+// information for links to put on the page
+const tabLinks: { path: string; name: string }[] = [
+	{ path: "/dashboard", name: "Organizations" },
+	{ path: "/documentation", name: "Documentation" },
+	{ path: "/profile", name: "Profile" },
+];
+
 /**
  * @component a static footer component for the home and other pages
  * @author `Ravish Ranjan`
@@ -75,14 +82,6 @@ function Footer() {
 									href="/dashboard"
 									className={listContentClass}
 								>
-									Bills Management
-								</a>
-							</li>
-							<li>
-								<a
-									href="/dashboard"
-									className={listContentClass}
-								>
 									Analytics & Reports
 								</a>
 							</li>
@@ -95,36 +94,18 @@ function Footer() {
 							Company
 						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
-							<li>
-								<a href="#" className={listContentClass}>
-									About Us
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Products
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Community
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Resources
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Pricing
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Link
-								</a>
-							</li>
+							{tabLinks.map((value) => {
+								return (
+									<li>
+										<a
+											href={value.path}
+											className={listContentClass}
+										>
+											{value.name}
+										</a>
+									</li>
+								);
+							})}
 						</ul>
 					</div>
 
@@ -136,19 +117,19 @@ function Footer() {
 						<div className="space-y-3 text-sm jet-brains">
 							<div className="flex items-center space-x-2 dark:text-muted-foreground">
 								<Phone className="h-4 w-4" />
-								<Small>+1 (555) 123-4567</Small>
+								<a href="tel:9973882727">
+									<Small>+91 9973882727</Small>
+								</a>
 							</div>
 							<div className="flex items-center space-x-2 dark:text-muted-foreground">
 								<Mail className="h-4 w-4" />
-								<Small>support@logisick.com</Small>
+								<a href="mailto:gaurangt.mca25@cs.du.ac.in">
+									<Small>gaurangt.mca25@cs.du.ac.in</Small>
+								</a>
 							</div>
 							<div className="flex items-start space-x-2 dark:text-muted-foreground">
 								<MapPin className="h-4 w-4 mt-0.5" />
-								<Small>
-									123 ABC Marg
-									<br />
-									New Delhi, 110000
-								</Small>
+								<Small>New Delhi, 110000</Small>
 							</div>
 						</div>
 					</div>

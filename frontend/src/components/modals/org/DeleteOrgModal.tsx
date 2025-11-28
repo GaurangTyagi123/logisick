@@ -38,7 +38,12 @@ function DeleteOrgModal({
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
-			toast.success("Organization deleted successfully", { className: "toast" });
+			queryClient.invalidateQueries({
+				queryKey: ["orgs"],
+			});
+			toast.success("Organization deleted successfully", {
+				className: "toast",
+			});
 		},
 		onError: (err) => {
 			toast.error(err.message, { className: "toast" });
@@ -49,6 +54,7 @@ function DeleteOrgModal({
 	 * @brief async function to handle the user request to delete account
 	 */
 	async function handleDeleteAccount() {
+		console.log("Org id",orgId)
 		if (text.trim() == "delete my organization" && orgId) {
 			deleteOrgFn(orgId);
 			setOpen(false);

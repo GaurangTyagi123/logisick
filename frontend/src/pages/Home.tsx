@@ -17,12 +17,9 @@ import { BookOpen, Star } from "@/assets/icons/Homepage";
 
 // information for links to put on the page
 const tabLinks: { path: string; name: string }[] = [
-	{ path: "#", name: "Products" },
-	{ path: "#", name: "Community" },
+	{ path: "/dashboard", name: "Organizations" },
 	{ path: "/documentation", name: "Documentation" },
-	{ path: "#", name: "Pricing" },
-	{ path: "#", name: "Contacts" },
-	{ path: "#", name: "Links" },
+	{ path: "/profile", name: "Profile" },
 ];
 
 /**
@@ -48,7 +45,7 @@ function Home() {
 						<DropdownMenuContent>
 							{tabLinks.map((link, i) => (
 								<DropdownMenuItem key={i}>
-									<Link to={link.path} >{link.name}</Link>
+									<Link to={link.path}>{link.name}</Link>
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuContent>
