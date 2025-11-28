@@ -26,11 +26,13 @@ const OrgOverview = lazy(() => import("@/pages/OrgOverview"));
 /**
  * @component a component to serves as base of all pages and handles routing of pages
  * @returns base app component
+ * @author `Gaurang Tyagi | Ravish Ranjan`
  */
 function App() {
 	const { getTheme, setMode } = useModeStore();
 	const { user, isCheckingAuth } = useCheckAuth();
 
+	// effect to set colour theme on first load from localStorage
 	useEffect(() => {
 		setMode(getTheme());
 	}, [getTheme, setMode]);
@@ -43,6 +45,7 @@ function App() {
 				<Routes>
 					{/* path for homepage */}
 					<Route index path="/" element={<Home />} />
+					{/* path for dashboard */}
 					<Route
 						path="/dashboard"
 						element={
@@ -53,7 +56,7 @@ function App() {
 							)
 						}
 					/>
-					{/* path for all/specific dashboard */}
+					{/* path for all/specific dashboard of organization */}
 					<Route
 						path="/dashboard/:orgSlug"
 						element={
@@ -64,19 +67,24 @@ function App() {
 							)
 						}
 					>
+						{/* path for organization overview */}
 						<Route index element={<OrgOverview />} />
+						{/* path for organization analytics */}
 						<Route
 							path="/dashboard/:orgSlug/analytics"
 							element={<Analytics />}
 						/>
+						{/* path for organization's user management */}
 						<Route
 							path="/dashboard/:orgSlug/user-role"
 							element={<UserManagement />}
 						/>
+						{/* path for organization's product management */}
 						<Route
 							path="/dashboard/:orgSlug/product-management"
 							element={<ProductManagement />}
 						/>
+						{/* path for organization's order and sales */}
 						<Route
 							path="/dashboard/:orgSlug/order-sales"
 							element={<OrderSales />}
@@ -114,11 +122,13 @@ function App() {
 					/>
 					{/* path for documentation */}
 					<Route path="/documentation" element={<Docs />} />
+					{/* path for displaying order details */}
 					<Route path="/item/:orgSlug/:SKU" element={<ItemPage />} />
 					{/* default path for paths that are not found/defined/allowed */}
 					<Route path="*" element={<Notfound />} />
 				</Routes>
 			</Suspense>
+			{/* global-toast-configuration */}
 			<ToastContainer
 				position="top-left"
 				theme={getTheme()}

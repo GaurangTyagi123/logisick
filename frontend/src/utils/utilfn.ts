@@ -1,3 +1,10 @@
+/**
+ * @brief function to format currency amount
+ * @param {number} amount currency amount to format
+ * @param {string?} currency curreny of the amount
+ * @returns {string} formated currency string
+ * @author `Gaurang Tyagi`
+ */
 export const formatCurrency = (amount: number, currency?: string) => {
 	return new Intl.NumberFormat("en", {
 		style: "currency",
@@ -5,6 +12,14 @@ export const formatCurrency = (amount: number, currency?: string) => {
 		notation: "standard",
 	}).format(amount);
 };
+
+/**
+ * @brief function to convert amount of weight or volume to perferable units
+ * @param {number} amount amount of unit to convert
+ * @param {"weight" | "volume"} type type of unit to make preferable
+ * @returns {string} amount to preffered units
+ * @author `Ravish Ranjan`
+ */
 export function prefereableUnits(
 	amount: number,
 	type: "weight" | "volume" = "weight"
@@ -20,6 +35,12 @@ export function prefereableUnits(
 	return `${amount} ${type === "volume" ? "l" : "g"}(s)`;
 }
 
+/**
+ * @brief function to convert amount units
+ * @param {"MG" | "G" | "KG" | "ML" | "L" | "KL"} unit unit to convert to
+ * @param {number} amount amount to convert 
+ * @returns {number} converted amount by units
+ */
 export function unitConversion(
 	unit: "MG" | "G" | "KG" | "ML" | "L" | "KL",
 	amount?: number,

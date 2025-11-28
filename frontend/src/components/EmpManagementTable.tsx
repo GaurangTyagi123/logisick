@@ -1,24 +1,31 @@
 // HOOKS
 import useGetEmployees from "@/hooks/emp/useGetEmployees";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import UserAvatar from "./UserAvatar";
-import CustomTable from "./CustomTable";
+import UserAvatar from "@/components/UserAvatar";
+import CustomTable from "@/components/CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
-import Button from "./ui/button";
+import Button from "@/components/ui/button";
 import useDeleteEmployee from "@/hooks/emp/useDeleteEmployee";
-import DeleteEmpModal from "./modals/emp/DeleteEmpModal";
 import { Delete } from "@/assets/icons/Profilepage";
 import useChangeRole from "@/hooks/emp/useChangeRole";
-import ChangeEmpRoleModal from "./modals/emp/ChangeEmpRoleModal";
 import useChangeManager from "@/hooks/emp/useChangeManager";
-import ChangeEmpManagerModal from "./modals/emp/ChangeEmpManagerModal";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+
+const ChangeEmpManagerModal = lazy(
+	() => import("@/components/modals/emp/ChangeEmpManagerModal")
+);
+const ChangeEmpRoleModal = lazy(
+	() => import("@/components/modals/emp/ChangeEmpRoleModal")
+);
+const DeleteEmpModal = lazy(
+	() => import("@/components/modals/emp/DeleteEmpModal")
+);
 
 interface Employee {
 	[key: string]: string;

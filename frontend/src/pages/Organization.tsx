@@ -1,6 +1,5 @@
 import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
 import Loading from "@/components/Loading";
-import OrganizationModal from "@/components/modals/org/CreateOrgModal";
 import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";
@@ -15,8 +14,11 @@ import { H2, H3, Large, Muted, Small } from "@/components/ui/Typography";
 import useGetOrganizations from "@/hooks/organization/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Suspense, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+const OrganizationModal = lazy(
+	() => import("@/components/modals/org/CreateOrgModal")
+);
 
 interface OrgCardProps {
 	org: {
@@ -31,8 +33,8 @@ interface OrgCardProps {
 
 /**
  * @brief function get different classed based on role of user
- * @param {string} role role of the user 
- * @author `Ravish Ranjan` 
+ * @param {string} role role of the user
+ * @author `Ravish Ranjan`
  */
 function roleClasses(role: string): string {
 	switch (role) {
@@ -115,7 +117,8 @@ function Organization() {
 		| { user?: User }
 		| undefined;
 	const user = userData?.user;
-	const { data: organizations, isGettingOrganizations } = useGetOrganizations();
+	const { data: organizations, isGettingOrganizations } =
+		useGetOrganizations();
 
 	if (!user) navigate("/");
 	if (isGettingOrganizations) return <Loading fullscreen />;

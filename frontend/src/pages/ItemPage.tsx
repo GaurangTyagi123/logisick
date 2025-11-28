@@ -5,12 +5,12 @@ import useGetItem from "@/hooks/item/useGetItem";
 import Loading from "@/components/Loading";
 import useCheckAuth from "@/hooks/user/useCheckAuth";
 import Button from "@/components/ui/button";
-import DeleteItemModal from "@/components/modals/item/DeleteItemModal";
-import { useState } from "react";
+import { lazy, useState } from "react";
 import { PanelLeftIcon } from "@/assets/icons/Docspage";
-import UpdateItemModal from "@/components/modals/item/EditItemModal";
 import { toast } from "react-toastify";
 import useIsEmployee from "@/hooks/item/useIsEmployee";
+const UpdateItemModal = lazy(() => import("@/components/modals/item/EditItemModal")) ;
+const DeleteItemModal = lazy(() => import("@/components/modals/item/DeleteItemModal")) ;
 
 /**
  * @component page to server as endpoint for item page

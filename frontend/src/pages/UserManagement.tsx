@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { lazy, useState } from "react";
 import EmpManagementTable from "@/components/EmpManagementTable";
-import InviteEmpModal from "@/components/modals/emp/InviteEmpModal";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import { checkAuth } from "@/services/apiAuth";
@@ -9,6 +8,9 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useParams } from "react-router-dom";
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+const InviteEmpModal = lazy(
+	() => import("@/components/modals/emp/InviteEmpModal")
+);
 
 /**
  * @component page to server as endpoint for user management

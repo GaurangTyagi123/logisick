@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo, type ReactNode } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, H4, Muted } from "./ui/Typography";
-import { Input } from "./ui/input";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { H3, H4, Muted } from "@/components/ui/Typography";
+import { Input } from "@/components/ui/input";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -10,8 +10,8 @@ import {
 	DropdownMenuCheckboxItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
-import Button from "./ui/button";
+} from "@/components/ui/dropdown-menu";
+import Button from "@/components/ui/button";
 import { Desc, Incr, Sort } from "@/assets/icons/Table";
 import {
 	Table,
@@ -20,9 +20,9 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "./ui/table";
-import Pagination from "./Pagination";
-import { Separator } from "./ui/separator";
+} from "@/components/ui/table";
+import Pagination from "@/components/Pagination";
+import { Separator } from "@/components/ui/separator";
 
 export interface Column<RowType> {
 	key: string | keyof RowType;

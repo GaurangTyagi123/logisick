@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { H3 } from "./ui/Typography";
+import { H3 } from "@/components/ui/Typography";
 
 interface DocSecProps {
 	children: React.ReactNode;

@@ -31,6 +31,13 @@ type updateItemProps = ({
 type deleteItemProps = (orgId: string) => Promise<any>;
 type getItemsReportProps = (orgId: string) => Promise<ItemReportType | null>;
 
+/**
+ * @brief async function to request api to get item by SKU
+ * @param SKU item's SKU
+ * @effect raises toast on failiure
+ * @return {Item} item data
+ * @author `Ravish Ranjan`
+ */
 export const getItem: getItemProps = async (SKU) => {
 	try {
 		const res = await axinstance.get(`/v1/item/${SKU}`);
@@ -41,6 +48,13 @@ export const getItem: getItemProps = async (SKU) => {
 	}
 };
 
+/**
+ * @brief async function to request api to get item by id
+ * @param itemId item's id
+ * @effect raises toast on failiure
+ * @return {Item} item data
+ * @author `Ravish Ranjan`
+ */
 export const getItemById: getItemByIdProps = async (itemId) => {
 	try {
 		const res = await axinstance.get(`/v1/item/id/${itemId}`);
@@ -51,6 +65,14 @@ export const getItemById: getItemByIdProps = async (itemId) => {
 	}
 };
 
+/**
+ * @brief async function to request api to get all items of a organization
+ * @param page page no.
+ * @param orgid organization's id
+ * @effect raises toast on failiure
+ * @return {Item[]} items data
+ * @author `Ravish Ranjan`
+ */
 export const getAllItems: getAllItemsProps = async (orgId, page = 1) => {
 	try {
 		const res = await axinstance.get(
@@ -67,6 +89,13 @@ export const getAllItems: getAllItemsProps = async (orgId, page = 1) => {
 	}
 };
 
+/**
+ * @brief async function to request api to add new item
+ * @param itemDetails user's id
+ * @effect raises toast on success/failiure
+ * @return {Item} inserted item data
+ * @author `Ravish Ranjan`
+ */
 export const addItem: addItemProps = async (itemDetails) => {
 	try {
 		const res = await axinstance.post("/v1/item", itemDetails);
@@ -77,6 +106,13 @@ export const addItem: addItemProps = async (itemDetails) => {
 	}
 };
 
+/**
+ * @brief async function to request api to update item
+ * @param {{newIrem:"new item information", itemId:string}} form user's id
+ * @effect raises toast on success/failiure
+ * @return {Item} updated item data
+ * @author `Ravish Ranjan`
+ */
 export const updateItem: updateItemProps = async ({ newItem, itemId }) => {
 	try {
 		const res = await axinstance.patch(`/v1/item/${itemId}`, newItem);
@@ -87,6 +123,12 @@ export const updateItem: updateItemProps = async ({ newItem, itemId }) => {
 	}
 };
 
+/**
+ * @brief async function to request api to delete item
+ * @param itemId item's id
+ * @effect raises toast on failiure
+ * @author `Ravish Ranjan`
+ */
 export const deleteItem: deleteItemProps = async (itemId) => {
 	try {
 		const res = await axinstance.delete(`/v1/item/${itemId}`);
@@ -97,6 +139,13 @@ export const deleteItem: deleteItemProps = async (itemId) => {
 	}
 };
 
+/**
+ * @brief async function to request api to get items' report
+ * @param orgid organization's id
+ * @effect raises toast on failiure
+ * @return {ItemReportType} item report
+ * @author `Ravish Ranjan`
+ */
 export const getItemsReport: getItemsReportProps = async (orgId) => {
 	try {
 		const res = await axinstance.get(`/v1/item/report/${orgId}`);
@@ -111,6 +160,13 @@ export const getItemsReport: getItemsReportProps = async (orgId) => {
 	}
 };
 
+/**
+ * @brief async function to request api to employment status to be able to edit item
+ * @param orgSlug organization's slug
+ * @effect raises toast on failiure
+ * @return {boolean} is user an employee or not
+ * @author `Ravish Ranjan`
+ */
 export const checkEmployeeStatus = async (orgSlug: string) => {
 	try {
 		const res = await axinstance.get(`/v1/auth/isEmployee/${orgSlug}`);
@@ -128,6 +184,14 @@ export const checkEmployeeStatus = async (orgSlug: string) => {
 	}
 };
 
+/**
+ * @brief async function to request api to search item in table
+ * @param orgid organization's id
+ * @param query query to serach item with
+ * @param controller controller of searching
+ * @effect raises toast on success/failiure
+ * @author `Ravish Ranjan`
+ */
 export const searchItems = async ({
 	orgid,
 	query,
@@ -150,6 +214,13 @@ export const searchItems = async ({
 	}
 };
 
+/**
+ * @brief async function to request remote api to add Item By Barcode
+ * @param barcode barcode's code
+ * @effect raises toast on success/failiure
+ * @author {Item} item data
+ * @author `Gaurang Tyagi`
+ */
 export const addItemByBarcode = async (barcode: string) => {
 	try {
 		const res = await axios.get(

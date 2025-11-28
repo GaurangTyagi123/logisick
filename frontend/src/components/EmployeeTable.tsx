@@ -5,12 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import UserAvatar from "./UserAvatar";
-import CustomTable from "./CustomTable";
+import UserAvatar from "@/components/UserAvatar";
+import CustomTable from "@/components/CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 
 interface Employee {
 	[key: string]: string;

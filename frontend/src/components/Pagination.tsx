@@ -4,7 +4,7 @@ import {
 	ChevronLeft,
 	ChevronRight,
 } from "@/assets/icons/Pagination";
-import Button from "./ui/button";
+import Button from "@/components/ui/button";
 import type { ReactNode } from "react";
 
 interface PaginationProps {

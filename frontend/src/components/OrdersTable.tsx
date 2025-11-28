@@ -3,18 +3,22 @@ import { searchOrders } from "@/services/apiOrder";
 import { getOrganization } from "@/services/apiOrg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { debounce } from "lodash";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
-import CustomTable from "./CustomTable";
-import { Badge } from "./ui/badge";
-import { Small } from "./ui/Typography";
-import Button from "./ui/button";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+import CustomTable from "@/components/CustomTable";
+import { Badge } from "@/components/ui/badge";
+import { Small } from "@/components/ui/Typography";
+import Button from "@/components/ui/button";
 import useDeleteOrder from "@/hooks/order/useDeleteOrder";
 import { Delete } from "@/assets/icons/Profilepage";
-import DeleteOrderModal from "./modals/order/DeleteOrderModal";
 import useUpdateOrder from "@/hooks/order/useUpdateOrder";
-import UpdateOrderModal from "./modals/order/UpdateOrderModal";
+const DeleteOrderModal = lazy(
+	() => import("@/components/modals/order/DeleteOrderModal")
+);
+const UpdateOrderModal = lazy(
+	() => import("@/components/modals/order/UpdateOrderModal")
+);
 
 /**
  * @component table to show and manage orders in organization
@@ -68,7 +72,7 @@ function OrdersTable() {
 	const { deleteOrderFn, isDeletingOrder } = useDeleteOrder();
 	// hook used to update order
 	const { isUpdatingOrder, updateOrderFn } = useUpdateOrder();
-	// state used to maintain search result 
+	// state used to maintain search result
 	const [searchResult, setSearchResults] = useState<shipmentType[] | null>(
 		null
 	);

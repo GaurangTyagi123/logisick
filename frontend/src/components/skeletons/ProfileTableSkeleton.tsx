@@ -4,8 +4,8 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "../ui/table";
-import { Skeleton } from "../ui/skeleton";
+} from "@/components/ui/table";
+import { Skeleton } from "@/components/ui/skeleton";
 
 /**
  * @componenet react componenet to be used as fallback of profile table
