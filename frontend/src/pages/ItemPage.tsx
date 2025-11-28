@@ -9,8 +9,12 @@ import { lazy, useState } from "react";
 import { PanelLeftIcon } from "@/assets/icons/Docspage";
 import { toast } from "react-toastify";
 import useIsEmployee from "@/hooks/item/useIsEmployee";
-const UpdateItemModal = lazy(() => import("@/components/modals/item/EditItemModal")) ;
-const DeleteItemModal = lazy(() => import("@/components/modals/item/DeleteItemModal")) ;
+const UpdateItemModal = lazy(
+	() => import("@/components/modals/item/EditItemModal")
+);
+const DeleteItemModal = lazy(
+	() => import("@/components/modals/item/DeleteItemModal")
+);
 
 /**
  * @component page to server as endpoint for item page
@@ -27,9 +31,7 @@ function ItemPage() {
 	// user data getting hook
 	const { user: userData, isCheckingAuth } = useCheckAuth();
 	// employee data getting hook
-	const { isEmployee, isCheckingEmployment } = useIsEmployee(
-		orgSlug || ""
-	);
+	const { isEmployee, isCheckingEmployment } = useIsEmployee(orgSlug || "");
 	const user = userData?.user;
 	const navigate = useNavigate();
 	// delete item modal open state
@@ -37,12 +39,14 @@ function ItemPage() {
 	// edit item modal open state
 	const [openEditItemModal, setOpenEditItemModal] = useState(false);
 
-	if (isGettingItem || isCheckingAuth || isCheckingEmployment) return <Loading />;
+	if (isGettingItem || isCheckingAuth || isCheckingEmployment)
+		return <Loading />;
 	return (
 		<div className="flex flex-col justify-start gap-3 items-center bg-ls-bg-300 dark:bg-ls-bg-dark-800 min-h-dvh relative">
 			<Navbar hide={{ userButton: true }}>
 				<Button variant={"outline"} onClick={() => navigate(-1)}>
-					<PanelLeftIcon /> <span className="hidden sm:flex">Go Back</span>
+					<PanelLeftIcon />{" "}
+					<span className="hidden sm:flex">Go Back</span>
 				</Button>
 			</Navbar>
 			{item ? (
@@ -83,14 +87,8 @@ function ItemPage() {
 					)}
 				</main>
 			) : (
-				<div className="w-full flex flex-wrap justify-between px-6">
-					<Button variant={"outline"} onClick={() => navigate(-1)}>
-						<PanelLeftIcon /> Go Back
-					</Button>
-					<div className="grid place-items-center gap-2 p-2 min-w-md outline-1 rounded-2xl items-center">
-						Not Item Found
-					</div>
-					<div className="w-20"></div>
+				<div className="grid place-items-center gap-2 p-2 w-md max-w-11/12 outline-1 rounded-2xl items-center">
+					Not Item Found
 				</div>
 			)}
 		</div>
