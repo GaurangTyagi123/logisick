@@ -2,17 +2,19 @@ import useGetAllItems from "@/hooks/item/useGetAllItems";
 import { getOrganization } from "@/services/apiOrg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
-import CustomTable from "./CustomTable";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Muted } from "./ui/Typography";
-import Button from "./ui/button";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+import CustomTable from "@/components/CustomTable";
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Muted } from "@/components/ui/Typography";
+import Button from "@/components/ui/button";
 import { Edit } from "@/assets/icons/Profilepage";
 import { debounce } from "lodash";
 import { searchItems } from "@/services/apiItem";
 import { prefereableUnits } from "@/utils/utilfn";
-import CreateOrderModal from "./modals/order/CreateOrderModal";
 import useCreateOrder from "@/hooks/order/useCreateOrder";
+const CreateOrderModal = lazy(
+	() => import("@/components/modals/order/CreateOrderModal")
+);
 
 /**
  * @component table to display and manager item in inventory

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { Badge } from "./ui/badge";
+import { Badge } from "@/components/ui/badge";
 import { formatCurrency } from "@/utils/utilfn";
 
 /**

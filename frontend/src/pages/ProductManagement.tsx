@@ -1,5 +1,4 @@
 import ItemsTable from "@/components/ItemsTable";
-import AddItemModal from "@/components/modals/item/AddItemModal";
 import ReportBar from "@/components/ReportBar";
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 import Button from "@/components/ui/button";
@@ -9,8 +8,11 @@ import useGetItemsReport from "@/hooks/item/useGetItemsReport";
 import type { ItemReportType } from "@/services/apiItem";
 import { getOrganization } from "@/services/apiOrg";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { lazy, useState } from "react";
 import { useParams } from "react-router-dom";
+const AddItemModal = lazy(
+	() => import("@/components/modals/item/AddItemModal")
+);
 
 /**
  * @component page to server as endpoint for product management page

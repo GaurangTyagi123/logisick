@@ -55,6 +55,13 @@ type sendOrderReponse = {
 	order: shipmentType;
 };
 
+/**
+ * @brief api request to get all orders of an organization
+ * @param {string} orgid organizatio's id
+ * @param {number} page page no
+ * @returns {Order[]} orders of an organization
+ * @author `Ravish Ranjan`
+ */
 export const getAllOrders: getAllOrdersProps = async (orgid, page = 1) => {
 	try {
 		const res = await axinstance.get<{
@@ -73,6 +80,14 @@ export const getAllOrders: getAllOrdersProps = async (orgid, page = 1) => {
 	}
 };
 
+/**
+ * @brief api request to get search results of order search
+ * @param {string} orgid organizatio's id
+ * @param query search query
+ * @param controller search controller
+ * @returns {Order[]} orders of an organization
+ * @author `Ravish Ranjan`
+ */
 export const searchOrders = async ({
 	orgid,
 	query,
@@ -94,6 +109,12 @@ export const searchOrders = async ({
 	}
 };
 
+/**
+ * @brief api request to get orders' report
+ * @param {string} orgid organizatio's id
+ * @returns {OrderReportType} orders's report
+ * @author `Ravish Ranjan`
+ */
 export const getOrdersReport: getOrdersReportProps = async (orgid) => {
 	try {
 		const res = await axinstance.get(`/v1/order/allOrders/report/${orgid}`);
@@ -104,6 +125,12 @@ export const getOrdersReport: getOrdersReportProps = async (orgid) => {
 	}
 };
 
+/**
+ * @brief api request to get order by name
+ * @param {string} orderName order's name
+ * @returns {Order} order of an organization
+ * @author `Ravish Ranjan`
+ */
 export const getOrderByName: getOrderByNameProps = async (orderName) => {
 	try {
 		const res = await axinstance.get<sendOrdersReponse>(
@@ -120,6 +147,12 @@ export const getOrderByName: getOrderByNameProps = async (orderName) => {
 	}
 };
 
+/**
+ * @brief api request to get order by Id
+ * @param {string} orderId order's Id
+ * @returns {Order} order of an organization
+ * @author `Ravish Ranjan`
+ */
 export const getOrderById: getOrderByIdProps = async (orderId) => {
 	try {
 		const res = await axinstance.get<sendOrderReponse>(
@@ -136,6 +169,20 @@ export const getOrderById: getOrderByIdProps = async (orderId) => {
 	}
 };
 
+/**
+ * @brief api request to create new Order
+ * @param newOrderDetails order's details
+ * ```
+ * {
+ * 		itemId: string;
+ * 		quantity: number;
+ * 		organizationId: string;
+ * 		orderedOn: Date;
+ * }
+ * ```
+ * @returns {Order} new order's details
+ * @author `Ravish Ranjan`
+ */
 export const createOrder: createOrderProps = async (newOrderDetails) => {
 	try {
 		const res = await axinstance.post<sendOrderReponse>(
@@ -149,6 +196,20 @@ export const createOrder: createOrderProps = async (newOrderDetails) => {
 	}
 };
 
+/**
+ * @brief api request to update order details
+ * @param {string} orderId order's id
+ * @param orderUpdates updates on the order
+ * ```
+ * {
+ * 		quantity?: number | undefined;
+ * 		shipped?: boolean | undefined;
+ * 		orderedOn?: Date | undefined;
+ * }
+ * ```
+ * @returns {Order} new order details
+ * @author `Ravish Ranjan`
+ */
 export const updateOrderById: updateOrderByIdProps = async (
 	orderId,
 	orderUpdates
@@ -165,6 +226,11 @@ export const updateOrderById: updateOrderByIdProps = async (
 	}
 };
 
+/**
+ * @brief api request to delete and order by its id
+ * @param {string} orderId order's id
+ * @author `Ravish Ranjan`
+ */
 export const deleteOrderById: deleteOrderByIdProps = async (orderId) => {
 	try {
 		const res = await axinstance.delete(`/v1/order/${orderId}`);

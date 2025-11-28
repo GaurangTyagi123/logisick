@@ -1,12 +1,12 @@
-import Modal from "../../Modal";
-import Button from "../../ui/button";
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../../ui/card";
+} from "@/components/ui/card";
 import { Close } from "@/assets/icons/Close";
 import { useState } from "react";
 import { toast } from "react-toastify";

@@ -16,8 +16,8 @@ import {
 	TableRow,
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { H3, Small } from "./ui/Typography";
-import Button from "./ui/button";
+import { H3, Small } from "@/components/ui/Typography";
+import Button from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import useGetOrganizations from "@/hooks/organization/useGetOrganizations";
 import clsx from "clsx";
@@ -27,8 +27,8 @@ import {
 	DropdownMenuItem,
 	DropdownMenuSeparator,
 	DropdownMenuTrigger,
-} from "./ui/dropdown-menu";
-import ProfileTableSkeleton from "./skeletons/ProfileTableSkeleton";
+} from "@/components/ui/dropdown-menu";
+import ProfileTableSkeleton from "@/components/skeletons/ProfileTableSkeleton";
 
 type OrgType = {
 	id: number;

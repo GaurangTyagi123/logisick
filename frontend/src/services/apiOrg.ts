@@ -18,6 +18,11 @@ type updateOrg = ({
 }) => Promise<void>;
 type getAllOrgs = () => Promise<Org[]>;
 
+/**
+ * @brief api request to create new organization of user as owner
+ * @param {orgFormType} data organization's data
+ * @author `Ravish Ranjan`
+ */
 export const createOrg: createOrg = async (data) => {
 	try {
 		const res = await axinstance.post<{
@@ -34,6 +39,11 @@ export const createOrg: createOrg = async (data) => {
 	}
 };
 
+/**
+ * @brief api request to delete organization by owner
+ * @param {string} orderId order's id
+ * @author `Ravish Ranjan`
+ */
 export const deleteOrg: deleteOrg = async (id: string) => {
 	try {
 		const res = await axinstance.delete(`/v1/org/${id}`);
@@ -45,6 +55,11 @@ export const deleteOrg: deleteOrg = async (id: string) => {
 	}
 };
 
+/**
+ * @brief api request to update organization details
+ * @param {{id:string, data:orgFormType}} form update details
+ * @author `Ravish Ranjan`
+ */
 export const updateOrg: updateOrg = async ({ id, data }) => {
 	try {
 		const res = await axinstance.patch(`/v1/org/${id}`, data);
@@ -59,6 +74,10 @@ export const updateOrg: updateOrg = async ({ id, data }) => {
 	}
 };
 
+/**
+ * @brief api request to get all organitaions in which user is a employee
+ * @author `Ravish Ranjan`
+ */
 export const getAllOrgs = async () => {
 	try {
 		const res = await axinstance.get("/v1/emp/myOrgs");
@@ -74,6 +93,11 @@ export const getAllOrgs = async () => {
 	}
 };
 
+/**
+ * @brief api request to get user's organizations
+ * @param {string} orgSlug organization's slug
+ * @author `Ravish Ranjan`
+ */
 export const getOrganization = async (orgSlug: string) => {
 	try {
 		const res = await axinstance.get(`/v1/org/${orgSlug}`);
@@ -91,6 +115,12 @@ export const getOrganization = async (orgSlug: string) => {
 	}
 };
 
+/**
+ * @brief api request to get all employees of an organization
+ * @param {string} orgid organization's id
+ * @param {number} page page no.
+ * @author `Ravish Ranjan`
+ */
 export const getAllEmployees = async (orgid: string, page: number) => {
 	try {
 		const res = await axinstance.get(`/v1/emp/${orgid}?page=${page}`);
@@ -104,6 +134,11 @@ export const getAllEmployees = async (orgid: string, page: number) => {
 	}
 };
 
+/**
+ * @brief api request to search employees of an orgnaization
+ * @param {{orgid:string,query:string,controller:any}} form search form id
+ * @author `Ravish Ranjan`
+ */
 export const searchEmployee = async ({
 	orgid,
 	query,
@@ -126,6 +161,11 @@ export const searchEmployee = async ({
 	}
 };
 
+/**
+ * @brief api request to transfer ownership of organization
+ * @param {{newOwnerEmail:string}} form transfer owner ship form
+ * @author `Ravish Ranjan`
+ */
 export const transferOwnership = async ({
 	newOwnerEmail,
 }: {

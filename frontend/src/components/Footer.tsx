@@ -6,7 +6,7 @@ import {
 	Phone,
 	Mail,
 } from "@/assets/icons/Homepage";
-import { H3, H4, P, Small } from "./ui/Typography";
+import { H3, H4, P, Small } from "@/components/ui/Typography";
 
 // information for links to put on the page
 const tabLinks: { path: string; name: string }[] = [

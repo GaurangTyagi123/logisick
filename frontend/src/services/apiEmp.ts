@@ -25,8 +25,11 @@ type deleteEmployee = (userid: string, orgid: string) => Promise<void>;
 
 /**
  * @brief async function to request api to send invite to user
- * @return ({message:string}) message data
+ * @param {string} empEmail email of employee wanted to invite
+ * @param {string} role role of employee invited as
+ * @return {{message:string}} message data
  * @effect raises toast on failiure
+ * @author `Ravish Ranjan`
  */
 export const sendInvite: sendInvite = async (empEmail, role) => {
 	try {
@@ -52,7 +55,9 @@ export const sendInvite: sendInvite = async (empEmail, role) => {
 
 /**
  * @brief async function to request api to accept invite by new user
- * @returns (Emp) data of new employee
+ * @param {string} token invitation token sent on email to user
+ * @returns {Emp} data of new employee
+ * @author `Ravish Ranjan`
  */
 export const acceptInvite: acceptInvite = async (token) => {
 	try {
@@ -70,7 +75,11 @@ export const acceptInvite: acceptInvite = async (token) => {
 
 /**
  * @brief async function to request api to change role of employee
- * @returns (Emp) data of new employee
+ * @param orgid organization's id
+ * @param newRole new roleof the user
+ * @param userid user's id
+ * @returns {Emp} data of new employee
+ * @author `Ravish Ranjan`
  */
 export const changeRole: changeRole = async (orgid, newRole, userid) => {
 	try {
@@ -91,7 +100,11 @@ export const changeRole: changeRole = async (orgid, newRole, userid) => {
 
 /**
  * @brief async function to request api to check user authentication
- * @returns (Emp) data of new employee
+ * @param userid user'd id
+ * @param managerEmail user's manager's email
+ * @param orgid organizarion's id
+ * @returns {Emp} data of new employee
+ * @author `Ravish Ranjan`
  */
 export const changeManager: changeManager = async (
 	userid,
@@ -116,7 +129,10 @@ export const changeManager: changeManager = async (
 
 /**
  * @brief async function to request api to check user authentication
+ * @param userid user's id
+ * @param orgid organization's id
  * @effect raises toast on success/failiure
+ * @author `Ravish Ranjan`
  */
 export const deleteEmployee: deleteEmployee = async (userid, orgid) => {
 	try {

@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Muted } from "./ui/Typography";
-import Button from "./ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { H3, Muted } from "@/components/ui/Typography";
+import Button from "@/components/ui/button";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { Hint } from "@/assets/icons/Profilepage";
 import { dateDifference, formatCurrency, prefereableUnits } from "@/utils/utilfn";
 

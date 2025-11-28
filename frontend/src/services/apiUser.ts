@@ -5,7 +5,6 @@ type UserUpdateForm = {
 	name?: string;
 	email?: string;
 	avatar?: string;
-	org?: string[];
 };
 type updateUser = (form: UserUpdateForm) => Promise<User | void>;
 
@@ -17,8 +16,17 @@ type changePassword = (form: {
 
 /**
  * @brief async function to request api to update user
- * @param form data to update user (name?,email?,avatar?,org?)
+ * @param form data to update user 
+ * ```
+ * {
+ * 		name?:string,
+ * 		email?:string,
+ * 		avatar?:string
+ * }
+ * ```
  * @effect updates user with new data
+ * @return {User} updateduser
+ * @author `Gaurang Tyagi`
  */
 export const updateUser: updateUser = async (form) => {
 	try {
@@ -37,8 +45,17 @@ export const updateUser: updateUser = async (form) => {
 
 /**
  * @brief async function to request api to change user password
- * @param form data to change password (prev password,new password,confirm new password)
+ * @param form data to change password 
+ * ```
+ * {	
+ * 		prevPassword:string, 
+ * 		newPassword:string, 
+ * 		confirmNewPassword:string
+ * }
+ * ```
  * @effect updates user with new data
+ * @return {User} updated user data
+ * @author `Gaurang Tyagi`
  */
 export const updatePassword: changePassword = async (form) => {
 	try {
