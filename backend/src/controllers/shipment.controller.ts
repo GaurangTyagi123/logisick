@@ -59,8 +59,8 @@ export const createOrder = catchAsync(
 		res: ExpressTypes.Response,
 		next: ExpressTypes.NextFn
 	) => {
-		const { itemId, quantity, organizationId, orderedOn } = req.body;
-		if (!itemId || !quantity || !organizationId)
+		const { itemId,orderName, quantity, organizationId, orderedOn } = req.body;
+		if (!itemId || !quantity || !organizationId || !orderName)
 			return next(new AppError("Please provide complete details", 400));
 
 		const itemDetails = await Item.findById(itemId).where({
@@ -75,6 +75,7 @@ export const createOrder = catchAsync(
 			);
 		const order = await Shipment.create({
 			item: itemId,
+			orderName,
 			organizationId,
 			quantity,
 			orderedOn,

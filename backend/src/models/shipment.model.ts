@@ -60,13 +60,6 @@ shipmentSchema.index({
     orderName: 1,
 });
 
-// onsave middlwware to change order name
-shipmentSchema.pre('save', function (next: any) {
-    const orderName = `ORD-${new Date().toLocaleDateString()}`;
-    this.orderName = orderName;
-    next();
-});
-
 // update of refis client on different operations
 shipmentSchema.post(['save', 'findOneAndDelete', 'findOneAndUpdate','deleteOne'], async function () {
     if (redisClient.isReady) {

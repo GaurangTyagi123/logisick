@@ -60,9 +60,11 @@ function CreateOrderModal({
 		queryFn: () => getOrganization(orgSlug as string),
 	});
 	const [form, setForm] = useState<{
+		orderName : string
 		quantity: number;
 		orderedOn: Date;
 	}>({
+		orderName : "",
 		quantity: 1,
 		orderedOn: new Date(),
 	});
@@ -100,6 +102,7 @@ function CreateOrderModal({
 		setForm({
 			orderedOn: new Date(),
 			quantity: 1,
+			orderName : ""
 		});
 		setOpen(false);
 	};
@@ -119,6 +122,25 @@ function CreateOrderModal({
 					</Button>
 				</CardHeader>
 				<CardContent className="grid gap-2 max-h-80 overflow-auto sm:px-1">
+					<Label htmlFor="orderName" className="grid">
+						<span>Order Name *</span>
+						<Input
+							id="orderName"
+							name="orderName"
+							type="text"
+							value={form.orderName}
+							className="text-sm md:text-md"
+							min={1}
+							onChange={(e) =>
+								setForm({
+									...form,
+									orderName: e.target.value,
+								})
+							}
+							placeholder="Enter order Name"
+							required
+						/>
+					</Label>
 					<Label htmlFor="quantity" className="grid">
 						<span>Quantity *</span>
 						<Input

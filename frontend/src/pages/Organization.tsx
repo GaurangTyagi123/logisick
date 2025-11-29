@@ -79,7 +79,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 					{view === "list" && (
 						<Button asChild variant={"outline"} size={"sm"}>
 							<Link to={`/dashboard/${org?.slug}`}>
-								View Organization
+								Go to Workspace
 							</Link>
 						</Button>
 					)}
@@ -95,7 +95,7 @@ function OrgCard({ org, view }: OrgCardProps) {
 							to={`/dashboard/${org?.slug}`}
 							className="w-full md:w-fit"
 						>
-							View Organization
+							Go to Workspace
 						</Link>
 					</Button>
 				</CardFooter>
