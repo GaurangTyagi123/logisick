@@ -32,22 +32,22 @@ function CustomSidebar() {
 		return [
 			{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
 			{
-				name: "Analytics &  Reporting",
+				name: "Analytics &  Reports",
 				href: `/dashboard/${orgSlug}/analytics`,
 				id: "analytics",
 			},
 			{
-				name: "User & Role",
+				name: "Users & Roles",
 				href: `/dashboard/${orgSlug}/user-role`,
 				id: "user-role",
 			},
 			{
-				name: "Product Management",
+				name: "Products",
 				href: `/dashboard/${orgSlug}/product-management`,
 				id: "product-management",
 			},
 			{
-				name: "Order & Sales",
+				name: "Sales & Order",
 				href: `/dashboard/${orgSlug}/order-sales`,
 				id: "order-sales",
 			},

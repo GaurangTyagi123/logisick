@@ -11,6 +11,7 @@
 	/* margin: 0; */
 	/* scrollbar-width: none; */
 	box-sizing: border-box;
+	scroll-behavior: smooth;
 }
 .scrollbar {
 	scrollbar-width: auto;
