@@ -96,7 +96,7 @@ function Footer() {
 						<ul className="space-y-2 text-sm jet-brains">
 							{tabLinks.map((value) => {
 								return (
-									<li>
+									<li key={value.path}>
 										<a
 											href={value.path}
 											className={listContentClass}

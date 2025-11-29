@@ -86,7 +86,7 @@ function DeleteOrgModal({
 							<span className="text-red-500">
 								delete my organization
 							</span>
-							" in the input below to delete account
+							" in the input below to delete organization
 						</span>
 						<Input
 							placeholder="Enter Text"

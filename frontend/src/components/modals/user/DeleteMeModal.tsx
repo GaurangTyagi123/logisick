@@ -65,10 +65,10 @@ function DeleteMeModal({
 							" in the input below to delete account
 						</span>
 						<Input
-							placeholder="Enter Your Email"
+							placeholder="Enter Text"
 							type="email"
 							value={text}
-							name="email"
+							name="text"
 							required
 							className="text-sm md:text-md"
 							onChange={(e) => setText(e.target.value.trim())}
