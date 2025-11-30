@@ -1,4 +1,4 @@
-# <div style="display:flex;aligh-items:baseline;gap:1rem;">![alt text](frontend/public//logo64.png) LogiSick – Smart inventory and logistics management, all in one place.</div>
+<div style="display:flex;aligh-items:baseline;gap:1rem;">![alt text](frontend/public//logo64.png) LogiSick – Smart inventory and logistics management, all in one place.</div>
 
 > LogiSick is a web-based inventory and logistics management platform designed to streamline supply chain operations. It enables businesses to efficiently track & manage warehouse inventories, process orders, and monitor deliveries in real time. The system provides an intuitive dashboard, smart notifications for low stock, and detailed reporting to improve decision-making and reduce operational delays. By integrating inventory control with logistics workflows, LogiSick ensures higher accuracy, cost efficiency, and smoother end-to-end management.
 
@@ -14,54 +14,22 @@
   * Search & Filter
   * Quick product lookup (by name, SKU, barcode, category)
   * Advanced filtering (by supplier, quantity, expiry date)
-  * Suppliers & Vendors
-  * Supplier database
-  * Contact info & order history
-  * Preferred supplier tagging
 * #### Analytics & Reporting
 
   * Dashboards
   * Total stock value
-  * Fast-moving vs. slow-moving items
-  * Out-of-stock alerts
   * Reports
-  * Sales reports
-  * Inventory aging report (stock nearing expiry)
-  * Purchase history
 * #### Order & Sales Features
 
   * Purchase Orders
   * Create and track purchase orders
-  * Supplier confirmation status
-  * Auto-stock update on delivery
   * Sales Orders
-  * Customer order management
 * #### User & Role Management
 
   * Access Control
   * Admin, Manager, Staff roles
   * Permissions for editing vs. view-only
   * Activity logs
-* #### Advanced/Optional Features
-
-  * QR Code Scanning
-  * Integration with barcode scanners or camera-based scanning
-  * Print qrcodes/labels for products
-  * Multi-Warehouse Support
-  * Manage stock across multiple warehouses/stores
-  * Inter-warehouse transfers
-  * Integrations
-  * Accounting software (e.g., QuickBooks, Zoho Books)
-  * Shipping & logistics APIs
-  * Forecasting & Automation
-  * Demand forecasting using historical sales
-  * Auto-reorder suggestions
-  * Mobile App or Responsive Web
-  * Offline mode with sync
-  * Security & Backup
-  * Two-factor authentication
-  * Daily/weekly backups
-  * Data export (CSV/Excel/PDF)
 
 ---
 
@@ -69,11 +37,12 @@
 
 - **Frontend:** React, TailwindCSS
 - **Backend:** Node.js, Express.js
-- **Database:** MongoDB 
+- **Database:** MongoDB
 - **Authentication:** JWT-based authentication, Role-based access control
 - **Other Tools:**  REST APIs, Git/GitHub
 
 ---
+
 ## Documentation
 
 For full API reference and usage examples, see the [API Documentation](https://documenter.getpostman.com/view/47791845/2sB3BLjnwi).
@@ -142,11 +111,13 @@ DEV_MAIL_PASSWORD = <mail-dev-password>
 OAUTH_CLIENT_ID = <google-oauth-client-id>
 OAUTH_CLIENT_SECRET = <google-oauth-client-secret>
 OAUTH_CALLBACK_URL = <google-oauth-callback>
+SENDGRID_KEY=<sendgrid-mailing-api>
 ```
 
 # Run the project (IN DEVELOPMENT):
 
 #### Start backend & frontend
+
 ```bash
 npm run dev
 ```
@@ -155,7 +126,7 @@ npm run dev
 
 > Visit [http://localhost:8000](http://localhost:8000) in your browser.
 
-----
+---
 
 # License
 
@@ -166,7 +137,8 @@ All rights reserved.
 This source code is made available for viewing and educational purposes only.
 No permission is granted to use, copy, modify, merge, publish, distribute, sublicense, or sell copies of this software, in whole or in part, without prior written permission from the author.
 
-----
+---
 
 # Contact
+
 For support or queries, reach out at [gaurangt.mca25@cs.du.ac.in](mailto:gaurangt.mca25@cs.du.ac.in) or [ravishr.mca25@cs.du.ac.in](mailto:ravishr.mca25@cs.du.ac.in)
