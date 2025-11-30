@@ -74,7 +74,7 @@ function DeleteEmpModal({
 						htmlFor="removeemp"
 						className="grid"
 					>
-						<span>
+						<span id="employee-name">
 							Enter "
 							<span className="text-red-500">
 								remove {empData.name}
@@ -89,6 +89,8 @@ function DeleteEmpModal({
 							required
 							className="text-sm md:text-md"
 							onChange={(e) => setText(e.target.value)}
+							aria-describedby="employee-name"
+							aria-required="true"
 						/>
 					</Label>
 				</CardContent>

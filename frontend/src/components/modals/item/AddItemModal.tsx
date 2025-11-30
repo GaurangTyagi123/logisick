@@ -180,7 +180,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 					<Separator />
 					<div className="grid gap-2 grid-cols-1 md:grid-cols-2">
 						<Label htmlFor="name" className="grid">
-							<span>Name *</span>
+							<span id="name">Name *</span>
 							<Input
 								id="name"
 								name="name"
@@ -192,10 +192,12 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item's name"
 								required
+								aria-describedby="name"
+								aria-required="true"
 							/>
 						</Label>
 						<Label htmlFor="inventory-category" className="grid">
-							<span>Inventory Category *</span>
+							<span id="category">Inventory Category *</span>
 							<Input
 								id="inventory-category"
 								name="inventoryCategory"
@@ -210,13 +212,15 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item's inventory category"
 								required
+								aria-required="true"
+								aria-describedby="category"
 							/>
 						</Label>
 					</div>
 					{/* costs */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 						<Label htmlFor="costprice" className="grid">
-							<span>Cost Price *</span>
+							<span id="cost-price">Cost Price *</span>
 							<Input
 								id="costprice"
 								name="costPrice"
@@ -233,10 +237,13 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item cost price"
 								required
+								aria-required="true"
+								aria-describedby="cost-price"
+								
 							/>
 						</Label>
 						<Label htmlFor="sellingprice" className="grid">
-							<span>Selling Price *</span>
+							<span id="selling price">Selling Price *</span>
 							<Input
 								id="sellingprice"
 								name="sellingPrice"
@@ -252,12 +259,15 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item selling price"
 								required
+								aria-required="true"
+								aria-describedby="selling price"
+
 							/>
 						</Label>
 					</div>
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 						<Label htmlFor="quantity" className="grid">
-							<span>Quantity *</span>
+							<span id="quantity">Quantity *</span>
 							<Input
 								id="quantity"
 								name="quantity"
@@ -273,12 +283,15 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item quantity"
 								required
+								aria-required="true"
+								aria-describedby="quantity"
+
 							/>
 						</Label>
 						{/* weight */}
 						<div className="flex gap-2 items-end w-full">
 							<Label htmlFor="weight" className="grid w-full">
-								<span>Weight</span>
+								<span id="weight">Weight</span>
 								<Input
 									id="weight"
 									name="weight"
@@ -294,6 +307,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 										})
 									}
 									placeholder="Enter item's weight"
+									aria-describedby="weight"
 								/>
 							</Label>
 							<DropdownMenu>
@@ -376,7 +390,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 					{/* dates */}
 					<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 						<Label htmlFor="importedon" className="grid">
-							<span>Imported On *</span>
+							<span id="import-date">Imported On *</span>
 							<Input
 								id="importedon"
 								name="importedOn"
@@ -399,10 +413,12 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								placeholder="Enter item's imported date"
 								className="w-full text-sm md:text-md"
 								required
+								aria-required="true"
+								aria-describedby="import-date"
 							/>
 						</Label>
 						<Label htmlFor="expireson" className="grid">
-							<span>Expires On</span>
+							<span id="expire-date">Expires On</span>
 							<Input
 								id="expireson"
 								name="expiresOn"
@@ -426,12 +442,13 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}}
 								placeholder="Enter item's expiry date"
 								className="w-full text-sm md:text-md"
+								aria-describedby="expire-date"
 							/>
 						</Label>
 					</div>
 					<div className="grid gap-2 grid-cols-1 md:grid-cols-2">
 						<Label htmlFor="colour" className="grid">
-							<span>Colour</span>
+							<span id="colour">Colour</span>
 							<Input
 								id="colour"
 								name="colour"
@@ -442,10 +459,11 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item's colour"
 								className="text-sm md:text-md"
+								aria-describedby="colour"
 							/>
 						</Label>
 						<Label htmlFor="origin" className="grid">
-							<span>Origin Place</span>
+							<span id="origin">Origin Place</span>
 							<Input
 								id="origin"
 								name="origin"
@@ -456,12 +474,13 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									setForm({ ...form, origin: e.target.value })
 								}
 								placeholder="Enter item's origin place"
+								aria-describedby="origin"
 							/>
 						</Label>
 					</div>
 					<div className="grid gap-2 grid-cols-1 md:grid-cols-2">
 						<Label htmlFor="reorderlevel" className="grid">
-							<span>Re-Order Level</span>
+							<span id="order-level">Re-Order Level</span>
 							<Input
 								id="reorderlevel"
 								name="reorderLevel"
@@ -477,10 +496,11 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									})
 								}
 								placeholder="Enter item's re-order level"
+								aria-describedby="order-level"
 							/>
 						</Label>
 						<Label htmlFor="batchnumber" className="grid">
-							<span>Batch Number</span>
+							<span id="batch-number">Batch Number</span>
 							<Input
 								id="batchnumber"
 								name="batchNumber"
@@ -496,6 +516,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									})
 								}
 								placeholder="Enter item's batch number"
+								aria-describedby="batch-number"
 							/>
 						</Label>
 					</div>

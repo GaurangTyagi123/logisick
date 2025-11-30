@@ -251,6 +251,8 @@ function CustomTable<
 						type="search"
 						placeholder="Search..."
 						className="text-xs md:text-sm bg-white dark:bg-ls-bg-dark-800"
+						aria-autocomplete="list"
+						aria-live="polite"
 					/>
 
 					{/* Sort by column */}

@@ -80,7 +80,7 @@ function ChangeEmpManagerModal({
 						htmlFor="changemanager"
 						className="grid"
 					>
-						<span>Manager's email id</span>
+						<span id="manager-email">Manager's email id</span>
 						<Input
 							placeholder="Enter manager's email id"
 							type="email"
@@ -89,6 +89,8 @@ function ChangeEmpManagerModal({
 							required
 							className="text-sm md:text-md"
 							onChange={(e) => setManagerEmail(e.target.value)}
+							aria-describedby="manager-email"
+							aria-required="true"
 						/>
 					</Label>
 				</CardContent>

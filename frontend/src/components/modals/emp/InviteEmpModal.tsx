@@ -65,7 +65,7 @@ function InviteEmpModal({
 				</CardHeader>
 				<CardContent className="grid gap-3">
 					<Label title="New Employee's Email" className="grid">
-						<span>Employee's email</span>
+						<span id="employee-email">Employee's email</span>
 						<Input
 							placeholder="Enter new employee's email"
 							type="email"
@@ -79,6 +79,8 @@ function InviteEmpModal({
 									empEmail: e.target.value.trim(),
 								})
 							}
+							aria-describedby="employee-email"
+							aria-required="true"
 						/>
 					</Label>
 					<Label title="New Employee's role" className="grid">
