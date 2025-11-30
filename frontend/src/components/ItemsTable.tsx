@@ -204,7 +204,7 @@ function ItemsTable() {
 						header: "Manage",
 						render: (_, row) => (
 							<Link to={`/item/${orgData.slug}/${row.SKU}`}>
-								<Button variant={"outline"} size={"sm"}>
+								<Button variant={"outline"} size={"sm"} aria-label="Edit Item">
 									<Edit />
 								</Button>
 							</Link>

@@ -18,6 +18,8 @@ function Loading({ className, fullscreen }: LoadingProps) {
 				fullscreen ? "h-screen w-screen" : "w-full h-full",
 				className
 			)}
+			role="status"
+			aria-live="polite"
 		>
 			<div className="flex space-x-1 justify-center w-full">
 				<div

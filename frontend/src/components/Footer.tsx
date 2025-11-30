@@ -7,6 +7,7 @@ import {
 	Mail,
 } from "@/assets/icons/Homepage";
 import { H3, H4, P, Small } from "@/components/ui/Typography";
+import { useQueryClient } from "@tanstack/react-query";
 
 // information for links to put on the page
 const tabLinks: { path: string; name: string }[] = [
@@ -20,6 +21,8 @@ const tabLinks: { path: string; name: string }[] = [
  * @author `Ravish Ranjan`
  */
 function Footer() {
+	const queryClient = useQueryClient();
+	const { user } = queryClient.getQueryData<{ user: User }>(["user"])!
 	const listContentClass =
 		"dark:text-muted-foreground hover:text-foreground transition-colors";
 	return (
@@ -55,7 +58,7 @@ function Footer() {
 						<ul className="space-y-2 text-sm jet-brains">
 							<li>
 								<a
-									href="/dashboard"
+									href={user?.myOrg?.slug ? `/dashboard/${user?.myOrg?.slug}/product-management` : '/dashboard'}
 									className={listContentClass}
 								>
 									Inventory Management
@@ -63,23 +66,7 @@ function Footer() {
 							</li>
 							<li>
 								<a
-									href="/dashboard"
-									className={listContentClass}
-								>
-									Import/Export Management
-								</a>
-							</li>
-							<li>
-								<a
-									href="/dashboard"
-									className={listContentClass}
-								>
-									Delivery Tracking
-								</a>
-							</li>
-							<li>
-								<a
-									href="/dashboard"
+									href={user?.myOrg?.slug ? `/dashboard/${user?.myOrg?.slug}/analytics` : '/dashboard'}
 									className={listContentClass}
 								>
 									Analytics & Reports
@@ -140,18 +127,6 @@ function Footer() {
 					<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 jet-brains">
 						<div className="flex items-center space-x-6 text-sm dark:text-muted-foreground">
 							<Small>© 2025 logisick. All rights reserved.</Small>
-							<a
-								href="#"
-								className="hover:text-foreground transition-colors"
-							>
-								Privacy Policy
-							</a>
-							<a
-								href="#"
-								className="hover:text-foreground transition-colors"
-							>
-								Terms of Service
-							</a>
 						</div>
 						<div className="flex items-center space-x-4">
 							<div className="flex items-center space-x-2 text-sm dark:text-muted-foreground">
