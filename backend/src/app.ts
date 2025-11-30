@@ -105,7 +105,7 @@ app.use(
                 ],
 
                 imgSrc: ["'self'", 'data:', 'https:'],
-                connectSrc: ["'self'","'https://world.openfoodfacts.org'"],
+                connectSrc: ["'self'","https://world.openfoodfacts.org"],
                 manifestSrc: ["'self'"],
                 frameSrc: ["'none'"],
                 objectSrc: ["'none'"],
