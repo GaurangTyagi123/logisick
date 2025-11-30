@@ -24,7 +24,7 @@ const tabLinks: { path: string; name: string }[] = [
 
 /**
  * @component page to server as endpoint for homepage
- * @author `Ravish Ranjan`
+ * @author `Manas More`
  */
 function Home() {
 	return (

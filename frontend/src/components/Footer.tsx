@@ -18,7 +18,7 @@ const tabLinks: { path: string; name: string }[] = [
 
 /**
  * @component a static footer component for the home and other pages
- * @author `Ravish Ranjan`
+ * @author `Manas More`
  */
 function Footer() {
 	const queryClient = useQueryClient();

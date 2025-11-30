@@ -49,7 +49,7 @@ const tabs: Tabs = {
 
 /**
  * @component sidebar for docs page
- * @author `Ravish Ranjan`
+ * @author `Manas More`
  */
 function CustomSidebar() {
 	return (

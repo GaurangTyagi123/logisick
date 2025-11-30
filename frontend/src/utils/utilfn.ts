@@ -38,12 +38,13 @@ export function prefereableUnits(
 /**
  * @brief function to convert amount units
  * @param {"MG" | "G" | "KG" | "ML" | "L" | "KL"} unit unit to convert to
- * @param {number} amount amount to convert 
+ * @param {number} amount amount to convert
  * @returns {number} converted amount by units
+ * @author `Manas More`
  */
 export function unitConversion(
 	unit: "MG" | "G" | "KG" | "ML" | "L" | "KL",
-	amount?: number,
+	amount?: number
 ) {
 	if (!amount) return amount;
 	switch (unit) {
@@ -64,13 +65,13 @@ export function unitConversion(
  * @brief function to get difference between given date and current date
  * @param {Date} date date to get difference from
  * @returns {number} differnce of days between given date and current date
- * @author `Ravish Ranjan`
+ * @author `Manas More`
  */
 export function dateDifference(date: Date): number {
 	const dateThen = new Date(date);
 	const now = new Date();
-	const diff:number =  Math.ceil(
+	const diff: number = Math.ceil(
 		(dateThen.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-	)
+	);
 	return diff > 0 ? diff : 0;
 }
