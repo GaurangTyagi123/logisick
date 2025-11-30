@@ -134,13 +134,14 @@ function BarcodeScan({
 				<div>Prompt for access</div>
 			)}
 			<input
-				type="text"
+				type="search"
 				name="barcode"
 				id="barcode"
 				value={barcode}
 				placeholder="No barcode detected"
 				onChange={(e) => setBarcode(e.target.value)}
 				className="jet-brains tracking-wide"
+				aria-autocomplete="list"
 			/>
 		</div>
 	);

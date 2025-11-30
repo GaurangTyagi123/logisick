@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo, type ReactNode } from "react";
+import { useEffect, useState, useMemo, type ReactNode, useRef } from "react";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { H3, H4, Muted } from "@/components/ui/Typography";
 import { Input } from "@/components/ui/input";
@@ -100,6 +100,12 @@ function CustomTable<
 	const [filters, setFilters] = useState<Record<string, (string | number)[]>>(
 		{}
 	);
+	const searchRef = useRef<HTMLInputElement>(null);
+
+	// Set focus on search bar when the page renders for the first time	
+	useEffect(() => {
+		searchRef?.current?.focus();
+	},[])
 
 	// Trigger search callback
 	useEffect(() => {
@@ -239,11 +245,14 @@ function CustomTable<
 				<div className="grid grid-cols-1 w-full sm:w-fit sm:grid-cols-2 gap-2">
 					{/* Search input */}
 					<Input
+						ref={searchRef}
 						value={searchStr || ""}
 						onChange={(e) => setSearchStr(e.target.value)}
-						type="text"
+						type="search"
 						placeholder="Search..."
 						className="text-xs md:text-sm bg-white dark:bg-ls-bg-dark-800"
+						aria-autocomplete="list"
+						aria-live="polite"
 					/>
 
 					{/* Sort by column */}
@@ -360,13 +369,13 @@ function CustomTable<
 						<H3>No Data</H3>
 					</div>
 				) : (
-					<Table className="min-h-64 w-full">
+					<Table className="min-h-64 w-full" aria-label="table">
 						<TableHeader className="w-full">
 							<TableRow>
 								{columns.map((col) => (
 									<TableHead
 										key={String(col.key)}
-										// className="overflow-hidden text-ellipsis whitespace-nowrap"
+									// className="overflow-hidden text-ellipsis whitespace-nowrap"
 									>
 										{col.header}
 									</TableHead>
@@ -384,14 +393,14 @@ function CustomTable<
 											>
 												{col.render
 													? col.render(
-															row[col.key],
-															row
-													  )
+														row[col.key],
+														row
+													)
 													: (row[
-															col.key
-													  ] as React.ReactNode) || (
-															<Muted>NA</Muted>
-													  )}
+														col.key
+													] as React.ReactNode) || (
+														<Muted>NA</Muted>
+													)}
 											</TableCell>
 										))}
 									</TableRow>

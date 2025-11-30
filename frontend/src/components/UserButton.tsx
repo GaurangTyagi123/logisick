@@ -57,7 +57,7 @@ function UserButton() {
 					</DropdownMenuItem>
 				)}
 				<DropdownMenuItem asChild>
-					<Link to={"/dashboard"}>Your Organization</Link>
+					<Link to={"/dashboard"}>Dashboard</Link>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onClick={handleLogout}

@@ -19,6 +19,8 @@ function Modal({ openModal, children }: ModalProps) {
 				"h-full w-full absolute top-0 left-0 justify-center items-start pt-10 sm:pt-20 z-50",
 				openModal ? "flex" : "hidden"
 			)}
+			aria-modal="true"
+			role="dialog"
 		>
 			<Suspense fallback={<Loading />}>{children}</Suspense>
 		</div>

@@ -69,7 +69,8 @@ export function unitConversion(
 export function dateDifference(date: Date): number {
 	const dateThen = new Date(date);
 	const now = new Date();
-	return Math.ceil(
+	const diff:number =  Math.ceil(
 		(dateThen.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-	);
+	)
+	return diff > 0 ? diff : 0;
 }

@@ -86,6 +86,7 @@ function CustomSidebar() {
 										to="/"
 										replace={true}
 										className="jet-brains"
+										role="tab"
 									>
 										Homepage
 									</Link>
@@ -97,6 +98,7 @@ function CustomSidebar() {
 										to="/dashboard"
 										replace={true}
 										className="jet-brains"
+										role="tab"
 									>
 										Dashboard
 									</Link>
@@ -124,6 +126,7 @@ function CustomSidebar() {
 														? `jet-brains bg-ls-bg-300 dark:bg-ls-bg-dark-600`
 														: `jet-brains `
 												}
+												role="tab"
 											>
 												{item.name}
 											</Link>
@@ -158,7 +161,7 @@ function Dashboard() {
 						<Navbar hide={{ logo: true }} />
 					</div>
 					{/* dashboard main content */}
-					<div className="p-1 md:p-3 w-full grid bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
+					<div className="p-1 md:p-3 w-full grid bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl" role="main">
 						<Outlet />
 					</div>
 				</main>

@@ -52,6 +52,7 @@ function Navbar({
 					asChild
 					variant={"ghost"}
 					title="Go to homepage"
+					aria-label="Main Navigation"
 					className="h-full p-0.5 min-w-40 aspect-square flex items-center"
 				>
 					<Link to={{ pathname: "/" }}>
