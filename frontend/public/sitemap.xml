@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+    <!-- Homepage -->
+    <url>
+        <loc>https://logisick.ravishdev.org/</loc>
+        <lastmod>2025-12-01T00:00:00+05:30</lastmod>
+    </url>
+
+    <!-- Dashboard root -->
+    <url>
+        <loc>https://logisick.ravishdev.org/dashboard</loc>
+        <lastmod>2025-12-01T00:00:00+05:30</lastmod>
+    </url>
+
+    <!-- Authentication -->
+    <url>
+        <loc>https://logisick.ravishdev.org/authenticate</loc>
+        <lastmod>2025-12-01T00:00:00+05:30</lastmod>
+    </url>
+
+    <!-- Documentation -->
+    <url>
+        <loc>https://logisick.ravishdev.org/documentation</loc>
+        <lastmod>2025-12-01T00:00:00+05:30</lastmod>
+    </url>
+
+</urlset>

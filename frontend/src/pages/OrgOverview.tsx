@@ -8,6 +8,8 @@ import { Link, useParams } from "react-router-dom";
 import { Skeleton } from "@/components/ui/skeleton";
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 import Button from "@/components/ui/button";
+import useGetItemsReport from "@/hooks/item/useGetItemsReport";
+import useGetOrdersReport from "@/hooks/order/useGetOrderReport";
 
 /**
  * @component page to server as endpoint for organization overview
@@ -19,8 +21,12 @@ function OrgOverview() {
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
+	const { isGettingItemReport, report } = useGetItemsReport(orgData?._id);
+	const { isGettingOrdersReport, report: orderReport } = useGetOrdersReport(
+		orgData?._id
+	);
 
-	if (isGettingOrg) {
+	if (isGettingOrg || isGettingItemReport || isGettingOrdersReport) {
 		return (
 			<div className="flex flex-col gap-2  items-baseline h-full w-autorounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
 				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl">
@@ -47,16 +53,22 @@ function OrgOverview() {
 						{orgData.name}
 					</H3>
 					<div className="flex gap-4">
-						<Small className="grid place-items-center gap-2 h-full p-2">
-							Imports
+						<Small className="grid place-items-center gap-2 h-full p-2 text-center">
+							Inventory Value
 							<Badge className="p-2">
-								{formatCurrency(500000, "INR")}
+								{formatCurrency(
+									report?.totalSellingPrice || 0,
+									"INR"
+								)}
 							</Badge>
 						</Small>
-						<Small className="grid place-items-center gap-2 h-full p-2">
-							Exports
+						<Small className="grid place-items-center gap-2 h-full p-2 text-center">
+							Order Revenue
 							<Badge className="p-2">
-								{formatCurrency(500000, "INR")}
+								{formatCurrency(
+									orderReport?.totalRevenue || 0,
+									"INR"
+								)}
 							</Badge>
 						</Small>
 					</div>

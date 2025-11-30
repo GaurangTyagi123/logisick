@@ -3,7 +3,7 @@
  * @param {number} amount currency amount to format
  * @param {string?} currency curreny of the amount
  * @returns {string} formated currency string
- * @author `Gaurang Tyagi`
+ * @author `Manas More`
  */
 export const formatCurrency = (amount: number, currency?: string) => {
 	return new Intl.NumberFormat("en", {
@@ -38,12 +38,13 @@ export function prefereableUnits(
 /**
  * @brief function to convert amount units
  * @param {"MG" | "G" | "KG" | "ML" | "L" | "KL"} unit unit to convert to
- * @param {number} amount amount to convert 
+ * @param {number} amount amount to convert
  * @returns {number} converted amount by units
+ * @author `Ravish Ranjan`
  */
 export function unitConversion(
 	unit: "MG" | "G" | "KG" | "ML" | "L" | "KL",
-	amount?: number,
+	amount?: number
 ) {
 	if (!amount) return amount;
 	switch (unit) {
@@ -69,8 +70,8 @@ export function unitConversion(
 export function dateDifference(date: Date): number {
 	const dateThen = new Date(date);
 	const now = new Date();
-	const diff:number =  Math.ceil(
+	const diff: number = Math.ceil(
 		(dateThen.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-	)
+	);
 	return diff > 0 ? diff : 0;
 }

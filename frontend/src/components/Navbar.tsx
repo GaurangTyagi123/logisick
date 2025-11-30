@@ -10,7 +10,6 @@ import type { ReactNode } from "react";
 interface NavbarProps {
 	hide?: {
 		logo?: boolean;
-		options?: boolean;
 		userButton?: boolean;
 		loginRegisterButton?: boolean;
 	};
