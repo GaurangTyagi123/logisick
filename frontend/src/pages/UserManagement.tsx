@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { lazy, useState } from "react";
 import EmpManagementTable from "@/components/EmpManagementTable";
-import InviteEmpModal from "@/components/modals/emp/InviteEmpModal";
 import Button from "@/components/ui/button";
 import { H3 } from "@/components/ui/Typography";
 import { checkAuth } from "@/services/apiAuth";
@@ -9,7 +8,14 @@ import { useQuery } from "@tanstack/react-query";
 import clsx from "clsx";
 import { useParams } from "react-router-dom";
 import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+const InviteEmpModal = lazy(
+	() => import("@/components/modals/emp/InviteEmpModal")
+);
 
+/**
+ * @component page to server as endpoint for user management
+ * @author `Ravish Ranjan`
+ */
 function UserManagement() {
 	const [openInviteModal, setOpenInviteModal] = useState<boolean>(false);
 
@@ -24,6 +30,10 @@ function UserManagement() {
 		queryFn: () => getOrganization(orgSlug as string),
 	});
 
+	/**
+	 * @brief function to check authorization of user to make changes
+	 * @returns boolean - to check if the user is authorized to make changes
+	 */
 	const isAuthorized = () => {
 		if (!userData?.user.myOrg) return false;
 		if (userData?.user) return true;
@@ -33,17 +43,15 @@ function UserManagement() {
 
 	return (
 		<div className="gap-2 grid">
-			<div className="flex flex-col gap-2 items-baseline h-full w-auto jet-brains rounded-2xl bg-ls-bg-300 dark:bg-ls-bg-dark-800">
-				<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-3 rounded-2xl flex justify-between items-center">
-					<H3>User & Role</H3>
-					<div className={clsx(isAuthorized() ? "grid" : "hidden")}>
-						<Button
-							onClick={() => setOpenInviteModal(true)}
-							disabled={!isAuthorized()}
-						>
-							Invite Employee
-						</Button>
-					</div>
+			<div className="bg-white dark:bg-ls-bg-dark-800 outline-1 w-full p-1 md:p-3 rounded-lg md:rounded-2xl grid md:flex md:justify-between items-center">
+				<H3>User & Role</H3>
+				<div className={clsx(isAuthorized() ? "grid" : "hidden")}>
+					<Button
+						onClick={() => setOpenInviteModal(true)}
+						disabled={!isAuthorized()}
+					>
+						Invite Employee
+					</Button>
 				</div>
 			</div>
 

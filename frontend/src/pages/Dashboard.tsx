@@ -12,37 +12,42 @@ import {
 	SidebarTrigger,
 } from "@/components/ui/sidebar";
 import { Large, Muted } from "@/components/ui/Typography";
-import Button from "@/components/ui/button";
 import { Link, Outlet, useParams } from "react-router-dom";
 import { useMemo, useState } from "react";
 import useCheckAuth from "@/hooks/user/useCheckAuth";
+import { Separator } from "@/components/ui/separator";
 
+/**
+ * @component component for sidebar of dashboard page
+ * @author `Gaurang Tyagi`
+ */
 function CustomSidebar() {
 	const { orgSlug } = useParams();
 	const [pathName, setPathName] = useState("overview");
 	const { user: userData } = useCheckAuth();
 	const user = userData?.user;
 
+	// sidebar tabs information
 	let sidebarData = useMemo(() => {
 		return [
 			{ name: "Overview", href: `/dashboard/${orgSlug}`, id: "overview" },
 			{
-				name: "Analytics &  Reporting",
+				name: "Analytics &  Reports",
 				href: `/dashboard/${orgSlug}/analytics`,
 				id: "analytics",
 			},
 			{
-				name: "User & Role",
+				name: "Users & Roles",
 				href: `/dashboard/${orgSlug}/user-role`,
 				id: "user-role",
 			},
 			{
-				name: "Product Management",
+				name: "Products",
 				href: `/dashboard/${orgSlug}/product-management`,
 				id: "product-management",
 			},
 			{
-				name: "Order & Sales",
+				name: "Sales & Order",
 				href: `/dashboard/${orgSlug}/order-sales`,
 				id: "order-sales",
 			},
@@ -55,10 +60,14 @@ function CustomSidebar() {
 		);
 
 	return (
-		<Sidebar>
+		<Sidebar className="h-full">
 			<SidebarHeader>
 				<div className="h-16 p-2 flex gap-2 items-center rounded-2xl bg-zinc-300 dark:bg-zinc-800">
-					<img src="/assets/appicon.png" alt="logo" className="h-12" />
+					<img
+						src="/assets/appicon.png"
+						alt="logo"
+						className="h-12"
+					/>
 					<div className="grid gap-1 pt-2">
 						<Large className="leading-4 king-julian">
 							Logisick
@@ -68,6 +77,37 @@ function CustomSidebar() {
 				</div>
 			</SidebarHeader>
 			<SidebarContent className="dark:bg-ls-bg-dark-800">
+				<SidebarGroup>
+					<SidebarGroupContent>
+						<SidebarMenu>
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild>
+									<Link
+										to="/"
+										replace={true}
+										className="jet-brains"
+										role="tab"
+									>
+										Homepage
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+							<SidebarMenuItem>
+								<SidebarMenuButton asChild>
+									<Link
+										to="/dashboard"
+										replace={true}
+										className="jet-brains"
+										role="tab"
+									>
+										Dashboard
+									</Link>
+								</SidebarMenuButton>
+							</SidebarMenuItem>
+						</SidebarMenu>
+					</SidebarGroupContent>
+				</SidebarGroup>
+				<Separator/>
 				<SidebarGroup>
 					<SidebarGroupContent>
 						<SidebarMenu>
@@ -86,6 +126,7 @@ function CustomSidebar() {
 														? `jet-brains bg-ls-bg-300 dark:bg-ls-bg-dark-600`
 														: `jet-brains `
 												}
+												role="tab"
 											>
 												{item.name}
 											</Link>
@@ -100,26 +141,27 @@ function CustomSidebar() {
 		</Sidebar>
 	);
 }
+
+/**
+ * @component page to server as endpoint for dashboard page
+ * @author `Gaurang Tyagi`
+ */
 function Dashboard() {
 	return (
 		<div className="relative">
 			<SidebarProvider>
 				<CustomSidebar />
 				<main className="flex-1 p-2 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 w-full">
+					{/* dashbard navbar */}
 					<div className="flex gap-2 items-center">
 						<SidebarTrigger
-							className="p-2 h-10 w-10 rounded-xl"
+							className="p-2 h-10 w-10 rounded-lg md:rounded-xl"
 							variant={"outline"}
 						/>
-						<Button variant={"link"} asChild>
-							<Link to={"/"}>Homepage</Link>
-						</Button>
-						<Button variant={"link"} asChild>
-							<Link to={"/dashboard"}>Dashboard</Link>
-						</Button>
 						<Navbar hide={{ logo: true }} />
 					</div>
-					<div className="m-2 p-4 flex flex-col bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl">
+					{/* dashboard main content */}
+					<div className="p-1 md:p-3 w-full grid bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl" role="main">
 						<Outlet />
 					</div>
 				</main>

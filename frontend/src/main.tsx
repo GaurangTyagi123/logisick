@@ -9,6 +9,9 @@ import { ErrorBoundary } from 'react-error-boundary'
 import { lazy } from 'react';
 const ErrorFallback = lazy(() => import("@/pages/ErrorFallback.tsx"));
 
+/**
+ * @brief react query client configuration
+ */
 const queryClient = new QueryClient({
     defaultOptions: {
         queries: {
@@ -16,6 +19,10 @@ const queryClient = new QueryClient({
         },
     },
 });
+
+/**
+ * @brief root component
+ */
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
         <ReactQueryDevtools />

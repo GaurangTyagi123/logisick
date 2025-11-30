@@ -1,4 +1,3 @@
-// import useAuthStore from '@/stores/useAuthStore';
 import UserAvatar from "@/components/UserAvatar";
 import {
 	DropdownMenu,
@@ -11,13 +10,12 @@ import { Link, useLocation } from "react-router-dom";
 import Button from "@/components/ui/button";
 import type React from "react";
 import { useQueryClient } from "@tanstack/react-query";
-// import useAuthStore from '@/stores/useAuthStore';
 import useLogout from "@/hooks/user/useLogout";
 import { Separator } from "@/components/ui/separator";
 
 /**
  * @component a component to server as user image button on navbar or other place
- * @returns react dropdown component
+ * @author `Ravish Ranjan`
  */
 function UserButton() {
 	const queryClient = useQueryClient();
@@ -25,12 +23,12 @@ function UserButton() {
 		"user",
 	])?.user;
 	// const {logout } = useAuthStore();
-	const { logoutFn: logout, isPending: isLoggingOut } = useLogout();
+	const { logoutFn: logout, isLoggingOut } = useLogout();
 	const userButtonHidden = useLocation().pathname.startsWith("/profile");
 
 	/**
 	 * @brief function to handle logout request from user
-	 * @param e mouse click event
+	 * @param {React.MouseEvent<HTMLDivElement>} e mouse click event
 	 */
 	function handleLogout(e: React.MouseEvent<HTMLDivElement>) {
 		e.stopPropagation();
@@ -42,7 +40,7 @@ function UserButton() {
 			<DropdownMenuTrigger asChild>
 				<Button className="">
 					<UserAvatar
-						customSeed={user?.avatar || "12345678"}
+						customSeed={user?.avatar || user?.email || "12345678"}
 						className="w-8 h-8"
 					/>
 					<span className="hidden sm:flex">{user?.name}</span>
@@ -59,7 +57,7 @@ function UserButton() {
 					</DropdownMenuItem>
 				)}
 				<DropdownMenuItem asChild>
-					<Link to={"/dashboard"}>Your Organization</Link>
+					<Link to={"/dashboard"}>Dashboard</Link>
 				</DropdownMenuItem>
 				<DropdownMenuItem
 					onClick={handleLogout}

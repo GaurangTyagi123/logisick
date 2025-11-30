@@ -5,12 +5,12 @@ import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import UserAvatar from "./UserAvatar";
-import CustomTable from "./CustomTable";
+import UserAvatar from "@/components/UserAvatar";
+import CustomTable from "@/components/CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
 
 interface Employee {
 	[key: string]: string;
@@ -20,7 +20,11 @@ interface Employee {
 	avatar: string;
 }
 
-// unwinds employee data
+/**
+ * @brief function to deconstruct searched data on employee
+ * @param employees list of employee's data
+ * @author `Gaurang Tyagi`
+ */
 function deconstructEmployee(
 	employees: Array<{
 		data: {
@@ -59,8 +63,8 @@ function deconstructEmployee(
 }
 /**
  * @component Employee table displays all the employees belonging to an organization including the owner
- * @param orgid (string) id of the organization
- * @returns JSX
+ * @param {string} orgid id of the organization
+ * @author `Gaurang Tyagi`
  */
 function EmployeeTable({ orgid }: { orgid: string }) {
 	/**
@@ -80,7 +84,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	const {
 		data: employees,
 		count,
-		isPending: isGettingEmployees,
+		isGettingEmployees,
 		error,
 	} = useGetEmployees(orgid as string, page);
 
@@ -112,6 +116,7 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 			}
 			const controller = new AbortController();
 			controllerRef.current = controller;
+
 			if (query.length)
 				search({ orgid, query: query.trim(), controller });
 		},
@@ -124,6 +129,24 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	}, [handleSearch]) as ((searchTerm: string) => void) & {
 		cancel: () => void;
 	};
+
+	// Wrapper function to handle immediate clear
+	const handleSearchWrapper = useCallback(
+		(query: string) => {
+			// Immediately clear if empty (don't debounce)
+			if (query.trim() === "") {
+				debouncedSearch.cancel(); // Cancel any pending searches
+				setSearchResults(null);
+				if (controllerRef.current) {
+					controllerRef.current.abort();
+				}
+				return;
+			}
+			// Otherwise use debounced search
+			debouncedSearch(query);
+		},
+		[debouncedSearch]
+	);
 
 	// calculates and sets the totalPage number based on the employee data recieved from the server
 	useEffect(() => {
@@ -147,44 +170,42 @@ function EmployeeTable({ orgid }: { orgid: string }) {
 	}
 	const deconstructedEmployees = deconstructEmployee(employees);
 	return (
-		<div className="w-full">
-			<CustomTable<Record<string, string>>
-				title="Employees"
-				columns={[
-					{
-						key: "name",
-						header: "Name",
-						render: (_, row) => {
-							return (
-								<div className="flex gap-2 items-center">
-									<UserAvatar
-										className="w-10 h-10"
-										customSeed={row.avatar}
-									/>
-									<span className="hidden sm:flex">
-										{row?.name}
-									</span>
-								</div>
-							);
-						},
+		<CustomTable
+			title="Employees"
+			columns={[
+				{
+					key: "name",
+					header: "Name",
+					render: (_, row) => {
+						return (
+							<div className="flex gap-2 items-center">
+								<UserAvatar
+									className="w-10 h-10"
+									customSeed={row.avatar}
+								/>
+								<span className="overflow-hidden text-ellipsis whitespace-nowrap">
+									{row?.name}
+								</span>
+							</div>
+						);
 					},
-					{
-						key: "email",
-						header: "Email",
-					},
-					{
-						key: "role",
-						header: "Role",
-					},
-				]}
-				clientSide
-				data={searchResults ? searchResults : deconstructedEmployees}
-				currentPage={page}
-				totalPages={totalPages}
-				setPage={setPage}
-				onSearch={debouncedSearch}
-			/>
-		</div>
+				},
+				{
+					key: "email",
+					header: "Email",
+				},
+				{
+					key: "role",
+					header: "Role",
+				},
+			]}
+			clientSide
+			data={searchResults ? searchResults : deconstructedEmployees}
+			currentPage={page}
+			totalPages={totalPages}
+			setPage={setPage}
+			onSearch={handleSearchWrapper}
+		/>
 	);
 }
 

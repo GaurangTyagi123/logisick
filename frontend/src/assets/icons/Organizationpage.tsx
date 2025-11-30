@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// organization page icons
+
+// plus icon
 export function Plus(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -21,6 +24,7 @@ export function Plus(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// grid icons
 export function Grid(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -44,6 +48,7 @@ export function Grid(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// list icons
 export function List(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

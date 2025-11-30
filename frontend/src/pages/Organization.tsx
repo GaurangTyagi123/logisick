@@ -1,6 +1,5 @@
 import { Grid, List, Plus } from "@/assets/icons/Organizationpage";
 import Loading from "@/components/Loading";
-import OrganizationModal from "@/components/modals/org/CreateOrgModal";
 import Navbar from "@/components/Navbar";
 import { Badge } from "@/components/ui/badge";
 import Button from "@/components/ui/button";
@@ -15,8 +14,11 @@ import { H2, H3, Large, Muted, Small } from "@/components/ui/Typography";
 import useGetOrganizations from "@/hooks/organization/useGetOrganizations";
 import { useQueryClient } from "@tanstack/react-query";
 import clsx from "clsx";
-import { Suspense, useState } from "react";
+import { lazy, Suspense, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+const OrganizationModal = lazy(
+	() => import("@/components/modals/org/CreateOrgModal")
+);
 
 interface OrgCardProps {
 	org: {
@@ -29,6 +31,11 @@ interface OrgCardProps {
 	view: "grid" | "list";
 }
 
+/**
+ * @brief function get different classed based on role of user
+ * @param {string} role role of the user
+ * @author `Ravish Ranjan`
+ */
 function roleClasses(role: string): string {
 	switch (role) {
 		case "Owner":
@@ -44,34 +51,52 @@ function roleClasses(role: string): string {
 	}
 }
 
+/**
+ * @component component to be used as organization cards
+ * @author `Ravish Ranjan | Gaurang Tyagi`
+ */
 function OrgCard({ org, view }: OrgCardProps) {
 	return (
-		<Card className="bg-ls-bg-300 dark:bg-ls-bg-dark-800 hover:border-zinc-500 transition-colors duration-100">
-			<CardHeader className="flex items-center">
-				<CardTitle className="overflow-hidden text-ellipsis whitespace-nowrap">
+		<Card
+			className={clsx(
+				"bg-ls-bg-300 dark:bg-ls-bg-dark-800 min-h-40 flex flex-1 hover:border-zinc-500 transition-colors duration-100",
+				view === "list" ? "justify-between" : "justify-between"
+			)}
+		>
+			<CardHeader className="grid md:flex justify-between items-center">
+				<CardTitle className="overflow-hidden px-1 text-ellipsis whitespace-nowrap">
 					<Large>{org.name}</Large>
 				</CardTitle>
-				<Badge
-					className={clsx(
-						roleClasses(""),
-						"font-semibold shadow-md ml-auto"
+				<div className="flex gap-2">
+					<Badge
+						className={clsx(
+							roleClasses(""),
+							"font-semibold shadow-md"
+						)}
+					>
+						{org.role}
+					</Badge>
+					{view === "list" && (
+						<Button asChild variant={"outline"} size={"sm"}>
+							<Link to={`/dashboard/${org?.slug}`}>
+								Go to Workspace
+							</Link>
+						</Button>
 					)}
-				>
-					{org.role}
-				</Badge>
-				{view === "list" && (
-					<Button asChild variant={"link"}>
-						<Link to={`/dashboard/${org?.slug}`}>View Organization</Link>
-					</Button>
-				)}
+				</div>
 			</CardHeader>
 			<CardContent>
 				<Muted className="line-clamp-2">{org.description}</Muted>
 			</CardContent>
 			{view === "grid" && (
-				<CardFooter className="flex justify-end">
+				<CardFooter className="flex justify-center md:justify-end mt-auto">
 					<Button asChild>
-						<Link to={`/dashboard/${org?.slug}`}>View Organization</Link>
+						<Link
+							to={`/dashboard/${org?.slug}`}
+							className="w-full md:w-fit"
+						>
+							Go to Workspace
+						</Link>
 					</Button>
 				</CardFooter>
 			)}
@@ -79,8 +104,8 @@ function OrgCard({ org, view }: OrgCardProps) {
 	);
 }
 /**
- * @component component which displays all the organizations
- * @returns react component
+ * @component page to server as endpoint for organizations page
+ * @author `Ravish Ranjan`
  */
 function Organization() {
 	const [openOrgForm, setOpenOrgForm] = useState(false);
@@ -92,14 +117,15 @@ function Organization() {
 		| { user?: User }
 		| undefined;
 	const user = userData?.user;
-	const { data: organizations, isPending } = useGetOrganizations();
+	const { data: organizations, isGettingOrganizations } =
+		useGetOrganizations();
 
 	if (!user) navigate("/");
-	if (isPending) return <Loading />;
+	if (isGettingOrganizations) return <Loading fullscreen />;
 
 	return (
 		<>
-			<div className="w-full flex flex-col gap-3 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 relative">
+			<div className="w-full flex flex-col gap-3 p-1 md:p-3 min-h-dvh bg-ls-bg-200 dark:bg-ls-bg-dark-900 relative">
 				<Navbar />
 				<div className="flex flex-col sm:flex-row justify-between items-center king-julian md:px-4 gap-2 px-2">
 					<H2>Organizations</H2>
@@ -141,10 +167,10 @@ function Organization() {
 				{/* orgs display */}
 				<div
 					className={clsx(
-						"min-h-96 m-4 items-baseline outline-1 p-4 rounded-2xl grid gap-2 ",
+						"min-h-96 justify-between items-start outline-1 p-1 md:p-3 rounded-2xl grid gap-2",
 						view === "grid"
-							? `grid-cols-[repeat(auto-fit,minmax(320px,1fr))]`
-							: ""
+							? "grid-cols-[repeat(auto-fit,minmax(300px,1fr))]"
+							: "grid-cols-1"
 					)}
 				>
 					{organizations.length === 0 ? (

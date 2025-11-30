@@ -27,26 +27,21 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import BarcodeScannerModal from "./BarcodeScannerModal";
 import { Separator } from "@/components/ui/separator";
+import { unitConversion } from "@/utils/utilfn";
 
 interface AddItemModalProps {
 	open: boolean;
 	setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-function weightInGrams(unit: "MG" | "G" | "KG", weight?: number) {
-	if (!weight) return weight;
-	switch (unit) {
-		case "KG":
-			return weight * 1000;
-		case "MG":
-			return weight / 1000;
-		default:
-			return weight;
-	}
-}
-
+/**
+ * @component modal to add new item
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @author `Ravish Ranjan`
+ */
 function AddItemModal({ open, setOpen }: AddItemModalProps) {
-	const { isPending: isAddingItem, addItemFn } = useAddItem();
+	const { isAddingItem, addItemFn } = useAddItem();
 	const { orgSlug } = useParams();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
@@ -54,14 +49,16 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 	});
 	const [openScannerModal, setOpenScannerModal] = useState<boolean>(false);
 
-	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG">("KG");
+	const [weightUnit, setWeightUnit] = useState<
+		"MG" | "G" | "KG" | "ML" | "L" | "KL"
+	>("KG");
 
 	const [form, setForm] = useState<{
 		name: string;
 		organizationId: string;
 		costPrice: number;
 		sellingPrice: number;
-		quantify: number;
+		quantity: number;
 		inventoryCategory: string;
 		importance: "A" | "B" | "C";
 		importedOn: Date;
@@ -76,13 +73,16 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		organizationId: "",
 		costPrice: 0,
 		sellingPrice: 0,
-		quantify: 1,
+		quantity: 1,
 		inventoryCategory: "",
 		importance: "C",
 		importedOn: new Date(),
 		weight: 1,
 	});
 
+	/**
+	 * @brief function to handle add of item on submit
+	 */
 	const handleAddItem = () => {
 		if (form.name.trim() === "")
 			return toast.warning("Item should have a name", {
@@ -99,7 +99,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 				className: "toast",
 			});
 
-		if (form.quantify <= 0)
+		if (form.quantity <= 0)
 			return toast.warning("Quantity can't be 0", { className: "toast" });
 
 		if (form.inventoryCategory.trim() === "")
@@ -131,7 +131,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 			organizationId: string;
 			costPrice: number;
 			sellingPrice: number;
-			quantify: number;
+			quantity: number;
 			inventoryCategory: string;
 			importance: "A" | "B" | "C";
 			importedOn: string;
@@ -146,7 +146,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 		submitForm.importedOn = form.importedOn.toISOString();
 		submitForm.expiresOn = form.expiresOn?.toISOString();
 		submitForm.organizationId = orgData._id;
-		submitForm.weight = weightInGrams(weightUnit, form.weight);
+		submitForm.weight = unitConversion(weightUnit, form.weight);
 		submitForm.name = submitForm.name.trim();
 		submitForm.inventoryCategory = submitForm.inventoryCategory.trim();
 		submitForm.colour = submitForm.colour?.trim();
@@ -158,7 +158,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-lg max-w-screen">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Add new item</CardTitle>
 					<Button
@@ -168,7 +168,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 						<Close />
 					</Button>
 				</CardHeader>
-				<CardContent className="grid gap-2 max-h-80 overflow-auto">
+				<CardContent className="grid gap-2 max-h-80 overflow-auto sm:px-1">
 					<Button
 						onClick={() => setOpenScannerModal(true)}
 						variant={"outline"}
@@ -178,28 +178,32 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 						<Scan className="h-5 w-5" />
 					</Button>
 					<Separator />
-					<div className="grid gap-2 grid-cols-2">
+					<div className="grid gap-2 grid-cols-1 md:grid-cols-2">
 						<Label htmlFor="name" className="grid">
-							<span>Name *</span>
+							<span id="name">Name *</span>
 							<Input
 								id="name"
 								name="name"
 								type="text"
 								value={form.name}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({ ...form, name: e.target.value })
 								}
 								placeholder="Enter item's name"
 								required
+								aria-describedby="name"
+								aria-required="true"
 							/>
 						</Label>
 						<Label htmlFor="inventory-category" className="grid">
-							<span>Inventory Category *</span>
+							<span id="category">Inventory Category *</span>
 							<Input
 								id="inventory-category"
 								name="inventoryCategory"
 								type="text"
 								value={form.inventoryCategory}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
@@ -208,19 +212,23 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item's inventory category"
 								required
+								aria-required="true"
+								aria-describedby="category"
 							/>
 						</Label>
 					</div>
 					{/* costs */}
-					<div className="grid grid-cols-2 gap-2">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 						<Label htmlFor="costprice" className="grid">
-							<span>Cost Price *</span>
+							<span id="cost-price">Cost Price *</span>
 							<Input
 								id="costprice"
 								name="costPrice"
 								type="number"
 								value={form.costPrice}
 								min={0}
+								onFocus={(e) => e.target.select()}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
@@ -229,15 +237,20 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item cost price"
 								required
+								aria-required="true"
+								aria-describedby="cost-price"
+								
 							/>
 						</Label>
 						<Label htmlFor="sellingprice" className="grid">
-							<span>Selling Price *</span>
+							<span id="selling price">Selling Price *</span>
 							<Input
 								id="sellingprice"
 								name="sellingPrice"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								value={form.sellingPrice}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
@@ -246,37 +259,47 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								}
 								placeholder="Enter item selling price"
 								required
+								aria-required="true"
+								aria-describedby="selling price"
+
 							/>
 						</Label>
 					</div>
-					<div className="grid grid-cols-2 gap-2">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 						<Label htmlFor="quantity" className="grid">
-							<span>Quantity *</span>
+							<span id="quantity">Quantity *</span>
 							<Input
 								id="quantity"
 								name="quantity"
 								type="number"
-								value={form.quantify}
+								onFocus={(e) => e.target.select()}
+								value={form.quantity}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
-										quantify: Number(e.target.value),
+										quantity: Number(e.target.value),
 									})
 								}
 								placeholder="Enter item quantity"
 								required
+								aria-required="true"
+								aria-describedby="quantity"
+
 							/>
 						</Label>
 						{/* weight */}
 						<div className="flex gap-2 items-end w-full">
 							<Label htmlFor="weight" className="grid w-full">
-								<span>Weight</span>
+								<span id="weight">Weight</span>
 								<Input
 									id="weight"
 									name="weight"
 									type="number"
+									onFocus={(e) => e.target.select()}
 									min={1}
 									value={form.weight}
+									className="text-sm md:text-md"
 									onChange={(e) =>
 										setForm({
 											...form,
@@ -284,6 +307,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 										})
 									}
 									placeholder="Enter item's weight"
+									aria-describedby="weight"
 								/>
 							</Label>
 							<DropdownMenu>
@@ -295,22 +319,25 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 								<DropdownMenuContent>
 									<DropdownMenuRadioGroup
 										defaultValue={weightUnit}
+										className="text-sm md:text-md"
 										onValueChange={(value) =>
 											setWeightUnit(
-												value as "KG" | "MG" | "G"
+												value as "KG" | "MG" | "G" | "ML" | "L" | "KL"
 											)
 										}
 									>
-										{["KG", "G", "MG"].map((unit, i) => {
-											return (
-												<DropdownMenuRadioItem
-													key={i}
-													value={unit}
-												>
-													{unit}
-												</DropdownMenuRadioItem>
-											);
-										})}
+										{["KG", "G", "MG", "ML", "L", "KL"].map(
+											(unit, i) => {
+												return (
+													<DropdownMenuRadioItem
+														key={i}
+														value={unit}
+													>
+														{unit}
+													</DropdownMenuRadioItem>
+												);
+											}
+										)}
 									</DropdownMenuRadioGroup>
 								</DropdownMenuContent>
 							</DropdownMenu>
@@ -318,7 +345,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 					</div>
 					<Label htmlFor="importance" className="grid">
 						<span>Importance *</span>
-						<div className="grid grid-cols-3 gap-1">
+						<div className="grid grid-cols-1 md:grid-cols-3 gap-1">
 							<Button
 								onClick={() =>
 									setForm({ ...form, importance: "A" })
@@ -361,9 +388,9 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 						</div>
 					</Label>
 					{/* dates */}
-					<div className="grid grid-cols-2 gap-2">
+					<div className="grid grid-cols-1 md:grid-cols-2 gap-2">
 						<Label htmlFor="importedon" className="grid">
-							<span>Imported On *</span>
+							<span id="import-date">Imported On *</span>
 							<Input
 								id="importedon"
 								name="importedOn"
@@ -384,12 +411,14 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									});
 								}}
 								placeholder="Enter item's imported date"
-								className="w-full"
+								className="w-full text-sm md:text-md"
 								required
+								aria-required="true"
+								aria-describedby="import-date"
 							/>
 						</Label>
 						<Label htmlFor="expireson" className="grid">
-							<span>Expires On</span>
+							<span id="expire-date">Expires On</span>
 							<Input
 								id="expireson"
 								name="expiresOn"
@@ -412,13 +441,14 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									});
 								}}
 								placeholder="Enter item's expiry date"
-								className="w-full"
+								className="w-full text-sm md:text-md"
+								aria-describedby="expire-date"
 							/>
 						</Label>
 					</div>
-					<div className="grid gap-2 grid-cols-2">
+					<div className="grid gap-2 grid-cols-1 md:grid-cols-2">
 						<Label htmlFor="colour" className="grid">
-							<span>Colour</span>
+							<span id="colour">Colour</span>
 							<Input
 								id="colour"
 								name="colour"
@@ -428,31 +458,37 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									setForm({ ...form, colour: e.target.value })
 								}
 								placeholder="Enter item's colour"
+								className="text-sm md:text-md"
+								aria-describedby="colour"
 							/>
 						</Label>
 						<Label htmlFor="origin" className="grid">
-							<span>Origin Place</span>
+							<span id="origin">Origin Place</span>
 							<Input
 								id="origin"
 								name="origin"
 								type="text"
 								value={form.origin}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({ ...form, origin: e.target.value })
 								}
 								placeholder="Enter item's origin place"
+								aria-describedby="origin"
 							/>
 						</Label>
 					</div>
-					<div className="grid gap-2 grid-cols-2">
+					<div className="grid gap-2 grid-cols-1 md:grid-cols-2">
 						<Label htmlFor="reorderlevel" className="grid">
-							<span>Re-Order Level</span>
+							<span id="order-level">Re-Order Level</span>
 							<Input
 								id="reorderlevel"
 								name="reorderLevel"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								min={0}
 								value={form.reorderLevel}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
@@ -460,16 +496,19 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									})
 								}
 								placeholder="Enter item's re-order level"
+								aria-describedby="order-level"
 							/>
 						</Label>
 						<Label htmlFor="batchnumber" className="grid">
-							<span>Batch Number</span>
+							<span id="batch-number">Batch Number</span>
 							<Input
 								id="batchnumber"
 								name="batchNumber"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								min={0}
 								value={form.batchNumber}
+								className="text-sm md:text-md"
 								onChange={(e) =>
 									setForm({
 										...form,
@@ -477,6 +516,7 @@ function AddItemModal({ open, setOpen }: AddItemModalProps) {
 									})
 								}
 								placeholder="Enter item's batch number"
+								aria-describedby="batch-number"
 							/>
 						</Label>
 					</div>

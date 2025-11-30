@@ -7,6 +7,7 @@ import Navbar from "@/components/Navbar";
 /**
  * @component authentication page for users
  * @returns page with selected authentcation for ("login" | "register")
+ * @author `Ravish Ranjan`
  */
 function Authenticate() {
 	const [formType, setFormType] = useState<"login" | "register">("login");

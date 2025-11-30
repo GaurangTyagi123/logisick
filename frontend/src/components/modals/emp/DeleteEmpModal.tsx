@@ -35,6 +35,16 @@ interface DeleteEmpProps {
 	isPending: boolean;
 }
 
+/**
+ * @component modal to delete employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Employee-Data} empDate employee data { _id:string, name:string, email:string }
+ * @param {string} orgid organization id
+ * @param {Function} deleteEmp delete employee function
+ * @param {boolean} isPending pending state for delete employee function
+ * @author `Ravish Ranjan`
+ */
 function DeleteEmpModal({
 	open,
 	setOpen,
@@ -47,7 +57,7 @@ function DeleteEmpModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Remove Employee {empData.name}</CardTitle>
 					<Button
@@ -64,7 +74,7 @@ function DeleteEmpModal({
 						htmlFor="removeemp"
 						className="grid"
 					>
-						<span>
+						<span id="employee-name">
 							Enter "
 							<span className="text-red-500">
 								remove {empData.name}
@@ -79,6 +89,8 @@ function DeleteEmpModal({
 							required
 							className="text-sm md:text-md"
 							onChange={(e) => setText(e.target.value)}
+							aria-describedby="employee-name"
+							aria-required="true"
 						/>
 					</Label>
 				</CardContent>

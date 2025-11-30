@@ -15,22 +15,20 @@ import {
 import { Menu } from "@/assets/icons/HamBurger";
 import { BookOpen, Star } from "@/assets/icons/Homepage";
 
+// information for links to put on the page
 const tabLinks: { path: string; name: string }[] = [
-	{ path: "#", name: "Products" },
-	{ path: "#", name: "Community" },
+	{ path: "/dashboard", name: "Organizations" },
 	{ path: "/documentation", name: "Documentation" },
-	{ path: "#", name: "Pricing" },
-	{ path: "#", name: "Contacts" },
-	{ path: "#", name: "Links" },
+	{ path: "/profile", name: "Profile" },
 ];
 
 /**
- * @component a page to be used as home page of app
- * @returns page/react component
+ * @component page to server as endpoint for homepage
+ * @author `Ravish Ranjan`
  */
 function Home() {
 	return (
-		<div className="w-full px-4 grid gap-3 h-auto bg-ls-bg-200 dark:bg-ls-bg-dark-900">
+		<div className="w-full px-2 md:px-4 grid gap-3 h-auto bg-ls-bg-200 dark:bg-ls-bg-dark-900">
 			{/* topbar */}
 			<Navbar hide={{ logo: true }} />
 			{/* tabs bar */}
@@ -39,7 +37,7 @@ function Home() {
 					<BigHeading />
 					{/* option menu in small screens */}
 					<DropdownMenu>
-						<DropdownMenuTrigger className="md:hidden ml-auto ">
+						<DropdownMenuTrigger className="lg:hidden ml-auto ">
 							<Button asChild className="w-full">
 								<Menu />
 							</Button>
@@ -47,14 +45,14 @@ function Home() {
 						<DropdownMenuContent>
 							{tabLinks.map((link, i) => (
 								<DropdownMenuItem key={i}>
-									<Link to={link.path} >{link.name}</Link>
+									<Link to={link.path}>{link.name}</Link>
 								</DropdownMenuItem>
 							))}
 						</DropdownMenuContent>
 					</DropdownMenu>
 				</div>
 				{/* tab-bar in large screens */}
-				<div className="hidden gap-2 justify-end mr-5 md:flex">
+				<div className="hidden gap-2 justify-end mr-5 lg:flex">
 					{tabLinks.map((link, i) => (
 						<Link to={link.path} key={i}>
 							<Button
@@ -69,7 +67,7 @@ function Home() {
 			</div>
 			<Separator className="mt-0 md:mt-6" />
 			{/* hero */}
-			<main className="md:mx-10 p-2 text-black">
+			<main className="md:mx-10 p-1 md:p-2 text-black">
 				{/* hero */}
 				<div
 					className="w-full min-h-120 flex p-4 flex-col items-center lg:flex-row justify-center bg-white dark:bg-zinc-200"
@@ -83,12 +81,12 @@ function Home() {
 							Streamline Your Supply Chain
 						</h2>
 						<p
-							className="text-xl text-balance text-center lg:text-start"
+							className="text-xl text-balance text-center lg:text-start jet-brains"
 							style={{ fontFamily: "TimesNewRoman" }}
 						>
 							Track, manage and analyze your inventory with ease.
 						</p>
-						<div className="flex gap-2 justify-center lg:justify-start">
+						<div className="flex flex-wrap gap-2 justify-center lg:justify-start">
 							<Link to={"/dashboard"}>
 								<Button className="shadow-xl text-black bg-ls-sec-500 hover:bg-ls-sec-600  dark:bg-ls-sec-500">
 									<Star />

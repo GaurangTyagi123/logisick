@@ -28,11 +28,11 @@ interface OTPProps {
 
 /**
  * @component a modal for profilepage which prompts user to enter otp when user want to verify email
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @param otp a string state for user input of otp
- * @param setOtp a setter function for user input of otp
- * @returns gives a components as a otp entering modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @param {string} otp a string state for user input of otp
+ * @param {Function} setOtp a setter function for user input of otp
+ * @author `Ravish Ranjan`
  */
 function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 	const { verifyEmail, isVerifingEmail } = useAuthStore();
@@ -58,7 +58,7 @@ function OtpModal({ otp, open, setOpen, setOtp }: OTPProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Enter OTP</CardTitle>
 					<Button

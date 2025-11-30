@@ -1,9 +1,10 @@
-import catchAsync from "../utils/catchAsync";
-import AppError from "../utils/appError";
-import jwt from "jsonwebtoken";
-import "../utils/oauth.setup";
+import catchAsync from '../utils/catchAsync';
+import AppError from '../utils/appError';
+import jwt from 'jsonwebtoken';
+import '../utils/oauth.setup';
+import User from '../models/user.model';
 
-import type { StringValue } from "ms";
+import type { StringValue } from 'ms';
 
 /**
  * @brief Controller Function to handle post-Google OAuth successful authentication, generate a JWT, set it as an HTTP-only cookie, and redirect the user to the frontend URL.
@@ -30,37 +31,34 @@ import type { StringValue } from "ms";
  * @author `Gaurang Tyagi`
  */
 const googleSignup = catchAsync(
-	async (
-		req: ExpressTypes.Request,
-		res: ExpressTypes.Response,
-		next: ExpressTypes.NextFn
-	) => {
-		if (!req.user) return next(new AppError("There was an error", 400));
-		const user = req.user as UserType;
-		const token = jwt.sign(
-			{ id: user._id },
-			process.env.JWT_SIGN as string,
-			{
-				expiresIn: process.env.JWT_REFRESH_EXPIRE_TIME as StringValue,
-			}
-		);
-
-		const cookieOptions: cookieOptionsType = {
-			httpOnly: true,
-			secure: process.env.NODE_ENV === "production",
-			maxAge: new Date(
-				Date.now() +
-					parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
-						24 *
-						60 *
-						60 *
-						1000
-			),
-		};
-		res.cookie("jwt", token, cookieOptions);
-
-		res.redirect(process.env.FRONTEND_URL as string);
-	}
+    async (
+        req: ExpressTypes.UserRequest,
+        res: ExpressTypes.Response,
+        next: ExpressTypes.NextFn
+    ) => {
+        if (!req.user) return next(new AppError('There was an error', 400));
+        const user = req.user as UserType;
+        const token = jwt.sign(
+            { id: user._id },
+            process.env.JWT_SIGN as string,
+            {
+                expiresIn: process.env.JWT_REFRESH_EXPIRE_TIME as StringValue,
+            }
+        );
+        await User.findByIdAndUpdate(req.user._id, { refreshToken: token });
+        const cookieOptions: cookieOptionsType = {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge:
+                parseInt(process.env.COOKIE_EXPIRE_TIME as string) *
+                24 *
+                60 *
+                60 *
+                1000,
+        };
+        res.cookie('jwt', token, cookieOptions);
+        res.redirect(process.env.FRONTEND_URL as string);
+    }
 );
 
 export default googleSignup;

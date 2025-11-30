@@ -1,9 +1,7 @@
 import axinstance from "@/utils/axios";
 import { isAxiosError } from "axios";
 import { toast } from "react-toastify";
-// import { userDb } from "@/utils/db";
 import { create } from "zustand";
-
 
 interface AuthProps {
 	isVerifingEmail: boolean;
@@ -17,7 +15,8 @@ interface AuthProps {
 /**
  * @brief function to handle error for async API class to server or system error
  * @param error instance of error
- * @param message custom message for toast to user
+ * @param {string} message custom message for toast to user
+ * @author `Ravish Ranjan`
  */
 function handleError(error: unknown, message: string) {
 	if (isAxiosError(error)) {
@@ -30,12 +29,24 @@ function handleError(error: unknown, message: string) {
 }
 
 /**
- * @brief hook to handle user authentication functions 
+ * @brief hook to handle user authentication functions
+ * @author `Ravish Ranjan`
  */
 const useAuthStore = create<AuthProps>((set) => ({
 	isVerifingEmail: false, // boolean value to tell if verifying email request is processing
 	isDeleteingUser: false, // boolean value to tell if deleting userrequest is processing
-	
+	/**
+	 * @brief api request to verify email of user
+	 * @param form otp form
+	 * ```
+	 * {
+	 * 		otp:string
+	 * }
+	 * ```
+	 * @effect toast on success/failure
+	 * @returns {string} message of "already" | "sent" | "verified"
+	 * @author `Ravish Ranjan`
+	 */
 	verifyEmail: async (form) => {
 		try {
 			set({ isVerifingEmail: true });
@@ -69,12 +80,13 @@ const useAuthStore = create<AuthProps>((set) => ({
 	/**
 	 * @brief async function to request api to delete user
 	 * @effect sets user to null
+	 * @author `Ravish Ranjan`
 	 */
 	deleteUser: async () => {
 		try {
 			set({ isDeleteingUser: true });
 			await axinstance.delete("/v1/users/updateMe");
-			toast.success("User deleted successfully",{className:"toast"})
+			toast.success("User deleted successfully", { className: "toast" });
 		} catch (error) {
 			handleError(error, "Error deleting user");
 		} finally {

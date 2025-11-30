@@ -1,5 +1,6 @@
 import { model, Schema, type Model } from 'mongoose';
 import MongooseDelete from 'mongoose-delete';
+import { redisClient } from '../app';
 
 export interface ItemDocument extends ItemType, Document {
     delete(): Promise<ItemDocument>; // soft delete
@@ -84,7 +85,7 @@ itemSchema.plugin(MongooseDelete, {
 });
 
 /**
- * @brief functiont to genereate sku on save of document
+ * @brief function to genereate sku on save of document
  * @author `Gaurang Tyagi`` 
  */
 itemSchema.pre('save', function (this: ItemDocument, next) {
@@ -97,6 +98,11 @@ itemSchema.pre('save', function (this: ItemDocument, next) {
     this.SKU = SKU;
     next();
 });
+itemSchema.post(['save', 'findOneAndDelete','findOneAndUpdate', 'deleteOne'], async function (doc: ItemDocument) {
+    if (redisClient.isReady) {
+        await redisClient.del(`organization-${doc.organizationId}`)
+    }
+})
 
 const itemModel = model<ItemDocument, ItemModel>('Item', itemSchema);
 export default itemModel;

@@ -1,5 +1,8 @@
 import type { SVGProps } from "react";
 
+// checkron icons
+
+// chevron first icon
 export function ChevronFirst(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -21,6 +24,7 @@ export function ChevronFirst(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// chevron last icon
 export function ChevronLast(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -42,6 +46,7 @@ export function ChevronLast(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// chevron left icon
 export function ChevronLeft(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -63,6 +68,7 @@ export function ChevronLeft(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// chevron right icon
 export function ChevronRight(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -84,6 +90,7 @@ export function ChevronRight(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// chevron up icon
 export function ChevronUp(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg
@@ -106,6 +113,7 @@ export function ChevronUp(props: SVGProps<SVGSVGElement>) {
 	);
 }
 
+// chevron down icon
 export function ChevronDown(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

@@ -1,15 +1,16 @@
-import { Link } from "react-router-dom";
-
+import { useNavigate } from "react-router-dom";
 
 import Navbar from "@/components/Navbar";
 import Button from "@/components/ui/button";
 import { H1, Large } from "@/components/ui/Typography";
+import { PanelLeftIcon } from "@/assets/icons/Docspage";
 
 /**
- * @component a page to be used as a fallback page where thier is no path defined
- * @returns page/react component
+ * @component page to server as endpoint for error fallback for whole website
+ * @author `Gaurang Tyagi`
  */
 function ErrorFallback() {
+	const navigate = useNavigate();
 	return (
 		<div className="h-screen w-full flex flex-col justify-between items-center px-4 bg-ls-bg-300 dark:bg-ls-bg-dark-900">
 			<Navbar hide={{ userButton: true, loginRegisterButton: true }} />
@@ -19,8 +20,13 @@ function ErrorFallback() {
 						asChild
 						className="my-4 md:mr-auto col-span-1"
 						variant={"outline"}
+						onClick={() => navigate("/", { replace: true })}
 					>
-						<Link to={"/"}>Go to Home Page</Link>
+						Go to Home Page
+					</Button>
+					<Button variant={"outline"} onClick={() => navigate(-1)}>
+						<PanelLeftIcon />{" "}
+						<span className="hidden sm:flex">Go Back</span>
 					</Button>
 					<Button onClick={() => window.location.reload()}>
 						Check Again

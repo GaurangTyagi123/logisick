@@ -11,7 +11,8 @@
 		"test": "cd ./backend && npm run test && cd ../",
 		"build": "npm run build --prefix frontend && npm run build --prefix backend",
 		"preinstall": "npm install --prefix backend && npm install --prefix frontend",
-		"start": "npm run start --prefix backend"
+		"start": "npm run start --prefix backend",
+		"deploy": "powershell -ExecutionPolicy Bypass -File ./deploy.ps1"
 	},
 	"repository": {
 		"type": "git",

@@ -15,6 +15,12 @@ import { Input } from "@/components/ui/input";
 import useSendInvite from "@/hooks/emp/useSendInvite";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
+/**
+ * @component modal to send invitation to new employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @author `Ravish Ranjan`
+ */
 function InviteEmpModal({
 	open,
 	setOpen,
@@ -27,7 +33,7 @@ function InviteEmpModal({
 		role: "Admin" | "Manager" | "Staff";
 	}>({ empEmail: "", role: "Staff" });
 
-	const { sendInvitation, isPending } = useSendInvite();
+	const { sendInvitation, isSendingInvite } = useSendInvite();
 
 	/**
 	 * @brief async function to handle the user request to send invite
@@ -47,7 +53,7 @@ function InviteEmpModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Send Invite</CardTitle>
 					<Button
@@ -59,7 +65,7 @@ function InviteEmpModal({
 				</CardHeader>
 				<CardContent className="grid gap-3">
 					<Label title="New Employee's Email" className="grid">
-						<span>Employee's email</span>
+						<span id="employee-email">Employee's email</span>
 						<Input
 							placeholder="Enter new employee's email"
 							type="email"
@@ -73,6 +79,8 @@ function InviteEmpModal({
 									empEmail: e.target.value.trim(),
 								})
 							}
+							aria-describedby="employee-email"
+							aria-required="true"
 						/>
 					</Label>
 					<Label title="New Employee's role" className="grid">
@@ -122,7 +130,7 @@ function InviteEmpModal({
 						onClick={handleSendInvite}
 						className="w-full"
 						disabled={
-							isPending ||
+							isSendingInvite ||
 							form.empEmail.trim() == "" ||
 							!["Admin", "Manager", "Staff"].includes(
 								form.role.trim()

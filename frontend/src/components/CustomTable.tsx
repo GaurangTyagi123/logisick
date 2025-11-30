@@ -1,8 +1,7 @@
-import { useEffect, useState, useMemo, type ReactNode } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Large, Muted } from "./ui/Typography";
-import { Separator } from "./ui/separator";
-import { Input } from "./ui/input";
+import { useEffect, useState, useMemo, type ReactNode, useRef } from "react";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { H3, H4, Muted } from "@/components/ui/Typography";
+import { Input } from "@/components/ui/input";
 import {
 	DropdownMenu,
 	DropdownMenuContent,
@@ -11,8 +10,8 @@ import {
 	DropdownMenuCheckboxItem,
 	DropdownMenuLabel,
 	DropdownMenuSeparator,
-} from "./ui/dropdown-menu";
-import Button from "./ui/button";
+} from "@/components/ui/dropdown-menu";
+import Button from "@/components/ui/button";
 import { Desc, Incr, Sort } from "@/assets/icons/Table";
 import {
 	Table,
@@ -21,8 +20,9 @@ import {
 	TableHead,
 	TableHeader,
 	TableRow,
-} from "./ui/table";
-import Pagination from "./Pagination";
+} from "@/components/ui/table";
+import Pagination from "@/components/Pagination";
+import { Separator } from "@/components/ui/separator";
 
 export interface Column<RowType> {
 	key: string | keyof RowType;
@@ -61,7 +61,26 @@ interface CustomTableProps<RowType> {
 	// If true, sorting/filtering/searching happens client-side
 	clientSide?: boolean;
 }
-function CustomTable<RowType extends Record<string, string | number | Date>>({
+
+/**
+ * @objective customizable table to be used every place where a table is needed
+ * @param {string} title title to put on top of the title
+ * @param {ReactNode} titleIcon icon to display with title
+ * @param {RowType[]} data data to display in the table
+ * @param {Column<RowType>[]} columns list of column and its type to display data
+ * @param {FilterOption<RowType>[]} filterOptions options to filter the data with
+ * @param {number} currentPage current page 
+ * @param {number} totalPages total no. of pages on data
+ * @param {Function} setPage function to change current page on the data
+ * @param {Function} onSearch function to apply searching to the data
+ * @param {Function} onSort function to apply sorting to the data
+ * @param {Function} onFilter function to apply filters to the data
+ * @param {boolean} clientSide state whether the table should be manages server side or client side 
+ * @author `Ravish Ranjan`
+ */
+function CustomTable<
+	RowType extends Record<string, string | number | Date | boolean | object>
+>({
 	title,
 	titleIcon,
 	data,
@@ -81,6 +100,12 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 	const [filters, setFilters] = useState<Record<string, (string | number)[]>>(
 		{}
 	);
+	const searchRef = useRef<HTMLInputElement>(null);
+
+	// Set focus on search bar when the page renders for the first time	
+	useEffect(() => {
+		searchRef?.current?.focus();
+	},[])
 
 	// Trigger search callback
 	useEffect(() => {
@@ -106,6 +131,10 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 		}
 	}, [filters, onFilter, clientSide, setPage]);
 
+	/**
+	 * @brief function to sort data with
+	 * @param column column to sort the data with
+	 */
 	const handleSort = (column: keyof RowType) => {
 		if (sortColumn === column) {
 			// Cycle through: asc -> desc -> null
@@ -121,6 +150,9 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 		}
 	};
 
+	/**
+	 * @brief function to change the sorting order (increasing | decreasing)
+	 */
 	const handleChangeSortOrder = () => {
 		switch (sortOrder) {
 			case "asc":
@@ -137,6 +169,11 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 		}
 	};
 
+	/**
+	 * @brief function to handle filtering of data in table
+	 * @param filterKey column key to filter data with
+	 * @param value the value by which t o filter
+	 */
 	const handleFilterChange = (filterKey: string, value: string | number) => {
 		setFilters((prev) => {
 			const currentValues = prev[filterKey] || [];
@@ -153,6 +190,9 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 		});
 	};
 
+	/**
+	 * @brief function to clear the filter on the data
+	 */
 	const clearFilters = () => {
 		setFilters({});
 	};
@@ -162,18 +202,6 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 		if (!clientSide) return data;
 
 		let result = [...data];
-
-		// Search
-		// if (searchStr) {
-		// 	const searchLower = searchStr.toLowerCase();
-		// 	result = result.filter((row) =>
-		// 		columns.some((col) => {
-		// 			if (col.searchable === false) return false;
-		// 			const value = row[col.key];
-		// 			return String(value).toLowerCase().includes(searchLower);
-		// 		})
-		// 	);
-		// }
 
 		// Filter
 		Object.entries(filters).forEach(([key, values]) => {
@@ -200,80 +228,90 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 		return result;
 	}, [data, filters, sortColumn, sortOrder, clientSide]);
 
+	// variable to count active filters
 	const activeFilterCount = Object.values(filters).reduce(
 		(sum, arr) => sum + arr.length,
 		0
 	);
 
 	return (
-		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800 w-full">
-			<CardHeader className="flex flex-row flex-wrap items-center justify-between space-y-0">
+		<Card className="bg-ls-bg-200 dark:bg-ls-bg-dark-800 w-full overflow-y-auto p-1 md:p-2">
+			{/* Top bar items */}
+			<CardHeader className="flex flex-row flex-wrap items-center justify-center md:justify-between space-y-0 px-2">
 				<div className="flex items-center gap-2">
 					{titleIcon}
-					<Large>{title}</Large>
+					<H4>{title}</H4>
 				</div>
-				<div className="flex gap-2 flex-wrap">
+				<div className="grid grid-cols-1 w-full sm:w-fit sm:grid-cols-2 gap-2">
 					{/* Search input */}
 					<Input
+						ref={searchRef}
 						value={searchStr || ""}
 						onChange={(e) => setSearchStr(e.target.value)}
-						type="text"
+						type="search"
 						placeholder="Search..."
-						className="w-full md:w-64"
+						className="text-xs md:text-sm bg-white dark:bg-ls-bg-dark-800"
+						aria-autocomplete="list"
+						aria-live="polite"
 					/>
 
 					{/* Sort by column */}
-					<DropdownMenu>
-						<DropdownMenuTrigger asChild>
-							<Button variant="outline">
-								Sort by:{" "}
-								{sortColumn ? String(sortColumn) : "None"}
-							</Button>
-						</DropdownMenuTrigger>
-						<DropdownMenuContent className="max-h-48 overflow-y-auto">
-							<DropdownMenuItem
-								className="cursor-pointer"
-								onClick={() => {
-									setSortColumn(null);
-									setSortOrder(null);
-								}}
-							>
-								None
-							</DropdownMenuItem>
-							<DropdownMenuSeparator />
-							{columns
-								.filter((col) => col.sortable !== false)
-								.map((col) => (
-									<DropdownMenuItem
-										key={String(col.key)}
-										className="cursor-pointer"
-										onClick={() => handleSort(col.key)}
-									>
-										{col.header}
-										{sortColumn === col.key && (
-											<span className="ml-2">
-												{sortOrder === "asc"
-													? "↑"
-													: "↓"}
-											</span>
-										)}
-									</DropdownMenuItem>
-								))}
-						</DropdownMenuContent>
-					</DropdownMenu>
+					<div className="flex gap-1 w-full">
+						{/* sort by dropdown */}
+						<DropdownMenu>
+							<DropdownMenuTrigger asChild>
+								<Button
+									variant="outline"
+									className="text-xs md:text-sm flex-1"
+								>
+									Sort by:{" "}
+									{sortColumn ? String(sortColumn) : "None"}
+								</Button>
+							</DropdownMenuTrigger>
+							<DropdownMenuContent className="max-h-48 overflow-y-auto">
+								<DropdownMenuItem
+									className="cursor-pointer"
+									onClick={() => {
+										setSortColumn(null);
+										setSortOrder(null);
+									}}
+								>
+									None
+								</DropdownMenuItem>
+								<DropdownMenuSeparator />
+								{columns
+									.filter((col) => col.sortable !== false)
+									.map((col) => (
+										<DropdownMenuItem
+											key={String(col.key)}
+											className="cursor-pointer"
+											onClick={() => handleSort(col.key)}
+										>
+											{col.header}
+											{sortColumn === col.key && (
+												<span className="ml-2">
+													{sortOrder === "asc"
+														? "↑"
+														: "↓"}
+												</span>
+											)}
+										</DropdownMenuItem>
+									))}
+							</DropdownMenuContent>
+						</DropdownMenu>
 
-					{/* Sort order toggle */}
-					<Button
-						onClick={handleChangeSortOrder}
-						title={sortOrder || "no order"}
-						variant="outline"
-						disabled={!sortColumn}
-					>
-						{sortOrder === "asc" && <Incr />}
-						{sortOrder === "desc" && <Desc />}
-						{sortOrder === null && <Sort />}
-					</Button>
-
+						{/* Sort order toggle */}
+						<Button
+							onClick={handleChangeSortOrder}
+							title={sortOrder || "no order"}
+							variant="outline"
+							disabled={!sortColumn}
+						>
+							{sortOrder === "asc" && <Incr />}
+							{sortOrder === "desc" && <Desc />}
+							{sortOrder === null && <Sort />}
+						</Button>
+					</div>
 					{/* Filter */}
 					{filterOptions.length > 0 && (
 						<DropdownMenu>
@@ -325,44 +363,44 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 					)}
 				</div>
 			</CardHeader>
-
-			<Separator />
-
-			<CardContent className="w-full">
+			<CardContent className="overflow-x-auto scrollbar px-1 md:px-2">
 				{(clientSide ? processedData : data).length === 0 ? (
-					<div className="h-64 w-full grid place-items-center gap-3">
+					<div className="h-96 w-full grid place-items-center gap-3">
 						<H3>No Data</H3>
 					</div>
 				) : (
-					<Table className="overflow-x-scroll w-full">
-						<TableHeader>
+					<Table className="min-h-64 w-full" aria-label="table">
+						<TableHeader className="w-full">
 							<TableRow>
 								{columns.map((col) => (
-									<TableHead key={String(col.key)}>
+									<TableHead
+										key={String(col.key)}
+									// className="overflow-hidden text-ellipsis whitespace-nowrap"
+									>
 										{col.header}
 									</TableHead>
 								))}
 							</TableRow>
 						</TableHeader>
-						<TableBody className="w-full overflow-x-auto">
+						<TableBody className="w-full">
 							{(clientSide ? processedData : data).map(
 								(row, index) => (
 									<TableRow key={index}>
 										{columns.map((col) => (
 											<TableCell
 												key={String(col.key) + index}
-												className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10"
+												className="overflow-hidden max-w-60 text-ellipsis whitespace-nowrap items-center text-xs md:text-sm"
 											>
 												{col.render
 													? col.render(
-															row[col.key],
-															row
-													  )
+														row[col.key],
+														row
+													)
 													: (row[
-															col.key
-													  ] as React.ReactNode) || (
-															<Muted>NA</Muted>
-													  )}
+														col.key
+													] as React.ReactNode) || (
+														<Muted>NA</Muted>
+													)}
 											</TableCell>
 										))}
 									</TableRow>
@@ -372,8 +410,9 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 					</Table>
 				)}
 			</CardContent>
-
-			<CardFooter className="w-full flex justify-center items-center">
+			<Separator />
+			<Separator />
+			<CardFooter className="w-full flex justify-center items-center px-1 md:px-2">
 				<Pagination
 					currentPage={currentPage}
 					handlePageClick={(pageno) => setPage(pageno)}
@@ -385,39 +424,3 @@ function CustomTable<RowType extends Record<string, string | number | Date>>({
 }
 
 export default CustomTable;
-
-/* 
-? client side
-<CustomTable
-	title="somthing"
-	titleIcon={<Shield />}
-	clientSide
-	columns={[
-		{ key: "id", header: "Sno." },
-		{ key: "name", header: "Name" },
-		{ key: "age", header: "Age" },
-		{key:"surname",header:"Surname"}
-	]}
-	data={[
-		{ id: "1", name: "Ravish Ranjan a", age: 1 ,surname:"Ranjan"},
-		{ id: "2", name: "Ravish Ranjan b", age: 2 ,surname:"Ranjan"},
-		{ id: "3", name: "Ravish Ranjan c", age: 3 ,surname:"Ranjan"},
-		{ id: "4", name: "Ravish Ranjan d", age: 4 ,surname:"Ranjan"},
-		{ id: "5", name: "Ravish Ranjan e", age: 5 ,surname:"Ranjan"},
-	]}
-	currentPage={page}
-	totalPages={1}
-	setPage={setpage}
-/>
-? server side
-<CustomTable
-  data={data}
-  columns={columns}
-  onSearch={(term) => fetchData({ search: term })}
-  onSort={(col, order) => fetchData({ sortBy: col, sortOrder: order })}
-  onFilter={(filters) => fetchData({ filters })}
-  currentPage={page}
-  totalPages={total}
-  setPage={setPage}
-/>
-*/

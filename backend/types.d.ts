@@ -94,7 +94,7 @@ declare interface ItemType extends Document {
     _id: ObjectId;
     name: string;
     barcode: string;
-    organization: ObjectId;
+    organizationId: ObjectId;
     costPrice: number;
     sellingPrice: number;
     quantity: number;
@@ -123,7 +123,7 @@ declare interface deliveryType {
 
 declare interface shipmentType {
     _id: string;
-    items: string;
+    item: string;
     quantity: number;
     orderedOn: date;
     shipped: boolean;

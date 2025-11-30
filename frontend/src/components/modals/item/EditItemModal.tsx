@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import useUpdateItem from "@/hooks/item/useUpdateItem";
+import { unitConversion } from "@/utils/utilfn";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
@@ -27,27 +28,22 @@ interface UpdateItemModalProps {
 	item: Item;
 }
 
-function weightInGrams(unit: "MG" | "G" | "KG", weight?: number) {
-	if (!weight) return weight;
-	switch (unit) {
-		case "KG":
-			return weight * 1000;
-		case "MG":
-			return weight / 1000;
-		default:
-			return weight;
-	}
-}
-
+/**
+ * @component modal to update item data
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Item} item item data
+ * @author `Ravish Ranjan`
+ */
 function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
-	const { isPending: isUpdatingItem, updateItemFn } = useUpdateItem();
-	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG">("G");
+	const { isUpdatingItem, updateItemFn } = useUpdateItem();
+	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG" | "ML" | "L" | "KL">("G");
 
 	const [form, setForm] = useState<{
 		name: string;
 		costPrice: number;
 		sellingPrice: number;
-		quantify: number;
+		quantity: number;
 		inventoryCategory: string;
 		importance: "A" | "B" | "C";
 		importedOn: string;
@@ -60,17 +56,22 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		name: item.name,
 		costPrice: item.costPrice,
 		sellingPrice: item.sellingPrice,
-		quantify: item.quantity,
+		quantity: item.quantity,
 		inventoryCategory: item.inventoryCategory,
 		importance: (item.importance || "C") as "A" | "B" | "C",
 		importedOn: new Date(item.importedOn).toISOString(),
-		expiresOn: new Date(item.expiresOn).toISOString(),
+		expiresOn: item.expiresOn
+			? new Date(item.expiresOn).toISOString()
+			: new Date().toISOString(),
 		weight: item.weight,
 		colour: item.colour,
 		reorderLevel: item.reorderLevel,
 		origin: item.origin,
 	});
 
+	/**
+	 * @brief function to handle update of item on submit
+	 */
 	const handleUpdateItem = () => {
 		if (form.name.trim() === "")
 			return toast.warning("Item should have a name", {
@@ -87,7 +88,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 				className: "toast",
 			});
 
-		if (form.quantify <= 0)
+		if (form.quantity <= 0)
 			return toast.warning("Quantity can't be 0", { className: "toast" });
 
 		if (form.inventoryCategory.trim() === "")
@@ -113,7 +114,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 			name: string;
 			costPrice: number;
 			sellingPrice: number;
-			quantify: number;
+			quantity: number;
 			inventoryCategory: string;
 			importance: "A" | "B" | "C";
 			importedOn: string;
@@ -123,7 +124,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 			reorderLevel?: number;
 			origin?: string;
 		} = JSON.parse(JSON.stringify(form));
-		submitForm.weight = weightInGrams(weightUnit, form.weight);
+		submitForm.weight = unitConversion(weightUnit, form.weight);
 		submitForm.name = submitForm.name.trim();
 		submitForm.inventoryCategory = submitForm.inventoryCategory.trim();
 		submitForm.colour = submitForm.colour?.trim();
@@ -134,7 +135,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-lg max-w-screen">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Update item</CardTitle>
 					<Button
@@ -184,6 +185,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="costprice"
 								name="costPrice"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								value={form.costPrice}
 								min={0}
 								onChange={(e) =>
@@ -202,6 +204,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="sellingprice"
 								name="sellingPrice"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								value={form.sellingPrice}
 								onChange={(e) =>
 									setForm({
@@ -221,11 +224,12 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="quantity"
 								name="quantity"
 								type="number"
-								value={form.quantify}
+								onFocus={(e) => e.target.select()}
+								value={form.quantity}
 								onChange={(e) =>
 									setForm({
 										...form,
-										quantify: Number(e.target.value),
+										quantity: Number(e.target.value),
 									})
 								}
 								placeholder="Enter item quantity"
@@ -240,6 +244,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 									id="weight"
 									name="weight"
 									type="number"
+									onFocus={(e) => e.target.select()}
 									min={1}
 									value={form.weight}
 									onChange={(e) =>
@@ -262,20 +267,22 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 										defaultValue={weightUnit}
 										onValueChange={(value) =>
 											setWeightUnit(
-												value as "KG" | "MG" | "G"
+												value as "KG" | "MG" | "G" | "ML" | "L" | "KL"
 											)
 										}
 									>
-										{["KG", "G", "MG"].map((unit, i) => {
-											return (
-												<DropdownMenuRadioItem
-													key={i}
-													value={unit}
-												>
-													{unit}
-												</DropdownMenuRadioItem>
-											);
-										})}
+										{["KG", "G", "MG", "ML", "L", "KL"].map(
+											(unit, i) => {
+												return (
+													<DropdownMenuRadioItem
+														key={i}
+														value={unit}
+													>
+														{unit}
+													</DropdownMenuRadioItem>
+												);
+											}
+										)}
 									</DropdownMenuRadioGroup>
 								</DropdownMenuContent>
 							</DropdownMenu>
@@ -427,6 +434,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 								id="reorderlevel"
 								name="reorderLevel"
 								type="number"
+								onFocus={(e) => e.target.select()}
 								min={0}
 								value={form.reorderLevel}
 								onChange={(e) =>

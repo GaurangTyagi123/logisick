@@ -17,9 +17,9 @@ import { deleteOrg } from "@/services/apiOrg";
 
 /**
  * @component a modal for profilepage which prompts user to delete organization when clicked to do so
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a delete account modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Gaurang Tyagi`
  */
 function DeleteOrgModal({
 	open,
@@ -38,7 +38,12 @@ function DeleteOrgModal({
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
-			toast.success("Organization deleted successfully", { className: "toast" });
+			queryClient.invalidateQueries({
+				queryKey: ["orgs"],
+			});
+			toast.success("Organization deleted successfully", {
+				className: "toast",
+			});
 		},
 		onError: (err) => {
 			toast.error(err.message, { className: "toast" });
@@ -49,6 +54,7 @@ function DeleteOrgModal({
 	 * @brief async function to handle the user request to delete account
 	 */
 	async function handleDeleteAccount() {
+		console.log("Org id",orgId)
 		if (text.trim() == "delete my organization" && orgId) {
 			deleteOrgFn(orgId);
 			setOpen(false);
@@ -59,7 +65,7 @@ function DeleteOrgModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Delete My Organization</CardTitle>
 					<Button
@@ -80,7 +86,7 @@ function DeleteOrgModal({
 							<span className="text-red-500">
 								delete my organization
 							</span>
-							" in the input below to delete account
+							" in the input below to delete organization
 						</span>
 						<Input
 							placeholder="Enter Text"
@@ -93,7 +99,7 @@ function DeleteOrgModal({
 						/>
 					</Label>
 				</CardContent>
-				<CardFooter className="flex gap-2 w-full">
+				<CardFooter className="flex flex-wrap gap-2 w-full">
 					<Button
 						onClick={() => setOpen(false)}
 						variant={"secondary"}

@@ -3,7 +3,8 @@ import { isAxiosError } from "axios";
 /**
  * @brief function to handle error for async API class to server or system error
  * @param error instance of error
- * @param message custom message for toast to user
+ * @param {string} message custom message for toast to user
+ * @author `Gaurang Tyagi`
  */
 export function handleError(error: unknown, message?: string) {
     if (isAxiosError(error)) {

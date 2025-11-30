@@ -1,24 +1,31 @@
 // HOOKS
 import useGetEmployees from "@/hooks/emp/useGetEmployees";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { searchEmployee } from "@/services/apiOrg";
 
 // COMPONENTS
-import UserAvatar from "./UserAvatar";
-import CustomTable from "./CustomTable";
+import UserAvatar from "@/components/UserAvatar";
+import CustomTable from "@/components/CustomTable";
 
 import { toast } from "react-toastify";
 import { debounce } from "lodash";
-import Button from "./ui/button";
+import Button from "@/components/ui/button";
 import useDeleteEmployee from "@/hooks/emp/useDeleteEmployee";
-import DeleteEmpModal from "./modals/emp/DeleteEmpModal";
 import { Delete } from "@/assets/icons/Profilepage";
 import useChangeRole from "@/hooks/emp/useChangeRole";
-import ChangeEmpRoleModal from "./modals/emp/ChangeEmpRoleModal";
 import useChangeManager from "@/hooks/emp/useChangeManager";
-import ChangeEmpManagerModal from "./modals/emp/ChangeEmpManagerModal";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+
+const ChangeEmpManagerModal = lazy(
+	() => import("@/components/modals/emp/ChangeEmpManagerModal")
+);
+const ChangeEmpRoleModal = lazy(
+	() => import("@/components/modals/emp/ChangeEmpRoleModal")
+);
+const DeleteEmpModal = lazy(
+	() => import("@/components/modals/emp/DeleteEmpModal")
+);
 
 interface Employee {
 	[key: string]: string;
@@ -28,7 +35,11 @@ interface Employee {
 	avatar: string;
 }
 
-// unwinds employee data
+/**
+ * @brief function to deconstuct the searched employee data
+ * @param employees list of employee's data
+ * @author `Gaurang Tyagi`
+ */
 function deconstructEmployee(
 	employees: Array<{
 		data: {
@@ -69,8 +80,8 @@ function deconstructEmployee(
 }
 /**
  * @component Employee table displays all the employees belonging to an organization including the owner
- * @param orgid (string) id of the organization
- * @returns JSX
+ * @param {string} orgid id of the organization
+ * @author `Ravish Ranjan`
  */
 function EmployeeTable({
 	orgid,
@@ -91,14 +102,17 @@ function EmployeeTable({
 
 	// current page
 	const [page, setPage] = useState<number>(1);
-
+	// delete employee modal open state
 	const [deleteEmpModalOpen, setDeleteEmpModalOpen] =
 		useState<boolean>(false);
+	// change employee's role modal open state
 	const [changeRoleModalOpen, setChangeRoleModalOpen] =
 		useState<boolean>(false);
+	// change employee's manager modal open state
 	const [changeManagerModalOpen, setChangeManagerModalOpen] =
 		useState<boolean>(false);
 
+	// state to keep employee data to use in modal
 	const [empData, setEmpData] = useState<{
 		_id: string;
 		name: string;
@@ -108,20 +122,21 @@ function EmployeeTable({
 		name: "",
 		email: "",
 	});
+	// state to maintain old role
 	const [oldRole, setOldRole] = useState<"Admin" | "Manager" | "Staff">();
 
 	// employee data
 	const {
 		data: employees,
 		count,
-		isPending: isGettingEmployees,
+		isGettingEmployees,
 		error,
 	} = useGetEmployees(orgid as string, page);
 
-	const { deleteEmp, isPending: pendingDeleteEmp } = useDeleteEmployee();
-	const { changeEmpRole, isPending: pendingChangeRole } = useChangeRole();
-	const { changeEmpManager, isPending: pendingChangeManager } =
-		useChangeManager();
+	// employee hooks
+	const { deleteEmp, isDeletingEmployee } = useDeleteEmployee();
+	const { changeEmpRole, isChangingRole } = useChangeRole();
+	const { changeEmpManager, isChangingManager } = useChangeManager();
 
 	// stores the search results
 	const [searchResults, setSearchResults] = useState<Employee[] | null>(null);
@@ -163,6 +178,24 @@ function EmployeeTable({
 		cancel: () => void;
 	};
 
+	// Wrapper function to handle immediate clear
+	const handleSearchWrapper = useCallback(
+		(query: string) => {
+			// Immediately clear if empty (don't debounce)
+			if (query.trim() === "") {
+				debouncedSearch.cancel(); // Cancel any pending searches
+				setSearchResults(null);
+				if (controllerRef.current) {
+					controllerRef.current.abort();
+				}
+				return;
+			}
+			// Otherwise use debounced search
+			debouncedSearch(query);
+		},
+		[debouncedSearch]
+	);
+
 	// calculates and sets the totalPage number based on the employee data recieved from the server
 	useEffect(() => {
 		if (!isGettingEmployees) {
@@ -185,7 +218,7 @@ function EmployeeTable({
 	}
 	const deconstructedEmployees = deconstructEmployee(employees);
 	return (
-		<div className=" w-full">
+		<>
 			<CustomTable<Record<string, string>>
 				title="Employees"
 				columns={
@@ -198,10 +231,10 @@ function EmployeeTable({
 										return (
 											<div className="flex gap-2 items-center">
 												<UserAvatar
-													className="w-10 h-10"
+													className="w-10 h-10 hidden sm:grid"
 													customSeed={row.avatar}
 												/>
-												<span className="hidden sm:flex">
+												<span className="flex">
 													{row?.name} - ( {row?.role}{" "}
 													)
 												</span>
@@ -224,7 +257,7 @@ function EmployeeTable({
 														{/* change role */}
 														<Button
 															disabled={
-																pendingChangeRole
+																isChangingRole
 															}
 															onClick={() => {
 																setEmpData({
@@ -243,13 +276,15 @@ function EmployeeTable({
 																);
 															}}
 															variant={"outline"}
+															size={"sm"}
+															className="text-xs sm:text-sm"
 														>
-															Change Role
+															Role
 														</Button>
-														{/* change manager */}
+														{/* manager */}
 														<Button
 															disabled={
-																pendingChangeManager
+																isChangingManager
 															}
 															onClick={() => {
 																setEmpData({
@@ -263,13 +298,15 @@ function EmployeeTable({
 															}}
 															variant={"outline"}
 															title={`Remove ${row.name} from organization`}
+															size={"sm"}
+															className="text-xs sm:text-sm"
 														>
-															Change Manager
+															Manager
 														</Button>
 														{/* delete employee */}
 														<Button
 															disabled={
-																pendingDeleteEmp
+																isDeletingEmployee
 															}
 															onClick={() => {
 																setEmpData({
@@ -285,6 +322,7 @@ function EmployeeTable({
 																"destructive"
 															}
 															title={`Remove ${row.name} from organization`}
+															size={"sm"}
 														>
 															<Delete />
 														</Button>
@@ -325,7 +363,7 @@ function EmployeeTable({
 				currentPage={page}
 				totalPages={totalPages}
 				setPage={setPage}
-				onSearch={debouncedSearch}
+				onSearch={handleSearchWrapper}
 			/>
 			<DeleteEmpModal
 				open={deleteEmpModalOpen}
@@ -333,26 +371,26 @@ function EmployeeTable({
 				orgid={orgid}
 				empData={empData}
 				deleteEmp={deleteEmp}
-				isPending={pendingDeleteEmp}
+				isPending={isDeletingEmployee}
 			/>
 			<ChangeEmpRoleModal
 				open={changeRoleModalOpen}
 				setOpen={setChangeRoleModalOpen}
 				changeRole={changeEmpRole}
 				empData={empData}
-				isPending={pendingChangeRole}
+				isPending={isChangingRole}
 				oldRole={oldRole || "Staff"}
 				orgid={orgid}
 			/>
 			<ChangeEmpManagerModal
 				changeManager={changeEmpManager}
 				empData={empData}
-				isPending={pendingChangeManager}
+				isPending={isChangingManager}
 				open={changeManagerModalOpen}
 				orgid={orgid}
 				setOpen={setChangeManagerModalOpen}
 			/>
-		</div>
+		</>
 	);
 }
 

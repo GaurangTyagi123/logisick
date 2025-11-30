@@ -416,6 +416,6 @@ export const deleteOrg = catchAsync(
 
 		await Emp.delete({ orgid });
 
-		return res.status(204).send();
-	}
+        return res.status(204).send();
+    }
 );

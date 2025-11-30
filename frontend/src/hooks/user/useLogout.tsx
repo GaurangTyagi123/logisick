@@ -4,14 +4,15 @@ import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 /**
- * @brief hook to handle logout functionality of user
- * @param message optional parameter for logout message 
- * @returns logout state of app from react-query
+ * @brief hook to logout user
+ * @returns {Function} `logoutFn` - function to logout user request
+ * @returns {boolean} `isLoggingOut` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useLogout(message: string = 'Logged-Out Successfully') {
     const queryClient = useQueryClient();
     const navigate = useNavigate();
-    const { mutate: logoutFn, isPending } = useMutation({
+    const { mutate: logoutFn, isPending:isLoggingOut } = useMutation({
         mutationFn: logout,
         onSuccess: () => {
             toast.success(message, {
@@ -23,7 +24,7 @@ function useLogout(message: string = 'Logged-Out Successfully') {
             navigate('/');
         },
     });
-    return { logoutFn, isPending };
+    return { logoutFn, isLoggingOut };
 }
 
 export default useLogout;

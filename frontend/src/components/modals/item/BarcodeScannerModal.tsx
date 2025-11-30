@@ -20,7 +20,7 @@ interface BarcodeScannerModalProps {
 			organizationId: string;
 			costPrice: number;
 			sellingPrice: number;
-			quantify: number;
+			quantity: number;
 			inventoryCategory: string;
 			importance: "A" | "B" | "C";
 			importedOn: Date;
@@ -34,6 +34,13 @@ interface BarcodeScannerModalProps {
 	>;
 }
 
+/**
+ * @component modal to scan product barcode
+ * @param {Function} setForm state mutation function to insert item data
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @author `Ravish Ranjan`
+ */
 function BarcodeScannerModal({
 	setForm,
 	open,
@@ -41,7 +48,7 @@ function BarcodeScannerModal({
 }: BarcodeScannerModalProps) {
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md max-w-screen">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Scan Item Barcode</CardTitle>
 					<Button

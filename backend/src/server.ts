@@ -43,7 +43,7 @@ redisClient.connect().catch((err) => {
 
 // start the server
 const server = app.listen(PORT, () => {
-    console.log(`SERVER : Running at http://localhost:${PORT}`);
+    console.log(`SERVER : Running at port ${PORT}`);
 });
 
 // For unhandled errors in synchronous code

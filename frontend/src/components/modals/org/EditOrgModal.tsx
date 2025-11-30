@@ -29,9 +29,9 @@ type OrganizationFormData = {
 };
 /**
  * @component a modal for profilepage which prompts user to change organization details when clicks to do so
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a update organization modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Gaurang Tyagi`
  */
 function EditOrgModal({
 	open,
@@ -66,13 +66,17 @@ function EditOrgModal({
 		},
 	});
 
+	/**
+	 * @brief function to handle submit of edit organization 
+	 * @param data organization data
+	 */
 	const onSubmit = (data: OrganizationFormData) => {
 		if (organization) updateOrgFn({ id: organization?._id, data });
 		setOpen(false);
 	};
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Create Organization</CardTitle>
 					<Button
@@ -95,6 +99,7 @@ function EditOrgModal({
 									placeholder="Enter Your Organization's Name"
 									type="text"
 									id="name"
+									className="text-sm md:text-md"
 									{...register("name", {
 										required: "Please provide a name",
 										minLength: {
@@ -125,6 +130,7 @@ function EditOrgModal({
 									placeholder="Enter a brief description "
 									type="text"
 									id="Description"
+									className="text-sm md:text-md"
 									{...register("description", {
 										required:
 											"Please provide a description of your organization",
@@ -160,7 +166,7 @@ function EditOrgModal({
 											onValueChange={field.onChange}
 											value={field.value}
 										>
-											<SelectTrigger className="w-[180px]">
+											<SelectTrigger className="w-full">
 												<SelectValue
 													placeholder="Basic"
 													defaultValue="Basic"

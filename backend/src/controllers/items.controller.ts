@@ -198,7 +198,8 @@ export const getItemBySKU = catchAsync(
 		const item = (await Item.findOne({ SKU })) as any | null;
 
 		if (!item) return next(new AppError("Item not found", 404));
-		sendItem(res, item as ItemType, 200);
+		
+		sendItem(res, item, 200, 1);
 	}
 );
 
@@ -289,7 +290,7 @@ export const deleteItem = catchAsync(
 
 		if (!itemId)
 			return next(new AppError("please provide a valid item id", 400));
-		await Item.deleteById(itemId);
+		await Item.findByIdAndDelete(itemId);
 		return res.status(204).end();
 	}
 );
@@ -402,12 +403,12 @@ export const searchItem = catchAsync(
 			items = await redisClient.hGet(`organization-${orgid}`, "items");
 			if (items && queryStr.length) {
 				items = JSON.parse(items);
-				items = items.values().filter((items: any) => {
-					const itemsStr = JSON.stringify(items);
+				items = items.filter((item: any) => {
+					const itemsStr = JSON.stringify(item);
 					return regex.test(itemsStr);
 				});
 			}
-			if (!items || !items.length || !queryStr.length) {
+			if (!items || !items.length ||  !queryStr.length) {
 				const query = Item.find({
 					organizationId: orgid,
 					$or: [
@@ -417,14 +418,8 @@ export const searchItem = catchAsync(
 						{ SKU: { $regex: regex } },
 					],
 				});
-				const totalCount = await Item.countDocuments({
-					organizationId: orgid,
-				});
-				items = await new ApiFilter(query, req.parsedQuery!)
-					.sort()
-					.project()
-					.filter()
-					.paginate(totalCount).query;
+				items = await new ApiFilter(query, req.parsedQuery!).query
+				
 				const itemsStr = JSON.stringify(items);
 				await redisClient.hSet(
 					`organization-${orgid}`,
@@ -442,13 +437,7 @@ export const searchItem = catchAsync(
 					{ SKU: { $regex: regex } },
 				],
 			});
-			const totalCount = await Item.countDocuments({
-				organizationId: orgid,
-			});
-			items = await new ApiFilter(query, req.parsedQuery!)
-				.sort()
-				.project()
-				.paginate(totalCount).query;
+			items = await new ApiFilter(query, req.parsedQuery!).query;
 		}
 		return res.status(200).json({
 			status: "success",

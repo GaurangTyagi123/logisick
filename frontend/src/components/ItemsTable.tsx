@@ -2,36 +2,42 @@ import useGetAllItems from "@/hooks/item/useGetAllItems";
 import { getOrganization } from "@/services/apiOrg";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Link, useParams } from "react-router-dom";
-import CustomTableSkeleton from "./skeletons/CustomTableSkeleton";
-import CustomTable from "./CustomTable";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Muted } from "./ui/Typography";
-import Button from "./ui/button";
+import CustomTableSkeleton from "@/components/skeletons/CustomTableSkeleton";
+import CustomTable from "@/components/CustomTable";
+import { lazy, useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { Muted } from "@/components/ui/Typography";
+import Button from "@/components/ui/button";
 import { Edit } from "@/assets/icons/Profilepage";
 import { debounce } from "lodash";
 import { searchItems } from "@/services/apiItem";
+import { prefereableUnits } from "@/utils/utilfn";
+import useCreateOrder from "@/hooks/order/useCreateOrder";
+const CreateOrderModal = lazy(
+	() => import("@/components/modals/order/CreateOrderModal")
+);
 
-function prefereableWeightUnits(weight: number): string {
-	if (weight >= 1000) return `${Math.round(weight / 10) / 100} Kg(s)`;
-	else if (weight < 1 && weight > 0)
-		return `${Math.round(weight * 100000) / 100} mg(s)`;
-	return `${weight} g(s)`;
-}
-
+/**
+ * @component table to display and manager item in inventory
+ * @author `Ravish Ranjan`
+ */
 function ItemsTable() {
 	const { orgSlug } = useParams();
 	const PAGESIZE = 5;
 	const [page, setPage] = useState<number>(1);
 	const [totalPages, setTotalPages] = useState<number>(1);
+	const [orderCreateForm, setOrderCreateForm] = useState({
+		itemName: "",
+		itemId: "",
+		itemAmount: 0,
+	});
+	const [openCreateOrderModal, setOpenCreateOrderModal] = useState(false);
 
+	const { createOrderFn, isCreatingOrder } = useCreateOrder();
 	const { data: orgData, isPending: isGettingOrg } = useQuery({
 		queryKey: [`org-${orgSlug}`],
 		queryFn: () => getOrganization(orgSlug as string),
 	});
-	const { itemsResponse, isPending: isGettingItems } = useGetAllItems(
-		orgData._id,
-		page
-	);
+	const { itemsResponse, isGettingItems } = useGetAllItems(orgData._id, page);
 
 	const [searchResult, setSearchResults] = useState<Item[] | null>(null);
 
@@ -62,6 +68,24 @@ function ItemsTable() {
 		cancel: () => void;
 	};
 
+	// Wrapper function to handle immediate clear
+	const handleSearchWrapper = useCallback(
+		(query: string) => {
+			// Immediately clear if empty (don't debounce)
+			if (query.trim() === "") {
+				debouncedSearch.cancel(); // Cancel any pending searches
+				setSearchResults(null);
+				if (controllerRef.current) {
+					controllerRef.current.abort();
+				}
+				return;
+			}
+			// Otherwise use debounced search
+			debouncedSearch(query);
+		},
+		[debouncedSearch]
+	);
+
 	useEffect(() => {
 		if (!isGettingItems && itemsResponse) {
 			setTotalPages(
@@ -74,79 +98,134 @@ function ItemsTable() {
 
 	if (isGettingItems || isGettingOrg) return <CustomTableSkeleton />;
 	return (
-		<CustomTable
-			title="Items"
-			columns={[
-				{
-					key: "name",
-					header: "Name",
-					render: (value) => (
-						<span className="font-bold">{value}</span>
-					),
-				},
-
-				{
-					key: "importedOn",
-					header: "Imported On",
-					render: (value) => new Date(value).toDateString(),
-				},
-				{
-					key: "expiresOn",
-					header: "Expires On",
-					render: (value) => {
-						if (value) return new Date(value).toDateString();
-						return <Muted>NA</Muted>;
+		<>
+			<CustomTable
+				title="Items"
+				columns={[
+					{
+						key: "name",
+						header: "Name",
+						render: (value) => (
+							<span className="font-bold">
+								{value instanceof Date
+									? new Date(value).toLocaleDateString()
+									: value}
+							</span>
+						),
 					},
-				},
-				{ key: "inventoryCategory", header: "Category" },
-				{
-					key: "batchNumber",
-					header: "Batch No.",
-					render: (value) => (value ? value : <Muted>NA</Muted>),
-				},
-				{
-					key: "weight",
-					header: "Unit Weight",
-					render: (weight) => prefereableWeightUnits(weight),
-				},
-				{ key: "quantity", header: "Quantity" },
-				{
-					key: "costPrice",
-					header: "Cost Price",
-					render: (value) => (
-						<span className="w-full font-bold text-red-400">
-							{value} /-
-						</span>
-					),
-				},
-				{
-					key: "sellingPrice",
-					header: "Selling Price",
-					render: (value) => (
-						<span className="w-full font-bold text-green-400">
-							{value} /-
-						</span>
-					),
-				},
-				{
-					key: "Manage",
-					header: "Manage",
-					render: (_, row) => (
-						<Link to={`/item/${row.SKU}`}>
-							<Button variant={"link"}>
-								<Edit />
+
+					{
+						key: "importedOn",
+						header: "Imported On",
+						render: (value) => {
+							if (value)
+								return new Date(value).toLocaleDateString();
+							return <Muted>NA</Muted>;
+						},
+					},
+					{
+						key: "expiresOn",
+						header: "Expires On",
+						render: (value) => {
+							if (value)
+								return new Date(value).toLocaleDateString();
+							return <Muted>NA</Muted>;
+						},
+					},
+					{ key: "inventoryCategory", header: "Category" },
+					{
+						key: "batchNumber",
+						header: "Batch No.",
+						render: (value) =>
+							value ? (
+								value instanceof Date ? (
+									new Date(value).toLocaleDateString()
+								) : (
+									value
+								)
+							) : (
+								<Muted>NA</Muted>
+							),
+					},
+					{
+						key: "weight",
+						header: "Unit Weight",
+						render: (weight) => prefereableUnits(Number(weight)),
+					},
+					{ key: "quantity", header: "Quantity" },
+					{
+						key: "costPrice",
+						header: "Cost Price",
+						render: (value) => (
+							<span className="w-full font-bold text-red-400">
+								{value instanceof Date
+									? new Date(value).toLocaleDateString()
+									: value}{" "}
+								/-
+							</span>
+						),
+					},
+					{
+						key: "sellingPrice",
+						header: "Selling Price",
+						render: (value) => (
+							<span className="w-full font-bold text-green-400">
+								{value instanceof Date
+									? new Date(value).toLocaleDateString()
+									: value}{" "}
+								/-
+							</span>
+						),
+					},
+					{
+						key: "createorder",
+						header: "Create Order",
+						render: (_, row) => (
+							<Button
+								disabled={isCreatingOrder}
+								onClick={() => {
+									setOrderCreateForm({
+										itemId: row._id,
+										itemName: row.name,
+										itemAmount: row.quantity,
+									});
+									setOpenCreateOrderModal(true);
+								}}
+								variant={"outline"}
+								size={"sm"}
+								className="text-xs sm:text-sm"
+							>
+								Create Order
 							</Button>
-						</Link>
-					),
-				},
-			]}
-			clientSide
-			data={searchResult ? searchResult : itemsResponse?.items || []}
-			currentPage={page}
-			totalPages={totalPages}
-			setPage={setPage}
-			onSearch={debouncedSearch}
-		/>
+						),
+					},
+					{
+						key: "Manage",
+						header: "Manage",
+						render: (_, row) => (
+							<Link to={`/item/${orgData.slug}/${row.SKU}`}>
+								<Button variant={"outline"} size={"sm"} aria-label="Edit Item">
+									<Edit />
+								</Button>
+							</Link>
+						),
+					},
+				]}
+				clientSide
+				data={searchResult ? searchResult : itemsResponse?.items || []}
+				currentPage={page}
+				totalPages={totalPages}
+				setPage={setPage}
+				onSearch={handleSearchWrapper}
+			/>
+			<CreateOrderModal
+				open={openCreateOrderModal}
+				setOpen={setOpenCreateOrderModal}
+				orderdata={orderCreateForm}
+				createOrderFn={createOrderFn}
+				isCreatingOrder={isCreatingOrder}
+			/>
+		</>
 	);
 }
 

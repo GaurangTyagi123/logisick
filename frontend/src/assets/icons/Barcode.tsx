@@ -1,5 +1,6 @@
 import type { SVGProps } from "react";
 
+// scan icon
 export function Scan(props: SVGProps<SVGSVGElement>) {
 	return (
 		<svg

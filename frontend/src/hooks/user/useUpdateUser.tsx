@@ -3,12 +3,14 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-toastify';
 
 /**
- * @brief hook to handle updating of user information 
- * @returns update user state of app from react-query
+ * @brief hook to update user
+ * @returns {Function} `updateUserFn` - function to update user request
+ * @returns {boolean} `isUpdatingUser` - pending state of request
+ * @author `Ravish Ranjan`
  */
 function useUpdateUser() {
     const queryClient = useQueryClient();
-    const { mutate: updateUserFn, isPending } = useMutation({
+    const { mutate: updateUserFn, isPending:isUpdatingUser } = useMutation({
         mutationFn: updateUser,
         onSuccess: () => {
             queryClient.invalidateQueries({
@@ -20,7 +22,7 @@ function useUpdateUser() {
             toast.error(err.message,{className:"toast"});
         },
     });
-    return { updateUserFn, isPending };
+    return { updateUserFn, isUpdatingUser };
 }
 
 export default useUpdateUser;

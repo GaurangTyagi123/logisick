@@ -2,12 +2,6 @@ import axinstance, { setAccessToken } from "@/utils/axios";
 import { handleError } from "@/utils/handleError";
 import { toast } from "react-toastify";
 
-// interface AuthProps {
-//     user: User | null;
-//     isCheckingAuth: boolean;
-//     isLoggingIn: boolean;
-//     checkAuth: () => Promise<void>;
-// }
 
 type PasswordResetForm = {
 	password: string;
@@ -38,6 +32,7 @@ type resetPassword = (
 /**
  * @brief async function to request api to check user authentication
  * @effect updates user state
+ * @author `Gaurang Tyagi`
  */
 export const checkAuth: checkAuth = async () => {
 	try {
@@ -58,8 +53,9 @@ export const checkAuth: checkAuth = async () => {
 
 /**
  * @brief async function to request api to register new user
- * @param form data for registering (name,email,password,confirm password)
+ * @param {user-details} form data for registering (name,email,password,confirm password)
  * @effect updates user state if succesfull
+ * @author `Gaurang Tyagi`
  */
 export const signup: signup = async (form) => {
 	try {
@@ -78,8 +74,9 @@ export const signup: signup = async (form) => {
 
 /**
  * @brief async function to request api to login user
- * @param form data for login containing (email,password)
+ * @param {{email:string, password:string}} form data for login containing (email,password)
  * @effect updated user state if logged in successfully
+ * @author `Gaurang Tyagi`
  */
 export const login: login = async (form: {
 	email: string;
@@ -101,6 +98,7 @@ export const login: login = async (form: {
 /**
  * @brief async function to request api to logout user
  * @effect settes user to null if succesfull
+ * @author`Gaurang Tyagi`
  */
 export const logout = async () => {
 	try {
@@ -117,11 +115,11 @@ export const logout = async () => {
 };
 /**
  * @brief async function to request api to send forgot password email
- * @param form data to send forgot password request (email)
+ * @param {{email:string}}form data to send forgot password request (email)
+ * @author `Gaurang Tyagi`
  */
 export const sendForgotToken: sendForgotPassword = async (form) => {
 	try {
-		// set({ isSendingForgotPassword: true });
 		const res = await axinstance.post<{
 			status: string;
 			data: { message: string };
@@ -137,9 +135,10 @@ export const sendForgotToken: sendForgotPassword = async (form) => {
 
 /**
  * @brief async function to request api to reset pasword after user forgot
- * @param resetToken token user got on email
- * @param form data for request (new password,confirm new password)
+ * @param {string} resetToken token user got on email
+ * @param {PasswordResetForm} form data for request (new password,confirm new password)
  * @effect updates user with new data
+ * @author `Gaurang Tyagi`
  */
 export const resetPassword: resetPassword = async (resetToken, form) => {
 	try {
@@ -147,7 +146,6 @@ export const resetPassword: resetPassword = async (resetToken, form) => {
 			toast.error("Invalid password reset url", { className: "toast" });
 			return;
 		}
-		// set({ isResettingPassword: true });
 		const res = await axinstance.patch<{
 			status: string;
 			data: { user: User };

@@ -16,9 +16,9 @@ import { Label } from "@/components/ui/label";
 
 /**
  * @component a modal for profilepage which prompts user to delete account when clicks to do so
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a delete account modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Ravish Ranjan`
  */
 function DeleteMeModal({
 	open,
@@ -44,7 +44,7 @@ function DeleteMeModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Delete My Account</CardTitle>
 					<Button onClick={() => setOpen(false)} variant={"secondary"}>
@@ -55,7 +55,7 @@ function DeleteMeModal({
 					<Label
 						title="delete my account"
 						htmlFor="deleteme"
-						className="grid"
+						className="grid text-balance"
 					>
 						<span>
 							Enter "
@@ -65,10 +65,10 @@ function DeleteMeModal({
 							" in the input below to delete account
 						</span>
 						<Input
-							placeholder="Enter Your Email"
+							placeholder="Enter Text"
 							type="email"
 							value={text}
-							name="email"
+							name="text"
 							required
 							className="text-sm md:text-md"
 							onChange={(e) => setText(e.target.value.trim())}

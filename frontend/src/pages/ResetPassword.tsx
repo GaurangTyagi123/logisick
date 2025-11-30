@@ -14,12 +14,12 @@ import { Eye, EyeClosed } from "@/assets/icons/Authenticatepage";
 import useResetPassword from "@/hooks/useResetPassword";
 
 /**
- * @brief page to be used as form to reset forgot password (for users)
- * @returns page/react component
+ * @component page to server as endpoint for resetting password
+ * @author `Ravish Ranjan`
  */
 function ResetPassword() {
 	const resetToken = useParams().resetToken as string;
-	const { resetPasswordFn: resetPassword, isPending: isResettingPassword } =
+	const { resetPasswordFn: resetPassword, isResettingPassword } =
 		useResetPassword();
 	const [form, setForm] = useState({
 		password: "",

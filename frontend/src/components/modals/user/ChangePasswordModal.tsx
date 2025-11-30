@@ -22,12 +22,12 @@ interface ChangePasswordProps {
 
 /**
  * @component a modal for profilepage which prompts user for change of password when clicks to change password
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a change password modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Ravish Ranjan`
  */
 function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
-    const { updatePasswordFn: changePassword, isPending: isChangingPassword } =
+    const { updatePasswordFn: changePassword, isUpdatingPassword } =
         useUpdatePassword();
     // const { changePassword, isChangingPassword } = useAuthStore();
     const [form, setForm] = useState<{
@@ -98,7 +98,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
 
     return (
         <Modal openModal={open}>
-            <Card className="min-w-md">
+            <Card className="w-md max-w-11/12">
                 <CardHeader className="flex justify-between items-center">
                     <CardTitle>Change Password</CardTitle>
                     <Button onClick={() => setOpen(false)} variant={"secondary"}>
@@ -120,6 +120,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                                 value={form.prevPassword}
                                 name="prevpassword"
                                 required
+                                className="text-sm md:text-md"
                                 onChange={(e) => {
                                     setForm({
                                         ...form,
@@ -165,6 +166,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                                 value={form.password}
                                 name="newpassword"
                                 required
+                                className="text-sm md:text-md"
                                 onChange={(e) => {
                                     setForm({
                                         ...form,
@@ -205,6 +207,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                                 value={form.confirmPassword}
                                 name="confirmPassword"
                                 required
+                                className="text-sm md:text-md"
                                 onChange={(e) => {
                                     setForm({
                                         ...form,
@@ -242,7 +245,7 @@ function ChangePasswordModal({ open, setOpen }: ChangePasswordProps) {
                         className="w-full"
                         type="submit"
                         onClick={handleSubmit}
-                        disabled={isChangingPassword}
+                        disabled={isUpdatingPassword}
                     >
                         Submit
                     </Button>

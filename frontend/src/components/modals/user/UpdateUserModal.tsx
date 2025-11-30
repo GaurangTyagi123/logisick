@@ -21,13 +21,12 @@ interface ChangePasswordProps {
 
 /**
  * @component a modal for profilepage which prompts user for update user details when clicks to change password
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @returns gives a components as a change password modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Ravish Ranjan`
  */
 function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
-	const { updateUserFn: updateUser, isPending: isUpdatingUser } =
-		useUpdateUser();
+	const { updateUserFn: updateUser, isUpdatingUser } = useUpdateUser();
 
 	const [form, setForm] = useState<{
 		name: string;
@@ -71,7 +70,7 @@ function UpdateUserModal({ open, setOpen }: ChangePasswordProps) {
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Update User</CardTitle>
 					<Button

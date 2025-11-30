@@ -1,6 +1,10 @@
-import { Separator } from "../ui/separator";
-import { Skeleton } from "../ui/skeleton";
+import { Separator } from "@/components/ui/separator";
+import { Skeleton } from "@/components/ui/skeleton";
 
+/**
+ * @componenet react componenet to be used as fallback of custom table
+ * @author `Ravish Ranjan`
+ */
 function CustomTableSkeleton() {
 	return (
 		<div className="outline-1 rounded-2xl min-h-96 w-full">

@@ -21,14 +21,21 @@ interface DeleteItemModalProps {
 	itemData: Item;
 }
 
+/**
+ * @component modal to delete item
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Item} itemData item data
+ * @author `Ravish Ranjan`
+ */
 function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 	const [text, setText] = useState<string>("");
 	const navigate = useNavigate();
-	const { deleteItemFn, isPending: isDeletingItem } = useDeleteItem();
+	const { deleteItemFn, isDeletingItem } = useDeleteItem();
 
 	return (
 		<Modal openModal={open}>
-			<Card>
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Remove Item</CardTitle>
 					<Button
@@ -75,8 +82,8 @@ function DeleteItemModal({ open, setOpen, itemData }: DeleteItemModalProps) {
 						type="button"
 						onClick={() => {
 							deleteItemFn(itemData._id);
-							setText("");
 							setOpen(false);
+							setText("");
 							navigate(-1);
 						}}
 						disabled={

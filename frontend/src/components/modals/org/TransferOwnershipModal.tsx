@@ -17,7 +17,12 @@ import { Input } from "@/components/ui/input";
 type OrganizationFormData = {
 	newOwnerEmail: string;
 };
-
+/**
+ * @component modal to transfer ownership ofthe organization
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @author `Gaurang Tyagi`
+ */
 function TransferOwnershipModal({
 	open,
 	setOpen,
@@ -34,6 +39,9 @@ function TransferOwnershipModal({
 			queryClient.invalidateQueries({
 				queryKey: ["user"],
 			});
+			queryClient.invalidateQueries({
+				queryKey: ["orgs"],
+			});
 			toast.success("Ownership transferred successfully", {
 				className: "toast",
 			});
@@ -43,13 +51,17 @@ function TransferOwnershipModal({
 		},
 	});
 
+	/**
+	 * @brief function to handle submit for transfering ownership
+	 * @param data organization data
+	 */
 	const onSubmit = (data: OrganizationFormData) => {
 		transferOwnershipFn({ ...data });
 		setOpen(false);
 	};
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Transfer Ownership To</CardTitle>
 					<Button

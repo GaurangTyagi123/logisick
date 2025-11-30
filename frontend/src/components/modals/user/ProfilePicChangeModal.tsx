@@ -14,6 +14,7 @@ import { Dice } from "@/assets/icons/Profilepage";
 import { toast } from "react-toastify";
 import { useQueryClient } from "@tanstack/react-query";
 import useUpdateUser from "@/hooks/user/useUpdateUser";
+import { Label } from "@/components/ui/label";
 
 interface ChangeProps {
 	open: boolean;
@@ -24,11 +25,11 @@ interface ChangeProps {
 
 /**
  * @component a modal for profilepage which prompts user to change profile picture when user want to do so
- * @param open a boolean value stating is modal is open
- * @param setOpen a function to change state of open of modal
- * @param modalPic a string state for user input of avatar seed
- * @param setModalPic a setter function for user input of avatar seed
- * @returns gives a components as a profile pic changing modal to put somewhere
+ * @param {boolean} open a boolean value stating is modal is open
+ * @param {Function} setOpen a function to change state of open of modal
+ * @param {string} modalPic a string state for user input of avatar seed
+ * @param {Function} setModalPic a setter function for user input of avatar seed
+ * @author `Ravish Ranjan`
  */
 function ProfilePicChangeModal({
 	open,
@@ -41,8 +42,7 @@ function ProfilePicChangeModal({
 		| { user?: User }
 		| undefined;
 	const user = userData?.user;
-	const { updateUserFn: updateUser, isPending: isUpdatingUser } =
-		useUpdateUser();
+	const { updateUserFn: updateUser, isUpdatingUser } = useUpdateUser();
 	// const { user, updateUser, isUpdatingUser } = useAuthStore();
 
 	/**
@@ -75,7 +75,7 @@ function ProfilePicChangeModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Change Profile Picture</CardTitle>
 					<Button
@@ -87,25 +87,37 @@ function ProfilePicChangeModal({
 				</CardHeader>
 				<CardContent className="flex flex-col gap-2 items-center">
 					<UserAvatar customSeed={modalPic} className="w-40 h-40" />
-					<div className="flex gap-2 w-full">
-						<Input
-							type="text"
-							autoFocus
-							value={modalPic}
-							className="text-lg font-semibold text-center bg-accent"
-							onChange={(e) => setModalPic(e.target.value.trim())}
-						/>
-						<Button
-							className="h-9 w-9 grid place-items-center"
-							title="generate random"
-							onClick={() =>
-								genProfileString(
-									Math.floor(Math.random() * 11) + 1
-								)
-							}
+					<div className="grid w-full">
+						<Label
+							title="Profile Picture Seed"
+							htmlFor="name"
+							className="grid w-full"
 						>
-							<Dice className="h-9 w-9" />
-						</Button>
+							Profile Picture Seed *
+							<div className="flex gap-2">
+								<Input
+									type="text"
+									autoFocus
+									value={modalPic}
+									className="text-lg font-semibold text-center bg-accent"
+									onChange={(e) =>
+										setModalPic(e.target.value.trim())
+									}
+								/>
+								<Button
+									className="h-9 w-9 grid place-items-center"
+									title="generate random"
+									variant={"secondary"}
+									onClick={() =>
+										genProfileString(
+											Math.floor(Math.random() * 11) + 1
+										)
+									}
+								>
+									<Dice className="h-9 w-9" />
+								</Button>
+							</div>
+						</Label>
 					</div>
 				</CardContent>
 				<CardFooter>

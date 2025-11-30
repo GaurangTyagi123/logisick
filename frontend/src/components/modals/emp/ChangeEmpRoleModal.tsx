@@ -1,12 +1,12 @@
-import Modal from "../../Modal";
-import Button from "../../ui/button";
+import Modal from "@/components/Modal";
+import Button from "@/components/ui/button";
 import {
 	Card,
 	CardContent,
 	CardFooter,
 	CardHeader,
 	CardTitle,
-} from "../../ui/card";
+} from "@/components/ui/card";
 import { Close } from "@/assets/icons/Close";
 import { useState } from "react";
 import { toast } from "react-toastify";
@@ -41,6 +41,17 @@ interface ChangeEmpRole {
 	isPending: boolean;
 }
 
+/**
+ * @component modal to change role of employee
+ * @param {boolean} open condition to maintain modal open state
+ * @param {Function} setOpen function to change modal open state
+ * @param {Employee-Data} empDate employee data { _id:string, name:string, email:string }
+ * @param {string} orgid organization id
+ * @param {Function} changeRole change role function
+ * @param {boolean} isPending pending state for change role function
+ * @param {string} oldRole old role of employee to set default state
+ * @author `Ravish Ranjan`
+ */
 function ChangeEmpRoleModal({
 	open,
 	setOpen,
@@ -52,6 +63,9 @@ function ChangeEmpRoleModal({
 }: ChangeEmpRole) {
 	const [role, setRole] = useState<"Admin" | "Manager" | "Staff">(oldRole);
 
+	/**
+	 * @brief function to handle change of role on sumit
+	 */
 	const handleChangeRole = () => {
 		if (role) {
 			changeRole({
@@ -66,7 +80,7 @@ function ChangeEmpRoleModal({
 
 	return (
 		<Modal openModal={open}>
-			<Card className="min-w-sm md:min-w-md">
+			<Card className="w-md max-w-11/12">
 				<CardHeader className="flex justify-between items-center">
 					<CardTitle>Change Role of {empData.name}</CardTitle>
 					<Button

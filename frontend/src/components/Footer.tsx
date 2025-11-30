@@ -6,13 +6,23 @@ import {
 	Phone,
 	Mail,
 } from "@/assets/icons/Homepage";
-import { H3, H4, P, Small } from "./ui/Typography";
+import { H3, H4, P, Small } from "@/components/ui/Typography";
+import { useQueryClient } from "@tanstack/react-query";
+
+// information for links to put on the page
+const tabLinks: { path: string; name: string }[] = [
+	{ path: "/dashboard", name: "Organizations" },
+	{ path: "/documentation", name: "Documentation" },
+	{ path: "/profile", name: "Profile" },
+];
 
 /**
- * @component a static footer component for the hoem and other pages
- * @returns a static react component
+ * @component a static footer component for the home and other pages
+ * @author `Ravish Ranjan`
  */
 function Footer() {
+	const queryClient = useQueryClient();
+	const { user } = queryClient.getQueryData<{ user: User }>(["user"])!
 	const listContentClass =
 		"dark:text-muted-foreground hover:text-foreground transition-colors";
 	return (
@@ -47,27 +57,18 @@ function Footer() {
 						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
 							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href={user?.myOrg?.slug ? `/dashboard/${user?.myOrg?.slug}/product-management` : '/dashboard'}
+									className={listContentClass}
+								>
 									Inventory Management
 								</a>
 							</li>
 							<li>
-								<a href="/dashboard" className={listContentClass}>
-									Import/Export Management
-								</a>
-							</li>
-							<li>
-								<a href="/dashboard" className={listContentClass}>
-									Delivery Tracking
-								</a>
-							</li>
-							<li>
-								<a href="/dashboard" className={listContentClass}>
-									Bills Management
-								</a>
-							</li>
-							<li>
-								<a href="/dashboard" className={listContentClass}>
+								<a
+									href={user?.myOrg?.slug ? `/dashboard/${user?.myOrg?.slug}/analytics` : '/dashboard'}
+									className={listContentClass}
+								>
 									Analytics & Reports
 								</a>
 							</li>
@@ -80,36 +81,18 @@ function Footer() {
 							Company
 						</H4>
 						<ul className="space-y-2 text-sm jet-brains">
-							<li>
-								<a href="#" className={listContentClass}>
-									About Us
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Products
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Community
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Resources
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Pricing
-								</a>
-							</li>
-							<li>
-								<a href="#" className={listContentClass}>
-									Link
-								</a>
-							</li>
+							{tabLinks.map((value) => {
+								return (
+									<li key={value.path}>
+										<a
+											href={value.path}
+											className={listContentClass}
+										>
+											{value.name}
+										</a>
+									</li>
+								);
+							})}
 						</ul>
 					</div>
 
@@ -121,19 +104,19 @@ function Footer() {
 						<div className="space-y-3 text-sm jet-brains">
 							<div className="flex items-center space-x-2 dark:text-muted-foreground">
 								<Phone className="h-4 w-4" />
-								<Small>+1 (555) 123-4567</Small>
+								<a href="tel:9973882727">
+									<Small>+91 9973882727</Small>
+								</a>
 							</div>
 							<div className="flex items-center space-x-2 dark:text-muted-foreground">
 								<Mail className="h-4 w-4" />
-								<Small>support@logisick.com</Small>
+								<a href="mailto:gaurangt.mca25@cs.du.ac.in">
+									<Small>gaurangt.mca25@cs.du.ac.in</Small>
+								</a>
 							</div>
 							<div className="flex items-start space-x-2 dark:text-muted-foreground">
 								<MapPin className="h-4 w-4 mt-0.5" />
-								<Small>
-									123 ABC Marg
-									<br />
-									New Delhi, 110000
-								</Small>
+								<Small>New Delhi, 110000</Small>
 							</div>
 						</div>
 					</div>
@@ -144,18 +127,6 @@ function Footer() {
 					<div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0 jet-brains">
 						<div className="flex items-center space-x-6 text-sm dark:text-muted-foreground">
 							<Small>© 2025 logisick. All rights reserved.</Small>
-							<a
-								href="#"
-								className="hover:text-foreground transition-colors"
-							>
-								Privacy Policy
-							</a>
-							<a
-								href="#"
-								className="hover:text-foreground transition-colors"
-							>
-								Terms of Service
-							</a>
 						</div>
 						<div className="flex items-center space-x-4">
 							<div className="flex items-center space-x-2 text-sm dark:text-muted-foreground">

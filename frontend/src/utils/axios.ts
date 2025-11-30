@@ -2,12 +2,18 @@ import axios from "axios";
 
 
 let accessToken:string;
+/**
+ * @brief setter function toset csrf token
+ * @param token csrf access token 
+ * @author `Gaurang Tyagi`
+ */
 export const setAccessToken = (token:string) => {
 	accessToken = token;
 }
 
 /**
- * @brief instance of axios with presets to our backend API in development or production mdoe 
+ * @brief instance of axios with presets to our backend API in development or production mode
+ * @author `Ravish Ranjan`
  */
 const axinstance = axios.create({
 	baseURL:
@@ -17,10 +23,30 @@ const axinstance = axios.create({
 	withCredentials: true,
 });
 
+/**
+ * @brief api request to get csrf token for user
+ * @author `Gaurang Tygai`
+ */
+const getCSRFToken = async () => {
+	try {
+		const res = await axinstance.get('/v1/csrf-token');
+		if (res.status === 200) {
+			axinstance.defaults.headers['X-CSRF-Token'] = res.data.csrfToken;
+		}
+	}
+	catch(err) {
+		Promise.reject(err)
+	}
+}
+
+await getCSRFToken();
+
+// axios request interceptor to set access token in Authorization header
 axinstance.interceptors.request.use((config) => {
 	if (accessToken) config.headers.Authorization = `Bearer ${accessToken}`
 	return config;
 })
+// axios interceptor to re-get the refresh token on expire
 axinstance.interceptors.response.use((response: any) => response, async (error) => {
 	const originalRequest = error.config;
 

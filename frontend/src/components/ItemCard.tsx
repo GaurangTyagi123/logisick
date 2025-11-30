@@ -1,32 +1,20 @@
 import { useState } from "react";
-import { Card, CardContent, CardFooter, CardHeader } from "./ui/card";
-import { H3, Large, Muted } from "./ui/Typography";
-import Button from "./ui/button";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { H3, Muted } from "@/components/ui/Typography";
+import Button from "@/components/ui/button";
 import clsx from "clsx";
 import { Link } from "react-router-dom";
-import { Separator } from "./ui/separator";
+import { Separator } from "@/components/ui/separator";
 import { Hint } from "@/assets/icons/Profilepage";
+import { dateDifference, formatCurrency, prefereableUnits } from "@/utils/utilfn";
 
 /**
- * @brief function to get difference between given date and current date
- * @param date date to get difference from
- * @returns {number} differnce of days between given date and current date
- */
-function dateDifference(date: Date): number {
-	const dateThen = new Date(date);
-	const now = new Date();
-	return Math.ceil(
-		(dateThen.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)
-	);
-}
-
-/**
- * @brief function to display list item on item card
+ * @componenet compoenent to be used as list item for the item card
  * @param {string | number} field data
- * @param string fieldName name of field
- * @param string suffix? suffix at end
- * @param boolean small? is card small
- * @returns List item
+ * @param {string} fieldName name of field
+ * @param {string} suffix suffix at end
+ * @param {boolean} small is card small
+ * @author `Ravish Ranjan`
  */
 function ListItem({
 	field,
@@ -40,10 +28,10 @@ function ListItem({
 	small?: boolean;
 }) {
 	return (
-		<Large
+		<div
 			className={clsx(
 				"flex justify-between items-center",
-				small ? "text-sm" : "text-md"
+				small ? "text-xs" : "text-sm"
 			)}
 		>
 			<span className="overflow-hidden text-ellipsis whitespace-nowrap max-w-4/10">
@@ -53,26 +41,28 @@ function ListItem({
 				{field || <Muted>NA</Muted>}
 				{suffix}
 			</span>
-		</Large>
+		</div>
 	);
 }
 
 /**
- *
- * @param string className? : to modify className from parent
- * @param Item item : item data
- * @param boolean small? : to keep small size
- * @param boolean barebone? : to show only small set of data
- * @returns
+ * @component componenet to be used as item card
+ * @param {string} className to modify className from parent
+ * @param {Item} item item data
+ * @param {boolean} small to keep small size
+ * @param {boolean} barebone to show only small set of data
+ * @author `Ravish Ranjan`
  */
 function ItemCard({
 	className,
 	item,
+	orgSlug,
 	small,
 	barebone = false,
 	viewMorePath,
 }: {
 	item: Item;
+	orgSlug: string;
 	barebone?: boolean;
 	small?: boolean;
 	className?: string;
@@ -83,49 +73,14 @@ function ItemCard({
 	return (
 		<div
 			className={clsx(
-				"relative duration-100 aspect-square transform-3d shadow-2xl",
-				showQr ? "rotate-y-180" : "rotate-y-0",
-				small ? "w-xs" : "w-md",
+				"aspect-square w-2xs sm:w-xs md:w-sm max-w-11/12 outline-none duration-1000 [perspective:10rem] transform-3d",
+				showQr && "[transform:rotateY(180deg)]",
+				small ? "max-w-xs" : "max-w-md",
 				className
 			)}
 		>
-			{/* Qrcode card */}
-			<Card
-				className={clsx(
-					"h-full w-full flex flex-col justify-center items-center p-4 gap-2 absolute top-0 left-0 rotate-y-180",
-					showQr ? "z-20" : "z-0"
-				)}
-			>
-				<CardHeader className="w-full text-center">
-					<H3 className="jet-brains">Scan Me</H3>
-				</CardHeader>
-				<CardContent
-					className={clsx(
-						"flex flex-col justify-between",
-						small ? "h-60 w-60" : "h-90 w-90"
-					)}
-				>
-					<img
-						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${import.meta.env.FRONTEND_URL  || "http://localhost:5173"}/item/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
-						alt={item?.name.substring(0, 10)}
-						className="w-full rounded-2xl"
-					/>
-				</CardContent>
-				<CardFooter className="w-full px-0">
-					<Button onClick={() => setShowQr(false)} className="w-full">
-						Show Information
-					</Button>
-				</CardFooter>
-			</Card>
-			{/* seperator card */}
-			<div className="h-full w-full bg-ls-bg-300 dark:bg-ls-bg-dark-800 rounded-2xl"></div>
 			{/* Information Card */}
-			<Card
-				className={clsx(
-					"h-full w-full flex flex-col justify-between p-4 absolute top-0 left-0 gap-2",
-					showQr ? "z-0" : "z-20"
-				)}
-			>
+			<Card className="inset-0 p-2 md:p-4 gap-2 absolute [backface-visibility:hidden]">
 				<CardHeader className="w-full h-min ">
 					<H3 className="text-center jet-brains">
 						{item?.SKU?.substring(25)}
@@ -142,7 +97,7 @@ function ItemCard({
 						</div>
 					)}
 				</CardHeader>
-				<CardContent className="w-full h-full gap-2 flex flex-col overflow-y-auto p-4 rounded-2xl">
+				<CardContent className="w-full h-90 gap-2 grid overflow-y-auto scrollbar p-2 md:p-4 rounded-2xl">
 					<ListItem
 						small={small}
 						field={item.name}
@@ -177,14 +132,14 @@ function ItemCard({
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.costPrice}
+								field={formatCurrency(item.costPrice)}
 								fieldName="Cost Price"
 								suffix=" /-"
 							/>
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.sellingPrice}
+								field={formatCurrency(item.sellingPrice)}
 								fieldName="Selling Price"
 								suffix=" /-"
 							/>
@@ -212,7 +167,9 @@ function ItemCard({
 							{!small && <Separator />}
 							<ListItem
 								small={small}
-								field={item.weight}
+								field={
+									item.weight && prefereableUnits(item.weight)
+								}
 								fieldName="Weight"
 							/>
 							{!small && <Separator />}
@@ -236,21 +193,43 @@ function ItemCard({
 						</>
 					)}
 				</CardContent>
-				<CardFooter className="w-full flex flex-col justify-between px-0 gap-2">
-					<div className="w-full grid grid-cols-2 gap-2">
-						<Button
-							onClick={() => setShowQr(true)}
-							className="w-full"
-						>
-							Show Qrcode
+				<CardFooter className="grid grid-cols-2 gap-1 p-0 md:p-0">
+					<Button
+						onClick={() => setShowQr(true)}
+						className="col-span-1 w-full"
+						size={"sm"}
+					>
+						Show Qrcode
+					</Button>
+					<Link
+						to={viewMorePath || "/authenticate"}
+						className="col-span-1"
+					>
+						<Button className="w-full" size={"sm"}>
+							More <span className="hidden sm:flex">About Item</span>
 						</Button>
-						<Link
-							to={viewMorePath || "/authenticate"}
-							className="w-full"
-						>
-							<Button className="w-full">More About Item</Button>
-						</Link>
-					</div>
+					</Link>
+				</CardFooter>
+			</Card>
+			{/* Qrcode card */}
+			<Card className="inset-0 size-full p-2 md:p-4 gap-2 absolute [backface-visibility:hidden] [transform:rotateY(180deg)]">
+				<CardHeader className="w-full text-center">
+					<H3 className="jet-brains">Scan Me</H3>
+				</CardHeader>
+				<CardContent className="grid place-items-center">
+					<img
+						src={`https://encode.ravishdev.org/api/create/text_url?text_url=${import.meta.env.VITE_FRONTEND_URL ||
+							window.location.origin ||
+							"http://localhost:5173"
+							}/item/${orgSlug}/${item?.SKU}&fg=%2368a872&bg=%230e2033`}
+						alt={item?.name.substring(0, 10)}
+						className="rounded-2xl md:max-w-10/12 max-w-2/3"
+					/>
+				</CardContent>
+				<CardFooter className="w-full p-0 md:p-0">
+					<Button onClick={() => setShowQr(false)} className="w-full">
+						Show Information
+					</Button>
 				</CardFooter>
 			</Card>
 		</div>
