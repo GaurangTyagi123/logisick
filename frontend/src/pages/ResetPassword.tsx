@@ -86,7 +86,6 @@ function ResetPassword() {
 			<Navbar
 				hide={{
 					userButton: true,
-					options: true,
 					loginRegisterButton: true,
 				}}
 			/>
