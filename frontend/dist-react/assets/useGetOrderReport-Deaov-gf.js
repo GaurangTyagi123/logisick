@@ -1,1 +1,0 @@
-import{a as n}from"./apiOrder-D393BIbC.js";import{b as i}from"./index-H5JN5wYo.js";function a(r){const{data:e,isPending:t,isError:o,error:s}=i({queryKey:["orders-report",r],queryFn:()=>n(r),enabled:!!r});return{report:e,isGettingOrdersReport:t,isError:o,error:s}}export{a as u};

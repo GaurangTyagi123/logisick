@@ -1,1 +1,0 @@
-import{a as i}from"./apiItem-BOdjaLtg.js";import{b as n}from"./index-H5JN5wYo.js";function u(e){const{data:r,isPending:t,isError:o,error:s}=n({queryKey:["items-report",e],queryFn:()=>i(e),enabled:!!e});return{report:r,isGettingItemReport:t,isError:o,error:s}}export{u};
