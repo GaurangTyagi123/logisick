@@ -35,7 +35,7 @@ function OrderSales() {
 					<Skeleton className="w-1/2 h-5" />
 				</div>
 				<div className="outline-1 p-4  w-full rounded-2xl">
-					<Skeleton className="w-full h-30" />
+					<Skeleton className="w-full h-15" />
 				</div>
 				<CustomTableSkeleton />
 			</div>
