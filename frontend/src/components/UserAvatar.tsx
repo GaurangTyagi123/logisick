@@ -8,7 +8,7 @@ interface UserAvatarProps {
 /**
  * @component a component to serve as a custom avatar specified by custom seed
  * @param {ComponentProps} props properties from parent including key for unique identification and custom seed of unique avatar
- * @author `Ravish Ranjan`
+ * @author `Manas More`
  */
 function UserAvatar(props: UserAvatarProps) {
 	const config = genConfig(props.customSeed);

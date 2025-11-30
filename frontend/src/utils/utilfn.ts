@@ -3,7 +3,7 @@
  * @param {number} amount currency amount to format
  * @param {string?} currency curreny of the amount
  * @returns {string} formated currency string
- * @author `Gaurang Tyagi`
+ * @author `Manas More`
  */
 export const formatCurrency = (amount: number, currency?: string) => {
 	return new Intl.NumberFormat("en", {
@@ -40,7 +40,7 @@ export function prefereableUnits(
  * @param {"MG" | "G" | "KG" | "ML" | "L" | "KL"} unit unit to convert to
  * @param {number} amount amount to convert
  * @returns {number} converted amount by units
- * @author `Manas More`
+ * @author `Ravish Ranjan`
  */
 export function unitConversion(
 	unit: "MG" | "G" | "KG" | "ML" | "L" | "KL",
@@ -65,7 +65,7 @@ export function unitConversion(
  * @brief function to get difference between given date and current date
  * @param {Date} date date to get difference from
  * @returns {number} differnce of days between given date and current date
- * @author `Manas More`
+ * @author `Ravish Ranjan`
  */
 export function dateDifference(date: Date): number {
 	const dateThen = new Date(date);
