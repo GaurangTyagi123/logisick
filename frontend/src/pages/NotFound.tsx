@@ -5,7 +5,7 @@ import { H1, Large } from "@/components/ui/Typography";
 
 /**
  * @component page to server as endpoint for not found page
- * @author `Ravish Ranjan`
+ * @author `Manas More`
  */
 function Notfound() {
 	return (
