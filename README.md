@@ -134,14 +134,12 @@ INVITE_EXPIRE_TIME = 1 // days
 
 OTP_EXPIRE_TIME = 2 // days
 
-DEV_MAIL_HOST = <mail-dev-host>
-DEV_MAIL_PORT = <mail-dev-port>
-DEV_MAIL_USER = <mail-dev-user>
-DEV_MAIL_PASSWORD = <mail-dev-password>
 
 OAUTH_CLIENT_ID = <google-oauth-client-id>
 OAUTH_CLIENT_SECRET = <google-oauth-client-secret>
 OAUTH_CALLBACK_URL = <google-oauth-callback>
+SENDGRID_KEY=<sendgrid-api-key>
+
 ```
 
 # Run the project (IN DEVELOPMENT):
@@ -153,7 +151,7 @@ npm run dev
 
 #### Access the app
 
-> Visit [http://localhost:8000](http://localhost:8000) in your browser.
+> Visit [http://localhost:5173](http://localhost:5173) in your browser.
 
 ----
 
