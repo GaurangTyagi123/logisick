@@ -111,6 +111,7 @@ DEV_MAIL_PASSWORD = <mail-dev-password>
 OAUTH_CLIENT_ID = <google-oauth-client-id>
 OAUTH_CLIENT_SECRET = <google-oauth-client-secret>
 OAUTH_CALLBACK_URL = <google-oauth-callback>
+SENDGRID_KEY=<sendgrid-mailing-api>
 ```
 
 # Run the project (IN DEVELOPMENT):
