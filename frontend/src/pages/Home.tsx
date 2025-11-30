@@ -37,7 +37,7 @@ function Home() {
 					<BigHeading />
 					{/* option menu in small screens */}
 					<DropdownMenu>
-						<DropdownMenuTrigger className="lg:hidden ml-auto ">
+						<DropdownMenuTrigger className="md:hidden ml-auto ">
 							<Button asChild className="w-full">
 								<Menu />
 							</Button>
@@ -52,7 +52,7 @@ function Home() {
 					</DropdownMenu>
 				</div>
 				{/* tab-bar in large screens */}
-				<div className="hidden gap-2 justify-end mr-5 lg:flex">
+				<div className="hidden gap-2 justify-end mr-5 md:flex">
 					{tabLinks.map((link, i) => (
 						<Link to={link.path} key={i}>
 							<Button

@@ -37,7 +37,9 @@ interface UpdateItemModalProps {
  */
 function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 	const { isUpdatingItem, updateItemFn } = useUpdateItem();
-	const [weightUnit, setWeightUnit] = useState<"MG" | "G" | "KG" | "ML" | "L" | "KL">("G");
+	const [weightUnit, setWeightUnit] = useState<
+		"MG" | "G" | "KG" | "ML" | "L" | "KL"
+	>("G");
 
 	const [form, setForm] = useState<{
 		name: string;
@@ -60,9 +62,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 		inventoryCategory: item.inventoryCategory,
 		importance: (item.importance || "C") as "A" | "B" | "C",
 		importedOn: new Date(item.importedOn).toISOString(),
-		expiresOn: item.expiresOn
-			? new Date(item.expiresOn).toISOString()
-			: new Date().toISOString(),
+		expiresOn: item.expiresOn ? new Date(item.expiresOn).toISOString() : "",
 		weight: item.weight,
 		colour: item.colour,
 		reorderLevel: item.reorderLevel,
@@ -267,7 +267,13 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 										defaultValue={weightUnit}
 										onValueChange={(value) =>
 											setWeightUnit(
-												value as "KG" | "MG" | "G" | "ML" | "L" | "KL"
+												value as
+													| "KG"
+													| "MG"
+													| "G"
+													| "ML"
+													| "L"
+													| "KL"
 											)
 										}
 									>
@@ -377,7 +383,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 										? new Date(form.expiresOn)
 												.toISOString()
 												.split("T")[0]
-										: new Date().toISOString().split("T")[0]
+										: ""
 								}
 								min={
 									new Date(form.importedOn)
@@ -391,7 +397,7 @@ function UpdateItemModal({ open, setOpen, item }: UpdateItemModalProps) {
 											? new Date(
 													e.target.valueAsDate
 											  ).toISOString()
-											: undefined,
+											: "",
 									});
 								}}
 								placeholder="Enter item's expiry date"

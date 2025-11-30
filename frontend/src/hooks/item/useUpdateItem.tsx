@@ -15,7 +15,7 @@ function useUpdateItem() {
 		onSuccess: () => {
 			queryClient.invalidateQueries({
 				predicate: (query) =>
-					["items", "items-report"].includes(
+					["item","items", "items-report"].includes(
 						query.queryKey[0]?.toString() || ""
 					),
 			});
