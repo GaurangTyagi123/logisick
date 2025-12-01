@@ -624,7 +624,29 @@ function Docs() {
 							</div>
 						</DocSec>
 						<DocSec id="feat-f3" title="Reports & Analytics">
-							<H3>Feature-3</H3>
+							<P>
+                                The <strong>Analytics</strong> section provides a real-time,
+                                high-level overview of inventory performance and
+                                sales activity, enabling users to quickly gauge
+                                business health. This page is segmented into two
+                                main components. The <strong>Items Summary</strong> panel
+                                offers key inventory metrics, including the
+                                total count of distinct items (e.g., 4) and
+                                total quantity across all items (e.g., 6), along
+                                with calculated efficiency metrics like Average
+                                Quantity per Item (e.g., 1.5). It also tracks
+                                financial data related to inventory, displaying
+                                the Total Cost Price, Total Selling Price, and
+                                their corresponding Average Cost Price and
+                                Average Selling Price for deeper profit margin
+                                analysis. Below this, the <strong>Orders Summary</strong>
+                                panel provides a concise snapshot of transaction
+                                volume, showing the total No. of Orders (e.g.,
+                                5), the collective Total Quantity of items sold
+                                across these orders (e.g., 5), and the
+                                cumulative Total Value (e.g., ₹208,788.00)
+                                generated from all processed transactions.
+                            </P>
 						</DocSec>
 						<DocSec id="feat-f4" title="Employees & Roles">
 							<P className="jet-brains">
