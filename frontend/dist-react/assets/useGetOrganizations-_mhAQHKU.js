@@ -1,1 +1,0 @@
-import{a as e}from"./apiOrg-BN6cYbtf.js";import{b as n}from"./index-D0_Sot9h.js";function a(){const{data:r,isPending:t}=n({queryKey:["orgs"],queryFn:e});return{data:r,isGettingOrganizations:t}}export{a as u};
