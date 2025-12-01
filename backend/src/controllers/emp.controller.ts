@@ -95,7 +95,7 @@ export const sendInvite = catchAsync(
 			await new Email(
 				{
 					userName: req.user?.name as string,
-					email: req.user?.email as string,
+					email: empEmail as string,
 					orgName: org.name,
 					role,
 				},
@@ -139,7 +139,7 @@ export const sendInvite = catchAsync(
 		await new Email(
 			{
 				userName: req.user?.name as string,
-				email: req.user?.email as string,
+				email: empEmail as string,
 				orgName: org.name,
 				role,
 			},
