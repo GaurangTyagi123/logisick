@@ -1,1 +1,0 @@
-import{j as t}from"./index-D0_Sot9h.js";import{e as a}from"./Typography-BkeLtctd.js";function n({className:s,...e}){return t.jsx("div",{"data-slot":"skeleton",className:a("bg-ls-bg-500/50 dark:bg-ls-bg-dark-500/50 animate-pulse rounded-md",s),...e})}export{n as S};
