@@ -1,4 +1,4 @@
-<div style="display:flex;aligh-items:baseline;gap:1rem;">![alt text](frontend/public//logo64.png) LogiSick – Smart inventory and logistics management, all in one place.</div>
+![alt text](frontend/dist-react/logo64.png) <div style="display:flex;aligh-items:baseline;gap:1rem;">LogiSick – Smart inventory and logistics management, all in one place.</div>
 
 > LogiSick is a web-based inventory and logistics management platform designed to streamline supply chain operations. It enables businesses to efficiently track & manage warehouse inventories, process orders, and monitor deliveries in real time. The system provides an intuitive dashboard, smart notifications for low stock, and detailed reporting to improve decision-making and reduce operational delays. By integrating inventory control with logistics workflows, LogiSick ensures higher accuracy, cost efficiency, and smoother end-to-end management.
 
