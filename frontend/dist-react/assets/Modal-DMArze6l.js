@@ -1,1 +1,0 @@
-import{j as s,d as e,r as l,g as r}from"./index-D0_Sot9h.js";function i({openModal:t,children:a}){return s.jsx("div",{style:{backgroundColor:"#00000088"},className:e("h-full w-full absolute top-0 left-0 justify-center items-start pt-10 sm:pt-20 z-50",t?"flex":"hidden"),"aria-modal":"true",role:"dialog",children:s.jsx(l.Suspense,{fallback:s.jsx(r,{}),children:a})})}export{i as M};
