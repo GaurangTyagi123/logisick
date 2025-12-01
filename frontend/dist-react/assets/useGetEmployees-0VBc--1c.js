@@ -1,0 +1,1 @@
+import{b as r}from"./apiOrg-CsUkuOvK.js";import{c as y,b as m}from"./index-BTqsFGzI.js";const i=5;function p(s,e=1){const u=y(),{data:t,isPending:n,error:o}=m({queryKey:["emps",e],staleTime:5*1e3,queryFn:()=>r(s,e)});return t&&i*(e+1)<t.count&&u.prefetchQuery({queryKey:["emps",e+1],queryFn:()=>r(s,e+1)}),{data:t?.emps,count:t?.count,isGettingEmployees:n,error:o}}export{p as u};
